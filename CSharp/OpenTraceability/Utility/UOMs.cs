@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml.Linq;
 
 namespace OpenTraceability.Utility
 {
@@ -54,33 +55,21 @@ namespace OpenTraceability.Utility
 
         }
 
-        static public DataTable GetDataTable()
-        {
-            DataTable dt = new DataTable("UOMS");
-            dt.Columns.Add("Name");
-            dt.Columns.Add("UNCode");
-            dt.Columns.Add("Abbreviation");
-            foreach (UOM item in UOMList)
-            {
-                DataRow row = dt.NewRow();
-                row["Name"] = item.Name;
-                row["UNCode"] = item.UNCode;
-                row["Abbreviation"] = item.Abbreviation;
-                dt.Rows.Add(row);
-            }
-            return (dt);
-        }
-
         static private void Load()
         {
             try
             {
                 // load the subscriptions xml
                 EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                DSXML xUOMs = loader.ReadXML("DSUtilities", "DSUtil.StaticData.Data.UOMs.xml");
-                foreach (DSXML xmlUOM in xUOMs)
+                XDocument xUOMs = loader.ReadXML("OpenTraceability", "OpenTraceability.Utility.Data.UOMs.xml");
+                if (xUOMs.Root == null)
                 {
-                    UOM uom = new UOM(xmlUOM);
+                    throw new Exception("Failed to load UOMs.xml, the XDocument.Root is null.");
+                }
+
+                foreach (XElement x in xUOMs.Root.Elements())
+                {
+                    UOM uom = new UOM(x);
                     if (!uomsAbbrevDict.ContainsKey(uom.Abbreviation.ToLower()))
                     {
                         uomsAbbrevDict.TryAdd(uom.Abbreviation.ToLower(), uom);
@@ -101,7 +90,7 @@ namespace OpenTraceability.Utility
             }
             catch (Exception ex)
             {
-                DSLogger.Log(0, ex);
+                OTLogger.Error(ex);
                 throw;
             }
         }
@@ -123,30 +112,12 @@ namespace OpenTraceability.Utility
                     }
                 }
             }
-            return (null);
+            throw new Exception("Failed to get base for dimension = " + dimension);
         }
 
-        static public UOM GetUOMFromID(int ID)
+        static public UOM? GetUOMFromName(string Name)
         {
-            UOM uom = null;
-            foreach (KeyValuePair<string, UOM> kvp in uomsAbbrevDict)
-            {
-                if (kvp.Value.LegacyID == ID)
-                {
-                    uom = kvp.Value;
-                    break;
-                }
-            }
-            if (uom == null)
-            {
-                DSLogger.Log(0, "Failed to locate UoM by legacyID=" + ID);
-            }
-            return (uom);
-        }
-
-        static public UOM GetUOMFromName(string Name)
-        {
-            UOM uom = null;
+            UOM? uom = null;
             Name = Name.ToLower();
             if (Name == "count")
             {
@@ -193,9 +164,9 @@ namespace OpenTraceability.Utility
             return (uom);
         }
 
-        static public UOM GetUOMFromUNCode(string Name)
+        static public UOM? GetUOMFromUNCode(string Name)
         {
-            UOM uom = null;
+            UOM? uom = null;
             Name = Name.ToUpper();
             if (uomsUNCodeDict.ContainsKey(Name))
             {
@@ -214,8 +185,6 @@ namespace OpenTraceability.Utility
             }
             return (uom);
         }
-
-        /// <remarks/>
 
         static public List<UOM> UOMList
         {
@@ -251,8 +220,6 @@ namespace OpenTraceability.Utility
                 }
             }
         }
-
-
     }
 
     /// <remarks/>
@@ -268,7 +235,7 @@ namespace OpenTraceability.Utility
             {
                 lock (_locker)
                 {
-                    UOM uom = UOMS.UOMList.Find(u => u.UNCode == unCode);
+                    UOM? uom = UOMS.UOMList.Find(u => u.UNCode == unCode);
                     if (uom == null)
                     {
                         uom = new UOM();
@@ -283,7 +250,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static bool IsNullOrEmpty(UOM uom)
+        public static bool IsNullOrEmpty(UOM? uom)
         {
             if (uom == null)
             {
@@ -298,16 +265,18 @@ namespace OpenTraceability.Utility
                 return (false);
             }
         }
+
         public static UOM ParseFromName(string name)
         {
-            UOM u = null;
+            UOM? u = null;
             try
             {
                 if (string.IsNullOrEmpty(name))
                 {
-                    return null;
+                    throw new ArgumentNullException(nameof(name));
                 }
-                UOM uom = UOMS.GetUOMFromName(name);
+
+                UOM? uom = UOMS.GetUOMFromName(name);
                 if (uom != null)
                 {
                     u = new UOM();
@@ -340,33 +309,21 @@ namespace OpenTraceability.Utility
                         u.B = uom.B;
                         u.C = uom.C;
                         u.D = uom.D;
-
-
                     }
                     else
                     {
-                        DSLogger.Log(1, "Unit conversion failed, Name=" + name);
+                        throw new Exception("Failed to parse UOM");
                     }
                 }
+
+                return u;
             }
             catch (Exception ex)
             {
-                u = null;
-                string Message = ex.Message;
-                DSLogger.Log(1, "Unit conversion failed, Name=" + name);
+                OTLogger.Error(ex);
+                throw;
             }
-            return u;
         }
-
-        /*
-        public UOM(string abbreviation, string name, string unitDimension, string unCode, Int64 id)
-        {
-            Abbreviation = abbreviation;
-            Name = name;
-            UnitDimension = unitDimension;
-            UNCode = unCode;
-            ID = id;
-        }*/
 
         public UOM(UOM uom)
         {
@@ -437,15 +394,10 @@ namespace OpenTraceability.Utility
 
         }
 
-
-        [DataMember]
-        [System.Xml.Serialization.XmlIgnore]
         public Int64 ID { get; set; }
 
-        [System.Xml.Serialization.XmlIgnore]
         public int LegacyID { get; set; }
 
-        [System.Xml.Serialization.XmlIgnore]
         public string Key
         {
             get
@@ -454,63 +406,23 @@ namespace OpenTraceability.Utility
             }
         }
 
-        [DataMember]
-        [System.Xml.Serialization.XmlIgnore]
         public string Name { get; private set; }
 
-        [DataMember]
-        [System.Xml.Serialization.XmlIgnore]
         public string Abbreviation { get; private set; }
 
-        [DataMember]
-        [System.Xml.Serialization.XmlIgnore]
         public string UnitDimension { get; private set; }
 
-        [DataMember]
-        [System.Xml.Serialization.XmlIgnore]
         public string SubGroup { get; private set; }
 
-        [DataMember]
-        [System.Xml.Serialization.XmlIgnore]
         public string UNCode { get; private set; }
 
-        [DataMember]
-        [System.Xml.Serialization.XmlIgnore]
         public double A { get; private set; }
 
-        [DataMember]
-        [System.Xml.Serialization.XmlIgnore]
         public double B { get; private set; }
 
-        [DataMember]
-        [System.Xml.Serialization.XmlIgnore]
         public double C { get; private set; }
 
-
-        [DataMember]
-        [System.Xml.Serialization.XmlIgnore]
         public double D { get; private set; }
-
-        [DataMember]
-        public string StrValue
-        {
-            get
-            {
-                return (this.UNCode);
-            }
-            set
-            {
-                if (value != this.UNCode)
-                {
-                    UOM UOM = UOM.ParseFromName(value);
-                    this.CopyFrom(UOM);
-                }
-            }
-        }
-
-        /* INSTANCE */
-        private DateTime createdField;
-        private DateTime updatedField;
 
         public UOM()
         {
@@ -520,222 +432,71 @@ namespace OpenTraceability.Utility
             D = 0.0;
         }
 
-        public UOM(DSXML xmlUOM)
+        public UOM(XElement xmlUOM)
         {
             A = 0.0;
             B = 1.0;
             C = 1.0;
             D = 0.0;
-            ID = xmlUOM.AttributeInt64Value("ID");
-            Name = xmlUOM.Attribute("Name");
-            Abbreviation = xmlUOM.Attribute("Abbreviation");
-            UnitDimension = xmlUOM.Attribute("Dimension");
-            UNCode = xmlUOM.Attribute("UNCode");
-            SubGroup = xmlUOM.Attribute("SubGroup");
-            LegacyID = xmlUOM.AttributeInt32Value("LegacyID");
-            if (xmlUOM.HasAttribute("Factor"))
+
+            Name = xmlUOM.Attribute("Name")?.Value ?? string.Empty;
+            Abbreviation = xmlUOM.Attribute("Abbreviation")?.Value ?? string.Empty;
+            UnitDimension = xmlUOM.Attribute("Dimension")?.Value ?? string.Empty;
+            UNCode = xmlUOM.Attribute("UNCode")?.Value ?? string.Empty;
+            SubGroup = xmlUOM.Attribute("SubGroup")?.Value ?? string.Empty;
+
+            if (xmlUOM.Attribute("Factor") != null)
             {
                 A = 0.0;
-                B = xmlUOM.AttributeDoubleValue("Factor");
+                B = double.Parse(xmlUOM.Attribute("Factor")?.Value ?? string.Empty);
                 C = 1.0;
                 D = 0.0;
             }
-            else if (xmlUOM.HasAttribute("Numerator"))
+            else if (xmlUOM.Attribute("Numerator") != null)
             {
                 A = 0.0;
-                B = xmlUOM.AttributeDoubleValue("Numerator");
-                C = xmlUOM.AttributeDoubleValue("Denominator");
+                B = double.Parse(xmlUOM.Attribute("Numerator")?.Value ?? string.Empty);
+                C = double.Parse(xmlUOM.Attribute("Denominator")?.Value ?? string.Empty);
                 D = 0.0;
             }
-            else if (xmlUOM.HasAttribute("A"))
+            else if (xmlUOM.Attribute("A") != null)
             {
-                A = xmlUOM.AttributeDoubleValue("A");
-                B = xmlUOM.AttributeDoubleValue("B");
-                C = xmlUOM.AttributeDoubleValue("C");
-                D = xmlUOM.AttributeDoubleValue("D");
+                A = double.Parse(xmlUOM.Attribute("A")?.Value ?? string.Empty);
+                B = double.Parse(xmlUOM.Attribute("B")?.Value ?? string.Empty);
+                C = double.Parse(xmlUOM.Attribute("C")?.Value ?? string.Empty);
+                D = double.Parse(xmlUOM.Attribute("D")?.Value ?? string.Empty);
             }
-
         }
 
-        public double? Convert(double? value, UOM to)
+        public double Convert(double value, UOM to)
         {
-            if (value == null)
-            {
-                return (null);
-            }
-            double? valueBase = this.ToBase(value.Value);
-            double? valueNew = to.FromBase(valueBase);
+            double valueBase = this.ToBase(value);
+            double valueNew = to.FromBase(valueBase);
             return (valueNew);
         }
 
-        static public double? Convert(double? value, UOM from, UOM to)
+        static public double Convert(double value, UOM from, UOM to)
         {
-            if (value == null)
-            {
-                return (null);
-            }
-            double? valueBase = from.ToBase(value.Value);
-            double? valueNew = to.FromBase(valueBase);
+            double valueBase = from.ToBase(value);
+            double valueNew = to.FromBase(valueBase);
             return (valueNew);
         }
 
-        public double? ToBase(double? value)
+        public double ToBase(double value)
         {
-            if (value == null)
-            {
-                return (null);
-            }
-            double baseValue = (A + B * value.Value) / (C + D * value.Value);
+            double baseValue = (A + B * value) / (C + D * value);
             return baseValue;
         }
-        public double? FromBase(double? baseValue)
-        {
-            if (baseValue == null)
-            {
-                return (null);
-            }
 
-            double value = (A - C * baseValue.Value) / (D * baseValue.Value - B);
+        public double FromBase(double baseValue)
+        {
+            double value = (A - C * baseValue) / (D * baseValue - B);
             return value;
         }
 
         public override String ToString()
         {
             return Name + " [" + Abbreviation + "]";
-        }
-
-        private void Copy(UOM source)
-        {
-            if (source != null)
-            {
-                this.ID = source.ID;
-                this.LegacyID = source.LegacyID;
-                this.Name = source.Name;
-                this.Abbreviation = source.Abbreviation;
-                this.UnitDimension = source.UnitDimension;
-                this.UNCode = source.UNCode;
-                this.SubGroup = source.SubGroup;
-                this.A = source.A;
-                this.B = source.B;
-                this.C = source.C;
-                this.D = source.D;
-            }
-        }
-        [System.Xml.Serialization.XmlIgnore]
-        public Int64 TRIDSetter
-        {
-            get
-            {
-                return (LegacyID);
-            }
-            set
-            {
-                try
-                {
-                    ID = value;
-                    UOM uom = UOMS.GetUOMFromID((Int32)ID);
-                    this.Copy(uom);
-
-                }
-                catch (Exception ex)
-                {
-                    string Message = ex.Message;
-                    DSLogger.Log(1, "Unit conversion failed, ID=" + value);
-                }
-            }
-
-        }
-
-        [System.Xml.Serialization.XmlIgnore]
-        public String NameSetter
-        {
-            get
-            {
-                return (Name);
-            }
-            set
-            {
-                try
-                {
-                    UOM uom = UOMS.GetUOMFromName(value);
-                    if (uom == null)
-                    {
-                        uom = UOMS.GetUOMFromUNCode(value);
-                    }
-                    this.Copy(uom);
-                }
-                catch (Exception ex)
-                {
-                    string Message = ex.Message;
-                    DSLogger.Log(1, "Unit conversion failed, ID=" + value);
-                }
-            }
-
-        }
-
-        [System.Xml.Serialization.XmlIgnore]
-        public DateTime Updated
-        {
-            get
-            {
-                return this.updatedField;
-            }
-            set
-            {
-                this.updatedField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnore]
-        public DateTime Created
-        {
-            get
-            {
-                return this.createdField;
-            }
-            set
-            {
-                this.createdField = value;
-            }
-        }
-
-        public DSXML ToXML(DSXML xmlParent, string name = "UOM")
-        {
-            DSXML xmlUOM = xmlParent.AddChild(name);
-            xmlUOM.Attribute("ID", ID);
-            xmlUOM.Attribute("Name", Name);
-            xmlUOM.Attribute("Abbreviation", Abbreviation);
-            xmlUOM.Attribute("UnitDimension", UnitDimension);
-            xmlUOM.Attribute("UNCode", UNCode);
-            xmlUOM.Attribute("LegacyID", LegacyID);
-            xmlUOM.Attribute("A", A);
-            xmlUOM.Attribute("B", B);
-            xmlUOM.Attribute("C", C);
-            xmlUOM.Attribute("D", D);
-            xmlUOM.Attribute("SubGroup", SubGroup);
-            return (xmlUOM);
-        }
-
-        public static UOM FromXML(DSXML xmlUOM)
-        {
-            UOM uom = new UOM();
-            if (xmlUOM == null || xmlUOM.IsNull)
-            {
-                return (uom);
-            }
-            uom.ID = xmlUOM.AttributeInt64Value("ID");
-            uom.Name = xmlUOM.Attribute("Name");
-            uom.Abbreviation = xmlUOM.Attribute("Abbreviation");
-            uom.UnitDimension = xmlUOM.Attribute("Dimension");
-            uom.UNCode = xmlUOM.Attribute("UNCode");
-            uom.A = xmlUOM.AttributeDoubleValue("A");
-            uom.B = xmlUOM.AttributeDoubleValue("B");
-            uom.C = xmlUOM.AttributeDoubleValue("C");
-            uom.D = xmlUOM.AttributeDoubleValue("D");
-            uom.SubGroup = xmlUOM.Attribute("SubGroup");
-            uom.LegacyID = xmlUOM.AttributeInt32Value("LegacyID");
-            return (uom);
         }
     }
 }

@@ -1,20 +1,14 @@
-﻿using DSUtil;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using OpenTraceability.Utility;
 using System.Runtime.Serialization;
-using System.Text;
-using GS1.Interfaces.Models.Identifiers;
-using DSUtil.Extensions;
 
 namespace OpenTraceability.Models.Identifiers
 {
     /// <summary>
-    /// Party Global Location Number - Used for identifying Trading Partners, Business Departments, 
+    /// Party Global Location Number - Used for identifying Trading Partners, Business Departments,
     /// Business Regions, Business Groups, and Private Trading Partners in Full Chain Traceability.
     /// </summary>
     [DataContract]
-    public class PGLN : IEquatable<PGLN>, IComparable<PGLN>, PGLN
+    public class PGLN : IEquatable<PGLN>, IComparable<PGLN>
     {
         private string _pglnStr;
 
@@ -65,7 +59,8 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        public static string DetectPGLNIssue(string pglnStr)
+
+        public static string? DetectPGLNIssue(string pglnStr)
         {
             try
             {
@@ -134,6 +129,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public static bool TryParse(string pglnStr, out PGLN pgln, out string error)
         {
             try
@@ -164,6 +160,7 @@ namespace OpenTraceability.Models.Identifiers
         }
 
         #region Overrides
+
         public static bool operator ==(PGLN obj1, PGLN obj2)
         {
             try
@@ -191,6 +188,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public static bool operator !=(PGLN obj1, PGLN obj2)
         {
             try
@@ -218,6 +216,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override bool Equals(object obj)
         {
             try
@@ -245,6 +244,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override int GetHashCode()
         {
             try
@@ -258,6 +258,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override string ToString()
         {
             try
@@ -270,10 +271,12 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
+
+        #endregion Overrides
 
         #region IEquatable
-        public bool Equals(PGLN pgln)
+
+        public bool Equals(PGLN? pgln)
         {
             try
             {
@@ -295,7 +298,8 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        private bool IsEquals(PGLN pgln)
+
+        private bool IsEquals(PGLN? pgln)
         {
             try
             {
@@ -317,53 +321,11 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public bool Equals(PGLN pgln)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, pgln))
-                {
-                    return false;
-                }
+        #endregion IEquatable
 
-                if (Object.ReferenceEquals(this, pgln))
-                {
-                    return true;
-                }
+        #region IComparable
 
-                return this.IsEquals(pgln);
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-        private bool IsEquals(PGLN pgln)
-        {
-            try
-            {
-                if (pgln == null) throw new ArgumentNullException(nameof(pgln));
-
-                if (this.ToString() == pgln.ToString())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-        #endregion
-
-        #region IComparable 
-        public int CompareTo(PGLN pgln)
+        public int CompareTo(PGLN? pgln)
         {
             try
             {
@@ -382,6 +344,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
+
+        #endregion IComparable
     }
 }

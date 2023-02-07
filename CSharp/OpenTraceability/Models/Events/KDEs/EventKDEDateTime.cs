@@ -1,57 +1,33 @@
-﻿using DSUtil;
-using GS1.Interfaces.Models.Events;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.Interfaces;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Models.Events.KDEs
 {
     public class EventKDEDateTime : EventKDEBase, IEventKDE
     {
-        [NotMapped]
-        public DSXML XmlValue
-        {
-            get
-            {
-                DSXML xKDE = new DSXML(this.Key);
-                if (this.Value != null)
-                {
-                    xKDE.Value = Value?.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-                }
-                return xKDE;
-            }
-            set
-            {
-                if (value != null & !value.IsNull)
-                {
-                    if (DateTime.TryParse(value.Value, out DateTime dt))
-                    {
-                        this.Value = dt;
-                    }
-                }
-            }
-        }
-
-        [NotMapped]
-        public JToken JsonValue
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public Type ValueType => typeof(DateTime?);
         public DateTime? Value { get; set; }
+
+        public JToken? GetJson()
+        {
+            throw new NotImplementedException();
+        }
+
+        public XElement? GetXml()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetFromJson(JToken json)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetFromXml(XElement xml)
+        {
+            throw new NotImplementedException();
+        }
 
         public override string ToString()
         {

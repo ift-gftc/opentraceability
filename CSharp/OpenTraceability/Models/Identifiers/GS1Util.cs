@@ -1,7 +1,8 @@
-﻿using DSUtil;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace OpenTraceability.Models.Identifiers
 {
@@ -143,7 +144,7 @@ namespace OpenTraceability.Models.Identifiers
             }
             catch (ArgumentNullException anEx)
             {
-                DSLogger.Log(0, anEx);
+                OTLogger.Error(anEx);
                 throw;
             }
             catch (Exception Ex)
@@ -194,7 +195,7 @@ namespace OpenTraceability.Models.Identifiers
             }
             catch (ArgumentNullException anEx)
             {
-                DSLogger.Log(0, anEx);
+                OTLogger.Error(anEx);
                 throw;
             }
             catch (Exception Ex)

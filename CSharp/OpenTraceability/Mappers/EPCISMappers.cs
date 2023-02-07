@@ -1,4 +1,5 @@
-﻿using OpenTraceability.Interfaces;
+﻿using GS1.Mappers.EPCIS;
+using OpenTraceability.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

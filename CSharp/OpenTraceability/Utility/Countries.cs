@@ -2,6 +2,7 @@
 using System.Data;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml.Linq;
 
 namespace OpenTraceability.Utility
 {
@@ -22,13 +23,12 @@ namespace OpenTraceability.Utility
 
         private static void Load()
         {
-            string data = null;
+            string? data = null;
             data = StaticData.ReadData("Countries.xml");
-            DSXML xmlCountries = new DSXML();
-            xmlCountries.LoadFromString(data);
-            foreach (DSXML xmlCountry in xmlCountries)
+            XDocument xmlCountries = XDocument.Parse(data);
+            foreach (XElement x in xmlCountries.Elements())
             {
-                Country country = new Country(xmlCountry);
+                Country country = new Country(x);
                 _dirCountries.TryAdd(country.Abbreviation.ToUpper(), country);
                 _dirNameCountries.TryAdd(country.Name.ToUpper(), country);
                 if (!string.IsNullOrEmpty(country.Alpha3))
@@ -36,163 +36,6 @@ namespace OpenTraceability.Utility
                     _dirAlpha3Countries.TryAdd(country.Alpha3.ToUpper(), country);
                 }
             }
-        }
-
-        public static DataTable GetDataTable()
-        {
-            DataTable dt = new DataTable("Countries");
-            dt.Columns.Add("Name");
-            dt.Columns.Add("ISO");
-            dt.Columns.Add("Abbreviation");
-            dt.Columns.Add("Alpha3");
-            dt.Columns.Add("AlternativeName");
-            foreach (Country item in CountryList)
-            {
-                DataRow row = dt.NewRow();
-                row["Name"] = item.Name;
-                row["ISO"] = item.ISO;
-                row["Abbreviation"] = item.Abbreviation;
-                row["Alpha3"] = item.Alpha3;
-                row["AlternativeName"] = item.AlternativeName;
-                dt.Rows.Add(row);
-            }
-            return (dt);
-        }
-
-        public static string CountryListToISOString(List<Country> countriesList)
-        {
-            string result = "";
-            if (countriesList != null)
-            {
-                StringBuilder sb = new StringBuilder();
-                List<Country> lstOrdered = countriesList.OrderBy(x => x.ISO).ToList();
-                foreach (Country country in lstOrdered)
-                {
-                    if (country != null)
-                    {
-                        sb.Append(country.ISO);
-                        sb.Append(";");
-                    }
-                }
-                result = sb.ToString();
-            }
-            return (result);
-        }
-
-        public static string CountryListToNameString(List<Country> countriesList, char seperator = ';')
-        {
-            string result = "";
-            if (countriesList != null)
-            {
-                StringBuilder sb = new StringBuilder();
-                List<Country> lstOrdered = countriesList.OrderBy(x => x.Name).ToList();
-                foreach (Country country in lstOrdered)
-                {
-                    if (country != null)
-                    {
-                        sb.Append(country.Name);
-                        sb.Append(seperator);
-                    }
-                }
-                result = sb.ToString();
-            }
-            return (result);
-        }
-
-        /// <summary>
-        /// Takes a list of countries and returns a list of Int32 (nullabl) Iso Codes
-        /// </summary>
-        /// <param name="countriesList"></param>
-        /// <returns></returns>
-        public static List<Int32?> CountryListToISOs(List<Country> countriesList)
-        {
-            List<Int32?> lst = new List<int?>();
-            if (countriesList != null)
-            {
-                List<Country> lstOrdered = countriesList.OrderBy(x => x.ISO).ToList();
-                foreach (Country country in lstOrdered)
-                {
-                    if (country != null)
-                    {
-                        lst.Add(country.ISO);
-                    }
-                }
-            }
-            return (lst);
-        }
-
-        /// <summary>
-        /// Takes a list of Int32 ? representing ISO codes and returns a list of Countries;
-        /// </summary>
-        /// <param name="countriesList"></param>
-        /// <returns></returns>
-        public static List<Country> CountryListFromISOs(List<Int32?> isoList)
-        {
-            List<Country> lst = new List<Country>();
-            if (isoList != null)
-            {
-                foreach (Int32? iso in isoList)
-                {
-                    if (iso.HasValue)
-                    {
-                        Country country = Countries.FromCountryIso(iso.Value);
-                        if (country != null)
-                        {
-                            lst.Add(country);
-                        }
-                    }
-                }
-            }
-            return (lst);
-        }
-
-        public static List<Country> CountryListFromISOString(string strListOfIsoCodes)
-        {
-            List<Country> countries = new List<Country>();
-            if (!string.IsNullOrEmpty(strListOfIsoCodes))
-            {
-                string[] strISOs = strListOfIsoCodes.Split(';');
-                foreach (string strISO in strISOs)
-                {
-                    if (!string.IsNullOrEmpty(strISO))
-                    {
-                        try
-                        {
-                            Int32 isoCode = System.Convert.ToInt32(strISO);
-                            Country country = Countries.FromCountryIso(isoCode);
-                            if (country != null)
-                            {
-                                countries.Add(country);
-                            }
-                        }
-                        catch
-                        {
-                        }
-                    }
-                }
-            }
-            return (countries);
-        }
-
-        public static List<Country> CountryListFromString(string strListOfCountries, char seperator = ';')
-        {
-            List<Country> countries = new List<Country>();
-            if (!string.IsNullOrEmpty(strListOfCountries))
-            {
-                string[] strCountires = strListOfCountries.Split(seperator);
-                foreach (string strCountry in strCountires)
-                {
-                    if (!string.IsNullOrEmpty(strCountry))
-                    {
-                        Country country = Countries.TryGetCountry(strCountry);
-                        if (country != null)
-                        {
-                            countries.Add(country);
-                        }
-                    }
-                }
-            }
-            return (countries);
         }
 
         public static List<Country> CountryList
@@ -285,83 +128,6 @@ namespace OpenTraceability.Utility
             return (country);
         }
 
-        public static Country TryGetCountry(string strValue)
-        {
-            Country country = null;
-            if (string.IsNullOrEmpty(strValue))
-            {
-                return (country);
-            }
-
-            country = FromAbbreviation(strValue);
-            if (country != null)
-            {
-                return (country);
-            }
-
-            country = FromAlpha3(strValue);
-            if (country != null)
-            {
-                return (country);
-            }
-            country = FromCountryName(strValue);
-            if (country != null)
-            {
-                return (country);
-            }
-
-            try
-            {
-                int Iso = System.Convert.ToInt32(strValue);
-                country = FromCountryIso(Iso);
-            }
-            catch
-            {
-                country = null;
-            }
-            return (country);
-        }
-
-        public static List<int?> CountryCodeList(string stringList)
-        {
-            List<int?> lst = new List<int?>();
-            try
-            {
-                if (!string.IsNullOrEmpty(stringList))
-                {
-                    string[] values = stringList.Split(';');
-                    foreach (string strCode in values)
-                    {
-                        if (!string.IsNullOrEmpty(strCode))
-                        {
-                            if (strCode.IsInteger())
-                            {
-                                int iIso = System.Convert.ToInt32(strCode);
-                                Country country = FromCountryIso(iIso);
-                                if (country != null)
-                                {
-                                    lst.Add(country.ISO);
-                                }
-                            }
-                            else
-                            {
-                                Country country = TryGetCountry(strCode);
-                                if (country != null)
-                                {
-                                    lst.Add(country.ISO);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                DSLogger.Log(0, ex);
-            }
-            return (lst);
-        }
-
         public static Country Parse(string strValue)
         {
             if (int.TryParse(strValue, out int iso))
@@ -380,18 +146,19 @@ namespace OpenTraceability.Utility
     [DataContract]
     public class Country : IEquatable<Country>, IComparable<Country>
     {
-        private Int64 idField;
+        public long ID { get; set; }
 
-        private string? nameField;
+        public string CultureInfoCode { get; set; } = string.Empty;
 
-        private string? abbreviationField;
-        private string? alpha3;
-        private string? cultureInfoCode;
+        public string Name { get; set; } = string.Empty;
 
-        private int isoField = 0;
+        public string AlternativeName { get; set; } = string.Empty;
 
-        private DateTime createdField;
-        private DateTime updatedField;
+        public string Abbreviation { get; set; } = string.Empty;
+
+        public string Alpha3 { get; set; } = string.Empty;
+
+        public int ISO { get; set; }
 
         public Country()
         {
@@ -401,167 +168,23 @@ namespace OpenTraceability.Utility
         {
             this.Abbreviation = other.Abbreviation;
             this.Alpha3 = other.Alpha3;
-            this.Created = other.Created;
             this.ID = other.ID;
             this.ISO = other.ISO;
             this.Name = other.Name;
             this.AlternativeName = other.AlternativeName;
             this.CultureInfoCode = other.CultureInfoCode;
-            this.Updated = other.Updated;
-            this.Region = other.Region;
-            this.subregion = other.subregion;
-            this.intermediateregion = other.intermediateregion;
         }
 
-        public Country(DSXML xmlCountry)
+        public Country(XElement xmlCountry)
         {
-            this.ID = xmlCountry.AttributeInt64Value("ID");
-            this.Name = xmlCountry.Attribute("Name");
-            this.AlternativeName = xmlCountry.Attribute("AlternativeName");
-            this.Abbreviation = xmlCountry.Attribute("Abbreviation");
-            this.Alpha3 = xmlCountry.Attribute("Alpha3");
-            this.ISO = xmlCountry.AttributeInt32Value("ISO");
-            this.CultureInfoCode = xmlCountry.Attribute("CultureInfoCode");
-            this.Region = xmlCountry.Attribute("region");
-            this.subregion = xmlCountry.Attribute("sub-region");
-            this.intermediateregion = xmlCountry.Attribute("intermediate-region");
+            this.ID = long.Parse(xmlCountry.Attribute("ID")?.Value ?? string.Empty);
+            this.Name = xmlCountry.Attribute("Name")?.Value ?? string.Empty;
+            this.AlternativeName = xmlCountry.Attribute("AlternativeName")?.Value ?? string.Empty;
+            this.Abbreviation = xmlCountry.Attribute("Abbreviation")?.Value ?? string.Empty;
+            this.Alpha3 = xmlCountry.Attribute("Alpha3")?.Value ?? string.Empty;
+            this.ISO = int.Parse(xmlCountry.Attribute("ISO")?.Value ?? string.Empty);
+            this.CultureInfoCode = xmlCountry.Attribute("CultureInfoCode")?.Value ?? string.Empty;
         }
-
-        /// <remarks/>
-
-        [DataMember]
-        public Int64 ID
-        {
-            get
-            {
-                return this.idField;
-            }
-            set
-            {
-                this.idField = value;
-            }
-        }
-
-        [DataMember]
-        public String CultureInfoCode
-        {
-            get
-            {
-                return this.cultureInfoCode;
-            }
-            set
-            {
-                this.cultureInfoCode = value;
-            }
-        }
-
-        [DataMember]
-        public DateTime Updated
-        {
-            get
-            {
-                return this.updatedField;
-            }
-            set
-            {
-                this.updatedField = value;
-            }
-        }
-
-        /// <remarks/>
-
-        [DataMember]
-        public DateTime Created
-        {
-            get
-            {
-                return this.createdField;
-            }
-            set
-            {
-                this.createdField = value;
-            }
-        }
-
-        /// <remarks/>
-
-        [DataMember]
-        public string Name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
-        }
-
-        [DataMember]
-        public string AlternativeName { get; set; }
-
-        public string Key
-        {
-            get
-            {
-                return (Abbreviation);
-            }
-        }
-
-        /// <remarks/>
-
-        [DataMember]
-        public string Abbreviation
-        {
-            get
-            {
-                return this.abbreviationField;
-            }
-            set
-            {
-                this.abbreviationField = value;
-            }
-        }
-
-        [DataMember]
-        public string Alpha3
-        {
-            get
-            {
-                return this.alpha3;
-            }
-            set
-            {
-                this.alpha3 = value;
-            }
-        }
-
-        /// <remarks/>
-
-        [DataMember]
-        public int ISO
-        {
-            get
-            {
-                return this.isoField;
-            }
-            set
-            {
-                this.isoField = value;
-            }
-        }
-
-        /// <remarks/>
-
-        [DataMember]
-        public string Region { get; set; }
-
-        [DataMember]
-        public string subregion { get; set; }
-
-        [DataMember]
-        public string intermediateregion { get; set; }
 
         public Country Clone()
         {
@@ -577,35 +200,11 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public DSXML ToXML(DSXML xmlParent, string name = "Country")
-        {
-            DSXML xmlCountry = xmlParent.AddChild(name);
-            xmlCountry.Attribute("ID", ID);
-            xmlCountry.Attribute("Name", Name);
-            xmlCountry.Attribute("AlternativeName", AlternativeName);
-            xmlCountry.Attribute("Abbreviation", Abbreviation);
-            xmlCountry.Attribute("Alpha3", Alpha3);
-            xmlCountry.Attribute("ISO", ISO);
-            xmlCountry.Attribute("CultureInfoCode", CultureInfoCode);
-            xmlCountry.Attribute("region", Region);
-            xmlCountry.Attribute("sub-region", subregion);
-            xmlCountry.Attribute("intermediate-region", intermediateregion);
-
-            return (xmlCountry);
-        }
-
         public override string ToString()
         {
             return this.ISO.ToString();
         }
 
-        public static Country FromXML(DSXML xmlCountry)
-        {
-            Country country = new Country(xmlCountry);
-            return (country);
-        }
-
-        //overriding Equals
         public override bool Equals(object? obj)
         {
             if (!(obj is Country))
@@ -627,7 +226,6 @@ namespace OpenTraceability.Utility
             }
         }
 
-        //overriding GetHashCode
         public override int GetHashCode()
         {
             return this.ISO.GetHashCode();
@@ -642,7 +240,7 @@ namespace OpenTraceability.Utility
         public int CompareTo(Country? other)
         {
             if (other == null) return 1;
-            return (Key.CompareTo(other.Key));
+            return (ISO.CompareTo(other.ISO));
         }
     }
 }

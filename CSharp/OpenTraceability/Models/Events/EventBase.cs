@@ -68,7 +68,6 @@ namespace OpenTraceability.Models.Events
         public List<EventDestination> DestinationList { get; set; } = new List<EventDestination>();
         public List<Certificate> Certificates { get; set; } = new List<Certificate>();
         public List<IEventKDE> KDEs { get; set; } = new List<IEventKDE>();
-        public List<Attachment> Attachments { get; set; } = new List<Attachment>();
         public List<EventBusinessTransaction> BusinessTransactions { get; set; } = new List<EventBusinessTransaction>();
         public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
         public ErrorDeclaration? ErrorDeclaration { get; set; }

@@ -1,4 +1,5 @@
 ﻿using OpenTraceability.Models.Identifiers;
+using OpenTraceability.Utility;
 
 namespace OpenTraceability.Models.Events
 {

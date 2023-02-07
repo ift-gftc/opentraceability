@@ -1,11 +1,4 @@
-﻿using GS1.Interfaces.Models.Common;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-
-namespace OpenTraceability.Models.Common
+﻿namespace OpenTraceability.Models.Common
 {
     public class Address : AnonymizedAddress
     {
@@ -53,13 +46,13 @@ namespace OpenTraceability.Models.Common
                 return false;
             }
 
-            return (this.Address1 == other.Address1 
-                &&  this.Address2 == other.Address2
-                &&  this.City == other.City
-                &&  this.County == other.County
-                &&  this.State == other.State
-                &&  this.ZipCode == other.ZipCode 
-                &&  this.Country == other.Country);
+            return (this.Address1 == other.Address1
+                && this.Address2 == other.Address2
+                && this.City == other.City
+                && this.County == other.County
+                && this.State == other.State
+                && this.ZipCode == other.ZipCode
+                && this.Country == other.Country);
         }
 
         public override int GetHashCode()

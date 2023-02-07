@@ -1,24 +1,17 @@
-﻿using DSUtil;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using OpenTraceability.Utility;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using GS1.Interfaces.Models.Identifiers;
-using DSUtil.Extensions;
 
 namespace OpenTraceability.Models.Identifiers
 {
     [DataContract]
-    public class GTIN : IGTIN, IEquatable<GTIN>, IComparable<GTIN>
+    public class GTIN : IEquatable<GTIN>, IComparable<GTIN>
     {
         private string _gtinStr;
 
         public GTIN()
         {
-
         }
+
         public GTIN(string gtinStr)
         {
             try
@@ -37,7 +30,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string gtinStr, out IGTIN gtin, out string error)
+        public static bool TryParse(string gtinStr, out GTIN gtin, out string error)
         {
             try
             {
@@ -72,7 +65,6 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-
 
         /// <summary>
         /// This function will analyze a GTIN and try to return feedback with why a GTIN is not valid.
@@ -139,8 +131,8 @@ namespace OpenTraceability.Models.Identifiers
             }
             catch (Exception Ex)
             {
-                DSLogger.Log(0, "Failed to detect GTIN Issues. GTIN=" + gtinStr);
-                OTLogger.Error(Ex);
+                Exception exception = new Exception("Failed to detect GTIN Issues. GTIN=" + gtinStr, Ex);
+                OTLogger.Error(exception);
                 throw;
             }
         }
@@ -177,6 +169,7 @@ namespace OpenTraceability.Models.Identifiers
         }
 
         #region Overrides
+
         public static bool operator ==(GTIN obj1, GTIN obj2)
         {
             try
@@ -204,6 +197,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public static bool operator !=(GTIN obj1, GTIN obj2)
         {
             try
@@ -231,6 +225,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override bool Equals(object obj)
         {
             try
@@ -258,6 +253,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override int GetHashCode()
         {
             try
@@ -271,6 +267,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override string ToString()
         {
             try
@@ -283,10 +280,12 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
+
+        #endregion Overrides
 
         #region IEquatable<GTIN>
-        public bool Equals(GTIN gtin)
+
+        public bool Equals(GTIN? gtin)
         {
             try
             {
@@ -308,7 +307,8 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        public bool Equals(IGTIN gtin)
+
+        private bool IsEquals(GTIN? gtin)
         {
             try
             {
@@ -317,31 +317,6 @@ namespace OpenTraceability.Models.Identifiers
                     return false;
                 }
 
-                if (Object.ReferenceEquals(this, gtin))
-                {
-                    return true;
-                }
-
-                if (gtin is null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return gtin.ToString() == this.ToString();
-                }
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-        private bool IsEquals(GTIN gtin)
-        {
-            try
-            {
-                if (gtin == null) throw new ArgumentNullException(nameof(gtin));
                 if (this.ToString().ToLower() == gtin.ToString().ToLower())
                 {
                     return true;
@@ -357,14 +332,19 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
 
-        #region IComparable 
-        public int CompareTo(GTIN gtin)
+        #endregion IEquatable<GTIN>
+
+        #region IComparable
+
+        public int CompareTo(GTIN? gtin)
         {
             try
             {
-                if (gtin == null) throw new ArgumentNullException(nameof(gtin));
+                if (Object.ReferenceEquals(null, gtin))
+                {
+                    throw new ArgumentNullException(nameof(gtin));
+                }
 
                 long myInt64Hash = this.ToString().GetInt64HashCode();
                 long otherInt64Hash = gtin.ToString().GetInt64HashCode();
@@ -379,6 +359,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
+
+        #endregion IComparable
     }
 }

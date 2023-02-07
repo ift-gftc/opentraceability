@@ -1,54 +1,50 @@
-﻿using DSUtil;
-using DSUtil.StaticData;
-using GS1.Interfaces.Models.Events;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.Interfaces;
+using OpenTraceability.Utility;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Models.Events.KDEs
 {
     public class EventKDECountry : EventKDEBase, IEventKDE
     {
-        [NotMapped]
-        public DSXML XmlValue
+        public Country? Value { get; set; }
+
+        public Type ValueType => typeof(Country);
+
+        public JToken? GetJson()
         {
-            get
+            if (Value == null)
             {
-                DSXML xKDE = new DSXML(this.Key);
-                if (this.Value != null)
-                {
-                    xKDE.Value = Value.Abbreviation;
-                }
-                return xKDE;
+                return null;
             }
-            set
+            else
             {
-                if (value != null & !value.IsNull)
-                {
-                    this.Value = Countries.Parse(value.Value);
-                }
+                return JToken.FromObject(Value.ISO);
             }
         }
 
-        [NotMapped]
-        public JToken JsonValue
+        public XElement? GetXml()
         {
-            get
+            if (Value == null)
             {
-                throw new NotImplementedException();
+                return null;
             }
-            set
+            else
             {
-                throw new NotImplementedException();
+                return new XElement(Key, Value.ISO);
             }
         }
-        public Type ValueType => typeof(DateTime?);
-        public Country Value { get; set; }
+
+        public void SetFromJson(JToken json)
+        {
+            string strValue = json.ToString();
+            Value = Countries.Parse(strValue); 
+        }
+
+        public void SetFromXml(XElement xml)
+        {
+            Value = Countries.Parse(xml.Value);
+        }
 
         public override string ToString()
         {

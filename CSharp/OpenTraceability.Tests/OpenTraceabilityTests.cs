@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTraceability.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,9 @@ namespace OpenTraceability.Tests
 
         internal static string ReadTestData(string v)
         {
-            throw new NotImplementedException();
+            EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+            string str = loader.ReadString("OpenTraceability.Tests", $"OpenTraceability.Tests.Data.{v}");
+            return str;
         }
     }
 }

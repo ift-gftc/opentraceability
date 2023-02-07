@@ -1,12 +1,5 @@
-﻿using DSUtil;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using OpenTraceability.Utility;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using GS1.Interfaces.Models.Identifiers;
-using DSUtil.Extensions;
 
 namespace OpenTraceability.Models.Identifiers
 {
@@ -14,7 +7,7 @@ namespace OpenTraceability.Models.Identifiers
     /// Global Location Number - used for identifying SCE's in Full Chain Traceability.
     /// </summary>
     [DataContract]
-    public class GLN : IGLN, IEquatable<GLN>, IComparable<GLN>
+    public class GLN : IEquatable<GLN>, IComparable<GLN>
     {
         private string _glnStr;
 
@@ -22,6 +15,7 @@ namespace OpenTraceability.Models.Identifiers
         {
 
         }
+
         public GLN(string glnStr)
         {
             try
@@ -72,6 +66,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public static string DetectGLNIssue(string glnStr)
         {
             try
@@ -153,7 +148,8 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        public static bool TryParse(string glnStr, out IGLN gln, out string error)
+
+        public static bool TryParse(string glnStr, out GLN gln, out string error)
         {
             try
             {
@@ -183,6 +179,7 @@ namespace OpenTraceability.Models.Identifiers
         }
 
         #region Overrides
+
         public static bool operator ==(GLN obj1, GLN obj2)
         {
             try
@@ -210,6 +207,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public static bool operator !=(GLN obj1, GLN obj2)
         {
             try
@@ -237,6 +235,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override bool Equals(object obj)
         {
             try
@@ -264,6 +263,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override int GetHashCode()
         {
             try
@@ -277,6 +277,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override string ToString()
         {
             try
@@ -289,33 +290,12 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
+
+        #endregion Overrides
 
         #region IEquatable<GLN>
-        public bool Equals(GLN gln)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, gln))
-                {
-                    return false;
-                }
 
-                if (Object.ReferenceEquals(this, gln))
-                {
-                    return true;
-                }
-
-                return this.IsEquals(gln);
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        public bool Equals(IGLN gln)
+        public bool Equals(GLN? gln)
         {
             try
             {
@@ -349,7 +329,10 @@ namespace OpenTraceability.Models.Identifiers
         {
             try
             {
-                if (gln == null) throw new ArgumentNullException(nameof(gln));
+                if (Object.ReferenceEquals(null, gln))
+                {
+                    return false;
+                }
 
                 if (this.ToString().ToLower() == gln.ToString().ToLower())
                 {
@@ -366,14 +349,19 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
 
-        #region IComparable 
-        public int CompareTo(GLN gln)
+        #endregion IEquatable<GLN>
+
+        #region IComparable
+
+        public int CompareTo(GLN? gln)
         {
             try
             {
-                if (gln == null) throw new ArgumentNullException(nameof(gln));
+                if (Object.ReferenceEquals(null, gln))
+                {
+                    throw new ArgumentNullException(nameof(gln));
+                }
 
                 long myInt64Hash = this.ToString().GetInt64HashCode();
                 long otherInt64Hash = gln.ToString().GetInt64HashCode();
@@ -388,6 +376,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
+
+        #endregion IComparable
     }
 }

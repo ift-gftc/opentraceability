@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml.Linq;
 
 namespace OpenTraceability.Utility
 {
@@ -56,7 +57,7 @@ namespace OpenTraceability.Utility
 
         public static UnitSystem GetUnitSystem(Int32 id)
         {
-            UnitSystem unitSystem = null;
+            UnitSystem? unitSystem = null;
             foreach (KeyValuePair<string, UnitSystem> kvp in UnitSystemMap)
             {
                 if (kvp.Value.ID == id)
@@ -66,7 +67,7 @@ namespace OpenTraceability.Utility
             }
             if (unitSystem == null)
             {
-                throw new DSException("Failed to located UnitSystem with id=" + id);
+                throw new Exception("Failed to located UnitSystem with id=" + id);
             }
             return (unitSystem);
         }
@@ -76,12 +77,18 @@ namespace OpenTraceability.Utility
         {
             ConcurrentDictionary<string, UnitSystem> unitSystems = new ConcurrentDictionary<string, UnitSystem>();
             EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-            DSXML xmlUnitSystems = loader.ReadXML("DSUtil", "DSUtil.StaticData.Data.UnitSystems.xml");
-            foreach (DSXML xmlUnitSystem in xmlUnitSystems)
+            XDocument xmlUnitSystems = loader.ReadXML("DSUtil", "DSUtil.StaticData.Data.UnitSystems.xml");
+            if (xmlUnitSystems.Root == null)
             {
-                UnitSystem unitSystem = new UnitSystem(xmlUnitSystem);
+                throw new Exception("Failed to load UnitSystems.xml because the XDocument.Root is null.");
+            }
+
+            foreach (XElement x in xmlUnitSystems.Elements())
+            {
+                UnitSystem unitSystem = new UnitSystem(x);
                 unitSystems.TryAdd(unitSystem.Name, unitSystem);
             }
+
             return (unitSystems);
         }
     }
@@ -89,25 +96,25 @@ namespace OpenTraceability.Utility
     [DataContract]
     public class UnitSystem
     {
-
         Dictionary<string, string> m_DimensionMap;
-        string m_Name;
-        Int32 m_ID;
 
         public UnitSystem()
         {
             m_DimensionMap = new Dictionary<string, string>();
         }
-        public UnitSystem(DSXML xml)
+
+        public UnitSystem(XElement xml)
         {
             m_DimensionMap = new Dictionary<string, string>();
-            Name = xml.Attribute("Name");
-            ID = xml.AttributeInt32Value("ID");
-            foreach (DSXML xmlDim in xml)
+            Name = xml.Attribute("Name")?.Value ?? string.Empty;
+            ID = int.Parse(xml.Attribute("ID")?.Value ?? string.Empty);
+
+            foreach (XElement xDim in xml.Elements())
             {
-                string dimension = xmlDim.Attribute("Dimension");
-                string subGroup = xmlDim.Attribute("SubGroup");
-                string unit = xmlDim.Attribute("Unit");
+                string dimension = xDim.Attribute("Dimension")?.Value ?? string.Empty;
+                string subGroup = xDim.Attribute("SubGroup")?.Value ?? string.Empty;
+                string unit = xDim.Attribute("Unit")?.Value ?? string.Empty;
+                
                 string key = "";
                 if (!string.IsNullOrEmpty(subGroup))
                 {
@@ -132,49 +139,24 @@ namespace OpenTraceability.Utility
             }
         }
 
-        [DataMember]
-        public string Name
-        {
-            get
-            {
-                return (m_Name);
-            }
-            set
-            {
-                m_Name = value;
-            }
+        public string Name { get; set; }
 
-        }
+        public Int32 ID { get; set; }
 
-        [DataMember]
-        public Int32 ID
-        {
-            get
-            {
-                return (m_ID);
-            }
-            set
-            {
-                m_ID = value;
-            }
-
-        }
-
-        [DataMember]
         public List<UnitSystemSubGroup> SubGroups { get; set; } = new List<UnitSystemSubGroup>();
 
-        public UOM GetSystemUOM(UOM uom)
+        public UOM? GetSystemUOM(UOM uom)
         {
             string uomUN = GetUOM(uom.UnitDimension, uom.SubGroup);
-            UOM uomSystem = UOMS.GetUOMFromUNCode(uomUN);
-            return (uomSystem);
+            UOM? systemUOM = UOMS.GetUOMFromUNCode(uomUN);
+            return (systemUOM);
         }
 
-        public UOM GetSystemUOM(UOM uom, string subGroup)
+        public UOM? GetSystemUOM(UOM uom, string subGroup)
         {
             string uomUN = GetUOM(uom.UnitDimension, subGroup);
-            UOM uomSystem = UOMS.GetUOMFromUNCode(uomUN);
-            return (uomSystem);
+            UOM? systemUOM = UOMS.GetUOMFromUNCode(uomUN);
+            return (systemUOM);
         }
 
         public string GetUOM(string dimension, string subGroup = "")
@@ -200,13 +182,10 @@ namespace OpenTraceability.Utility
     [DataContract]
     public class UnitSystemSubGroup
     {
-        [DataMember]
-        public string Dimension { get; set; }
+        public string Dimension { get; set; } = string.Empty;
 
-        [DataMember]
-        public string SubGroup { get; set; }
+        public string SubGroup { get; set; } = string.Empty;
 
-        [DataMember]
-        public string Unit { get; set; }
+        public string Unit { get; set; } = string.Empty;
     }
 }

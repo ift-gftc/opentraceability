@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTraceability.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,7 +51,7 @@ namespace OpenTraceability.Models.Identifiers
                     string gtinStr = String.Join(":", parts) + ":" + parts2[0] + "." + parts2[1];
                     gtinStr = gtinStr.Replace(":class:lgtin:", ":idpat:sgtin:");
                     this.SerialLotNumber = parts2[2];
-                    this.GTIN = IdentifierFactory.ParseGTIN(gtinStr);
+                    this.GTIN = new GTIN(gtinStr);
                 }
                 // else if this is a GS1 instance level epc (GS1 GTIN + Serial Number)
                 else if (epcStr.StartsWith("urn:epc:id:sgtin:"))
@@ -64,7 +65,7 @@ namespace OpenTraceability.Models.Identifiers
                     string gtinStr = String.Join(":", parts) + ":" + parts2[0] + "." + parts2[1];
                     gtinStr = gtinStr.Replace(":id:sgtin:", ":idpat:sgtin:");
                     this.SerialLotNumber = parts2[2];
-                    this.GTIN = IdentifierFactory.ParseGTIN(gtinStr);
+                    this.GTIN = new GTIN(gtinStr);
                 }
                 // else if this is a GDST / IBM private class level identifier (GTIN + Lot Number)
                 else if (epcStr.StartsWith("urn:") && epcStr.Contains(":product:lot:class:"))
@@ -78,7 +79,7 @@ namespace OpenTraceability.Models.Identifiers
                     string gtinStr = String.Join(":", parts) + ":" + parts2[0] + "." + parts2[1];
                     gtinStr = gtinStr.Replace(":product:lot:class:", ":product:class:");
                     this.SerialLotNumber = parts2[2];
-                    this.GTIN = IdentifierFactory.ParseGTIN(gtinStr);
+                    this.GTIN = new GTIN(gtinStr);
                 }
                 // else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number) 
                 else if (epcStr.StartsWith("urn:") && epcStr.Contains(":product:serial:obj:"))
@@ -92,7 +93,7 @@ namespace OpenTraceability.Models.Identifiers
                     string gtinStr = String.Join(":", parts) + ":" + parts2[0] + "." + parts2[1];
                     gtinStr = gtinStr.Replace(":product:serial:obj:", ":product:class:");
                     this.SerialLotNumber = parts2[2];
-                    this.GTIN = IdentifierFactory.ParseGTIN(gtinStr);
+                    this.GTIN = new GTIN(gtinStr);
                 }
                 else if (epcStr.StartsWith("urn:sscc:"))
                 {
@@ -128,7 +129,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public EPC(EPCType type, IGTIN gtin, string lotOrSerial)
+        public EPC(EPCType type, GTIN gtin, string lotOrSerial)
         {
             if (type == EPCType.Class)
             {
@@ -481,7 +482,7 @@ namespace OpenTraceability.Models.Identifiers
         #endregion
 
         #region IEquatable<EPC>
-        public bool Equals(EPC epc)
+        public bool Equals(EPC? epc)
         {
             try
             {
@@ -504,23 +505,14 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public bool Equals(EPC epc)
-        {
-            if (epc is null)
-            {
-                return false;
-            }
-            else
-            {
-                return this.ToString() == epc.ToString();
-            }
-        }
-
-        private bool IsEquals(EPC epc)
+        private bool IsEquals(EPC? epc)
         {
             try
             {
-                if (epc == null) throw new ArgumentNullException(nameof(epc));
+                if (Object.ReferenceEquals(null, epc))
+                {
+                    return false;
+                }
 
                 if (this.ToString().ToLower() == epc.ToString().ToLower())
                 {
@@ -544,13 +536,17 @@ namespace OpenTraceability.Models.Identifiers
         {
             try
             {
-                if (epc == null) throw new ArgumentNullException(nameof(epc));
+                if (Object.ReferenceEquals(null, epc))
+                {
+                    throw new ArgumentNullException(nameof(epc));
+                }
 
                 long myInt64Hash = this.ToString().GetInt64HashCode();
                 long otherInt64Hash = epc.ToString().GetInt64HashCode();
 
                 if (myInt64Hash > otherInt64Hash) return -1;
                 if (myInt64Hash == otherInt64Hash) return 0;
+
                 return 1;
             }
             catch (Exception Ex)

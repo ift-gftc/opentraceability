@@ -33,7 +33,12 @@ namespace OpenTraceability
         /// <param name="ex">The exception that was thrown.</param>
         public static void Error(Exception ex)
         {
-            throw new NotImplementedException();
+            if (OnLog != null)
+            {
+                OTLog log = new OTLog();
+                log.Level = LogLevel.Error;
+                log.Exception = ex;
+            }
         }
     }
 }

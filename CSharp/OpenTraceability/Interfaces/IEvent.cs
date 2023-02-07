@@ -35,7 +35,6 @@ namespace OpenTraceability.Interfaces
         List<EventSource> SourceList { get; set; }
         List<EventDestination> DestinationList { get; set; }
         List<Certificate> Certificates { get; set; }
-        List<Attachment> Attachments { get; set; }
         List<IEventKDE> KDEs { get; set; }
         List<SensorElement> SensorElementList { get; set; }
         EventILMD? ILMD { get; set; }

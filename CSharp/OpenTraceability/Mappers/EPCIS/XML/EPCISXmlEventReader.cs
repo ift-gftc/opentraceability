@@ -231,54 +231,44 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             string strValue = x.Value;
 
-            if (DateTimeOffset.TryParseExact(strValue, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dt))
+            for (int i = 1; i <= 6; i++)
             {
-                e.EventTime = dt;
+                string f = "".PadLeft(i,'f');
+                if (DateTimeOffset.TryParseExact(strValue, $"yyyy-MM-ddTHH:mm:ss.{f}Z", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dt))
+                {
+                    e.EventTime = dt;
+                    return;
+                }
+                else if (DateTimeOffset.TryParseExact(strValue, $"yyyy-MM-ddTHH:mm:ss.{f}K", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                {
+                    e.EventTime = dt;
+                    return;
+                }
             }
 
-            if (DateTimeOffset.TryParseExact(strValue, "yyyy-MM-ddTHH:mm:ss.ffZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-            {
-                e.EventTime = dt;
-            }
-
-            if (DateTimeOffset.TryParseExact(strValue, "yyyy-MM-ddTHH:mm:ss.fZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-            {
-                e.EventTime = dt;
-            }
-
-            if (DateTimeOffset.TryParseExact(strValue, "yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-            {
-                e.EventTime = dt;
-            }
-
-            throw new Exception("The event time {strValue} is not in a recognized format.");
+            throw new Exception($"The event time {strValue} is not in a recognized format.");
         }
 
         private static void ReadRecordTime(IEvent e, XElement x)
         {
             string strValue = x.Value;
 
-            if (DateTime.TryParseExact(strValue, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
+            for (int i = 1; i <= 6; i++)
             {
-                e.Recorded = dt;
+                string f = "".PadLeft(i, 'f');
+                if (DateTime.TryParseExact(strValue, $"yyyy-MM-ddTHH:mm:ss.{f}Z", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
+                {
+                    e.Recorded = dt;
+                    return;
+                }
+                else if (DateTime.TryParseExact(strValue, $"yyyy-MM-ddTHH:mm:ss.{f}K", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                {
+                    e.Recorded = dt;
+                    return;
+                }
             }
 
-            if (DateTime.TryParseExact(strValue, "yyyy-MM-ddTHH:mm:ss.ffZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-            {
-                e.Recorded = dt;
-            }
-
-            if (DateTime.TryParseExact(strValue, "yyyy-MM-ddTHH:mm:ss.fZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-            {
-                e.Recorded = dt;
-            }
-
-            if (DateTime.TryParseExact(strValue, "yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-            {
-                e.Recorded = dt;
-            }
-
-            throw new Exception("The event time {strValue} is not in a recognized format.");
+            throw new Exception($"The recorded time {strValue} is not in a recognized format.");
         }
 
         private static void ReadEventTimeZoneOffset(IEvent e, XElement x)
@@ -433,10 +423,10 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 EventProduct product = new EventProduct();
                 product.Type = EventProductType.Reference;
-                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value);
+                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
 
-                double quantity = double.Parse(xQuantity.Element("quantity")?.Value);
-                string uom = xQuantity.Element("uom")?.Value;
+                double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
+                string uom = xQuantity.Element("uom")?.Value ?? string.Empty;
                 product.Quantity = new Measurement(quantity, uom);
 
                 e.AddProduct(product);
@@ -449,10 +439,10 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 EventProduct product = new EventProduct();
                 product.Type = EventProductType.Child;
-                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value);
+                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
 
-                double quantity = double.Parse(xQuantity.Element("quantity")?.Value);
-                string uom = xQuantity.Element("uom")?.Value;
+                double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
+                string uom = xQuantity.Element("uom")?.Value ?? string.Empty;
                 product.Quantity = new Measurement(quantity, uom);
 
                 e.AddProduct(product);
@@ -465,10 +455,10 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 EventProduct product = new EventProduct();
                 product.Type = EventProductType.Input;
-                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value);
+                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
 
-                double quantity = double.Parse(xQuantity.Element("quantity")?.Value);
-                string uom = xQuantity.Element("uom")?.Value;
+                double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
+                string uom = xQuantity.Element("uom")?.Value ?? string.Empty;
                 product.Quantity = new Measurement(quantity, uom);
 
                 e.AddProduct(product);
@@ -481,10 +471,10 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 EventProduct product = new EventProduct();
                 product.Type = EventProductType.Output;
-                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value);
+                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
 
-                double quantity = double.Parse(xQuantity.Element("quantity")?.Value);
-                string uom = xQuantity.Element("uom")?.Value;
+                double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
+                string uom = xQuantity.Element("uom")?.Value ?? string.Empty;
                 product.Quantity = new Measurement(quantity, uom);
 
                 e.AddProduct(product);
@@ -521,13 +511,23 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         private static void ReadPersistentDisposition(IEvent e, XElement x)
         {
             e.PersistentDisposition = new PersistentDisposition();
-            foreach (var xSet in x.Elements("set"))
+
+            if (x.Element("set") != null)
             {
-                e.PersistentDisposition.Set.Add(xSet.Value);
+                e.PersistentDisposition.Set = new List<string>();
+                foreach (var xSet in x.Elements("set"))
+                {
+                    e.PersistentDisposition.Set.Add(xSet.Value);
+                }
             }
-            foreach (var xUnset in x.Elements("unset"))
+
+            if (x.Element("unset") != null)
             {
-                e.PersistentDisposition.Unset.Add(xUnset.Value);
+                e.PersistentDisposition.Unset = new List<string>();
+                foreach (var xUnset in x.Elements("unset"))
+                {
+                    e.PersistentDisposition.Unset.Add(xUnset.Value);
+                }
             }
         }
 
@@ -554,7 +554,8 @@ namespace OpenTraceability.Mappers.EPCIS.XML
 
         private static IEventKDE ReadKDE(XElement x)
         {
-            throw new NotImplementedException();
+            // we need to parse the xml into an event KDE here...
+
         }
     }
 }

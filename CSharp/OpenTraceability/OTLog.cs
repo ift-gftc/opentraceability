@@ -11,5 +11,7 @@ namespace OpenTraceability
     /// </summary>
     public class OTLog
     {
+        public LogLevel Level { get; internal set; }
+        public Exception Exception { get; internal set; }
     }
 }

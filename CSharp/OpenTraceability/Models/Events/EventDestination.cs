@@ -1,17 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GS1.Interfaces.Models.Events;
-using GS1.Interfaces.Models.Identifiers;
-using DSUtil;
+﻿using OpenTraceability.Utility;
+using System.ComponentModel;
 
 namespace OpenTraceability.Models.Events
 {
-    public class EventDestination : IEventDestination
+    public enum EventDestinationType
     {
-        public string RawType { get; set; }
+        Unknown = 0,
+
+        [Description("urn:epcglobal:cbv:sdt:owning_party")]
+        Owner = 1,
+
+        [Description("urn:epcglobal:cbv:sdt:possessing_party")]
+        Possessor = 2,
+
+        [Description("urn:epcglobal:cbv:sdt:location")]
+        Location = 3
+    }
+
+    public class EventDestination
+    {
+        public string? RawType { get; set; }
 
         public EventDestinationType Type
         {
@@ -20,7 +28,7 @@ namespace OpenTraceability.Models.Events
                 EventDestinationType type = EventDestinationType.Unknown;
                 foreach (EventDestinationType t in Enum.GetValues(typeof(EventDestinationType)))
                 {
-                    if (DSEnumUtil.GetEnumDescription(t).Trim().ToLower() == RawType.Trim().ToLower())
+                    if (EnumUtil.GetEnumDescription(t).Trim().ToLower() == RawType.Trim().ToLower())
                     {
                         type = t;
                     }
@@ -29,22 +37,11 @@ namespace OpenTraceability.Models.Events
             }
         }
 
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
         public EventDestination()
         {
 
-        }
-
-        public EventDestination(PGLN pgln, EventDestinationType type)
-        {
-            if (type != EventDestinationType.Owner && type != EventDestinationType.Possessor)
-            {
-                throw new Exception("When constructing a EventDestination from a PGLN, the EventDestinationType must either be Owner or Possessor.");
-            }
-
-            this.RawType = DSEnumUtil.GetEnumDescription(type);
-            this.Value = pgln.ToString();
         }
     }
 }
