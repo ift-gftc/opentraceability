@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<UnitSystems>
+	<UnitSystem Name="Metric (SI)" ID="1">
+		<UnitGroup Dimension="Weight" SubGroup="Small" Unit="GTM" />
+		<UnitGroup Dimension="Weight" SubGroup="Medium" Unit="KGM" />
+		<UnitGroup Dimension="Weight" SubGroup="Large" Unit="TNE" />
+
+		<UnitGroup Dimension="Number" SubGroup="Medium" Unit="EA" />
+
+		<UnitGroup Dimension="Volume" SubGroup="Small" Unit="CMQ" />
+		<UnitGroup Dimension="Volume" SubGroup="Medium" Unit="LTR" />
+		<UnitGroup Dimension="Volume" SubGroup="Large"  Unit="MTQ" />
+
+		<UnitGroup Dimension="Concentration" SubGroup="Medium" Unit="C34" />
+
+		<UnitGroup Dimension="Temperature" SubGroup="Medium" Unit="CEL" />
+
+		<UnitGroup Dimension="Time" SubGroup="Small" Unit="MIN" />
+		<UnitGroup Dimension="Time" SubGroup="Medium" Unit="DAY" />
+		<UnitGroup Dimension="Time" SubGroup="Large" Unit="MON" />
+
+		<UnitGroup Dimension="Length" SubGroup="Small" Unit="CMT" />
+		<UnitGroup Dimension="Length" SubGroup="Medium" Unit="MTR" />
+
+		<UnitGroup Dimension="Area" SubGroup="Small" Unit="CMK" />
+		<UnitGroup Dimension="Area" SubGroup="Medium" Unit="MTK" />
+	</UnitSystem>
+	<UnitSystem Name="Imperial (US)" ID="0">
+		<UnitGroup Dimension="Weight" SubGroup="Small" Unit="OZ" />
+		<UnitGroup Dimension="Weight" SubGroup="Medium" Unit="LBR" />
+		<UnitGroup Dimension="Weight" SubGroup="Large" Unit="STN" />
+
+		<UnitGroup Dimension="Number" SubGroup="Medium" Unit="EA" />
+
+		<UnitGroup Dimension="Volume" SubGroup="Small"  Unit="INQ" />
+		<UnitGroup Dimension="Volume" SubGroup="Medium" Unit="GLL" />
+		<UnitGroup Dimension="Volume" SubGroup="Large"  Unit="FTQ" />
+
+		<UnitGroup Dimension="Concentration" SubGroup="Medium" Unit="C34" />
+		<UnitGroup Dimension="Temperature" SubGroup="Medium" Unit="FAH" />
+
+		<UnitGroup Dimension="Time" SubGroup="Small" Unit="MIN" />
+		<UnitGroup Dimension="Time" SubGroup="Medium" Unit="DAY" />
+		<UnitGroup Dimension="Time" SubGroup="Large" Unit="MON" />
+
+		<UnitGroup Dimension="Length" SubGroup="Small" Unit="INH" />
+		<UnitGroup Dimension="Length" SubGroup="Medium" Unit="FOT" />
+
+		<UnitGroup Dimension="Area" SubGroup="Small" Unit="INK" />
+		<UnitGroup Dimension="Area" SubGroup="Medium" Unit="FTK" />
+	</UnitSystem>
+	<UnitSystem Name="Imperial (UK)" ID="2">
+		<UnitGroup Dimension="Weight" SubGroup="Small" Unit="OZ" />
+		<UnitGroup Dimension="Weight" SubGroup="Medium" Unit="LBR" />
+		<UnitGroup Dimension="Weight" SubGroup="Large" Unit="LTN" />
+
+		<UnitGroup Dimension="Number" SubGroup="Medium" Unit="EA" />
+
+		<UnitGroup Dimension="Volume" SubGroup="Small"  Unit="INQ" />
+		<UnitGroup Dimension="Volume" SubGroup="Medium" Unit="GLL" />
+		<UnitGroup Dimension="Volume" SubGroup="Large"  Unit="FTQ" />
+
+		<UnitGroup Dimension="Concentration" SubGroup="Medium" Unit="C34" />
+
+		<UnitGroup Dimension="Temperature" SubGroup="Medium" Unit="FAH" />
+
+		<UnitGroup Dimension="Time" SubGroup="Small" Unit="MIN" />
+		<UnitGroup Dimension="Time" SubGroup="Medium" Unit="DAY" />
+		<UnitGroup Dimension="Time" SubGroup="Large" Unit="MON" />
+
+		<UnitGroup Dimension="Length" SubGroup="Small" Unit="INH" />
+		<UnitGroup Dimension="Length" SubGroup="Medium" Unit="FOT" />
+
+		<UnitGroup Dimension="Area" SubGroup="Small" Unit="INK" />
+		<UnitGroup Dimension="Area" SubGroup="Medium" Unit="FTK" />
+	</UnitSystem>
+</UnitSystems>

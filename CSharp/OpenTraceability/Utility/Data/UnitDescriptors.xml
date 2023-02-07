@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<UnitDescriptors>
+  <UnitDescriptor Key="EA" Name="Each"/>
+  <UnitDescriptor Key="PK" Name="Pack"/>
+  <UnitDescriptor Key="CS" Name="Case"/>
+  <UnitDescriptor Key="PL" Name="Pallet"/>
+  <UnitDescriptor Key="TL" Name="Transport Load"/>
+</UnitDescriptors>

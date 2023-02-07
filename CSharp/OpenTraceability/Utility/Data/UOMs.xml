@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<UOMS>
+  
+  <!--UNCode is used for exchanging the UoM,  the source for the UNCode is https://www.unece.org/fileadmin/DAM/cefact/recommendations/rec20/rec20_rev3_Annex2e.pdf -->
+  <UOM ID="1" LegacyID="1"    Name="Grams" Abbreviation="g" Dimension="Weight" UNCode="GTM" SubGroup="Small" Factor="0.001" />
+  <UOM ID="17" LegacyID="17"    Name="Milligram" Abbreviation="mg" Dimension="Weight" UNCode="MGM" SubGroup="Small" Factor="0.000001" />
+  <UOM ID="16" LegacyID="16"    Name="Micrograms" Abbreviation="μg" Dimension="Weight" UNCode="MC" SubGroup="Small" Factor="0.000000001" />
+  <UOM ID="2" LegacyID="2"    Name="Pounds" Abbreviation="lb" Dimension="Weight" UNCode="LBR" SubGroup="Medium" Factor="0.4535924"/>
+  <UOM ID="3" LegacyID="3"    Name="Kilograms" Abbreviation="kg" Dimension="Weight" UNCode="KGM"  SubGroup="Medium"/>
+  <UOM ID="4" LegacyID="4"    Name="Metric Ton" Abbreviation="mt" Dimension="Weight" UNCode="TNE" SubGroup="Large" Factor="1000.0"/>
+  <UOM ID="5"                 Name="US Ton" Abbreviation="ust" Dimension="Weight" UNCode="STN" SubGroup="Large" Factor="907.1847"/>
+  <UOM ID="6"                 Name="UK Ton" Abbreviation="ukt" Dimension="Weight" UNCode="LTN" SubGroup="Large" Factor="1016.047"/>
+  <UOM ID="7" LegacyID="13"   Name="Ounce" Abbreviation="oz" Dimension="Weight" UNCode="OZ" SubGroup="Small" Numerator="0.4535924" Denominator="16.0" />
+  <UOM ID="8"                 Name="Troy Ounce" Abbreviation="toz" Dimension="Weight" UNCode="APZ" SubGroup="Small" Factor="0.031103477" />
+
+  <UOM ID="15" LegacyID="7" Name="Each" Abbreviation="ea" Dimension="Number" UNCode="EA" SubGroup="Medium" />
+
+  <UOM ID="21" LegacyID="5"   Name="UK Gallons" Abbreviation="ukga" Dimension="Volume" UNCode="GLI" SubGroup="Medium" Factor="0.004546092" />
+  <UOM ID="22"                Name="US Gallons" Abbreviation="usga" Dimension="Volume" UNCode="GLL" SubGroup="Medium" Factor="0.003785412" />
+  <UOM ID="23" LegacyID="6"   Name="Liters" Abbreviation="L" Dimension="Volume" UNCode="LTR" SubGroup="Medium" Factor="0.001"/>
+  <UOM ID="24"                Name="Cubic Meter" Abbreviation="m3" Dimension="Volume" UNCode="MTQ" SubGroup="Large" />
+  <UOM ID="25"                Name="Cubic Inch"  Abbreviation="in3" Dimension="Volume" UNCode="INQ" SubGroup="Small" Factor="1.63871E-05" />
+  <UOM ID="25"                Name="Cubic cm"  Abbreviation="cm3" Dimension="Volume" UNCode="CMQ" SubGroup="Small" Factor="0.000001" />
+  <UOM ID="26"                Name="Cubic Foot" Abbreviation="ft3" Dimension="Volume" UNCode="FTQ" SubGroup="Large" Factor="0.028316847"/>
+  <UOM ID="27"                Name="Cubic Yard" Abbreviation="yards3" Dimension="Volume" UNCode="YRQ"  SubGroup="Large" Factor="0.764554858"/>
+  <UOM ID="30" LegacyID="14" Name="Ounce Fluid" Abbreviation="floz" Dimension="Volume" UNCode="OZA" SubGroup="Small" Factor="0.00002957353"/>
+  <UOM ID="31" LegacyID="15" Name="Cup" Abbreviation="c" Dimension="Volume" UNCode="CU" SubGroup="Small" Factor="0.000236588" />
+  <UOM ID="32" LegacyID="16" Name="Pint" Abbreviation="pt" Dimension="Volume" UNCode="PT" SubGroup="Medium" Factor="0.0004731765"/>
+  <UOM ID="33" LegacyID="17" Name="Quart" Abbreviation="qt" Dimension="Volume" UNCode="QT" SubGroup="Medium" Factor="0.0009463529" />
+  <UOM ID="34" LegacyID="19" Name="barrel (US) " Abbreviation="bll" Dimension="Volume" UNCode="BLL" SubGroup="Large" Factor="0.158987304" />
+
+  <UOM ID="40" Name="Molarity" Abbreviation="moles" Dimension="Concentration" UNCode="C34" SubGroup="Medium" />
+  <UOM ID="41" Name="grams/L"  Abbreviation="g/L"   Dimension="Concentration" UNCode="GL" SubGroup="Medium" Factor="0.028169014"/>
+
+  <UOM ID="50" Name="Celcius" Abbreviation="C°" Dimension="Temperature" UNCode="CEL" SubGroup="Medium" />
+  <UOM ID="51" Name="Fahrenheit" Abbreviation="F°" Dimension="Temperature" UNCode="FAH" SubGroup="Medium" A="-160" B="5" C="9" D="0.0"/>
+
+
+  <UOM ID="60" Name="Milliseconds" Abbreviation="ms" Dimension="Time" UNCode="C26" SubGroup="Small" Factor="0.001"/>
+  <UOM ID="61" Name="Seconds" Abbreviation="s" Dimension="Time" UNCode="SEC" SubGroup="Small" />
+  <UOM ID="62" Name="Minutes" Abbreviation="min" Dimension="Time" UNCode="MIN" SubGroup="Small" Factor="60"/>
+  <UOM ID="63" Name="Hours" Abbreviation="hrs" Dimension="Time" UNCode="HUR" SubGroup="Medium" Factor="3600"/>
+  <UOM ID="64" Name="Days" Abbreviation="days" Dimension="Time" UNCode="DAY" SubGroup="Medium" Factor="86400"/>
+  <UOM ID="65" Name="Weeks" Abbreviation="wks" Dimension="Time" UNCode="WEE" SubGroup="Large" Factor="604800"/>
+  <UOM ID="66" Name="Months" Abbreviation="months" Dimension="Time" UNCode="MON" SubGroup="Large" Factor="2592000"/>
+  <UOM ID="67" Name="Years" Abbreviation="years" Dimension="Time" UNCode="ANN" SubGroup="Large" Factor="31536000"/>
+
+  <UOM ID="70" Name="Inches" Abbreviation="in" Dimension="Length" UNCode="INH" SubGroup="Small" Factor="0.0254" />
+  <UOM ID="71" Name="Feet" Abbreviation="ft" Dimension="Length" UNCode="FOT" SubGroup="Medium" Factor="0.3048"/>
+  <UOM ID="72" Name="Yards" Abbreviation="yards" Dimension="Length" UNCode="YRD" SubGroup="Medium" Factor="0.9144" />
+  <UOM ID="73" Name="Millimeter" Abbreviation="mm" Dimension="Length" UNCode="MMT" SubGroup="Small" Factor="0.001"/>
+  <UOM ID="74" Name="Centimeter" Abbreviation="cm" Dimension="Length" UNCode="CMT" SubGroup="Small" Factor="0.01"/>
+  <UOM ID="75" Name="Meters" Abbreviation="m" Dimension="Length" UNCode="MTR" SubGroup="Medium" />
+  <UOM ID="76" Name="Kilometers" Abbreviation="km" Dimension="Length" UNCode="KMT" SubGroup="Large" Factor="1000" />
+ 
+
+  <UOM ID="80" Name="Square Inch " Abbreviation="in2" Dimension="Area" UNCode="INK" SubGroup="Small" Factor="0.00064516" />
+  <UOM ID="81" Name="Square Foot" Abbreviation="ft2" Dimension="Area" UNCode="FTK" SubGroup="Medium" Factor="0.09290304"/>
+  <UOM ID="82" Name="Square Yard" Abbreviation="yard2" Dimension="Area" UNCode="YDK" SubGroup="Medium" Factor="0.83612736" />
+  <UOM ID="83" Name="Square Millimeter" Abbreviation="mm2" Dimension="Area" UNCode="MMK" SubGroup="Small" Factor="0.000001"/>
+  <UOM ID="84" Name="Square Centimeter " Abbreviation="cm2" Dimension="Area" UNCode="CMK" SubGroup="Small" Factor="0.0001"/>
+  <UOM ID="85" Name="Square Meter" Abbreviation="m2" Dimension="Area" UNCode="MTK" SubGroup="Medium" />
+
+  <UOM ID="100" Name="Kilo-Joules" Abbreviation="kJ" Dimension="Energy" UNCode="JOU" />
+  <UOM ID="101" Name="Kilo-Calories" Abbreviation="kCal" Dimension="Energy" UNCode="D70" Factor="4.1868" />
+</UOMS>

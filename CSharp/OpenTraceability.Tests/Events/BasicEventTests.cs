@@ -1,0 +1,37 @@
+﻿using OpenTraceability.Mappers;
+using OpenTraceability.Models.Events;
+using OpenTraceability.Models.Events.KDEs;
+using System.Xml.Linq;
+
+namespace OpenTraceability.Tests.Events
+{
+    /// <summary>
+    /// This is a test class for handling the basic building and using of events.
+    /// </summary>
+    [TestFixture]
+    public class BasicEventTests
+    {
+        /// <summary>
+        /// Tests the building of an object event and manipulating it in C#.
+        /// </summary>
+        [Test]
+        [TestCase("object_event_all_possible_fields.xml")]
+        public void XML(string file)
+        {
+            // initialize the libraries.
+            OpenTraceability.Initialize();
+
+            // read object events from test data specified in the file argument
+            string xmlObjectEvents = OpenTraceabilityTests.ReadTestData(file);
+
+            // deserialize object events into C# models
+            EPCISDocument doc = EPCISMappers.EPCISDocument.XML.Map(xmlObjectEvents);
+
+            // serialize C# models into xml
+            string xmlObjectEventsAfter = EPCISMappers.EPCISDocument.XML.Map(doc); 
+
+            // check that the XMLs match
+            OpenTraceabilityTests.CompareXML(xmlObjectEvents, xmlObjectEventsAfter);
+        }
+    }
+}

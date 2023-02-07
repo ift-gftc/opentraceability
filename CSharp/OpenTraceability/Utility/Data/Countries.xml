@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Countries>
+
+  <Country  Name="United States, Norway, Russia" Abbreviation="M6" AlternativeName="" Alpha3="M6" ISO="994" CultureInfoCode="en-US" region="World" sub-region="World" intermediate-region="World" />
+  <Country  Name="Canada, China" Abbreviation="M5" AlternativeName="" Alpha3="M5" ISO="995" CultureInfoCode="en-US" region="World" sub-region="World" intermediate-region="World" />
+  <Country  Name="United States, China" Abbreviation="M4" AlternativeName="" Alpha3="M4" ISO="996" CultureInfoCode="en-US" region="World" sub-region="World" intermediate-region="World" />
+  <Country  Name="China, India, Mexico, Peru, Thailand" Abbreviation="M3" AlternativeName="" Alpha3="M3" ISO="997" CultureInfoCode="en-US" region="World" sub-region="World" intermediate-region="World" />
+  <Country  Name="United States, Russia" Abbreviation="M2" AlternativeName="" Alpha3="M2" ISO="998" CultureInfoCode="en-US" region="World" sub-region="World" intermediate-region="World" />
+  <Country  Name="United States, Canada" Abbreviation="M1" AlternativeName="" Alpha3="M1" ISO="999" CultureInfoCode="en-US" region="World" sub-region="World" intermediate-region="World" />
+
+  <Country  Name="" Abbreviation="00" AlternativeName="" Alpha3="000" ISO="0" CultureInfoCode="en-US" region="World" sub-region="World" intermediate-region="World" />
+  <Country  Name="International Waters" Abbreviation="ZZ" Alpha3="001" ISO="1" CultureInfoCode="en-US" region="World" sub-region="World" intermediate-region="World" />
+  <Country  Name="Djibouti" Abbreviation="DJ" Alpha3="DJI" ISO="262" CultureInfoCode="fr-DJ" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Eritrea" Abbreviation="ER" Alpha3="ERI" ISO="232" CultureInfoCode="en-ER" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Ethiopia" Abbreviation="ET" Alpha3="ETH" ISO="231" CultureInfoCode="et" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Afghanistan" Abbreviation="AF" Alpha3="AFG" ISO="4" CultureInfoCode="af" region="Asia" sub-region="Southern Asia" intermediate-region="" />
+  <Country  Name="Namibia" Abbreviation="NA" Alpha3="NAM" ISO="516" CultureInfoCode="en-NA" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Southern Africa" />
+  <Country  Name="South Africa" Abbreviation="ZA" Alpha3="ZAF" ISO="710" CultureInfoCode="en-ZA" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Southern Africa" />
+  <Country  Name="Cameroon" Abbreviation="CM" Alpha3="CMR" ISO="120" CultureInfoCode="en-CM" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Middle Africa" />
+  <Country  Name="Ghana" Abbreviation="GH" Alpha3="GHA" ISO="288" CultureInfoCode="en-GH" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Armenia" Abbreviation="AM" Alpha3="ARM" ISO="51" CultureInfoCode="am" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Argentina" Abbreviation="AR" Alpha3="ARG" ISO="32" CultureInfoCode="ar" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="United Arab Emirates" Abbreviation="AE" Alpha3="ARE" ISO="784" CultureInfoCode="ar-AE" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Bahrain" Abbreviation="BH" Alpha3="BHR" ISO="48" CultureInfoCode="ar-BH" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Algeria" Abbreviation="DZ" Alpha3="DZA" ISO="12" CultureInfoCode="dz" region="Africa" sub-region="Northern Africa" intermediate-region="" />
+  <Country  Name="Egypt" Abbreviation="EG" Alpha3="EGY" ISO="818" CultureInfoCode="ar-EG" region="Africa" sub-region="Northern Africa" intermediate-region="" />
+  <Country  Name="Israel" Abbreviation="IL" Alpha3="ISR" ISO="376" CultureInfoCode="en-IL" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Iraq" Abbreviation="IQ" Alpha3="IRQ" ISO="368" CultureInfoCode="lrc-IQ" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Jordan" Abbreviation="JO" Alpha3="JOR" ISO="400" CultureInfoCode="ar-JO" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Comoros" Abbreviation="KM" Alpha3="COM" ISO="174" CultureInfoCode="km" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Kuwait" Abbreviation="KW" Alpha3="KWT" ISO="414" CultureInfoCode="kw" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Lebanon" Abbreviation="LB" Alpha3="LBN" ISO="422" CultureInfoCode="lb" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Libya" Abbreviation="LY" Alpha3="LBY" ISO="434" CultureInfoCode="ar-LY" region="Africa" sub-region="Northern Africa" intermediate-region="" />
+  <Country  Name="Morocco" Abbreviation="MA" Alpha3="MAR" ISO="504" CultureInfoCode="fr-MA" region="Africa" sub-region="Northern Africa" intermediate-region="" />
+  <Country  Name="Mauritania" Abbreviation="MR" Alpha3="MRT" ISO="478" CultureInfoCode="mr" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Oman" Abbreviation="OM" Alpha3="OMN" ISO="512" CultureInfoCode="om" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Palestine, State of" Abbreviation="PS" Alpha3="PSE" ISO="275" CultureInfoCode="ps" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Qatar" Abbreviation="QA" Alpha3="QAT" ISO="634" CultureInfoCode="ar-QA" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Saudi Arabia" Abbreviation="SA" Alpha3="SAU" ISO="682" CultureInfoCode="sa" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Sudan" Abbreviation="SD" Alpha3="SDN" ISO="729" CultureInfoCode="sd" region="Africa" sub-region="Northern Africa" intermediate-region="" />
+  <Country  Name="Somalia" Abbreviation="SO" Alpha3="SOM" ISO="706" CultureInfoCode="so" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="South Sudan" Abbreviation="SS" Alpha3="SSD" ISO="728" CultureInfoCode="ss" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Syrian Arab Republic" Abbreviation="SY" Alpha3="SYR" ISO="760" CultureInfoCode="fr-SY" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Chad" Abbreviation="TD" Alpha3="TCD" ISO="148" CultureInfoCode="fr-TD" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Middle Africa" />
+  <Country  Name="Tunisia" Abbreviation="TN" Alpha3="TUN" ISO="788" CultureInfoCode="tn" region="Africa" sub-region="Northern Africa" intermediate-region="" />
+  <Country  Name="Yemen" Abbreviation="YE" Alpha3="YEM" ISO="887" CultureInfoCode="ar-YE" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Chile" Abbreviation="CL" Alpha3="CHL" ISO="152" CultureInfoCode="es-CL" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="American Samoa" Abbreviation="AS" Alpha3="ASM" ISO="16" CultureInfoCode="as" region="Oceania" sub-region="Polynesia" intermediate-region="" />
+  <Country  Name="India" Abbreviation="IN" Alpha3="IND" ISO="356" CultureInfoCode="en-IN" region="Asia" sub-region="Southern Asia" intermediate-region="" />
+  <Country  Name="Tanzania, United Republic of" Abbreviation="TZ" Alpha3="TZA" ISO="834" CultureInfoCode="en-TZ" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Spain" Abbreviation="ES" Alpha3="ESP" ISO="724" CultureInfoCode="es" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Azerbaijan" Abbreviation="AZ" Alpha3="AZE" ISO="31" CultureInfoCode="az" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Bosnia and Herzegovina" Abbreviation="BA" Alpha3="BIH" ISO="70" CultureInfoCode="ba" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Russian Federation" AlternativeName="Russia" Abbreviation="RU" Alpha3="RUS" ISO="643" CultureInfoCode="ru" region="Europe" sub-region="Eastern Europe" intermediate-region="" />
+  <Country  Name="Belgium" Abbreviation="BE" Alpha3="BEL" ISO="56" CultureInfoCode="be" region="Europe" sub-region="Western Europe" intermediate-region="" />
+  <Country  Name="Belarus" Abbreviation="BY" Alpha3="BLR" ISO="112" CultureInfoCode="ru-BY" region="Europe" sub-region="Eastern Europe" intermediate-region="" />
+  <Country  Name="Zambia" Abbreviation="ZM" Alpha3="ZMB" ISO="894" CultureInfoCode="en-ZM" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Bulgaria" Abbreviation="BG" Alpha3="BGR" ISO="100" CultureInfoCode="bg" region="Europe" sub-region="Eastern Europe" intermediate-region="" />
+  <Country  Name="Nigeria" Abbreviation="NG" Alpha3="NGA" ISO="566" CultureInfoCode="en-NG" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Bermuda" Abbreviation="BM" Alpha3="BMU" ISO="60" CultureInfoCode="bm" region="Americas" sub-region="Northern America" intermediate-region="" />
+  <Country  Name="Mali" Abbreviation="ML" Alpha3="MLI" ISO="466" CultureInfoCode="ml" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Brunei Darussalam" Abbreviation="BN" Alpha3="BRN" ISO="96" CultureInfoCode="bn" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Bangladesh" Abbreviation="BD" Alpha3="BGD" ISO="50" CultureInfoCode="bn-BD" region="Asia" sub-region="Southern Asia" intermediate-region="" />
+  <Country  Name="Bolivia (Plurinational State of)" Abbreviation="BO" Alpha3="BOL" ISO="68" CultureInfoCode="bo" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="China" Abbreviation="CN" Alpha3="CHN" ISO="156" CultureInfoCode="zh-CN" region="Asia" sub-region="Eastern Asia" intermediate-region="" />
+  <Country  Name="Brazil" Abbreviation="BR" Alpha3="BRA" ISO="76" CultureInfoCode="br" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="France" Abbreviation="FR" Alpha3="FRA" ISO="250" CultureInfoCode="fr" region="Europe" sub-region="Western Europe" intermediate-region="" />
+  <Country  Name="Bahamas" Abbreviation="BS" Alpha3="BHS" ISO="44" CultureInfoCode="bs" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Canada" Abbreviation="CA" Alpha3="CAN" ISO="124" CultureInfoCode="ca" region="Americas" sub-region="Northern America" intermediate-region="" />
+  <Country  Name="Andorra" Abbreviation="AD" Alpha3="AND" ISO="20" CultureInfoCode="ca-AD" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Italy" Abbreviation="IT" Alpha3="ITA" ISO="380" CultureInfoCode="it" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Uganda" Abbreviation="UG" Alpha3="UGA" ISO="800" CultureInfoCode="ug" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="United States" Abbreviation="US" Alpha3="USA" ISO="840" CultureInfoCode="en-US" region="Americas" sub-region="Northern America" intermediate-region="" />
+  <Country  Name="Colombia" Abbreviation="CO" Alpha3="COL" ISO="170" CultureInfoCode="co" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="Czechia" Abbreviation="CZ" Alpha3="CZE" ISO="203" CultureInfoCode="cs-CZ" region="Europe" sub-region="Eastern Europe" intermediate-region="" />
+  <Country  Name="Cuba" Abbreviation="CU" Alpha3="CUB" ISO="192" CultureInfoCode="cu" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Cyprus" Abbreviation="CY" Alpha3="CYP" ISO="196" CultureInfoCode="cy" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="United Kingdom of Great Britain and Northern Ireland" AlternativeName="United Kingdom" Abbreviation="GB" Alpha3="GBR" ISO="826" CultureInfoCode="en-GB" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Denmark" Abbreviation="DK" Alpha3="DNK" ISO="208" CultureInfoCode="en-DK" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Greenland" Abbreviation="GL" Alpha3="GRL" ISO="304" CultureInfoCode="gl" region="Americas" sub-region="Northern America" intermediate-region="" />
+  <Country  Name="Kenya" Abbreviation="KE" Alpha3="KEN" ISO="404" CultureInfoCode="en-KE" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Germany" Abbreviation="DE" Alpha3="DEU" ISO="276" CultureInfoCode="de" region="Europe" sub-region="Western Europe" intermediate-region="" />
+  <Country  Name="Austria" Abbreviation="AT" Alpha3="AUT" ISO="40" CultureInfoCode="en-AT" region="Europe" sub-region="Western Europe" intermediate-region="" />
+  <Country  Name="Switzerland" Abbreviation="CH" Alpha3="CHE" ISO="756" CultureInfoCode="en-CH" region="Europe" sub-region="Western Europe" intermediate-region="" />
+  <Country  Name="Liechtenstein" Abbreviation="LI" Alpha3="LIE" ISO="438" CultureInfoCode="de-LI" region="Europe" sub-region="Western Europe" intermediate-region="" />
+  <Country  Name="Luxembourg" Abbreviation="LU" Alpha3="LUX" ISO="442" CultureInfoCode="lu" region="Europe" sub-region="Western Europe" intermediate-region="" />
+  <Country  Name="Niger" Abbreviation="NE" Alpha3="NER" ISO="562" CultureInfoCode="ne" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Maldives" Abbreviation="MV" Alpha3="MDV" ISO="462" CultureInfoCode="dv-MV" region="Asia" sub-region="Southern Asia" intermediate-region="" />
+  <Country  Name="Senegal" Abbreviation="SN" Alpha3="SEN" ISO="686" CultureInfoCode="sn" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Bhutan" Abbreviation="BT" Alpha3="BTN" ISO="64" CultureInfoCode="dz-BT" region="Asia" sub-region="Southern Asia" intermediate-region="" />
+  <Country  Name="Estonia" Abbreviation="EE" Alpha3="EST" ISO="233" CultureInfoCode="ee" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Togo" Abbreviation="TG" Alpha3="TGO" ISO="768" CultureInfoCode="tg" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Greece" Abbreviation="GR" Alpha3="GRC" ISO="300" CultureInfoCode="el-GR" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Antigua and Barbuda" Abbreviation="AG" Alpha3="ATG" ISO="28" CultureInfoCode="en-AG" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Anguilla" Abbreviation="AI" Alpha3="AIA" ISO="660" CultureInfoCode="en-AI" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Australia" Abbreviation="AU" Alpha3="AUS" ISO="36" CultureInfoCode="en-AU" region="Oceania" sub-region="Australia and New Zealand" intermediate-region="" />
+  <Country  Name="Barbados" Abbreviation="BB" Alpha3="BRB" ISO="52" CultureInfoCode="en-BB" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Burundi" Abbreviation="BI" Alpha3="BDI" ISO="108" CultureInfoCode="en-BI" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Botswana" Abbreviation="BW" Alpha3="BWA" ISO="72" CultureInfoCode="en-BW" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Southern Africa" />
+  <Country  Name="Belize" Abbreviation="BZ" Alpha3="BLZ" ISO="84" CultureInfoCode="en-BZ" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Central America" />
+  <Country  Name="Cocos (Keeling) Islands" Abbreviation="CC" Alpha3="CCK" ISO="166" CultureInfoCode="en-CC" region="Oceania" sub-region="Australia and New Zealand" intermediate-region="" />
+  <Country  Name="Cook Islands" Abbreviation="CK" Alpha3="COK" ISO="184" CultureInfoCode="en-CK" region="Oceania" sub-region="Polynesia" intermediate-region="" />
+  <Country  Name="Christmas Island" Abbreviation="CX" Alpha3="CXR" ISO="162" CultureInfoCode="en-CX" region="Oceania" sub-region="Australia and New Zealand" intermediate-region="" />
+  <Country  Name="Dominica" Abbreviation="DM" Alpha3="DMA" ISO="212" CultureInfoCode="en-DM" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Finland" Abbreviation="FI" Alpha3="FIN" ISO="246" CultureInfoCode="fi" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Fiji" Abbreviation="FJ" Alpha3="FJI" ISO="242" CultureInfoCode="en-FJ" region="Oceania" sub-region="Melanesia" intermediate-region="" />
+  <Country  Name="Falkland Islands (Malvinas)" Abbreviation="FK" Alpha3="FLK" ISO="238" CultureInfoCode="en-FK" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="Micronesia (Federated States of)" Abbreviation="FM" Alpha3="FSM" ISO="583" CultureInfoCode="en-FM" region="Oceania" sub-region="Micronesia" intermediate-region="" />
+  <Country  Name="Grenada" Abbreviation="GD" Alpha3="GRD" ISO="308" CultureInfoCode="gd" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Guernsey" Abbreviation="GG" Alpha3="GGY" ISO="831" CultureInfoCode="en-GG" region="Europe" sub-region="Northern Europe" intermediate-region="Channel Islands" />
+  <Country  Name="Gibraltar" Abbreviation="GI" Alpha3="GIB" ISO="292" CultureInfoCode="en-GI" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Gambia" Abbreviation="GM" Alpha3="GMB" ISO="270" CultureInfoCode="en-GM" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Guam" Abbreviation="GU" Alpha3="GUM" ISO="316" CultureInfoCode="gu" region="Oceania" sub-region="Micronesia" intermediate-region="" />
+  <Country  Name="Guyana" Abbreviation="GY" Alpha3="GUY" ISO="328" CultureInfoCode="en-GY" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="Hong Kong" Abbreviation="HK" Alpha3="HKG" ISO="344" CultureInfoCode="en-HK" region="Asia" sub-region="Eastern Asia" intermediate-region="" />
+  <Country  Name="Indonesia" Abbreviation="ID" Alpha3="IDN" ISO="360" CultureInfoCode="id" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Ireland" Abbreviation="IE" Alpha3="IRL" ISO="372" CultureInfoCode="en-IE" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Isle of Man" Abbreviation="IM" Alpha3="IMN" ISO="833" CultureInfoCode="en-IM" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="British Indian Ocean Territory" Abbreviation="IO" Alpha3="IOT" ISO="86" CultureInfoCode="en-IO" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Jersey" Abbreviation="JE" Alpha3="JEY" ISO="832" CultureInfoCode="en-JE" region="Europe" sub-region="Northern Europe" intermediate-region="Channel Islands" />
+  <Country  Name="Jamaica" Abbreviation="JM" Alpha3="JAM" ISO="388" CultureInfoCode="en-JM" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Kiribati" Abbreviation="KI" Alpha3="KIR" ISO="296" CultureInfoCode="ki" region="Oceania" sub-region="Micronesia" intermediate-region="" />
+  <Country  Name="Saint Kitts and Nevis" Abbreviation="KN" Alpha3="KNA" ISO="659" CultureInfoCode="kn" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Cayman Islands" Abbreviation="KY" Alpha3="CYM" ISO="136" CultureInfoCode="ky" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Saint Lucia" Abbreviation="LC" Alpha3="LCA" ISO="662" CultureInfoCode="en-LC" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Liberia" Abbreviation="LR" Alpha3="LBR" ISO="430" CultureInfoCode="en-LR" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Lesotho" Abbreviation="LS" Alpha3="LSO" ISO="426" CultureInfoCode="en-LS" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Southern Africa" />
+  <Country  Name="Madagascar" Abbreviation="MG" Alpha3="MDG" ISO="450" CultureInfoCode="mg" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Marshall Islands" Abbreviation="MH" Alpha3="MHL" ISO="584" CultureInfoCode="en-MH" region="Oceania" sub-region="Micronesia" intermediate-region="" />
+  <Country  Name="Macao" Abbreviation="MO" Alpha3="MAC" ISO="446" CultureInfoCode="en-MO" region="Asia" sub-region="Eastern Asia" intermediate-region="" />
+  <Country  Name="Northern Mariana Islands" Abbreviation="MP" Alpha3="MNP" ISO="580" CultureInfoCode="en-MP" region="Oceania" sub-region="Micronesia" intermediate-region="" />
+  <Country  Name="Montserrat" Abbreviation="MS" Alpha3="MSR" ISO="500" CultureInfoCode="ms" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Malta" Abbreviation="MT" Alpha3="MLT" ISO="470" CultureInfoCode="mt" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Mauritius" Abbreviation="MU" Alpha3="MUS" ISO="480" CultureInfoCode="en-MU" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Malawi" Abbreviation="MW" Alpha3="MWI" ISO="454" CultureInfoCode="en-MW" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Malaysia" Abbreviation="MY" Alpha3="MYS" ISO="458" CultureInfoCode="my" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Norfolk Island" Abbreviation="NF" Alpha3="NFK" ISO="574" CultureInfoCode="en-NF" region="Oceania" sub-region="Australia and New Zealand" intermediate-region="" />
+  <Country  Name="Netherlands" Abbreviation="NL" Alpha3="NLD" ISO="528" CultureInfoCode="nl" region="Europe" sub-region="Western Europe" intermediate-region="" />
+  <Country  Name="Nauru" Abbreviation="NR" Alpha3="NRU" ISO="520" CultureInfoCode="nr" region="Oceania" sub-region="Micronesia" intermediate-region="" />
+  <Country  Name="Niue" Abbreviation="NU" Alpha3="NIU" ISO="570" CultureInfoCode="en-NU" region="Oceania" sub-region="Polynesia" intermediate-region="" />
+  <Country  Name="New Zealand" Abbreviation="NZ" Alpha3="NZL" ISO="554" CultureInfoCode="en-NZ" region="Oceania" sub-region="Australia and New Zealand" intermediate-region="" />
+  <Country  Name="Papua New Guinea" Abbreviation="PG" Alpha3="PNG" ISO="598" CultureInfoCode="en-PG" region="Oceania" sub-region="Melanesia" intermediate-region="" />
+  <Country  Name="Philippines" Abbreviation="PH" Alpha3="PHL" ISO="608" CultureInfoCode="en-PH" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Pakistan" Abbreviation="PK" Alpha3="PAK" ISO="586" CultureInfoCode="en-PK" region="Asia" sub-region="Southern Asia" intermediate-region="" />
+  <Country  Name="Pitcairn" Abbreviation="PN" Alpha3="PCN" ISO="612" CultureInfoCode="en-PN" region="Oceania" sub-region="Polynesia" intermediate-region="" />
+  <Country  Name="Puerto Rico" Abbreviation="PR" Alpha3="PRI" ISO="630" CultureInfoCode="en-PR" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Palau" Abbreviation="PW" Alpha3="PLW" ISO="585" CultureInfoCode="en-PW" region="Oceania" sub-region="Micronesia" intermediate-region="" />
+  <Country  Name="Rwanda" Abbreviation="RW" Alpha3="RWA" ISO="646" CultureInfoCode="rw" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Solomon Islands" Abbreviation="SB" Alpha3="SLB" ISO="90" CultureInfoCode="en-SB" region="Oceania" sub-region="Melanesia" intermediate-region="" />
+  <Country  Name="Seychelles" Abbreviation="SC" Alpha3="SYC" ISO="690" CultureInfoCode="en-SC" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Sweden" Abbreviation="SE" Alpha3="SWE" ISO="752" CultureInfoCode="se" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Singapore" Abbreviation="SG" Alpha3="SGP" ISO="702" CultureInfoCode="sg" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Saint Helena, Ascension and Tristan da Cunha" Abbreviation="SH" Alpha3="SHN" ISO="654" CultureInfoCode="en-SH" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Slovenia" Abbreviation="SI" Alpha3="SVN" ISO="705" CultureInfoCode="si" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Sierra Leone" Abbreviation="SL" Alpha3="SLE" ISO="694" CultureInfoCode="sl" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Sint Maarten (Dutch part)" Abbreviation="SX" Alpha3="SXM" ISO="534" CultureInfoCode="en-SX" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Eswatini" Abbreviation="SZ" Alpha3="SWZ" ISO="748" CultureInfoCode="en-SZ" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Southern Africa" />
+  <Country  Name="Turks and Caicos Islands" Abbreviation="TC" Alpha3="TCA" ISO="796" CultureInfoCode="en-TC" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Tokelau" Abbreviation="TK" Alpha3="TKL" ISO="772" CultureInfoCode="tk" region="Oceania" sub-region="Polynesia" intermediate-region="" />
+  <Country  Name="Tonga" Abbreviation="TO" Alpha3="TON" ISO="776" CultureInfoCode="to" region="Oceania" sub-region="Polynesia" intermediate-region="" />
+  <Country  Name="Trinidad and Tobago" Abbreviation="TT" Alpha3="TTO" ISO="780" CultureInfoCode="tt" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Tuvalu" Abbreviation="TV" Alpha3="TUV" ISO="798" CultureInfoCode="en-TV" region="Oceania" sub-region="Polynesia" intermediate-region="" />
+  <Country  Name="United States Minor Outlying Islands" Abbreviation="UM" Alpha3="UMI" ISO="581" CultureInfoCode="en-UM" region="Oceania" sub-region="Micronesia" intermediate-region="" />
+  <Country  Name="Saint Vincent and the Grenadines" Abbreviation="VC" Alpha3="VCT" ISO="670" CultureInfoCode="en-VC" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Virgin Islands (British)" Abbreviation="VG" Alpha3="VGB" ISO="92" CultureInfoCode="en-VG" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Virgin Islands (U.S.)" Abbreviation="VI" Alpha3="VIR" ISO="850" CultureInfoCode="vi" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Vanuatu" Abbreviation="VU" Alpha3="VUT" ISO="548" CultureInfoCode="en-VU" region="Oceania" sub-region="Melanesia" intermediate-region="" />
+  <Country  Name="Samoa" Abbreviation="WS" Alpha3="WSM" ISO="882" CultureInfoCode="en-WS" region="Oceania" sub-region="Polynesia" intermediate-region="" />
+  <Country  Name="Zimbabwe" Abbreviation="ZW" Alpha3="ZWE" ISO="716" CultureInfoCode="en-ZW" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Costa Rica" Abbreviation="CR" Alpha3="CRI" ISO="188" CultureInfoCode="es-CR" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Central America" />
+  <Country  Name="Dominican Republic" Abbreviation="DO" Alpha3="DOM" ISO="214" CultureInfoCode="es-DO" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Ecuador" Abbreviation="EC" Alpha3="ECU" ISO="218" CultureInfoCode="es-EC" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="Equatorial Guinea" Abbreviation="GQ" Alpha3="GNQ" ISO="226" CultureInfoCode="es-GQ" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Middle Africa" />
+  <Country  Name="Guatemala" Abbreviation="GT" Alpha3="GTM" ISO="320" CultureInfoCode="es-GT" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Central America" />
+  <Country  Name="Honduras" Abbreviation="HN" Alpha3="HND" ISO="340" CultureInfoCode="es-HN" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Central America" />
+  <Country  Name="Mexico" Abbreviation="MX" Alpha3="MEX" ISO="484" CultureInfoCode="es-MX" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Central America" />
+  <Country  Name="Nicaragua" Abbreviation="NI" Alpha3="NIC" ISO="558" CultureInfoCode="es-NI" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Central America" />
+  <Country  Name="Panama" Abbreviation="PA" Alpha3="PAN" ISO="591" CultureInfoCode="pa" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Central America" />
+  <Country  Name="Peru" Abbreviation="PE" Alpha3="PER" ISO="604" CultureInfoCode="es-PE" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="Paraguay" Abbreviation="PY" Alpha3="PRY" ISO="600" CultureInfoCode="es-PY" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="El Salvador" Abbreviation="SV" Alpha3="SLV" ISO="222" CultureInfoCode="sv" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Central America" />
+  <Country  Name="Uruguay" Abbreviation="UY" Alpha3="URY" ISO="858" CultureInfoCode="es-UY" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="Venezuela (Bolivarian Republic of)" Abbreviation="VE" Alpha3="VEN" ISO="862" CultureInfoCode="ve" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="Iran (Islamic Republic of)" Abbreviation="IR" Alpha3="IRN" ISO="364" CultureInfoCode="lrc-IR" region="Asia" sub-region="Southern Asia" intermediate-region="" />
+  <Country  Name="Burkina Faso" Abbreviation="BF" Alpha3="BFA" ISO="854" CultureInfoCode="fr-BF" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Guinea" Abbreviation="GN" Alpha3="GIN" ISO="324" CultureInfoCode="gn" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Guinea-Bissau" Abbreviation="GW" Alpha3="GNB" ISO="624" CultureInfoCode="pt-GW" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Faroe Islands" Abbreviation="FO" Alpha3="FRO" ISO="234" CultureInfoCode="fo" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Benin" Abbreviation="BJ" Alpha3="BEN" ISO="204" CultureInfoCode="fr-BJ" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Saint Barthélemy" Abbreviation="BL" Alpha3="BLM" ISO="652" CultureInfoCode="fr-BL" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Congo, Democratic Republic of the" Abbreviation="CD" Alpha3="COD" ISO="180" CultureInfoCode="fr-CD" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Middle Africa" />
+  <Country  Name="Central African Republic" Abbreviation="CF" Alpha3="CAF" ISO="140" CultureInfoCode="fr-CF" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Middle Africa" />
+  <Country  Name="Congo" Abbreviation="CG" Alpha3="COG" ISO="178" CultureInfoCode="fr-CG" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Middle Africa" />
+  <Country  Name="Côte d'Ivoire" Abbreviation="CI" Alpha3="CIV" ISO="384" CultureInfoCode="fr-CI" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Gabon" Abbreviation="GA" Alpha3="GAB" ISO="266" CultureInfoCode="ga" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Middle Africa" />
+  <Country  Name="French Guiana" Abbreviation="GF" Alpha3="GUF" ISO="254" CultureInfoCode="fr-GF" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="Guadeloupe" Abbreviation="GP" Alpha3="GLP" ISO="312" CultureInfoCode="fr-GP" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Haiti" Abbreviation="HT" Alpha3="HTI" ISO="332" CultureInfoCode="fr-HT" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Monaco" Abbreviation="MC" Alpha3="MCO" ISO="492" CultureInfoCode="fr-MC" region="Europe" sub-region="Western Europe" intermediate-region="" />
+  <Country  Name="Saint Martin (French part)" Abbreviation="MF" Alpha3="MAF" ISO="663" CultureInfoCode="fr-MF" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Martinique" Abbreviation="MQ" Alpha3="MTQ" ISO="474" CultureInfoCode="fr-MQ" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="New Caledonia" Abbreviation="NC" Alpha3="NCL" ISO="540" CultureInfoCode="fr-NC" region="Oceania" sub-region="Melanesia" intermediate-region="" />
+  <Country  Name="French Polynesia" Abbreviation="PF" Alpha3="PYF" ISO="258" CultureInfoCode="fr-PF" region="Oceania" sub-region="Polynesia" intermediate-region="" />
+  <Country  Name="Saint Pierre and Miquelon" Abbreviation="PM" Alpha3="SPM" ISO="666" CultureInfoCode="fr-PM" region="Americas" sub-region="Northern America" intermediate-region="" />
+  <Country  Name="Réunion" Abbreviation="RE" Alpha3="REU" ISO="638" CultureInfoCode="fr-RE" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Wallis and Futuna" Abbreviation="WF" Alpha3="WLF" ISO="876" CultureInfoCode="fr-WF" region="Oceania" sub-region="Polynesia" intermediate-region="" />
+  <Country  Name="Mayotte" Abbreviation="YT" Alpha3="MYT" ISO="175" CultureInfoCode="fr-YT" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="Croatia" Abbreviation="HR" Alpha3="HRV" ISO="191" CultureInfoCode="hr" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Hungary" Abbreviation="HU" Alpha3="HUN" ISO="348" CultureInfoCode="hu" region="Europe" sub-region="Eastern Europe" intermediate-region="" />
+  <Country  Name="Iceland" Abbreviation="IS" Alpha3="ISL" ISO="352" CultureInfoCode="is" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="San Marino" Abbreviation="SM" Alpha3="SMR" ISO="674" CultureInfoCode="it-SM" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Holy See" Abbreviation="VA" Alpha3="VAT" ISO="336" CultureInfoCode="it-VA" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Japan" Abbreviation="JP" Alpha3="JPN" ISO="392" CultureInfoCode="ja-JP" region="Asia" sub-region="Eastern Asia" intermediate-region="" />
+  <Country  Name="Georgia" Abbreviation="GE" Alpha3="GEO" ISO="268" CultureInfoCode="os-GE" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Cabo Verde" Abbreviation="CV" Alpha3="CPV" ISO="132" CultureInfoCode="pt-CV" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Western Africa" />
+  <Country  Name="Kazakhstan" Abbreviation="KZ" Alpha3="KAZ" ISO="398" CultureInfoCode="ru-KZ" region="Asia" sub-region="Central Asia" intermediate-region="" />
+  <Country  Name="Cambodia" Abbreviation="KH" Alpha3="KHM" ISO="116" CultureInfoCode="km-KH" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Korea (Democratic People's Republic of)" Abbreviation="KP" Alpha3="PRK" ISO="408" CultureInfoCode="ko-KP" region="Asia" sub-region="Eastern Asia" intermediate-region="" />
+  <Country  Name="Korea, Republic of" Abbreviation="KR" Alpha3="KOR" ISO="410" CultureInfoCode="kr" region="Asia" sub-region="Eastern Asia" intermediate-region="" />
+  <Country  Name="Kyrgyzstan" Abbreviation="KG" Alpha3="KGZ" ISO="417" CultureInfoCode="ru-KG" region="Asia" sub-region="Central Asia" intermediate-region="" />
+  <Country  Name="Lao People's Democratic Republic" Abbreviation="LA" Alpha3="LAO" ISO="418" CultureInfoCode="la" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Angola" Abbreviation="AO" Alpha3="AGO" ISO="24" CultureInfoCode="pt-AO" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Middle Africa" />
+  <Country  Name="Lithuania" Abbreviation="LT" Alpha3="LTU" ISO="440" CultureInfoCode="lt" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Latvia" Abbreviation="LV" Alpha3="LVA" ISO="428" CultureInfoCode="lv" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Mozambique" Abbreviation="MZ" Alpha3="MOZ" ISO="508" CultureInfoCode="pt-MZ" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Eastern Africa" />
+  <Country  Name="North Macedonia" Abbreviation="MK" Alpha3="MKD" ISO="807" CultureInfoCode="mk" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Mongolia" Abbreviation="MN" Alpha3="MNG" ISO="496" CultureInfoCode="mn" region="Asia" sub-region="Eastern Asia" intermediate-region="" />
+  <Country  Name="Myanmar" Abbreviation="MM" Alpha3="MMR" ISO="104" CultureInfoCode="my-MM" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Norway" Abbreviation="NO" Alpha3="NOR" ISO="578" CultureInfoCode="no" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Svalbard and Jan Mayen" Abbreviation="SJ" Alpha3="SJM" ISO="744" CultureInfoCode="nb-SJ" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Nepal" Abbreviation="NP" Alpha3="NPL" ISO="524" CultureInfoCode="ne-NP" region="Asia" sub-region="Southern Asia" intermediate-region="" />
+  <Country  Name="Aruba" Abbreviation="AW" Alpha3="ABW" ISO="533" CultureInfoCode="nl-AW" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Bonaire, Sint Eustatius and Saba" Abbreviation="BQ" Alpha3="BES" ISO="535" CultureInfoCode="nl-BQ" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Curaçao" Abbreviation="CW" Alpha3="CUW" ISO="531" CultureInfoCode="nl-CW" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="Caribbean" />
+  <Country  Name="Suriname" Abbreviation="SR" Alpha3="SUR" ISO="740" CultureInfoCode="sr" region="Americas" sub-region="Latin America and the Caribbean" intermediate-region="South America" />
+  <Country  Name="Poland" Abbreviation="PL" Alpha3="POL" ISO="616" CultureInfoCode="pl" region="Europe" sub-region="Eastern Europe" intermediate-region="" />
+  <Country  Name="Portugal" Abbreviation="PT" Alpha3="PRT" ISO="620" CultureInfoCode="pt" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Sao Tome and Principe" Abbreviation="ST" Alpha3="STP" ISO="678" CultureInfoCode="st" region="Africa" sub-region="Sub-Saharan Africa" intermediate-region="Middle Africa" />
+  <Country  Name="Timor-Leste" Abbreviation="TL" Alpha3="TLS" ISO="626" CultureInfoCode="pt-TL" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Romania" Abbreviation="RO" Alpha3="ROU" ISO="642" CultureInfoCode="ro" region="Europe" sub-region="Eastern Europe" intermediate-region="" />
+  <Country  Name="Moldova, Republic of" Abbreviation="MD" Alpha3="MDA" ISO="498" CultureInfoCode="ru-MD" region="Europe" sub-region="Eastern Europe" intermediate-region="" />
+  <Country  Name="Ukraine" Abbreviation="UA" Alpha3="UKR" ISO="804" CultureInfoCode="ru-UA" region="Europe" sub-region="Eastern Europe" intermediate-region="" />
+  <Country  Name="Sri Lanka" Abbreviation="LK" Alpha3="LKA" ISO="144" CultureInfoCode="si-LK" region="Asia" sub-region="Southern Asia" intermediate-region="" />
+  <Country  Name="Slovakia" Abbreviation="SK" Alpha3="SVK" ISO="703" CultureInfoCode="sk" region="Europe" sub-region="Eastern Europe" intermediate-region="" />
+  <Country  Name="Albania" Abbreviation="AL" Alpha3="ALB" ISO="8" CultureInfoCode="sq-AL" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Montenegro" Abbreviation="ME" Alpha3="MNE" ISO="499" CultureInfoCode="sr-Latn-ME" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Serbia" Abbreviation="RS" Alpha3="SRB" ISO="688" CultureInfoCode="sr-Latn-RS" region="Europe" sub-region="Southern Europe" intermediate-region="" />
+  <Country  Name="Åland Islands" Abbreviation="AX" Alpha3="ALA" ISO="248" CultureInfoCode="sv-AX" region="Europe" sub-region="Northern Europe" intermediate-region="" />
+  <Country  Name="Tajikistan" Abbreviation="TJ" Alpha3="TJK" ISO="762" CultureInfoCode="tg-Cyrl-TJ" region="Asia" sub-region="Central Asia" intermediate-region="" />
+  <Country  Name="Thailand" Abbreviation="TH" Alpha3="THA" ISO="764" CultureInfoCode="th" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Turkmenistan" Abbreviation="TM" Alpha3="TKM" ISO="795" CultureInfoCode="tk-TM" region="Asia" sub-region="Central Asia" intermediate-region="" />
+  <Country  Name="Turkey" Abbreviation="TR" Alpha3="TUR" ISO="792" CultureInfoCode="tr" region="Asia" sub-region="Western Asia" intermediate-region="" />
+  <Country  Name="Uzbekistan" Abbreviation="UZ" Alpha3="UZB" ISO="860" CultureInfoCode="uz" region="Asia" sub-region="Central Asia" intermediate-region="" />
+  <Country  Name="Viet Nam" AlternativeName="Vietnam" Abbreviation="VN" Alpha3="VNM" ISO="704" CultureInfoCode="vi-VN" region="Asia" sub-region="South-eastern Asia" intermediate-region="" />
+  <Country  Name="Taiwan, Province of China" Abbreviation="TW" Alpha3="TWN" ISO="158" CultureInfoCode="zh-TW" region="Asia" sub-region="Eastern Asia" intermediate-region="" />
+</Countries>
