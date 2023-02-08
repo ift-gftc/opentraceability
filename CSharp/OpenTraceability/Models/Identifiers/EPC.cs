@@ -373,7 +373,7 @@ namespace OpenTraceability.Models.Identifiers
         }
 
         #region Overrides
-        public static bool operator ==(EPC obj1, EPC obj2)
+        public static bool operator ==(EPC? obj1, EPC? obj2)
         {
             try
             {
@@ -400,7 +400,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        public static bool operator !=(EPC obj1, EPC obj2)
+        public static bool operator !=(EPC? obj1, EPC? obj2)
         {
             try
             {
@@ -427,7 +427,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             try
             {

@@ -16,7 +16,7 @@ namespace OpenTraceability.Models.Events
         /// <summary>
         /// Represents a list of namespaces used in the document.
         /// </summary>
-        public Dictionary<string, string> Namespaces { get; set; } = new Dictionary<string, string>();
+        internal Dictionary<string, string> Namespaces { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// The version of EPCIS used for this document.
@@ -37,5 +37,11 @@ namespace OpenTraceability.Models.Events
         /// One or more events on the EPCIS Document.
         /// </summary>
         public List<IEvent> Events { get; set; } = new List<IEvent>();
+
+        public Dictionary<string, string> GetNamespaces()
+        {
+            Dictionary<string, string> namespaces = new Dictionary<string, string>(Namespaces);
+            return namespaces;
+        }
     }
 }

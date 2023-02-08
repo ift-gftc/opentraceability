@@ -9,6 +9,17 @@ namespace OpenTraceability.Models.Events.KDEs
         public Type ValueType => typeof(string);
         public string? Value { get; set; }
 
+        internal EventKDEString()
+        {
+
+        }
+
+        public EventKDEString(string ns, string name)
+        {
+            this.Namespace = ns;
+            this.Name = name;
+        }
+
         public JToken? GetJson()
         {
             if (string.IsNullOrWhiteSpace(Value))
@@ -29,7 +40,13 @@ namespace OpenTraceability.Models.Events.KDEs
             }
             else
             {
-                XElement x = new XElement(Key, Value);
+                XName xname = (XNamespace)Namespace + Name;
+                XElement x = new XElement(xname, Value);
+
+                // set the xsi type...
+                XName xsiTypeName = (XNamespace)Constants.XSI_NAMESPACE + "type";
+                x.Add(new XAttribute(xsiTypeName, "string"));
+
                 return x;
             }
         }

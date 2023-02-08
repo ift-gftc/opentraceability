@@ -7,7 +7,7 @@
 
     public class EventBusinessTransaction
     {
-        public string? RawType { get; set; }
+        public string RawType { get; set; } = string.Empty;
         public EventBusinessTransactionType Type { get; set; }
         public string? Value { get; set; }
     }

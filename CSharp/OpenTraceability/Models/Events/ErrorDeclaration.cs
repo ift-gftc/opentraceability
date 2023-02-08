@@ -16,7 +16,7 @@ namespace OpenTraceability.Models.Events
 
     public class ErrorDeclaration
     {
-        public string? RawReason { get; set; }
+        public Uri? RawReason { get; set; }
         public DateTime? DeclarationTime { get; set; }
         public List<string>? CorrectingEventIDs { get; set; }
 
@@ -27,7 +27,7 @@ namespace OpenTraceability.Models.Events
                 EventErrorType type = EventErrorType.Unknown;
                 foreach (EventErrorType t in Enum.GetValues(typeof(EventErrorType)))
                 {
-                    if (EnumUtil.GetEnumDescription(t) == RawReason)
+                    if (EnumUtil.GetEnumDescription(t) == RawReason?.ToString())
                     {
                         type = t;
                     }
@@ -37,7 +37,7 @@ namespace OpenTraceability.Models.Events
             set
             {
                 string reason = EnumUtil.GetEnumDescription(value);
-                this.RawReason = reason;
+                this.RawReason = new Uri(reason);
             }
         }
     }

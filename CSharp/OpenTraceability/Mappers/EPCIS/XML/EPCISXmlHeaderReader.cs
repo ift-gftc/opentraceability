@@ -10,34 +10,34 @@ namespace OpenTraceability.Mappers.EPCIS.XML
 {
     public static class EPCISXmlHeaderReader
     {
-        public static StandardBusinessDocumentHeader ReadHeader(XElement x, string headerNS)
+        public static StandardBusinessDocumentHeader ReadHeader(XElement x)
         {
             StandardBusinessDocumentHeader header = new StandardBusinessDocumentHeader();
-            header.HeaderVersion = x.Element($"{headerNS}:HeaderVersion")?.Value ?? string.Empty;
+            header.HeaderVersion = x.Element(Constants.SBDH_XNAMESPACE + "HeaderVersion")?.Value ?? string.Empty;
 
-            XElement? xSender = x.Element($"{headerNS}:Sender");
+            XElement? xSender = x.Element(Constants.SBDH_XNAMESPACE + "Sender");
             if (xSender != null)
             {
-                header.Sender = ReadHeaderOrganization(xSender, headerNS);
+                header.Sender = ReadHeaderOrganization(xSender);
             }
 
-            XElement? xReceiver = x.Element($"{headerNS}:Receiver");
+            XElement? xReceiver = x.Element(Constants.SBDH_XNAMESPACE + "Receiver");
             if (xReceiver != null)
             {
-                header.Receiver = ReadHeaderOrganization(xReceiver, headerNS);
+                header.Receiver = ReadHeaderOrganization(xReceiver);
             }
 
-            XElement? xDocId = x.Element($"{headerNS}:DocumentIdentification");
+            XElement? xDocId = x.Element(Constants.SBDH_XNAMESPACE + "DocumentIdentification");
             if (xDocId != null)
             {
                 header.DocumentIdentification = new SBDHDocumentIdentification();
-                header.DocumentIdentification.Standard = xDocId.Element($"{headerNS}:Standard")?.Value ?? string.Empty;
-                header.DocumentIdentification.Type = xDocId.Element($"{headerNS}:Type")?.Value ?? string.Empty;
-                header.DocumentIdentification.TypeVersion = xDocId.Element($"{headerNS}:TypeVersion")?.Value ?? string.Empty;
-                header.DocumentIdentification.InstanceIdentifier = xDocId.Element($"{headerNS}:InstanceIdentifier")?.Value ?? string.Empty;
-                header.DocumentIdentification.MultipleType = xDocId.Element($"{headerNS}:MultipleType")?.Value ?? string.Empty;
+                header.DocumentIdentification.Standard = xDocId.Element(Constants.SBDH_XNAMESPACE + "Standard")?.Value ?? string.Empty;
+                header.DocumentIdentification.Type = xDocId.Element(Constants.SBDH_XNAMESPACE + "Type")?.Value ?? string.Empty;
+                header.DocumentIdentification.TypeVersion = xDocId.Element(Constants.SBDH_XNAMESPACE + "TypeVersion")?.Value ?? string.Empty;
+                header.DocumentIdentification.InstanceIdentifier = xDocId.Element(Constants.SBDH_XNAMESPACE + "InstanceIdentifier")?.Value ?? string.Empty;
+                header.DocumentIdentification.MultipleType = xDocId.Element(Constants.SBDH_XNAMESPACE + "MultipleType")?.Value ?? string.Empty;
 
-                if (DateTimeOffset.TryParse(xDocId.Element($"{headerNS}:CreationDateAndTime")?.Value, out DateTimeOffset dt))
+                if (DateTimeOffset.TryParse(xDocId.Element(Constants.SBDH_XNAMESPACE + "CreationDateAndTime")?.Value, out DateTimeOffset dt))
                 {
                     header.DocumentIdentification.CreationDateAndTime = dt;
                 }
@@ -46,16 +46,16 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             return header;
         }
 
-        private static SBDHOrganization ReadHeaderOrganization(XElement x, string headerNS)
+        private static SBDHOrganization ReadHeaderOrganization(XElement x)
         {
             SBDHOrganization org = new SBDHOrganization();
-            org.Identifier = x.Element($"{headerNS}:Identifier")?.Value ?? string.Empty;
+            org.Identifier = x.Element(Constants.SBDH_XNAMESPACE + "Identifier")?.Value ?? string.Empty;
 
-            XElement? xContactInformation = x.Element($"{headerNS}:ContainInformation");
+            XElement? xContactInformation = x.Element(Constants.SBDH_XNAMESPACE + "ContactInformation");
             if (xContactInformation != null)
             {
-                org.ContactName = xContactInformation.Element($"{headerNS}:Contact")?.Value ?? string.Empty;
-                org.EmailAddress = xContactInformation.Element($"{headerNS}:EmailAddress")?.Value ?? string.Empty;
+                org.ContactName = xContactInformation.Element(Constants.SBDH_XNAMESPACE + "Contact")?.Value ?? string.Empty;
+                org.EmailAddress = xContactInformation.Element(Constants.SBDH_XNAMESPACE + "EmailAddress")?.Value ?? string.Empty;
             }
 
             return org;

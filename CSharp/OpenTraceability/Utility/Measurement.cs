@@ -284,7 +284,7 @@ namespace OpenTraceability.Utility
             return measure;
         }
 
-        public static bool operator ==(Measurement lhs, Measurement rhs)
+        public static bool operator ==(Measurement? lhs, Measurement? rhs)
         {
             if (ReferenceEquals(lhs, rhs))
             {
@@ -305,7 +305,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static bool operator !=(Measurement lhs, Measurement rhs)
+        public static bool operator !=(Measurement? lhs, Measurement? rhs)
         {
             if (lhs == rhs)
             {

@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace OpenTraceability.Models.Events.KDEs
 {
-    public class CertificationList : IEventKDE
+    public class CertificationList : EventKDEBase, IEventKDE
     {
         public List<Certificate> Certificates { get; set; } = new List<Certificate>();
 

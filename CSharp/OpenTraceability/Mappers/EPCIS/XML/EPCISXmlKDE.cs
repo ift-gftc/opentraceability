@@ -16,9 +16,9 @@ namespace OpenTraceability.Mappers.EPCIS.XML
     {
         public string Name { get; set; } = string.Empty;
         public EPCISVersion? RequiredVersion { get; set; }
-        public Action<IEvent, XElement> Action { get; set; }
+        public Action<string, IEvent, XElement> Action { get; set; }
 
-        public EPCISXmlKDE(string name, Action<IEvent, XElement> action, EPCISVersion? requiredVersion = null)
+        public EPCISXmlKDE(string name, Action<string, IEvent, XElement> action, EPCISVersion? requiredVersion = null)
         {
             Name = name;
             Action = action;

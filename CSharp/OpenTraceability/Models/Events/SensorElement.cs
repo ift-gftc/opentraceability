@@ -1,11 +1,11 @@
-﻿namespace OpenTraceability.Models.Events
+﻿using OpenTraceability.Interfaces;
+
+namespace OpenTraceability.Models.Events
 {
     public class SensorElement
     {
-        public DateTime? TimeStamp { get; set; }
-        public Uri? DeviceID { get; set; }
-        public string? DeviceMetaData { get; set; }
-        public Uri? RawData { get; set; }
+        public SensorMetaData? MetaData { get; set; }
         public List<SensorReport> Reports { get; set; } = new List<SensorReport>();
+        public List<IEventKDE> ExtensionKDEs { get; internal set; } = new List<IEventKDE>();
     }
 }

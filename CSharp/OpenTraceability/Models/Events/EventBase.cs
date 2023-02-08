@@ -1,6 +1,8 @@
 ﻿using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Identifiers;
+using OpenTraceability.Utility;
+using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events
 {
@@ -50,6 +52,10 @@ namespace OpenTraceability.Models.Events
 
     public class EventBase
     {
+        public Dictionary<string, string> _namespaces = new Dictionary<string, string>();
+        public Dictionary<string, string> _prefixes = new Dictionary<string, string>();
+        private List<IEventKDE> _kdes = new List<IEventKDE>();
+
         public long ID { get; set; }
         public string? EventID { get; set; } = string.Empty;
         public string? CertificationInfo { get; set; } = string.Empty;
@@ -58,7 +64,7 @@ namespace OpenTraceability.Models.Events
         public DateTime? Recorded { get; set; }
         public PGLN? DataOwner { get; set; }
         public PGLN? Owner { get; set; }
-        public EventAction Action { get; set; }
+        public EventAction? Action { get; set; }
         public string? BusinessStep { get; set; } = string.Empty;
         public string? Disposition { get; set; } = string.Empty;
         public PersistentDisposition? PersistentDisposition { get; set; }
@@ -67,11 +73,20 @@ namespace OpenTraceability.Models.Events
         public List<EventSource> SourceList { get; set; } = new List<EventSource>();
         public List<EventDestination> DestinationList { get; set; } = new List<EventDestination>();
         public List<Certificate> Certificates { get; set; } = new List<Certificate>();
-        public List<IEventKDE> KDEs { get; set; } = new List<IEventKDE>();
+        public ReadOnlyCollection<IEventKDE> KDEs { get => new ReadOnlyCollection<IEventKDE>(_kdes); }
         public List<EventBusinessTransaction> BusinessTransactions { get; set; } = new List<EventBusinessTransaction>();
         public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
         public ErrorDeclaration? ErrorDeclaration { get; set; }
         public EventILMD? ILMD { get; set; }
+
+        /// <summary>
+        /// Adds a KDE to the event.
+        /// </summary>
+        /// <param name="kde"></param>
+        public void AddKDE(IEventKDE kde)
+        {
+            _kdes.Add(kde);
+        }
 
         /// <summary>
         /// Gets a KDE by the type and key value.
@@ -79,9 +94,15 @@ namespace OpenTraceability.Models.Events
         /// <typeparam name="T">The C# type of the KDE.</typeparam>
         /// <param name="key">The key value of the KDE.</param>
         /// <returns>The instance of the IEventKDE that matches the parameters.</returns>
-        public T? GetKDE<T>(string key)
+        public T? GetKDE<T>(string ns, string name) where T : IEventKDE
         {
-            IEventKDE? kde = KDEs.Find(k => k.Key == key);
+            // if we are given the prefixes...
+            if (_prefixes.ContainsKey(ns))
+            {
+                ns = _prefixes[ns];
+            }
+
+            IEventKDE? kde = _kdes.Find(k => k.Namespace == ns && k.Name == name);
             if (kde != null)
             {
                 if (kde is T)
@@ -97,9 +118,9 @@ namespace OpenTraceability.Models.Events
         /// </summary>
         /// <typeparam name="T">The C# type of the KDE.</typeparam>
         /// <returns>The instance of the IEventKDE that matches the parameters.</returns>
-        public T? GetKDE<T>()
+        public T? GetKDE<T>() where T : IEventKDE
         {
-            IEventKDE? kde = KDEs.Find(k => k.ValueType == typeof(T));
+            IEventKDE? kde = _kdes.Find(k => k.ValueType == typeof(T));
             if (kde != null)
             {
                 if (kde is T)
@@ -108,6 +129,16 @@ namespace OpenTraceability.Models.Events
                 }
             }
             return default;
+        }
+
+        /// <summary>
+        /// Sets the namespaces on the event. This will replace the existing namespaces.
+        /// </summary>
+        /// <param name="namespaces"></param>
+        public void SetNamespaces(Dictionary<string, string> namespaces)
+        {
+            _namespaces = namespaces;
+            _prefixes = namespaces.Reverse();
         }
     }
 }

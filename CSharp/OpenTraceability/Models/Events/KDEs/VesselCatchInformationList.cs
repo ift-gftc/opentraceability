@@ -7,9 +7,8 @@ using System.Xml.Linq;
 namespace OpenTraceability.Models.Events.KDEs
 {
     [Description("cbvmda:vesselCatchInformationList")]
-    public class VesselCatchInformationList : IEventKDE
+    public class VesselCatchInformationList : EventKDEBase, IEventKDE
     {
-        public string Key { get; set; } = "cbvmda:vesselCatchInformationList";
         public Type ValueType => typeof(VesselCatchInformationList);
         public List<VesselCatchInformation> Vessels { get; set; } = new List<VesselCatchInformation>();
 

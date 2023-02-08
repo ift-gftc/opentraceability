@@ -7,6 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Utility\Data\Countries.xml" />
+    <None Remove="Utility\Data\UnitDescriptors.xml" />
+    <None Remove="Utility\Data\UnitSystems.xml" />
+    <None Remove="Utility\Data\UOMs.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Utility\Data\Countries.xml" />
+    <EmbeddedResource Include="Utility\Data\UnitDescriptors.xml" />
+    <EmbeddedResource Include="Utility\Data\UnitSystems.xml" />
+    <EmbeddedResource Include="Utility\Data\UOMs.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Crc32.NET" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>

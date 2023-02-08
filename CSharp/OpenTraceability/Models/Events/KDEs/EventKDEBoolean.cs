@@ -1,15 +1,24 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
-using OpenTraceability.Utility;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Models.Events.KDEs
 {
-    public class EventKDECountry : EventKDEBase, IEventKDE
+    public class EventKDEBoolean : EventKDEBase, IEventKDE
     {
-        public Country? Value { get; set; }
+        public Type ValueType => typeof(bool);
+        public bool? Value { get; set; }
 
-        public Type ValueType => typeof(Country);
+        internal EventKDEBoolean()
+        {
+
+        }
+
+        public EventKDEBoolean(string ns, string name)
+        {
+            this.Namespace = ns;
+            this.Name = name;
+        }
 
         public JToken? GetJson()
         {
@@ -19,7 +28,7 @@ namespace OpenTraceability.Models.Events.KDEs
             }
             else
             {
-                return JToken.FromObject(Value.ISO);
+                return JToken.FromObject(Value);
             }
         }
 
@@ -32,25 +41,29 @@ namespace OpenTraceability.Models.Events.KDEs
             else
             {
                 XName xname = (XNamespace)Namespace + Name;
-                XElement x = new XElement(xname, Value.ISO);
+                XElement x = new XElement(xname, Value);
+
+                // set the xsi type...
+                XName xsiTypeName = (XNamespace)Constants.XSI_NAMESPACE + "type";
+                x.Add(new XAttribute(xsiTypeName, "boolean"));
+
                 return x;
             }
         }
 
         public void SetFromJson(JToken json)
         {
-            string strValue = json.ToString();
-            Value = Countries.Parse(strValue); 
+            this.Value = bool.Parse(json.ToString());
         }
 
         public void SetFromXml(XElement xml)
         {
-            Value = Countries.Parse(xml.Value);
+            this.Value = bool.Parse(xml.Value);
         }
 
         public override string ToString()
         {
-            return Value?.Name ?? String.Empty;
+            return Value?.ToString() ?? string.Empty;
         }
     }
 }

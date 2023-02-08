@@ -1,5 +1,6 @@
 ﻿using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Events;
+using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
 using System;
@@ -10,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace OpenTraceability.Mappers.EPCIS.XML
 {
@@ -134,6 +136,9 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             new EPCISXmlKDE("persistentDisposition", ReadPersistentDisposition)
         };
 
+        private static List<string> sensorMetaDataAttributes = new List<string>() { "time", "deviceID", "deviceMetadata", "rawData", "startTime", "endTime", "bizRules", "dataProcessingMethod" };
+        private static List<string> sensorReportAttributes = new List<string>() { "type", "value", "component", "stringValue", "booleanValue", "hexBinaryValue", "uriValue", "uom", "minValue", "maxValue", "sDev", "chemicalSubstance", "microorganism", "deviceID", "deviceMetadata", "rawData", "time", "meanValue", "percRank", "percValue", "dataProcessingMethod", "coordinateReferenceSystem", "exception" };
+
         public static IEvent ReadEvent(XElement xEvent, EPCISVersion epcisVersion)
         {
             IEvent? e = null;
@@ -169,6 +174,8 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 throw new Exception("Unrecognized event type = " + xEvent.Name);
             }
 
+            kdes = kdes.Where(k => k.RequiredVersion == null || k.RequiredVersion == epcisVersion).ToList();
+
 
             // go through each KDE in our list...
             int i = 0;
@@ -188,7 +195,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                                 if (xChild.Name == parts[2])
                                 {
                                     // process the KDe and move to next KDE...
-                                    kdes[i].Action(e, xChild);
+                                    kdes[i].Action(kdes[i].Name, e, xChild);
 
                                     i++;
                                     if (kdes[i].Name.Contains("/"))
@@ -201,14 +208,14 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                                     }
                                 }
                             }
+                            break;
                         }
-                        break;
                     }
                     // processing a standard root KDE...
                     else if (x.Name == kdes[i].Name)
                     {
                         // process the KDEs and break...
-                        kdes[i].Action(e, x);
+                        kdes[i].Action(kdes[i].Name, e, x);
                         i++;
                         break;
                     }
@@ -220,14 +227,17 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 }
 
                 // if we reached the end of our list of kdes... assume it is an extension KDE...
-                IEventKDE kde = ReadKDE(x);
-                e.KDEs.Add(kde);
+                if (i >= kdes.Count)
+                {
+                    IEventKDE kde = ReadKDE(x);
+                    e.AddKDE(kde);
+                }
             }
 
             return e;
         }
 
-        private static void ReadEventTime(IEvent e, XElement x)
+        private static void ReadEventTime(string xName, IEvent e, XElement x)
         {
             string strValue = x.Value;
 
@@ -249,7 +259,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             throw new Exception($"The event time {strValue} is not in a recognized format.");
         }
 
-        private static void ReadRecordTime(IEvent e, XElement x)
+        private static void ReadRecordTime(string xName, IEvent e, XElement x)
         {
             string strValue = x.Value;
 
@@ -271,7 +281,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             throw new Exception($"The recorded time {strValue} is not in a recognized format.");
         }
 
-        private static void ReadEventTimeZoneOffset(IEvent e, XElement x)
+        private static void ReadEventTimeZoneOffset(string xName, IEvent e, XElement x)
         {
             string hours = x.Value.Substring(1);
             TimeSpan ts = TimeSpan.Parse(hours);
@@ -283,22 +293,22 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             e.EventTimeOffset = dbl;
         }
 
-        private static void ReadEventID(IEvent e, XElement x)
+        private static void ReadEventID(string xName, IEvent e, XElement x)
         {
             e.EventID = x.Value;
         }
 
-        private static void ReadCertificationInfo(IEvent e, XElement x)
+        private static void ReadCertificationInfo(string xName, IEvent e, XElement x)
         {
             e.CertificationInfo = x.Value;
         }
 
-        private static void ReadTransformationID(IEvent e, XElement x)
+        private static void ReadTransformationID(string xName, IEvent e, XElement x)
         {
             ((TransformationEvent)e).TransformationID = x.Value;   
         }
 
-        private static void ReadErrorDeclaration(IEvent e, XElement x)
+        private static void ReadErrorDeclaration(string xName, IEvent e, XElement x)
         {
             //<errorDeclaration>
             //    <declarationTime>2022-02-08T19:41:23</declarationTime>
@@ -311,6 +321,12 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             ErrorDeclaration err = new ErrorDeclaration();
             err.DeclarationTime = DateTime.Parse(x.Element("declarationTime")?.Value ?? throw new Exception("No declarationTime on the error declaration."));
 
+            XElement? xReason = x.Element("reason");
+            if (xReason != null)
+            {
+                err.RawReason = new Uri(xReason.Value);
+            }
+
             XElement? xCorrectiveEventIDs = x.Element("correctiveEventIDs");
             if (xCorrectiveEventIDs != null)
             {
@@ -321,10 +337,12 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 }
             }
 
+            // TODO: support extension kdes
+
             e.ErrorDeclaration = err;
         }
 
-        private static void ReadEPCList(IEvent e, XElement x)
+        private static void ReadEPCList(string xName, IEvent e, XElement x)
         {
             foreach (var xEPC in x.Elements("epc"))
             {
@@ -335,7 +353,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadChildEPCList(IEvent e, XElement x)
+        private static void ReadChildEPCList(string xName, IEvent e, XElement x)
         {
             foreach (var xEPC in x.Elements("epc"))
             {
@@ -346,7 +364,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadInputEPCList(IEvent e, XElement x)
+        private static void ReadInputEPCList(string xName, IEvent e, XElement x)
         {
             foreach (var xEPC in x.Elements("epc"))
             {
@@ -357,7 +375,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadOutputEPCList(IEvent e, XElement x)
+        private static void ReadOutputEPCList(string xName, IEvent e, XElement x)
         {
             foreach (var xEPC in x.Elements("epc"))
             {
@@ -368,7 +386,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadAction(IEvent e, XElement x)
+        private static void ReadAction(string xName, IEvent e, XElement x)
         {
             if (Enum.TryParse<EventAction>(x.Value, out EventAction action))
             {
@@ -376,17 +394,17 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadBizStep(IEvent e, XElement x)
+        private static void ReadBizStep(string xName, IEvent e, XElement x)
         {
             e.BusinessStep = x.Value;
         }
 
-        private static void ReadDisposition(IEvent e, XElement x)
+        private static void ReadDisposition(string xName, IEvent e, XElement x)
         {
             e.Disposition = x.Value;
         }
 
-        private static void ReadReadPoint(IEvent e, XElement x)
+        private static void ReadReadPoint(string xName, IEvent e, XElement x)
         {
             XElement? xID = x.Element("id");
             if (xID != null)
@@ -396,7 +414,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadBizLocation(IEvent e, XElement x)
+        private static void ReadBizLocation(string xName, IEvent e, XElement x)
         {
             XElement? xID = x.Element("id");
             if (xID != null)
@@ -406,7 +424,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadBizTransactionList(IEvent e, XElement x)
+        private static void ReadBizTransactionList(string xName, IEvent e, XElement x)
         {
             foreach (var xBizTransaction in x.Elements("bizTransaction"))
             {
@@ -417,7 +435,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadQuantityList(IEvent e, XElement x)
+        private static void ReadQuantityList(string xName, IEvent e, XElement x)
         {
             foreach (var xQuantity in x.Elements("quantityElement"))
             {
@@ -433,7 +451,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadChildQuantityList(IEvent e, XElement x)
+        private static void ReadChildQuantityList(string xName, IEvent e, XElement x)
         {
             foreach (var xQuantity in x.Elements("quantityElement"))
             {
@@ -449,7 +467,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadInputQuantityList(IEvent e, XElement x)
+        private static void ReadInputQuantityList(string xName, IEvent e, XElement x)
         {
             foreach (var xQuantity in x.Elements("quantityElement"))
             {
@@ -465,7 +483,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadOutputQuantityList(IEvent e, XElement x)
+        private static void ReadOutputQuantityList(string xName, IEvent e, XElement x)
         {
             foreach (var xQuantity in x.Elements("quantityElement"))
             {
@@ -481,7 +499,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadSourceList(IEvent e, XElement x)
+        private static void ReadSourceList(string xName, IEvent e, XElement x)
         {
             foreach (var xSource in x.Elements("source"))
             {
@@ -492,7 +510,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadDestinationList(IEvent e, XElement x)
+        private static void ReadDestinationList(string xName, IEvent e, XElement x)
         {
             foreach (var xDest in x.Elements("destination"))
             {
@@ -503,12 +521,85 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadSensorElementList(IEvent e, XElement x)
+        private static void ReadSensorElementList(string xName, IEvent e, XElement x)
         {
-            throw new NotImplementedException();
+            foreach (XElement xSensor in x.Elements())
+            {
+                SensorElement s = new SensorElement();
+
+                // sensor metadata
+                XElement? xSensorMetaData = xSensor.Element("sensorMetadata");
+                if (xSensorMetaData != null)
+                {
+                    s.MetaData = new SensorMetaData();
+                    s.MetaData.TimeStamp = xSensorMetaData.AttributeISODateTime("time");
+                    s.MetaData.DeviceID = xSensorMetaData.AttributeURI("deviceID");
+                    s.MetaData.StartTime = xSensorMetaData.AttributeISODateTime("startTime");
+                    s.MetaData.EndTime = xSensorMetaData.AttributeISODateTime("endTime");
+                    s.MetaData.DeviceMetaData = xSensorMetaData.AttributeURI("deviceMetadata");
+                    s.MetaData.RawData = xSensorMetaData.AttributeURI("rawData");
+                    s.MetaData.BizRules = xSensorMetaData.AttributeURI("bizRules");
+                    s.MetaData.DataProcessingMethod = xSensorMetaData.AttributeURI("dataProcessingMethod");
+
+                    // TODO: extension attributes...
+                    foreach (XAttribute xa in xSensorMetaData.Attributes().Where(a => !sensorMetaDataAttributes.Contains(a.Name.LocalName)))
+                    {
+                        IEventKDE kde = ReadAttributeKDE(xa);
+                        s.MetaData.ExtensionAttributes.Add(kde);
+                    }
+                }                
+
+                // sensor report(s)
+                foreach (XElement xSensorReport in xSensor.Elements("sensorReport"))
+                {
+                    SensorReport sReport = new SensorReport();
+                    sReport.Type = xSensorReport.AttributeURI("type");
+                    sReport.Value = xSensorReport.AttributeDouble("value");
+                    sReport.Component = xSensorReport.AttributeURI("component");
+                    sReport.StringValue = xSensorReport.Attribute("stringValue")?.Value;
+                    sReport.BooleanValue = xSensorReport.AttributeBoolean("booleanValue");
+                    sReport.HexBinaryValue = xSensorReport.Attribute("hexBinaryValue")?.Value;
+                    sReport.URIValue = xSensorReport.AttributeURI("uriValue");
+                    sReport.UOM = xSensorReport.AttributeUOM("uom");
+                    sReport.MinValue = xSensorReport.AttributeDouble("minValue");
+                    sReport.MaxValue = xSensorReport.AttributeDouble("maxValue");
+                    sReport.SDev = xSensorReport.AttributeDouble("sDev");
+                    sReport.ChemicalSubstance = xSensorReport.AttributeURI("chemicalSubstance");
+                    sReport.MicroOrganism = xSensorReport.AttributeURI("microorganism");
+                    sReport.DeviceID = xSensorReport.AttributeURI("deviceID");
+                    sReport.DeviceMetadata = xSensorReport.AttributeURI("deviceMetadata");
+                    sReport.RawData = xSensorReport.AttributeURI("rawData");
+                    sReport.TimeStamp = xSensor.AttributeISODateTime("time");
+                    sReport.MeanValue = xSensor.AttributeDouble("meanValue");
+                    sReport.PercentageValue = xSensor.AttributeDouble("percValue");
+                    sReport.PercentageRank = xSensor.AttributeDouble("percRank");
+                    sReport.DataProcessingMethod = xSensor.AttributeURI("dataProcessingMethod");
+                    sReport.CoordinateReferenceSystem = xSensor.AttributeURI("coordinateReferenceSystem");
+                    sReport.Exception = xSensor.AttributeURI("exception");
+
+                    // TODO: extension attributes...
+                    foreach (XAttribute xa in xSensorReport.Attributes().Where(a => !sensorReportAttributes.Contains(a.Name.LocalName)))
+                    {
+                        IEventKDE kde = ReadAttributeKDE(xa);
+                        sReport.ExtensionAttributes.Add(kde);
+                    }
+
+                    s.Reports.Add(sReport);
+                }
+
+                // TODO: extension elements...
+                foreach (XElement xKDE in xSensor.XPathSelectElements("*[not(self::sensorReport) and not(self::sensorMetadata)]"))
+                {
+                    IEventKDE kde = ReadKDE(xKDE);
+                    s.ExtensionKDEs.Add(kde);
+                }
+                
+
+                e.SensorElementList.Add(s);
+            }
         }
 
-        private static void ReadPersistentDisposition(IEvent e, XElement x)
+        private static void ReadPersistentDisposition(string xName, IEvent e, XElement x)
         {
             e.PersistentDisposition = new PersistentDisposition();
 
@@ -531,7 +622,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadILMD(IEvent e, XElement x)
+        private static void ReadILMD(string xName, IEvent e, XElement x)
         {
             e.ILMD = new EventILMD();
 
@@ -540,11 +631,11 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 // read the kde...
                 IEventKDE kde = ReadKDE(xKDE);
-                e.ILMD.KDEs.Add(kde);
+                e.ILMD.AddKDE(kde);
             }
         }
 
-        private static void ReadParentID(IEvent e, XElement x)
+        private static void ReadParentID(string xName, IEvent e, XElement x)
         {
             EventProduct product = new EventProduct();
             product.EPC = new EPC(x.Value);
@@ -556,6 +647,75 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             // we need to parse the xml into an event KDE here...
 
+            // check if it is a registered KDE...
+            IEventKDE? kde = IEventKDE.InitializeKDE(x.Name.NamespaceName, x.Name.LocalName);
+
+            // if not, then check if the data type is specified and we recognize it
+            if (kde == null)
+            {
+                XAttribute? xsiType = x.Attribute((XNamespace)Constants.XSI_NAMESPACE + "type");
+                if (xsiType != null)
+                {
+                    switch (xsiType.Value)
+                    {
+                        case "string": kde = new EventKDEString(x.Name.NamespaceName, x.Name.LocalName); break;
+                        case "boolean": kde = new EventKDEBoolean(x.Name.NamespaceName, x.Name.LocalName); break;
+                        case "number": kde = new EventKDEDouble(x.Name.NamespaceName, x.Name.LocalName); break;
+                    }
+                }
+            }
+
+            // if not, check if it is a simple value or an object
+            if (kde == null)
+            {
+                if (x.Elements().Count() > 0)
+                {
+                    kde = new EventKDEObject(x.Name.NamespaceName, x.Name.LocalName);
+                }
+                // else if simple value, then we will consume it as a string
+                else
+                {
+                    kde = new EventKDEString(x.Name.NamespaceName, x.Name.LocalName);
+                }
+            }
+
+            if (kde != null)
+            {
+                kde.SetFromXml(x);
+            }
+            else
+            {
+                throw new Exception("Failed to initialize KDE from XML = " + x.ToString());
+            }
+
+            return kde;
+        }
+
+        private static IEventKDE ReadAttributeKDE(XAttribute x)
+        {
+            // we need to parse the xml into an event KDE here...
+
+            // check if it is a registered KDE...
+            IEventKDE? kde = IEventKDE.InitializeKDE(x.Name.NamespaceName, x.Name.LocalName);
+
+            // if not, check if it is a simple value or an object
+            if (kde == null)
+            {
+                kde = new EventKDEString(x.Name.NamespaceName, x.Name.LocalName);
+            }
+
+            if (kde != null)
+            {
+                // here we will convert the attribute into a simple element for fitting into the interface
+                XElement xE = new XElement(x.Name, x.Value);
+                kde.SetFromXml(xE);
+            }
+            else
+            {
+                throw new Exception("Failed to initialize KDE from XML = " + x.ToString());
+            }
+
+            return kde;
         }
     }
 }

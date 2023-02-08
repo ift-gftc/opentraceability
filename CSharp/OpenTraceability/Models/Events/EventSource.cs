@@ -19,7 +19,7 @@ namespace OpenTraceability.Models.Events
 
     public class EventSource
     {
-        public string? RawType { get; set; }
+        public string RawType { get; set; } = string.Empty;
 
         public EventSourceType Type
         {

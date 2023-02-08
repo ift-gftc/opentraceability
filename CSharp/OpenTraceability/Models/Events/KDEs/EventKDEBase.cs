@@ -11,6 +11,7 @@ namespace OpenTraceability.Models.Events.KDEs
     /// </summary>
     public class EventKDEBase
     {
-        public string Key { get; protected set; } = string.Empty;
+        public string Namespace { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
     }
 }

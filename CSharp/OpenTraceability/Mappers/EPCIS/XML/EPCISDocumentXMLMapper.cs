@@ -10,7 +10,6 @@ namespace GS1.Mappers.EPCIS
 {
     public class EPCISDocumentXMLMapper : IEPCISDocumentMapper
     {
-
         public EPCISDocument Map(string strValue)
         {
             try
@@ -30,19 +29,16 @@ namespace GS1.Mappers.EPCIS
                 Dictionary<string, string> prefixLookup = document.Namespaces.Reverse();
 
                 // determine epcis version
-                XNamespace? epcisNS = null;
                 if (document.Namespaces.Values.Contains(Constants.EPCIS_2_NAMESPACE))
                 {
                     document.EPCISVersion = EPCISVersion.Version_2_0;
-                    epcisNS = Constants.EPCIS_2_NAMESPACE;
                 }
                 else if (document.Namespaces.Values.Contains(Constants.EPCIS_1_NAMESPACE))
                 {
                     document.EPCISVersion = EPCISVersion.Version_1_2;
-                    epcisNS = Constants.EPCIS_1_NAMESPACE;
                 }
 
-                if (document.EPCISVersion == null || epcisNS == null)
+                if (document.EPCISVersion == null)
                 {
                     throw new Exception($"Failed to determine the EPCIS version of the XML document. Must contain a namespace with either '{Constants.EPCIS_2_NAMESPACE}' or '{Constants.EPCIS_1_NAMESPACE}'");
                 }
@@ -57,14 +53,10 @@ namespace GS1.Mappers.EPCIS
                 }
 
                 // read the standard business document header
-                if (prefixLookup.ContainsKey(Constants.SBDH_NAMESPACE))
+                XElement? xHeader = xDoc.Root.Element(Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader");
+                if (xHeader != null)
                 {
-                    string headerNS = prefixLookup[Constants.SBDH_NAMESPACE];
-                    XElement? xHeader = xDoc.Root.Element($"{headerNS}:StandardBusinessDocumentHeader");
-                    if (xHeader != null)
-                    {
-                        document.Header = EPCISXmlHeaderReader.ReadHeader(xHeader, headerNS);
-                    }
+                    document.Header = EPCISXmlHeaderReader.ReadHeader(xHeader);
                 }
 
                 // TODO: read the master data
@@ -92,7 +84,50 @@ namespace GS1.Mappers.EPCIS
 
         public string Map(EPCISDocument doc)
         {
-            throw new NotImplementedException();
+            if (doc.EPCISVersion == null)
+            {
+                throw new Exception("doc.EPCISVersion is NULL. This must be set to a version.");
+            }
+
+            // build namespaces 
+            Dictionary<string, string> namespaces = doc.GetNamespaces();
+
+            XNamespace epcisNS = (doc.EPCISVersion == EPCISVersion.Version_2_0) ? Constants.EPCIS_2_NAMESPACE : Constants.EPCIS_1_NAMESPACE;
+
+            // create a new xdocument with all of the namespaces...
+            XDocument xDoc = new XDocument(new XElement(epcisNS + "EPCISDocument", namespaces.Select(ns => new XAttribute(XNamespace.Xmlns + ns.Key, ns.Value))));
+            if (xDoc.Root == null)
+            {
+                throw new Exception("Failed to convert EPCIS Document into XML because the XDoc.Root is NULL. This should not happen.");
+            }
+
+            // set the creation date
+            if (doc.CreationDate != null)
+            {
+                xDoc.Root.Add(new XAttribute("creationDate", doc.CreationDate.Value.ToString("yyyy-MM-ddTHH:mm:ss.ffffffZ")));
+            }
+
+            // write the standard business document header
+            if (doc.Header != null)
+            {
+                XElement xHeader = EPCISXmlHeaderWriter.WriteHeader(doc.Header);
+                xDoc.Root.Add(xHeader);
+            }
+
+            // TODO: write the master data
+
+            // write the events
+            xDoc.Root.Add(new XElement("EPCISBody", new XElement("EventList")));
+            XElement xEventList = xDoc.Root?.Element("EPCISBody")?.Element("EventList") ?? throw new Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root");
+            foreach (IEvent e in doc.Events)
+            {
+                XElement xEvent = EPCISXmlEventWriter.WriteEvent(e, doc.EPCISVersion.Value);
+                xEventList.Add(xEvent);
+            }
+
+            // TODO: validate the schema depending on the version in the document
+
+            return xDoc.ToString();
         }
     }
 }
