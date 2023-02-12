@@ -24,24 +24,13 @@ namespace OpenTraceability.Utility
             return result;
         }
 
-        public static DateTime? AttributeISODateTime(this XElement x, string attName)
+        public static DateTimeOffset? AttributeISODateTime(this XElement x, string attName)
         {
             string? strValue = x.Attribute(attName)?.Value;
 
             if (!string.IsNullOrEmpty(strValue))
             {
-                for (int i = 1; i <= 6; i++)
-                {
-                    string f = "".PadLeft(i, 'f');
-                    if (DateTime.TryParseExact(strValue, $"yyyy-MM-ddTHH:mm:ss.{f}Z", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
-                    {
-                        return dt;
-                    }
-                    else if (DateTime.TryParseExact(strValue, $"yyyy-MM-ddTHH:mm:ss.{f}K", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-                    {
-                        return dt;
-                    }
-                }
+                return strValue.TryConvertToDateTimeOffset();
             }
 
             return null;
@@ -143,19 +132,11 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static void AddDateTimeISOElement(this XElement x, XName xname, DateTime? value)
+        public static void AddDateTimeOffsetISOElement(this XElement x, XName xname, DateTimeOffset? value)
         {
             if (value != null)
             {
-                x.Add(new XElement(xname, value.Value.ToString("yyyy-MM-ddTHH:mm:ss.ffffffZ")));
-            }
-        }
-
-        public static void AddDateTimeISOElement(this XElement x, XName xname, DateTimeOffset? value)
-        {
-            if (value != null)
-            {
-                x.Add(new XElement(xname, value.Value.ToString("yyyy-MM-ddTHH:mm:ss.ffffffZ")));
+                x.Add(new XElement(xname, value.Value.ToString("o")));
             }
         }
     }

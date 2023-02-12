@@ -7,11 +7,11 @@
         public string? Standard { get; set; }
         public string? Value { get; set; }
         public string? Identification { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateTimeOffset? StartDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; }
         public Uri? URI { get; set; }
         public Uri? AgencyURL { get; set; }
-        public DateTime? AuditDate { get; set; }
+        public DateTimeOffset? AuditDate { get; set; }
         public string? Subject { get; set; }
     }
 }

@@ -1,18 +1,34 @@
 ﻿using OpenTraceability.Interfaces;
+using OpenTraceability.Utility.Attributes;
 
 namespace OpenTraceability.Models.Events
 {
     public class SensorMetaData
     {
-        public DateTime? TimeStamp { get; set; }
+        [OpenTraceabilityXml("time")]
+        public DateTimeOffset? TimeStamp { get; set; }
+
+        [OpenTraceabilityXml("deviceID")]
         public Uri? DeviceID { get; set; }
+
+        [OpenTraceabilityXml("deviceMetadata")]
         public Uri? DeviceMetaData { get; set; }
+
+        [OpenTraceabilityXml("rawData")]
         public Uri? RawData { get; set; }
-        public List<SensorReport> Reports { get; set; } = new List<SensorReport>();
-        public DateTime? StartTime { get; internal set; }
+
+        [OpenTraceabilityXml("startTime")]
+        public DateTimeOffset? StartTime { get; internal set; }
+
+        [OpenTraceabilityXml("bizRules")]
         public Uri? BizRules { get; internal set; }
+
+        [OpenTraceabilityXml("dataProcessingMethod")]
         public Uri? DataProcessingMethod { get; internal set; }
-        public DateTime? EndTime { get; internal set; }
+
+        [OpenTraceabilityXml("endTime")]
+        public DateTimeOffset? EndTime { get; internal set; }
+
         public List<IEventKDE> ExtensionAttributes { get; internal set; } = new List<IEventKDE>();
     }
 }

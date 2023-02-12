@@ -6,8 +6,8 @@ namespace OpenTraceability.Models.Events.KDEs
 {
     public class EventKDEDateTime : EventKDEBase, IEventKDE
     {
-        public Type ValueType => typeof(DateTime?);
-        public DateTime? Value { get; set; }
+        public Type ValueType => typeof(DateTimeOffset?);
+        public DateTimeOffset? Value { get; set; }
 
         public JToken? GetJson()
         {
@@ -31,7 +31,7 @@ namespace OpenTraceability.Models.Events.KDEs
 
         public override string ToString()
         {
-            return Value?.ToString() ?? String.Empty;
+            return Value?.ToString("O") ?? String.Empty;
         }
     }
 }

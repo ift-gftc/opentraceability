@@ -2,6 +2,7 @@
 using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
+using OpenTraceability.Utility.Attributes;
 using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events
@@ -61,7 +62,7 @@ namespace OpenTraceability.Models.Events
         public string? CertificationInfo { get; set; } = string.Empty;
         public DateTimeOffset? EventTime { get; set; }
         public double? EventTimeOffset { get; set; }
-        public DateTime? Recorded { get; set; }
+        public DateTimeOffset? Recorded { get; set; }
         public PGLN? DataOwner { get; set; }
         public PGLN? Owner { get; set; }
         public EventAction? Action { get; set; }

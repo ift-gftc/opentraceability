@@ -1,28 +1,41 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Utility\Data\Countries.xml" />
-    <None Remove="Utility\Data\UnitDescriptors.xml" />
-    <None Remove="Utility\Data\UnitSystems.xml" />
-    <None Remove="Utility\Data\UOMs.xml" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DefineConstants>$(DefineConstants)TRACE;STANDALONE_WASM</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Utility\Data\Countries.xml" />
-    <EmbeddedResource Include="Utility\Data\UnitDescriptors.xml" />
-    <EmbeddedResource Include="Utility\Data\UnitSystems.xml" />
-    <EmbeddedResource Include="Utility\Data\UOMs.xml" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DefineConstants>$(DefineConstants)TRACE;STANDALONE_WASM</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Crc32.NET" Version="1.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Utility\Data\Countries.xml" />
+		<None Remove="Utility\Data\UnitDescriptors.xml" />
+		<None Remove="Utility\Data\UnitSystems.xml" />
+		<None Remove="Utility\Data\UOMs.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Utility\Data\Countries.xml" />
+		<EmbeddedResource Include="Utility\Data\UnitDescriptors.xml" />
+		<EmbeddedResource Include="Utility\Data\UnitSystems.xml" />
+		<EmbeddedResource Include="Utility\Data\UOMs.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Crc32.NET" Version="1.2.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Wasi.Sdk" Version="0.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Models\MasterData\KDEs\" />
+	</ItemGroup>
 
 </Project>

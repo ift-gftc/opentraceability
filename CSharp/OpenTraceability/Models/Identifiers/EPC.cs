@@ -19,9 +19,9 @@ namespace OpenTraceability.Models.Identifiers
     {
         private string _epcStr;
 
-        public EPCType Type { get; set; }
-        public GTIN GTIN { get; set; }
-        public string SerialLotNumber { get; set; }
+        public EPCType Type { get; private set; }
+        public GTIN GTIN { get; private set; }
+        public string SerialLotNumber { get; private set; }
 
         public EPC(string epcStr)
         {

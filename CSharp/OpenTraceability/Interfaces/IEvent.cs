@@ -22,7 +22,7 @@ namespace OpenTraceability.Interfaces
         PGLN? Owner { get; set; }
         DateTimeOffset? EventTime { get; set; }
         double? EventTimeOffset { get; set; }
-        DateTime? Recorded { get; set; }
+        DateTimeOffset? Recorded { get; set; }
         EventType EventType { get; }
         EventAction? Action { get; set; }
         string? BusinessStep { get; set; }

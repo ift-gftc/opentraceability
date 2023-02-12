@@ -49,7 +49,7 @@ namespace GS1.Mappers.EPCIS
                 string? creationDateAttributeStr = xDoc.Root.Attribute("creationDate")?.Value;
                 if (!string.IsNullOrWhiteSpace(creationDateAttributeStr))
                 {
-                    document.CreationDate = DateTime.Parse(creationDateAttributeStr);
+                    document.CreationDate = creationDateAttributeStr.TryConvertToDateTimeOffset();
                 }
 
                 // read the standard business document header
@@ -104,7 +104,16 @@ namespace GS1.Mappers.EPCIS
             // set the creation date
             if (doc.CreationDate != null)
             {
-                xDoc.Root.Add(new XAttribute("creationDate", doc.CreationDate.Value.ToString("yyyy-MM-ddTHH:mm:ss.ffffffZ")));
+                xDoc.Root.Add(new XAttribute("creationDate", doc.CreationDate.Value.ToString("o")));
+            }
+
+            if (doc.EPCISVersion == EPCISVersion.Version_2_0)
+            {
+                xDoc.Root.Add(new XAttribute("schemaVersion", "2.0"));
+            }
+            else if (doc.EPCISVersion == EPCISVersion.Version_1_2)
+            {
+                xDoc.Root.Add(new XAttribute("schemaVersion", "1.2"));
             }
 
             // write the standard business document header

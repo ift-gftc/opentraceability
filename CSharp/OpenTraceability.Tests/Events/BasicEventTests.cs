@@ -16,6 +16,9 @@ namespace OpenTraceability.Tests.Events
         /// </summary>
         [Test]
         [TestCase("object_event_all_possible_fields.xml")]
+        [TestCase("aggregation_event_all_possible_fields.xml")]
+        [TestCase("association_event_all_possible_fields.xml")]
+        [TestCase("transformation_event_all_possible_fields.xml")]
         public void XML(string file)
         {
             // initialize the libraries.

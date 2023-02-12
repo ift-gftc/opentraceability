@@ -149,22 +149,22 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 e = new ObjectEvent();
                 kdes.AddRange(objectKDEs);
             }
-            else if (xEvent.Name == "")
+            else if (xEvent.Name == "TransformationEvent")
             {
                 e = new TransformationEvent();
                 kdes.AddRange(transformationKDEs);
             }
-            else if (xEvent.Name == "")
-            {
-                e = new TransactionEvent();
-                kdes.AddRange(transactionKDEs);
-            }
-            else if (xEvent.Name == "")
+            //else if (xEvent.Name == "")
+            //{
+            //    e = new TransactionEvent();
+            //    kdes.AddRange(transactionKDEs);
+            //}
+            else if (xEvent.Name == "AggregationEvent")
             {
                 e = new AggregationEvent();
                 kdes.AddRange(aggregationKDEs);
             }
-            else if (xEvent.Name == "")
+            else if (xEvent.Name == "AssociationEvent")
             {
                 e = new AssociationEvent();
                 kdes.AddRange(associationKDEs);
@@ -444,7 +444,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
 
                 double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
-                string uom = xQuantity.Element("uom")?.Value ?? string.Empty;
+                string uom = xQuantity.Element("uom")?.Value ?? "EA";
                 product.Quantity = new Measurement(quantity, uom);
 
                 e.AddProduct(product);
@@ -460,7 +460,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
 
                 double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
-                string uom = xQuantity.Element("uom")?.Value ?? string.Empty;
+                string uom = xQuantity.Element("uom")?.Value ?? "EA";
                 product.Quantity = new Measurement(quantity, uom);
 
                 e.AddProduct(product);
@@ -476,7 +476,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
 
                 double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
-                string uom = xQuantity.Element("uom")?.Value ?? string.Empty;
+                string uom = xQuantity.Element("uom")?.Value ?? "EA";
                 product.Quantity = new Measurement(quantity, uom);
 
                 e.AddProduct(product);
@@ -492,7 +492,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
 
                 double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
-                string uom = xQuantity.Element("uom")?.Value ?? string.Empty;
+                string uom = xQuantity.Element("uom")?.Value ?? "EA";
                 product.Quantity = new Measurement(quantity, uom);
 
                 e.AddProduct(product);
@@ -569,13 +569,13 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                     sReport.DeviceID = xSensorReport.AttributeURI("deviceID");
                     sReport.DeviceMetadata = xSensorReport.AttributeURI("deviceMetadata");
                     sReport.RawData = xSensorReport.AttributeURI("rawData");
-                    sReport.TimeStamp = xSensor.AttributeISODateTime("time");
-                    sReport.MeanValue = xSensor.AttributeDouble("meanValue");
-                    sReport.PercentageValue = xSensor.AttributeDouble("percValue");
-                    sReport.PercentageRank = xSensor.AttributeDouble("percRank");
-                    sReport.DataProcessingMethod = xSensor.AttributeURI("dataProcessingMethod");
-                    sReport.CoordinateReferenceSystem = xSensor.AttributeURI("coordinateReferenceSystem");
-                    sReport.Exception = xSensor.AttributeURI("exception");
+                    sReport.TimeStamp = xSensorReport.AttributeISODateTime("time");
+                    sReport.MeanValue = xSensorReport.AttributeDouble("meanValue");
+                    sReport.PercentageValue = xSensorReport.AttributeDouble("percValue");
+                    sReport.PercentageRank = xSensorReport.AttributeDouble("percRank");
+                    sReport.DataProcessingMethod = xSensorReport.AttributeURI("dataProcessingMethod");
+                    sReport.CoordinateReferenceSystem = xSensorReport.AttributeURI("coordinateReferenceSystem");
+                    sReport.Exception = xSensorReport.AttributeURI("exception");
 
                     // TODO: extension attributes...
                     foreach (XAttribute xa in xSensorReport.Attributes().Where(a => !sensorReportAttributes.Contains(a.Name.LocalName)))

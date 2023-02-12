@@ -2,8 +2,12 @@
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
+using OpenTraceability.Utility.Attributes;
 using System;
+using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OpenTraceability.Mappers.EPCIS.XML
 {
@@ -133,11 +137,16 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 xEvent = new XElement("ObjectEvent");
                 kdes.AddRange(objectKDEs);
             }
-            //else if (xEvent.Name == "")
-            //{
-            //    e = new TransformationEvent();
-            //    kdes.AddRange(transformationKDEs);
-            //}
+            else if (e is AggregationEvent)
+            {
+                xEvent = new XElement("AggregationEvent");
+                kdes.AddRange(aggregationKDEs);
+            }
+            else if (e is TransformationEvent)
+            {
+                xEvent = new XElement("TransformationEvent");
+                kdes.AddRange(transformationKDEs);
+            }
             //else if (xEvent.Name == "")
             //{
             //    e = new TransactionEvent();
@@ -148,11 +157,11 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             //    e = new AggregationEvent();
             //    kdes.AddRange(aggregationKDEs);
             //}
-            //else if (xEvent.Name == "")
-            //{
-            //    e = new AssociationEvent();
-            //    kdes.AddRange(associationKDEs);
-            //}
+            else if (e is AssociationEvent)
+            {
+                xEvent = new XElement("AssociationEvent");
+                kdes.AddRange(associationKDEs);
+            }
             else
             {
                 throw new Exception("Unrecognized event type = " + e.GetType().FullName);
@@ -199,7 +208,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             if (e.ErrorDeclaration != null)
             {
                 XElement xe = new XElement(xName);
-                xe.AddDateTimeISOElement("declarationTime", e.ErrorDeclaration.DeclarationTime);
+                xe.AddDateTimeOffsetISOElement("declarationTime", e.ErrorDeclaration.DeclarationTime);
                 xe.AddStringElement("reason", e.ErrorDeclaration.RawReason?.ToString());
                 if (e.ErrorDeclaration.CorrectingEventIDs != null && e.ErrorDeclaration.CorrectingEventIDs.Count > 0)
                 {
@@ -230,7 +239,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             if (e.EventTimeOffset != null)
             {
-                TimeSpan ts = TimeSpan.FromHours(e.EventTimeOffset.Value);
+                TimeSpan ts = TimeSpan.FromHours(Math.Abs(e.EventTimeOffset.Value));
                 string offset = $"{ts.Hours.ToString().PadLeft(2, '0')}:{ts.Minutes.ToString().PadLeft(2, '0')}";
                 if (e.EventTimeOffset.Value >= 0) offset = "+" + offset;
                 else offset = "-" + offset;
@@ -243,7 +252,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             if (e.Recorded != null)
             {
-                XElement xKDE = new XElement(xName, e.Recorded.Value.ToString("yyyy-MM-ddTHH:mm:ss.ffffffZ"));
+                XElement xKDE = new XElement(xName, e.Recorded.Value.ToString("o"));
                 x.Add(xKDE);
             }
         }
@@ -252,7 +261,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             if (e.EventTime != null)
             {
-                XElement xKDE = new XElement(xName, e.EventTime.Value.ToString("yyyy-MM-ddTHH:mm:ss.ffffffZ"));
+                XElement xKDE = new XElement(xName, e.EventTime.Value.ToString("o"));
                 x.Add(xKDE);
             }
         }
@@ -279,20 +288,20 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             if (e.PersistentDisposition != null)
             {
                 XElement xKDE = new XElement(xName);
-                if (e.PersistentDisposition.Set != null)
-                {
-                    foreach (string set in e.PersistentDisposition.Set)
-                    {
-                        XElement xSet = new XElement("set", set);
-                        xKDE.Add(xSet);
-                    }
-                }
                 if (e.PersistentDisposition.Unset != null)
                 {
                     foreach (string unset in e.PersistentDisposition.Unset)
                     {
                         XElement xUnset = new XElement("unset", unset);
                         xKDE.Add(xUnset);
+                    }
+                }
+                if (e.PersistentDisposition.Set != null)
+                {
+                    foreach (string set in e.PersistentDisposition.Set)
+                    {
+                        XElement xSet = new XElement("set", set);
+                        xKDE.Add(xSet);
                     }
                 }
                 x.Add(xKDE);
@@ -312,31 +321,27 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                     {
                         XElement xMetadata = new XElement("sensorMetadata");
 
-                        // TODO: populate the meta data...
+                        WriteXmlAttributes(xMetadata, se.MetaData);
+                        WriteXmlExtensionAttributes(xMetadata, se.MetaData.ExtensionAttributes);
 
-                        // TODO: add extension attributes
+                        xSE.Add(xMetadata);
                     }
 
                     foreach (SensorReport report in se.Reports)
                     {
                         XElement xReport = new XElement("sensorReport");
 
-                        // TODO: populate report
+                        WriteXmlAttributes(xReport, report);
+                        WriteXmlExtensionAttributes(xReport, report.ExtensionAttributes);
 
-                        // TODO: add extension attributes
+                        xSE.Add(xReport);
                     }
 
-                    foreach (IEventKDE kde in se.ExtensionKDEs)
-                    {
-                        XElement? xKDE = kde.GetXml();
-                        if (xKDE != null)
-                        {
-                            xSE.Add(xKDE);
-                        }
-                    }
+                    WriteXmlExtensionKDEs(xSE, se.ExtensionKDEs);
 
                     xList.Add(xSE);
                 }
+                x.Add(xList);
             }
         }
 
@@ -380,8 +385,12 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                     {
                         XElement xQuantity = new XElement("quantityElement",
                             new XElement("epcClass", product.EPC.ToString()),
-                            new XElement("quantity", product.Quantity.Value),
-                            new XElement("uom", product.Quantity.UoM.UNCode));
+                            new XElement("quantity", product.Quantity.Value));
+
+                        if (product.Quantity.UoM.UNCode != "EA")
+                        {
+                            xQuantity.Add(new XElement("uom", product.Quantity.UoM.UNCode));
+                        }
 
                         xQuantityList.Add(xQuantity);
                     }
@@ -482,8 +491,12 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                     {
                         XElement xQuantity = new XElement("quantityElement",
                             new XElement("epcClass", product.EPC.ToString()),
-                            new XElement("quantity", product.Quantity.Value),
-                            new XElement("uom", product.Quantity.UoM.UNCode));
+                            new XElement("quantity", product.Quantity.Value));
+
+                        if (product.Quantity.UoM.UNCode != "EA")
+                        {
+                            xQuantity.Add(new XElement("uom", product.Quantity.UoM.UNCode));
+                        }
 
                         xQuantityList.Add(xQuantity);
                     }
@@ -519,10 +532,14 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 {
                     if (product.EPC != null && product.Quantity != null)
                     {
-                        XElement xQuantity = new XElement("quantityElement", 
-                            new XElement("epcClass", product.EPC.ToString()), 
-                            new XElement("quantity", product.Quantity.Value), 
-                            new XElement("uom", product.Quantity.UoM.UNCode));
+                        XElement xQuantity = new XElement("quantityElement",
+                            new XElement("epcClass", product.EPC.ToString()),
+                            new XElement("quantity", product.Quantity.Value));
+
+                        if (product.Quantity.UoM.UNCode != "EA")
+                        {
+                            xQuantity.Add(new XElement("uom", product.Quantity.UoM.UNCode));
+                        }
 
                         xQuantityList.Add(xQuantity);
                     }
@@ -569,8 +586,12 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                     {
                         XElement xQuantity = new XElement("quantityElement",
                             new XElement("epcClass", product.EPC.ToString()),
-                            new XElement("quantity", product.Quantity.Value),
-                            new XElement("uom", product.Quantity.UoM.UNCode));
+                            new XElement("quantity", product.Quantity.Value));
+
+                        if (product.Quantity.UoM.UNCode != "EA")
+                        {
+                            xQuantity.Add(new XElement("uom", product.Quantity.UoM.UNCode));
+                        }
 
                         xQuantityList.Add(xQuantity);
                     }
@@ -593,6 +614,73 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                     }
                 }
                 x.Add(xEPCList);
+            }
+        }
+
+        private static void WriteXmlAttributes(XElement x, object o)
+        {
+            foreach (PropertyInfo prop in o.GetType().GetProperties())
+            {
+                OpenTraceabilityXmlAttribute? att = prop.GetCustomAttribute<OpenTraceabilityXmlAttribute>();
+                if (att != null)
+                {
+                    if (prop.PropertyType == typeof(DateTimeOffset?))
+                    {
+                        DateTimeOffset? dt = (DateTimeOffset?)prop.GetValue(o);
+                        if (dt != null)
+                        {
+                            x.Add(new XAttribute(att.Name, dt.Value.ToString("o")));
+                        }
+                    }
+                    else if (prop.PropertyType == typeof(UOM))
+                    {
+                        UOM? uom = (UOM?)prop.GetValue(o);
+                        if (uom != null)
+                        {
+                            x.Add(new XAttribute(att.Name, uom.UNCode));
+                        }
+                    }
+                    else if (prop.PropertyType == typeof(bool?))
+                    {
+                        bool? b = (bool?)prop.GetValue(o);
+                        if (b != null)
+                        {
+                            x.Add(new XAttribute(att.Name, Convert.ToString(b)?.ToLower() ?? string.Empty));
+                        }
+                    }
+                    else
+                    {
+                        string? str = prop.GetValue(o)?.ToString();
+                        if (str != null)
+                        {
+                            x.Add(new XAttribute(att.Name, str));
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void WriteXmlExtensionAttributes(XElement x, List<IEventKDE> kdes)
+        {
+            foreach (IEventKDE kde in kdes)
+            {
+                XElement? xKDE = kde.GetXml();
+                if (xKDE != null)
+                {
+                    x.Add(new XAttribute(xKDE.Name, xKDE.Value));
+                }
+            }
+        }
+
+        private static void WriteXmlExtensionKDEs(XElement x, List<IEventKDE> kdes)
+        {
+            foreach (IEventKDE kde in kdes)
+            {
+                XElement? xKDE = kde.GetXml();
+                if (xKDE != null)
+                {
+                    x.Add(xKDE);
+                }
             }
         }
     }

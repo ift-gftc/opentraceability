@@ -17,7 +17,7 @@ namespace OpenTraceability.Models.Events
     public class ErrorDeclaration
     {
         public Uri? RawReason { get; set; }
-        public DateTime? DeclarationTime { get; set; }
+        public DateTimeOffset? DeclarationTime { get; set; }
         public List<string>? CorrectingEventIDs { get; set; }
 
         public EventErrorType Reason

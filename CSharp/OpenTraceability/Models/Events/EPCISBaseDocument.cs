@@ -26,7 +26,7 @@ namespace OpenTraceability.Models.Events
         /// <summary>
         /// The date that the EPCIS Document was created.
         /// </summary>
-        public DateTime? CreationDate { get; set; }
+        public DateTimeOffset? CreationDate { get; set; }
 
         /// <summary>
         /// The standard business document header on the EPCIS document.

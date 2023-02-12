@@ -32,7 +32,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 xDocId.AddStringElement(Constants.SBDH_XNAMESPACE + "TypeVersion", header.DocumentIdentification.TypeVersion);
                 xDocId.AddStringElement(Constants.SBDH_XNAMESPACE + "InstanceIdentifier", header.DocumentIdentification.InstanceIdentifier);
                 xDocId.AddStringElement(Constants.SBDH_XNAMESPACE + "MultipleType", header.DocumentIdentification.MultipleType);
-                xDocId.AddDateTimeISOElement(Constants.SBDH_XNAMESPACE + "CreationDateAndTime", header.DocumentIdentification.CreationDateAndTime);
+                xDocId.AddDateTimeOffsetISOElement(Constants.SBDH_XNAMESPACE + "CreationDateAndTime", header.DocumentIdentification.CreationDateAndTime);
             }
 
             return xHeader;
