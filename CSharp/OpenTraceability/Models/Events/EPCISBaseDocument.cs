@@ -7,8 +7,8 @@ namespace OpenTraceability.Models.Events
 {
     public enum EPCISVersion
     {
-        Version_1_2 = 0,
-        Version_2_0 = 1
+        Version_1_2 = 1,
+        Version_2_0 = 2
     }
 
     public class EPCISBaseDocument

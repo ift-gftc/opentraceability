@@ -1,4 +1,7 @@
-﻿using OpenTraceability.Mappers;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.Mappers;
+using OpenTraceability.Mappers.EPCIS;
+using OpenTraceability.Mappers.EPCIS.XML;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Events.KDEs;
 using System.Xml.Linq;

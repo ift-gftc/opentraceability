@@ -2,6 +2,6 @@
 {
     public class EventReadPoint
     {
-        public string ID { get; set; } = string.Empty;
+        public Uri? ID { get; set; }
     }
 }

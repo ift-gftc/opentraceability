@@ -21,17 +21,17 @@ namespace OpenTraceability.Interfaces
         PGLN? DataOwner { get; set; }
         PGLN? Owner { get; set; }
         DateTimeOffset? EventTime { get; set; }
-        double? EventTimeOffset { get; set; }
-        DateTimeOffset? Recorded { get; set; }
+        double? EventTimeZoneOffset { get; set; }
+        DateTimeOffset? RecordTime { get; set; }
         EventType EventType { get; }
         EventAction? Action { get; set; }
-        string? BusinessStep { get; set; }
-        string? Disposition { get; set; }
+        Uri? BusinessStep { get; set; }
+        Uri? Disposition { get; set; }
         PersistentDisposition? PersistentDisposition { get; set; }
         ErrorDeclaration? ErrorDeclaration { get; set; }
         EventLocation? Location { get; set; }
         EventReadPoint? ReadPoint { get; set; }
-        List<EventBusinessTransaction> BusinessTransactions { get; set; }
+        List<EventBusinessTransaction> BizTransactionList { get; set; }
         List<EventSource> SourceList { get; set; }
         List<EventDestination> DestinationList { get; set; }
         List<Certificate> Certificates { get; set; }

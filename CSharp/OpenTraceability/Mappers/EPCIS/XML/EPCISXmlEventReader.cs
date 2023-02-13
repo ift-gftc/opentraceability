@@ -1,12 +1,18 @@
-﻿using OpenTraceability.Interfaces;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
+using OpenTraceability.Utility.Attributes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,186 +27,70 @@ namespace OpenTraceability.Mappers.EPCIS.XML
     public static class EPCISXmlEventReader
     {
         // https://ref.gs1.org/standards/epcis/epcglobal-epcis-2_0.xsd
-
-        private static List<EPCISXmlKDE> baseKDEs = new List<EPCISXmlKDE>()
-        {
-            new EPCISXmlKDE("eventTime", ReadEventTime),
-            new EPCISXmlKDE("recordTime", ReadRecordTime),
-            new EPCISXmlKDE("eventTimeZoneOffset", ReadEventTimeZoneOffset),
-            new EPCISXmlKDE("eventID", ReadEventID, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("errorDeclaration", ReadErrorDeclaration, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("certificationInfo", ReadCertificationInfo, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("baseExtension/eventID", ReadEventID, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("baseExtension/errorDeclaration", ReadErrorDeclaration, EPCISVersion.Version_1_2),
-        };
-
-        private static List<EPCISXmlKDE> objectKDEs = new List<EPCISXmlKDE>()
-        {
-            new EPCISXmlKDE("epcList", ReadEPCList),
-            new EPCISXmlKDE("action", ReadAction),
-            new EPCISXmlKDE("bizStep", ReadBizStep),
-            new EPCISXmlKDE("disposition", ReadDisposition),
-            new EPCISXmlKDE("readPoint", ReadReadPoint),
-            new EPCISXmlKDE("bizLocation", ReadBizLocation),
-            new EPCISXmlKDE("bizTransactionList", ReadBizTransactionList),
-            new EPCISXmlKDE("quantityList", ReadQuantityList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("sourceList", ReadSourceList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("destinationList", ReadDestinationList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("sensorElementList", ReadSensorElementList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("persistentDisposition", ReadPersistentDisposition, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("ilmd", ReadILMD, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("extension/quantityList", ReadQuantityList, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("extension/sourceList", ReadSourceList, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("extension/destinationList", ReadDestinationList, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("extension/ilmd", ReadILMD, EPCISVersion.Version_1_2)
-        };
-
-        private static List<EPCISXmlKDE> transformationKDEs = new List<EPCISXmlKDE>()
-        {
-            new EPCISXmlKDE("inputEPCList", ReadInputEPCList),
-            new EPCISXmlKDE("inputQuantityList", ReadInputQuantityList),
-            new EPCISXmlKDE("outputEPCList", ReadOutputEPCList),
-            new EPCISXmlKDE("outputQuantityList", ReadOutputQuantityList),
-            new EPCISXmlKDE("transformationID", ReadTransformationID),
-            new EPCISXmlKDE("bizStep", ReadBizStep),
-            new EPCISXmlKDE("disposition", ReadDisposition),
-            new EPCISXmlKDE("readPoint", ReadReadPoint),
-            new EPCISXmlKDE("bizLocation", ReadBizLocation),
-            new EPCISXmlKDE("bizTransactionList", ReadBizTransactionList),
-            new EPCISXmlKDE("sourceList", ReadSourceList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("destinationList", ReadDestinationList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("sensorElementList", ReadSensorElementList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("persistentDisposition", ReadPersistentDisposition, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("ilmd", ReadILMD, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("extension/quantityList", ReadQuantityList, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("extension/sourceList", ReadSourceList, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("extension/destinationList", ReadDestinationList, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("extension/ilmd", ReadILMD, EPCISVersion.Version_1_2)
-        };
-
-        private static List<EPCISXmlKDE> transactionKDEs = new List<EPCISXmlKDE>()
-        {
-            new EPCISXmlKDE("bizTransactionList", ReadBizTransactionList),
-            new EPCISXmlKDE("parentID", ReadParentID),
-            new EPCISXmlKDE("epcList", ReadEPCList),
-            new EPCISXmlKDE("action", ReadAction),
-            new EPCISXmlKDE("bizStep", ReadBizStep),
-            new EPCISXmlKDE("disposition", ReadDisposition),
-            new EPCISXmlKDE("readPoint", ReadReadPoint),
-            new EPCISXmlKDE("bizLocation", ReadBizLocation),
-            new EPCISXmlKDE("quantityList", ReadQuantityList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("sourceList", ReadSourceList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("destinationList", ReadDestinationList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("sensorElementList", ReadSensorElementList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("persistentDisposition", ReadPersistentDisposition, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("extension/quantityList", ReadQuantityList, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("extension/sourceList", ReadSourceList, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("extension/destinationList", ReadDestinationList, EPCISVersion.Version_1_2),
-        };
-
-        private static List<EPCISXmlKDE> aggregationKDEs = new List<EPCISXmlKDE>()
-        {
-            new EPCISXmlKDE("parentID", ReadParentID),
-            new EPCISXmlKDE("childEPCs", ReadChildEPCList),
-            new EPCISXmlKDE("action", ReadAction),
-            new EPCISXmlKDE("bizStep", ReadBizStep),
-            new EPCISXmlKDE("disposition", ReadDisposition),
-            new EPCISXmlKDE("readPoint", ReadReadPoint),
-            new EPCISXmlKDE("bizLocation", ReadBizLocation),
-            new EPCISXmlKDE("bizTransactionList", ReadBizTransactionList),
-            new EPCISXmlKDE("childQuantityList", ReadChildQuantityList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("sourceList", ReadSourceList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("destinationList", ReadDestinationList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("sensorElementList", ReadSensorElementList, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("persistentDisposition", ReadPersistentDisposition, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("ilmd", ReadILMD, EPCISVersion.Version_2_0),
-            new EPCISXmlKDE("extension/childQuantityList", ReadChildQuantityList, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("extension/sourceList", ReadSourceList, EPCISVersion.Version_1_2),
-            new EPCISXmlKDE("extension/destinationList", ReadDestinationList, EPCISVersion.Version_1_2)
-        };
-
-        private static List<EPCISXmlKDE> associationKDEs = new List<EPCISXmlKDE>()
-        {
-            new EPCISXmlKDE("parentID", ReadParentID),
-            new EPCISXmlKDE("childEPCs", ReadChildEPCList),
-            new EPCISXmlKDE("childQuantityList", ReadChildQuantityList),
-            new EPCISXmlKDE("action", ReadAction),
-            new EPCISXmlKDE("bizStep", ReadBizStep),
-            new EPCISXmlKDE("disposition", ReadDisposition),
-            new EPCISXmlKDE("readPoint", ReadReadPoint),
-            new EPCISXmlKDE("bizLocation", ReadBizLocation),
-            new EPCISXmlKDE("bizTransactionList", ReadBizTransactionList),
-            new EPCISXmlKDE("sourceList", ReadSourceList),
-            new EPCISXmlKDE("destinationList", ReadDestinationList),
-            new EPCISXmlKDE("sensorElementList", ReadSensorElementList),
-            new EPCISXmlKDE("persistentDisposition", ReadPersistentDisposition)
-        };
-
-        private static List<string> sensorMetaDataAttributes = new List<string>() { "time", "deviceID", "deviceMetadata", "rawData", "startTime", "endTime", "bizRules", "dataProcessingMethod" };
-        private static List<string> sensorReportAttributes = new List<string>() { "type", "value", "component", "stringValue", "booleanValue", "hexBinaryValue", "uriValue", "uom", "minValue", "maxValue", "sDev", "chemicalSubstance", "microorganism", "deviceID", "deviceMetadata", "rawData", "time", "meanValue", "percRank", "percValue", "dataProcessingMethod", "coordinateReferenceSystem", "exception" };
-
         public static IEvent ReadEvent(XElement xEvent, EPCISVersion epcisVersion)
         {
             IEvent? e = null;
-            List<EPCISXmlKDE> kdes = new List<EPCISXmlKDE>(baseKDEs);
+            List<EPCISMappingKDE> kdes = EPCISMappingKDE.MappingKDEs["Base"].ToList();
 
             if (xEvent.Name == "ObjectEvent")
             {
                 e = new ObjectEvent();
-                kdes.AddRange(objectKDEs);
+                kdes.AddRange(EPCISMappingKDE.MappingKDEs["ObjectEvent"].ToList());
             }
             else if (xEvent.Name == "TransformationEvent")
             {
                 e = new TransformationEvent();
-                kdes.AddRange(transformationKDEs);
+                kdes.AddRange(EPCISMappingKDE.MappingKDEs["TransformationEvent"].ToList());
             }
-            //else if (xEvent.Name == "")
-            //{
-            //    e = new TransactionEvent();
-            //    kdes.AddRange(transactionKDEs);
-            //}
+            else if (xEvent.Name == "TransactionEvent")
+            {
+                e = new TransactionEvent();
+                kdes.AddRange(EPCISMappingKDE.MappingKDEs["TransactionEvent"].ToList());
+            }
             else if (xEvent.Name == "AggregationEvent")
             {
                 e = new AggregationEvent();
-                kdes.AddRange(aggregationKDEs);
+                kdes.AddRange(EPCISMappingKDE.MappingKDEs["AggregationEvent"].ToList());
             }
             else if (xEvent.Name == "AssociationEvent")
             {
                 e = new AssociationEvent();
-                kdes.AddRange(associationKDEs);
+                kdes.AddRange(EPCISMappingKDE.MappingKDEs["AssociationEvent"].ToList());
             }
             else
             {
                 throw new Exception("Unrecognized event type = " + xEvent.Name);
             }
 
-            kdes = kdes.Where(k => k.RequiredVersion == null || k.RequiredVersion == epcisVersion).ToList();
-
+            kdes = kdes.Where(k => k.Version == null || k.Version == epcisVersion).ToList();
 
             // go through each KDE in our list...
             int i = 0;
             foreach (XElement x in xEvent.Elements())
             {
+                bool readSomething = false;
+
                 // move through our list of KDEs until we find that the current element matches it...
                 while (i < kdes.Count)
                 {
                     // here we need to handle if we are processing a child element like baseExtension or extension
-                    if (kdes[i].Name.Contains("/"))
+                    if (kdes[i].XPath.Contains("/"))
                     {
-                        string[] parts = kdes[i].Name.Split("/");
+                        string[] parts = kdes[i].XPath.Split("/");
                         while (x.Name == parts[0])
                         {
                             foreach (XElement xChild in x.Elements())
                             {
-                                if (xChild.Name == parts[2])
+                                if (xChild.Name == parts[1])
                                 {
-                                    // process the KDe and move to next KDE...
-                                    kdes[i].Action(kdes[i].Name, e, xChild);
-
+                                    // TODO: process the KDe and move to next KDE...
+                                    ReadKDE(kdes[i], e, xChild);
+                                    readSomething = true;
                                     i++;
-                                    if (kdes[i].Name.Contains("/"))
+
+                                    if (kdes[i].XPath.Contains("/"))
                                     { 
-                                        parts = kdes[i].Name.Split("/");
+                                        parts = kdes[i].XPath.Split("/");
                                     }
                                     else
                                     {
@@ -208,14 +98,20 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                                     }
                                 }
                             }
-                            break;
+                            if (!kdes[i].XPath.Contains("/"))
+                            {
+                                break;
+                            }
                         }
+                        break;
                     }
                     // processing a standard root KDE...
-                    else if (x.Name == kdes[i].Name)
+                    else if (x.Name == kdes[i].XPath)
                     {
-                        // process the KDEs and break...
-                        kdes[i].Action(kdes[i].Name, e, x);
+                        // process the KDe and move to next KDE...
+                        ReadKDE(kdes[i], e, x);
+                        readSomething = true;
+
                         i++;
                         break;
                     }
@@ -225,6 +121,8 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                         i++;
                     }
                 }
+
+                if (readSomething) continue;
 
                 // if we reached the end of our list of kdes... assume it is an extension KDE...
                 if (i >= kdes.Count)
@@ -237,51 +135,83 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             return e;
         }
 
-        private static void ReadEventTime(string xName, IEvent e, XElement x)
+        private static void ReadKDE(EPCISMappingKDE kde, IEvent e, XElement x)
         {
-            string strValue = x.Value;
-
-            for (int i = 1; i <= 6; i++)
+            if (kde.Property != null)
             {
-                string f = "".PadLeft(i,'f');
-                if (DateTimeOffset.TryParseExact(strValue, $"yyyy-MM-ddTHH:mm:ss.{f}Z", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dt))
+                // if we are looking at a complex property on the C#, then drill down to it
+                object obj = e;
+                List<string> parts = kde.Property.Split(".").ToList();
+                while (parts.Count > 1)
                 {
-                    e.EventTime = dt;
-                    return;
+                    string pName = parts.First();
+                    PropertyInfo p = obj.GetType().GetProperty(pName) ?? throw new Exception($"Failed to find property on {obj.GetType().FullName} with name {pName}");
+                    object? o2 = p.GetValue(obj);
+                    if (o2 == null)
+                    {
+                        o2 = Activator.CreateInstance(p.PropertyType) ?? throw new Exception("Failed to create instance of " + p.PropertyType.FullName);
+                        p.SetValue(obj, o2);
+                    }
+                    obj = o2;
+                    parts.RemoveAt(0);
                 }
-                else if (DateTimeOffset.TryParseExact(strValue, $"yyyy-MM-ddTHH:mm:ss.{f}K", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                PropertyInfo pInfo =obj.GetType().GetProperty(parts.First()) ?? throw new Exception($"Failed to find property on {obj.GetType().FullName} with name {parts.First()}");
+
+                try
                 {
-                    e.EventTime = dt;
-                    return;
+                    switch (kde.Type)
+                    {
+                        case "EventTimeZoneOffset": ReadEventTimeZoneOffset(kde, obj, x, pInfo); break;
+                        case "DateTimeOffset": ReadDateTimeOffset(kde, obj, x, pInfo); break;
+                        case "URI": ReadURI(kde, obj, x, pInfo); break;
+                        case "Action": ReadAction(kde, obj, x, pInfo); break;
+                        case "String": ReadString(kde, obj, x, pInfo); break;
+                        case "GLN": ReadGLN(kde, obj, x, pInfo); break;
+                        default:
+                            {
+                                object o = ReadObject(x, pInfo.PropertyType);
+                                pInfo.SetValue(obj, o);
+                                break;
+                            }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    OTLogger.Error(ex);
+                    throw;
                 }
             }
-
-            throw new Exception($"The event time {strValue} is not in a recognized format.");
-        }
-
-        private static void ReadRecordTime(string xName, IEvent e, XElement x)
-        {
-            string strValue = x.Value;
-
-            for (int i = 1; i <= 6; i++)
+            else if (kde.Type == "ParentID")
             {
-                string f = "".PadLeft(i, 'f');
-                if (DateTime.TryParseExact(strValue, $"yyyy-MM-ddTHH:mm:ss.{f}Z", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
+                ReadParentID(e, x);
+            }
+            else if (kde.Type == "EPCList")
+            {
+                string xname = kde.XPath.Split('/').Last();
+                switch (xname)
                 {
-                    e.Recorded = dt;
-                    return;
-                }
-                else if (DateTime.TryParseExact(strValue, $"yyyy-MM-ddTHH:mm:ss.{f}K", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-                {
-                    e.Recorded = dt;
-                    return;
+                    case "epcList": ReadEPCList(e, x, EventProductType.Reference); break;
+                    case "outputEPCList": ReadEPCList(e, x, EventProductType.Output); break;
+                    case "inputEPCList": ReadEPCList(e, x, EventProductType.Input); break;
+                    case "childEPCs": ReadEPCList(e, x, EventProductType.Child); break;
+                    default: throw new Exception("Did not recognize epc list xpath. " + JsonConvert.SerializeObject(kde));
                 }
             }
-
-            throw new Exception($"The recorded time {strValue} is not in a recognized format.");
+            else if (kde.Type == "QuantityList")
+            {
+                string xname = kde.XPath.Split('/').Last();
+                switch (xname)
+                {
+                    case "quantityList": ReadQuantityList(e, x, EventProductType.Reference); break;
+                    case "outputQuantityList": ReadQuantityList(e, x, EventProductType.Output); break;
+                    case "inputQuantityList": ReadQuantityList(e, x, EventProductType.Input); break;
+                    case "childQuantityList": ReadQuantityList(e, x, EventProductType.Child); break;
+                    default: throw new Exception("Did not recognize quantity list xpath. " + JsonConvert.SerializeObject(kde));
+                }
+            }
         }
 
-        private static void ReadEventTimeZoneOffset(string xName, IEvent e, XElement x)
+        private static void ReadEventTimeZoneOffset(EPCISMappingKDE kde, object e, XElement x, PropertyInfo pInfo)
         {
             string hours = x.Value.Substring(1);
             TimeSpan ts = TimeSpan.Parse(hours);
@@ -290,157 +220,55 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 dbl = -dbl;
             }
-            e.EventTimeOffset = dbl;
+            pInfo.SetValue(e, dbl);
         }
 
-        private static void ReadEventID(string xName, IEvent e, XElement x)
+        private static void ReadDateTimeOffset(EPCISMappingKDE kde, object e, XElement x, PropertyInfo pInfo)
         {
-            e.EventID = x.Value;
+            DateTimeOffset? dt = x.Value.TryConvertToDateTimeOffset();
+            pInfo.SetValue(e, dt);
         }
 
-        private static void ReadCertificationInfo(string xName, IEvent e, XElement x)
+        private static void ReadURI(EPCISMappingKDE kde, object e, XElement x, PropertyInfo pInfo)
         {
-            e.CertificationInfo = x.Value;
+            Uri uri = new Uri(x.Value);
+            pInfo.SetValue(e, uri);
         }
 
-        private static void ReadTransformationID(string xName, IEvent e, XElement x)
+        private static void ReadAction(EPCISMappingKDE kde, object e, XElement x, PropertyInfo pInfo)
         {
-            ((TransformationEvent)e).TransformationID = x.Value;   
+            EventAction action = Enum.Parse<EventAction>(x.Value);  
+            pInfo.SetValue(e, action);
         }
 
-        private static void ReadErrorDeclaration(string xName, IEvent e, XElement x)
+        private static void ReadString(EPCISMappingKDE kde, object e, XElement x, PropertyInfo pInfo)
         {
-            //<errorDeclaration>
-            //    <declarationTime>2022-02-08T19:41:23</declarationTime>
-            //    <correctiveEventIDs>
-            //        <correctiveEventID>0038bdc2-cad3-43eb-88f5-c93eda34ec43</correctiveEventID>
-            //    </correctiveEventIDs>
-            //    <extension />
-            //</errorDeclaration>
-
-            ErrorDeclaration err = new ErrorDeclaration();
-            err.DeclarationTime = DateTime.Parse(x.Element("declarationTime")?.Value ?? throw new Exception("No declarationTime on the error declaration."));
-
-            XElement? xReason = x.Element("reason");
-            if (xReason != null)
-            {
-                err.RawReason = new Uri(xReason.Value);
-            }
-
-            XElement? xCorrectiveEventIDs = x.Element("correctiveEventIDs");
-            if (xCorrectiveEventIDs != null)
-            {
-                err.CorrectingEventIDs = new List<string>();
-                foreach (XElement xCorrEventID in xCorrectiveEventIDs.Elements("correctiveEventID"))
-                {
-                    err.CorrectingEventIDs.Add(xCorrEventID.Value);
-                }
-            }
-
-            // TODO: support extension kdes
-
-            e.ErrorDeclaration = err;
+            pInfo.SetValue(e, x.Value);
         }
 
-        private static void ReadEPCList(string xName, IEvent e, XElement x)
+        private static void ReadGLN(EPCISMappingKDE kde, object e, XElement x, PropertyInfo pInfo)
+        {
+            GLN gln = new GLN(x.Value);
+            pInfo.SetValue(e, gln);
+        }
+
+        private static void ReadEPCList(IEvent e, XElement x, EventProductType productType)
         {
             foreach (var xEPC in x.Elements("epc"))
             {
                 EventProduct product = new EventProduct();
-                product.Type = EventProductType.Reference;
+                product.Type = productType;
                 product.EPC = new EPC(xEPC.Value);
                 e.AddProduct(product);
             }
         }
 
-        private static void ReadChildEPCList(string xName, IEvent e, XElement x)
-        {
-            foreach (var xEPC in x.Elements("epc"))
-            {
-                EventProduct product = new EventProduct();
-                product.Type = EventProductType.Child;
-                product.EPC = new EPC(xEPC.Value);
-                e.AddProduct(product);
-            }
-        }
-
-        private static void ReadInputEPCList(string xName, IEvent e, XElement x)
-        {
-            foreach (var xEPC in x.Elements("epc"))
-            {
-                EventProduct product = new EventProduct();
-                product.Type = EventProductType.Input;
-                product.EPC = new EPC(xEPC.Value);
-                e.AddProduct(product);
-            }
-        }
-
-        private static void ReadOutputEPCList(string xName, IEvent e, XElement x)
-        {
-            foreach (var xEPC in x.Elements("epc"))
-            {
-                EventProduct product = new EventProduct();
-                product.Type = EventProductType.Output;
-                product.EPC = new EPC(xEPC.Value);
-                e.AddProduct(product);
-            }
-        }
-
-        private static void ReadAction(string xName, IEvent e, XElement x)
-        {
-            if (Enum.TryParse<EventAction>(x.Value, out EventAction action))
-            {
-                e.Action = action;
-            }
-        }
-
-        private static void ReadBizStep(string xName, IEvent e, XElement x)
-        {
-            e.BusinessStep = x.Value;
-        }
-
-        private static void ReadDisposition(string xName, IEvent e, XElement x)
-        {
-            e.Disposition = x.Value;
-        }
-
-        private static void ReadReadPoint(string xName, IEvent e, XElement x)
-        {
-            XElement? xID = x.Element("id");
-            if (xID != null)
-            {
-                e.ReadPoint = new EventReadPoint();
-                e.ReadPoint.ID = xID.Value;
-            }
-        }
-
-        private static void ReadBizLocation(string xName, IEvent e, XElement x)
-        {
-            XElement? xID = x.Element("id");
-            if (xID != null)
-            {
-                e.Location = new EventLocation();
-                e.Location.GLN = new GLN(xID.Value);
-            }
-        }
-
-        private static void ReadBizTransactionList(string xName, IEvent e, XElement x)
-        {
-            foreach (var xBizTransaction in x.Elements("bizTransaction"))
-            {
-                EventBusinessTransaction bizTransaction = new EventBusinessTransaction();
-                bizTransaction.RawType = xBizTransaction.Attribute("type")?.Value;
-                bizTransaction.Value = xBizTransaction.Value;
-                e.BusinessTransactions.Add(bizTransaction);
-            }
-        }
-
-        private static void ReadQuantityList(string xName, IEvent e, XElement x)
+        private static void ReadQuantityList(IEvent e, XElement x, EventProductType productType)
         {
             foreach (var xQuantity in x.Elements("quantityElement"))
             {
                 EventProduct product = new EventProduct();
-                product.Type = EventProductType.Reference;
+                product.Type = productType;
                 product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
 
                 double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
@@ -451,196 +279,198 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void ReadChildQuantityList(string xName, IEvent e, XElement x)
-        {
-            foreach (var xQuantity in x.Elements("quantityElement"))
-            {
-                EventProduct product = new EventProduct();
-                product.Type = EventProductType.Child;
-                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
-
-                double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
-                string uom = xQuantity.Element("uom")?.Value ?? "EA";
-                product.Quantity = new Measurement(quantity, uom);
-
-                e.AddProduct(product);
-            }
-        }
-
-        private static void ReadInputQuantityList(string xName, IEvent e, XElement x)
-        {
-            foreach (var xQuantity in x.Elements("quantityElement"))
-            {
-                EventProduct product = new EventProduct();
-                product.Type = EventProductType.Input;
-                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
-
-                double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
-                string uom = xQuantity.Element("uom")?.Value ?? "EA";
-                product.Quantity = new Measurement(quantity, uom);
-
-                e.AddProduct(product);
-            }
-        }
-
-        private static void ReadOutputQuantityList(string xName, IEvent e, XElement x)
-        {
-            foreach (var xQuantity in x.Elements("quantityElement"))
-            {
-                EventProduct product = new EventProduct();
-                product.Type = EventProductType.Output;
-                product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
-
-                double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
-                string uom = xQuantity.Element("uom")?.Value ?? "EA";
-                product.Quantity = new Measurement(quantity, uom);
-
-                e.AddProduct(product);
-            }
-        }
-
-        private static void ReadSourceList(string xName, IEvent e, XElement x)
-        {
-            foreach (var xSource in x.Elements("source"))
-            {
-                EventSource source = new EventSource();
-                source.RawType = xSource.Attribute("type")?.Value;
-                source.Value = xSource.Value;
-                e.SourceList.Add(source);
-            }
-        }
-
-        private static void ReadDestinationList(string xName, IEvent e, XElement x)
-        {
-            foreach (var xDest in x.Elements("destination"))
-            {
-                EventDestination dest = new EventDestination();
-                dest.RawType = xDest.Attribute("type")?.Value;
-                dest.Value = xDest.Value;
-                e.DestinationList.Add(dest);
-            }
-        }
-
-        private static void ReadSensorElementList(string xName, IEvent e, XElement x)
-        {
-            foreach (XElement xSensor in x.Elements())
-            {
-                SensorElement s = new SensorElement();
-
-                // sensor metadata
-                XElement? xSensorMetaData = xSensor.Element("sensorMetadata");
-                if (xSensorMetaData != null)
-                {
-                    s.MetaData = new SensorMetaData();
-                    s.MetaData.TimeStamp = xSensorMetaData.AttributeISODateTime("time");
-                    s.MetaData.DeviceID = xSensorMetaData.AttributeURI("deviceID");
-                    s.MetaData.StartTime = xSensorMetaData.AttributeISODateTime("startTime");
-                    s.MetaData.EndTime = xSensorMetaData.AttributeISODateTime("endTime");
-                    s.MetaData.DeviceMetaData = xSensorMetaData.AttributeURI("deviceMetadata");
-                    s.MetaData.RawData = xSensorMetaData.AttributeURI("rawData");
-                    s.MetaData.BizRules = xSensorMetaData.AttributeURI("bizRules");
-                    s.MetaData.DataProcessingMethod = xSensorMetaData.AttributeURI("dataProcessingMethod");
-
-                    // TODO: extension attributes...
-                    foreach (XAttribute xa in xSensorMetaData.Attributes().Where(a => !sensorMetaDataAttributes.Contains(a.Name.LocalName)))
-                    {
-                        IEventKDE kde = ReadAttributeKDE(xa);
-                        s.MetaData.ExtensionAttributes.Add(kde);
-                    }
-                }                
-
-                // sensor report(s)
-                foreach (XElement xSensorReport in xSensor.Elements("sensorReport"))
-                {
-                    SensorReport sReport = new SensorReport();
-                    sReport.Type = xSensorReport.AttributeURI("type");
-                    sReport.Value = xSensorReport.AttributeDouble("value");
-                    sReport.Component = xSensorReport.AttributeURI("component");
-                    sReport.StringValue = xSensorReport.Attribute("stringValue")?.Value;
-                    sReport.BooleanValue = xSensorReport.AttributeBoolean("booleanValue");
-                    sReport.HexBinaryValue = xSensorReport.Attribute("hexBinaryValue")?.Value;
-                    sReport.URIValue = xSensorReport.AttributeURI("uriValue");
-                    sReport.UOM = xSensorReport.AttributeUOM("uom");
-                    sReport.MinValue = xSensorReport.AttributeDouble("minValue");
-                    sReport.MaxValue = xSensorReport.AttributeDouble("maxValue");
-                    sReport.SDev = xSensorReport.AttributeDouble("sDev");
-                    sReport.ChemicalSubstance = xSensorReport.AttributeURI("chemicalSubstance");
-                    sReport.MicroOrganism = xSensorReport.AttributeURI("microorganism");
-                    sReport.DeviceID = xSensorReport.AttributeURI("deviceID");
-                    sReport.DeviceMetadata = xSensorReport.AttributeURI("deviceMetadata");
-                    sReport.RawData = xSensorReport.AttributeURI("rawData");
-                    sReport.TimeStamp = xSensorReport.AttributeISODateTime("time");
-                    sReport.MeanValue = xSensorReport.AttributeDouble("meanValue");
-                    sReport.PercentageValue = xSensorReport.AttributeDouble("percValue");
-                    sReport.PercentageRank = xSensorReport.AttributeDouble("percRank");
-                    sReport.DataProcessingMethod = xSensorReport.AttributeURI("dataProcessingMethod");
-                    sReport.CoordinateReferenceSystem = xSensorReport.AttributeURI("coordinateReferenceSystem");
-                    sReport.Exception = xSensorReport.AttributeURI("exception");
-
-                    // TODO: extension attributes...
-                    foreach (XAttribute xa in xSensorReport.Attributes().Where(a => !sensorReportAttributes.Contains(a.Name.LocalName)))
-                    {
-                        IEventKDE kde = ReadAttributeKDE(xa);
-                        sReport.ExtensionAttributes.Add(kde);
-                    }
-
-                    s.Reports.Add(sReport);
-                }
-
-                // TODO: extension elements...
-                foreach (XElement xKDE in xSensor.XPathSelectElements("*[not(self::sensorReport) and not(self::sensorMetadata)]"))
-                {
-                    IEventKDE kde = ReadKDE(xKDE);
-                    s.ExtensionKDEs.Add(kde);
-                }
-                
-
-                e.SensorElementList.Add(s);
-            }
-        }
-
-        private static void ReadPersistentDisposition(string xName, IEvent e, XElement x)
-        {
-            e.PersistentDisposition = new PersistentDisposition();
-
-            if (x.Element("set") != null)
-            {
-                e.PersistentDisposition.Set = new List<string>();
-                foreach (var xSet in x.Elements("set"))
-                {
-                    e.PersistentDisposition.Set.Add(xSet.Value);
-                }
-            }
-
-            if (x.Element("unset") != null)
-            {
-                e.PersistentDisposition.Unset = new List<string>();
-                foreach (var xUnset in x.Elements("unset"))
-                {
-                    e.PersistentDisposition.Unset.Add(xUnset.Value);
-                }
-            }
-        }
-
-        private static void ReadILMD(string xName, IEvent e, XElement x)
-        {
-            e.ILMD = new EventILMD();
-
-            // the ILMD are just a series of extension KDEs
-            foreach (XElement xKDE in x.Elements())
-            {
-                // read the kde...
-                IEventKDE kde = ReadKDE(xKDE);
-                e.ILMD.AddKDE(kde);
-            }
-        }
-
-        private static void ReadParentID(string xName, IEvent e, XElement x)
+        private static void ReadParentID(IEvent e, XElement x)
         {
             EventProduct product = new EventProduct();
             product.EPC = new EPC(x.Value);
             product.Type = EventProductType.Parent;
             e.AddProduct(product);
+        }
+
+        private static object ReadObject(XElement x, Type t)
+        {
+            object value = Activator.CreateInstance(t) ?? throw new Exception("Failed to create instance of type " + t.FullName);
+
+            try
+            {
+                // if this is a list, then we will make a list of the objects...
+                if (value is IList)
+                {
+                    IList list = (IList)value;
+                    OpenTraceabilityXmlAttribute? att = t.GetCustomAttribute<OpenTraceabilityXmlAttribute>();
+                    if (att != null)
+                    {
+                        foreach (XElement xchild in x.Elements(att.Name))
+                        {
+                            object childvalue = ReadObject(xchild, t.GenericTypeArguments.First());
+                            list.Add(childvalue);
+                        }
+                    }
+                    else
+                    {
+                        foreach (XElement xchild in x.Elements())
+                        {
+                            object childvalue = ReadObject(xchild, t.GenericTypeArguments.First());
+                            list.Add(childvalue);
+                        }
+                    }
+                }
+                // else, try and parse the object...
+                else
+                {
+                    OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetTypeInfo(t);
+
+                    List<IEventKDE>? extensionKDEs = null;
+                    List<IEventKDE>? extensionAttributes = null;
+
+                    if (typeInfo.ExtensionAttributes != null)
+                    {
+                        extensionAttributes = new List<IEventKDE>();
+                    }
+
+                    if (typeInfo.ExtensionKDEs != null)
+                    {
+                        extensionKDEs = new List<IEventKDE>();
+                    }
+
+                    foreach (XAttribute xatt in x.Attributes())
+                    {
+                        if (typeInfo.XmlAttributes.Keys.ToList().Exists(x => x.Name.TrimStart('@') == xatt.Name))
+                        {
+                            var kvp = typeInfo.XmlAttributes.FirstOrDefault(x => x.Key.Name.TrimStart('@') == xatt.Name);
+                            string xchildname = kvp.Key.Name.ToString();
+                            string? attValue = x.Attribute(xchildname.TrimStart('@'))?.Value;
+                            if (!string.IsNullOrEmpty(attValue))
+                            {
+                                object o = ReadObjectFromString(attValue, kvp.Value.PropertyType);
+                                kvp.Value.SetValue(value, o);
+                            }
+                        }
+                        else if (extensionAttributes != null)
+                        {
+                            IEventKDE kde = ReadKDE(xatt);
+                            extensionAttributes.Add(kde);
+                        }
+                    }
+
+                    if (typeInfo.XmlAttributes.Keys.ToList().Exists(x => x.Name == "text()"))
+                    {
+                        var kvp = typeInfo.XmlAttributes.FirstOrDefault(x => x.Key.Name == "text()");
+                        string? eleText = x.Value;
+                        if (!string.IsNullOrWhiteSpace(eleText))
+                        {
+                            object o = ReadObjectFromString(eleText, kvp.Value.PropertyType);
+                            kvp.Value.SetValue(value, o);
+                        }
+                    }
+                    else
+                    {
+                        foreach (XElement xe in x.Elements())
+                        {
+                            if (typeInfo.XmlAttributes.Keys.ToList().Exists(x => x.Name == xe.Name))
+                            {
+                                var kvp = typeInfo.XmlAttributes.FirstOrDefault(x => x.Key.Name == xe.Name);
+                                string xchildname = kvp.Key.Name.ToString();
+                                if (kvp.Value.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
+                                {
+                                    XElement? xchild = x.Element(xchildname);
+                                    if (xchild != null)
+                                    {
+                                        object o = ReadObject(xchild, kvp.Value.PropertyType);
+                                        kvp.Value.SetValue(value, o);
+                                    }
+                                }
+                                else if (kvp.Value.GetCustomAttribute<OpenTraceabilityArrayAttribute>() != null)
+                                {
+                                    if (x.Element(xchildname) != null)
+                                    {
+                                        IList list = (IList)(Activator.CreateInstance(kvp.Value.PropertyType) ?? throw new Exception("Failed to create instance of " + kvp.Value.PropertyType.FullName));
+                                        foreach (XElement xchild in x.Elements(xchildname))
+                                        {
+                                            Type t2 = kvp.Value.PropertyType.GenericTypeArguments[0];
+                                            if (t2 == typeof(Uri))
+                                            {
+                                                object o = ReadObjectFromString(xchild.Value, t2);
+                                                list.Add(o);
+                                            }
+                                            else
+                                            {
+                                                object o = ReadObject(xchild, t2);
+                                                list.Add(o);
+                                            }
+                                        }
+                                        kvp.Value.SetValue(value, list);
+                                    }
+                                }
+                                else
+                                {
+                                    string? eleText = x.Element(xchildname)?.Value;
+                                    if (!string.IsNullOrWhiteSpace(eleText))
+                                    {
+                                        object o = ReadObjectFromString(eleText, kvp.Value.PropertyType);
+                                        kvp.Value.SetValue(value, o);
+                                    }
+                                }
+                            }
+                            else if (extensionKDEs != null)
+                            {
+                                IEventKDE kde = ReadKDE(xe);
+                                extensionKDEs.Add(kde);
+                            }
+                        }
+                    }
+
+                    if (typeInfo.ExtensionAttributes != null) 
+                    {
+                        typeInfo.ExtensionAttributes.SetValue(value, extensionAttributes);
+                    }
+
+                    if (typeInfo.ExtensionKDEs != null)
+                    {
+                        typeInfo.ExtensionKDEs.SetValue(value, extensionKDEs);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OTLogger.Error(ex);
+                throw;
+            }
+
+            return value;
+        }
+
+        private static object ReadObjectFromString(string value, Type t)
+        {
+            if (t == typeof(DateTimeOffset) || t == typeof(DateTimeOffset?))
+            {
+                DateTimeOffset dt = value.TryConvertToDateTimeOffset() ?? throw new Exception("Failed to convert string to datetimeoffset where value = " + value);
+                return dt;
+            }
+            else if (t == typeof(UOM))
+            {
+                UOM uom = UOM.LookUpFromUNCode(value);
+                return uom;
+            }
+            else if (t == typeof(bool) || t == typeof(bool?))
+            {
+                bool v = bool.Parse(value);
+                return v;
+            }
+            else if (t == typeof(double) || t == typeof(double?))
+            {
+                double v = double.Parse(value);
+                return v;
+            }
+            else if (t == typeof(Uri))
+            {
+                Uri v = new Uri(value);
+                return v;
+            }
+            else
+            {
+                return value;
+            }
         }
 
         private static IEventKDE ReadKDE(XElement x)
@@ -691,7 +521,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             return kde;
         }
 
-        private static IEventKDE ReadAttributeKDE(XAttribute x)
+        private static IEventKDE ReadKDE(XAttribute x)
         {
             // we need to parse the xml into an event KDE here...
 
@@ -706,13 +536,12 @@ namespace OpenTraceability.Mappers.EPCIS.XML
 
             if (kde != null)
             {
-                // here we will convert the attribute into a simple element for fitting into the interface
-                XElement xE = new XElement(x.Name, x.Value);
-                kde.SetFromXml(xE);
+                XElement xe = new XElement(x.Name, x.Value);
+                kde.SetFromXml(xe);
             }
             else
             {
-                throw new Exception("Failed to initialize KDE from XML = " + x.ToString());
+                throw new Exception("Failed to initialize KDE from XML Attribute = " + x.ToString());
             }
 
             return kde;

@@ -9,6 +9,7 @@ namespace OpenTraceability.Models.Events.KDEs
         public Type ValueType => typeof(string);
         public string? Value { get; set; }
         public string? Type { get; set; }
+        Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
 
         internal EventKDEString()
         {
@@ -45,8 +46,10 @@ namespace OpenTraceability.Models.Events.KDEs
                 XElement x = new XElement(xname, Value);
 
                 // set the xsi type...
-                XName xsiTypeName = (XNamespace)Constants.XSI_NAMESPACE + "type";
-                x.Add(new XAttribute(xsiTypeName, this.Type ?? "string"));
+                foreach (var kvp in Attributes)
+                {
+                    x.Add(new XAttribute(kvp.Key, kvp.Value));
+                }
 
                 return x;
             }
@@ -61,10 +64,9 @@ namespace OpenTraceability.Models.Events.KDEs
         {
             this.Value = xml.Value;
 
-            XAttribute? xsiType = xml.Attribute(Constants.XSI_XNAMESPACE + "type");
-            if (xsiType != null)
+            foreach (XAttribute xatt in xml.Attributes())
             {
-                this.Type = xsiType.Value;
+                Attributes.Add(xatt.Name.ToString(), xatt.Value);
             }
         }
 

@@ -58,16 +58,16 @@ namespace OpenTraceability.Models.Events
         private List<IEventKDE> _kdes = new List<IEventKDE>();
 
         public long ID { get; set; }
-        public string? EventID { get; set; } = string.Empty;
-        public string? CertificationInfo { get; set; } = string.Empty;
+        public string? EventID { get; set; }
+        public string? CertificationInfo { get; set; }
         public DateTimeOffset? EventTime { get; set; }
-        public double? EventTimeOffset { get; set; }
-        public DateTimeOffset? Recorded { get; set; }
+        public double? EventTimeZoneOffset { get; set; }
+        public DateTimeOffset? RecordTime { get; set; }
         public PGLN? DataOwner { get; set; }
         public PGLN? Owner { get; set; }
         public EventAction? Action { get; set; }
-        public string? BusinessStep { get; set; } = string.Empty;
-        public string? Disposition { get; set; } = string.Empty;
+        public Uri? BusinessStep { get; set; }
+        public Uri? Disposition { get; set; }
         public PersistentDisposition? PersistentDisposition { get; set; }
         public EventLocation? Location { get; set; }
         public EventReadPoint? ReadPoint { get; set; }
@@ -75,7 +75,7 @@ namespace OpenTraceability.Models.Events
         public List<EventDestination> DestinationList { get; set; } = new List<EventDestination>();
         public List<Certificate> Certificates { get; set; } = new List<Certificate>();
         public ReadOnlyCollection<IEventKDE> KDEs { get => new ReadOnlyCollection<IEventKDE>(_kdes); }
-        public List<EventBusinessTransaction> BusinessTransactions { get; set; } = new List<EventBusinessTransaction>();
+        public List<EventBusinessTransaction> BizTransactionList { get; set; } = new List<EventBusinessTransaction>();
         public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
         public ErrorDeclaration? ErrorDeclaration { get; set; }
         public EventILMD? ILMD { get; set; }

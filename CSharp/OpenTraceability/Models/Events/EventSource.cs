@@ -1,4 +1,5 @@
 ﻿using OpenTraceability.Utility;
+using OpenTraceability.Utility.Attributes;
 using System.ComponentModel;
 
 namespace OpenTraceability.Models.Events
@@ -17,8 +18,10 @@ namespace OpenTraceability.Models.Events
         Location = 3
     }
 
+    [OpenTraceabilityXml("source")]
     public class EventSource
     {
+        [OpenTraceabilityXml("@type")]
         public string RawType { get; set; } = string.Empty;
 
         public EventSourceType Type
@@ -37,6 +40,7 @@ namespace OpenTraceability.Models.Events
             }
         }
 
+        [OpenTraceabilityXml("text()")]
         public string? Value { get; set; }
 
         public EventSource()

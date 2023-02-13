@@ -1,0 +1,448 @@
+{
+    "EPCIS": {
+        "Base": [
+            {
+                "XPath": "eventTime",
+                "Property": "EventTime",
+                "Type": "DateTimeOffset"
+            },
+            {
+                "XPath": "recordTime",
+                "Property": "RecordTime",
+                "Type": "DateTimeOffset"
+            },
+            {
+                "XPath": "eventTimeZoneOffset",
+                "Property": "EventTimeZoneOffset",
+                "Type": "EventTimeZoneOffset"
+            },
+            {
+                "XPath": "eventID",
+                "Property": "EventID",
+                "Type": "URI",
+                "Version": 2
+            },
+            {
+                "XPath": "errorDeclaration",
+                "Property": "ErrorDeclaration",
+                "Version": 2
+            },
+            {
+                "XPath": "certificationInfo",
+                "Property": "CertificationInfo",
+                "Type": "URI",
+                "Version": 2
+            },
+            {
+                "XPath": "baseExtension/eventID",
+                "Property": "EventID",
+                "Type": "URI",
+                "Version": 1
+            },
+            {
+                "XPath": "baseExtension/errorDeclaration",
+                "Property": "ErrorDeclaration",
+                "Version": 1
+            }
+        ],
+        "ObjectEvent": [
+            {
+                "XPath": "epcList",
+                "Type": "EPCList"
+            },
+            {
+                "XPath": "action",
+                "Property": "Action",
+                "Type": "Action"
+            },
+            {
+                "XPath": "bizStep",
+                "Property": "BusinessStep",
+                "Type": "URI"
+            },
+            {
+                "XPath": "disposition",
+                "Property": "Disposition",
+                "Type": "URI"
+            },
+            {
+                "XPath": "readPoint/id",
+                "Property": "ReadPoint.ID",
+                "Type": "URI"
+            },
+            {
+                "XPath": "bizLocation/id",
+                "Property": "Location.GLN",
+                "Type": "GLN"
+            },
+            {
+                "XPath": "bizTransactionList",
+                "Property": "BizTransactionList"
+            },
+            {
+                "XPath": "quantityList",
+                "Type": "QuantityList",
+                "Version": 2
+            },
+            {
+                "XPath": "sourceList",
+                "Property": "SourceList",
+                "Version": 2
+            },
+            {
+                "XPath": "destinationList",
+                "Property": "DestinationList",
+                "Version": 2
+            },
+            {
+                "XPath": "sensorElementList",
+                "Property": "SensorElementList",
+                "Version": 2
+            },
+            {
+                "XPath": "persistentDisposition",
+                "Property": "PersistentDisposition",
+                "Version": 2
+            },
+            {
+                "XPath": "ilmd",
+                "Property": "ILMD",
+                "Version": 2
+            },
+            {
+                "XPath": "extension/quantityList",
+                "Type": "QuantityList",
+                "Version": 1
+            },
+            {
+                "XPath": "extension/sourceList",
+                "Property": "SourceList",
+                "Version": 1
+            },
+            {
+                "XPath": "extension/destinationList",
+                "Property": "DestinationList",
+                "Version": 1
+            },
+            {
+                "XPath": "extension/ilmd",
+                "Property": "ILMD",
+                "Version": 1
+            }
+        ],
+        "TransactionEvent": [
+            {
+                "XPath": "bizTransactionList",
+                "Property": "BizTransactionList"
+            },
+            {
+                "XPath": "parentID",
+                "Type": "ParentID"
+            },
+            {
+                "XPath": "epcList",
+                "Type": "EPCList"
+            },
+            {
+                "XPath": "action",
+                "Property": "Action",
+                "Type": "Action"
+            },
+            {
+                "XPath": "bizStep",
+                "Property": "BusinessStep",
+                "Type": "URI"
+            },
+            {
+                "XPath": "disposition",
+                "Property": "Disposition",
+                "Type": "URI"
+            },
+            {
+                "XPath": "readPoint/id",
+                "Property": "ReadPoint.ID",
+                "Type": "URI"
+            },
+            {
+                "XPath": "bizLocation/id",
+                "Property": "Location.GLN",
+                "Type": "GLN"
+            },
+            {
+                "XPath": "quantityList",
+                "Type": "QuantityList",
+                "Version": 2
+            },
+            {
+                "XPath": "sourceList",
+                "Property": "SourceList",
+                "Version": 2
+            },
+            {
+                "XPath": "destinationList",
+                "Property": "DestinationList",
+                "Version": 2
+            },
+            {
+                "XPath": "sensorElementList",
+                "Property": "SensorElementList",
+                "Version": 2
+            },
+            {
+                "XPath": "persistentDisposition",
+                "Property": "PersistentDisposition",
+                "Version": 2
+            },
+            {
+                "XPath": "extension/quantityList",
+                "Type": "QuantityList",
+                "Version": 1
+            },
+            {
+                "XPath": "extension/sourceList",
+                "Property": "SourceList",
+                "Version": 1
+            },
+            {
+                "XPath": "extension/destinationList",
+                "Property": "DestinationList",
+                "Version": 1
+            }
+        ],
+        "TransformationEvent": [
+            {
+                "XPath": "inputEPCList",
+                "Type": "EPCList"
+            },
+            {
+                "XPath": "inputQuantityList",
+                "Type": "QuantityList"
+            },
+            {
+                "XPath": "outputEPCList",
+                "Type": "EPCList"
+            },
+            {
+                "XPath": "outputQuantityList",
+                "Type": "QuantityList"
+            },
+            {
+                "XPath": "transformationID",
+                "Property": "TransformationID",
+                "Type": "String"
+            },
+            {
+                "XPath": "bizStep",
+                "Property": "BusinessStep",
+                "Type": "URI"
+            },
+            {
+                "XPath": "disposition",
+                "Property": "Disposition",
+                "Type": "URI"
+            },
+            {
+                "XPath": "readPoint/id",
+                "Property": "ReadPoint.ID",
+                "Type": "URI"
+            },
+            {
+                "XPath": "bizLocation/id",
+                "Property": "Location.GLN",
+                "Type": "GLN"
+            },
+            {
+                "XPath": "bizTransactionList",
+                "Property": "BizTransactionList"
+            },
+            {
+                "XPath": "sourceList",
+                "Property": "SourceList",
+                "Version": 2
+            },
+            {
+                "XPath": "destinationList",
+                "Property": "DestinationList",
+                "Version": 2
+            },
+            {
+                "XPath": "sensorElementList",
+                "Property": "SensorElementList",
+                "Version": 2
+            },
+            {
+                "XPath": "persistentDisposition",
+                "Property": "PersistentDisposition",
+                "Version": 2
+            },
+            {
+                "XPath": "ilmd",
+                "Property": "ILMD",
+                "Version": 2
+            },
+            {
+                "XPath": "extension/quantityList",
+                "Type": "QuantityList",
+                "Version": 1
+            },
+            {
+                "XPath": "extension/sourceList",
+                "Property": "SourceList",
+                "Version": 1
+            },
+            {
+                "XPath": "extension/destinationList",
+                "Property": "DestinationList",
+                "Version": 1
+            },
+            {
+                "XPath": "extension/ilmd",
+                "Property": "ILMD",
+                "Version": 1
+            }
+        ],
+        "AssociationEvent": [
+            {
+                "XPath": "parentID",
+                "Type": "ParentID"
+            },
+            {
+                "XPath": "childEPCs",
+                "Type": "EPCList"
+            },
+            {
+                "XPath": "childQuantityList",
+                "Type": "QuantityList"
+            },
+            {
+                "XPath": "action",
+                "Property": "Action",
+                "Type": "Action"
+            },
+            {
+                "XPath": "bizStep",
+                "Property": "BusinessStep",
+                "Type": "URI"
+            },
+            {
+                "XPath": "disposition",
+                "Property": "Disposition",
+                "Type": "URI"
+            },
+            {
+                "XPath": "readPoint/id",
+                "Property": "ReadPoint.ID",
+                "Type": "URI"
+            },
+            {
+                "XPath": "bizLocation/id",
+                "Property": "Location.GLN",
+                "Type": "GLN"
+            },
+            {
+                "XPath": "bizTransactionList",
+                "Property": "BizTransactionList"
+            },
+            {
+                "XPath": "sourceList",
+                "Property": "SourceList"
+            },
+            {
+                "XPath": "destinationList",
+                "Property": "DestinationList"
+            },
+            {
+                "XPath": "sensorElementList",
+                "Property": "SensorElementList"
+            },
+            {
+                "XPath": "persistentDisposition",
+                "Property": "PersistentDisposition"
+            }
+        ],
+        "AggregationEvent": [
+            {
+                "XPath": "parentID",
+                "Type": "ParentID"
+            },
+            {
+                "XPath": "childEPCs",
+                "Type": "EPCList"
+            },
+            {
+                "XPath": "action",
+                "Property": "Action",
+                "Type": "Action"
+            },
+            {
+                "XPath": "bizStep",
+                "Property": "BusinessStep",
+                "Type": "URI"
+            },
+            {
+                "XPath": "disposition",
+                "Property": "Disposition",
+                "Type": "URI"
+            },
+            {
+                "XPath": "readPoint/id",
+                "Property": "ReadPoint.ID",
+                "Type": "URI"
+            },
+            {
+                "XPath": "bizLocation/id",
+                "Property": "Location.GLN",
+                "Type": "GLN"
+            },
+            {
+                "XPath": "bizTransactionList",
+                "Property": "BizTransactionList"
+            },
+            {
+                "XPath": "childQuantityList",
+                "Type": "QuantityList",
+                "Version": 2
+            },
+            {
+                "XPath": "sourceList",
+                "Property": "SourceList",
+                "Version": 2
+            },
+            {
+                "XPath": "destinationList",
+                "Property": "DestinationList",
+                "Version": 2
+            },
+            {
+                "XPath": "sensorElementList",
+                "Property": "SensorElementList",
+                "Version": 2
+            },
+            {
+                "XPath": "persistentDisposition",
+                "Property": "PersistentDisposition",
+                "Version": 2
+            },
+            {
+                "XPath": "ilmd",
+                "Property": "ILMD",
+                "Version": 2
+            },
+            {
+                "XPath": "extension/childQuantityList",
+                "Type": "QuantityList",
+                "Version": 1
+            },
+            {
+                "XPath": "extension/sourceList",
+                "Property": "SourceList",
+                "Version": 1
+            },
+            {
+                "XPath": "extension/destinationList",
+                "Property": "DestinationList",
+                "Version": 1
+            }
+        ]
+    }
+}
