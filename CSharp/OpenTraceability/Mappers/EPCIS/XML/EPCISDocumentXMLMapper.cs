@@ -23,6 +23,8 @@ namespace GS1.Mappers.EPCIS
                     throw new Exception("doc.EPCISVersion is NULL. This must be set to a version.");
                 }
 
+                EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.EPCISVersion.Value);
+
                 // read the events
                 XElement? xEventList = xDoc.Root?.Element("EPCISBody")?.Element("EventList");
                 if (xEventList != null)
@@ -76,6 +78,8 @@ namespace GS1.Mappers.EPCIS
                     xEventList.Add(xEvent);
                 }
             }
+
+            EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.EPCISVersion.Value);
 
             return xDoc.ToString();
         }

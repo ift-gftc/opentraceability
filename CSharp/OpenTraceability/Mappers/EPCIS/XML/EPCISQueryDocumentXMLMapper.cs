@@ -29,6 +29,8 @@ namespace GS1.Mappers.EPCIS
                     throw new Exception("doc.EPCISVersion is NULL. This must be set to a version.");
                 }
 
+                EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.EPCISVersion.Value);
+
                 XNamespace epcisQueryXName = (document.EPCISVersion == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
 
                 // read the query name
@@ -112,6 +114,8 @@ namespace GS1.Mappers.EPCIS
                     xEventList.Add(xEvent);
                 }
             }
+
+            EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.EPCISVersion.Value);
 
             return xDoc.ToString();
         }

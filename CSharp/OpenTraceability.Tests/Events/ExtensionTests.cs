@@ -16,7 +16,7 @@ namespace OpenTraceability.Tests.Events
         /// Tests the building of an object event and manipulating it in C#.
         /// </summary>
         [Test]
-        [TestCase("querydoc_example01.xml")]
+        [TestCase("gdst_extensions_01.xml")]
         public void XML(string file)
         {
             // initialize the libraries.
