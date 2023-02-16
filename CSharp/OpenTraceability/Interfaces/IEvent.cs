@@ -33,7 +33,6 @@ namespace OpenTraceability.Interfaces
         List<EventDestination> DestinationList { get; set; }
         List<IEventKDE> KDEs { get; }
         List<SensorElement> SensorElementList { get; set; }
-        EventILMD? ILMD { get; set; }
         ReadOnlyCollection<EventProduct> Products { get; }
         T? GetKDE<T>(string ns, string name) where T : IEventKDE;
         T? GetKDE<T>() where T : IEventKDE;

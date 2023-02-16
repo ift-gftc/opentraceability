@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OpenTraceability.GDST\OpenTraceability.GDST.csproj" />
     <ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
   </ItemGroup>
 

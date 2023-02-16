@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenTraceability.Utility.Attributes
 {
-    internal class OpenTraceabilityObjectAttribute : System.Attribute
+    public class OpenTraceabilityObjectAttribute : System.Attribute
     {
     }
 }

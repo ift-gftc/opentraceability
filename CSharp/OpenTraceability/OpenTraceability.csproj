@@ -44,6 +44,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Mappers\EPCIS\JSON\" />
 	  <Folder Include="Mappers\MasterData\" />
 	</ItemGroup>
 

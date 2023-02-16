@@ -7,6 +7,7 @@ using OpenTraceability.Utility;
 using System.Globalization;
 using System.Reflection.Metadata;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GS1.Mappers.EPCIS
 {
@@ -111,8 +112,6 @@ namespace GS1.Mappers.EPCIS
                     xEventList.Add(xEvent);
                 }
             }
-
-            // TODO: validate the schema depending on the version in the document
 
             return xDoc.ToString();
         }

@@ -17,6 +17,8 @@ namespace OpenTraceability.Mappers.EPCIS.XML
 {
     public class EPCISDocumentBaseXMLMapper
     {
+        internal static XmlSchemaChecker _schemaChecker = new XmlSchemaChecker();
+
         public static T ReadXml<T>(string strValue, out XDocument xDoc) where T : EPCISBaseDocument, new()
         {
             // convert into XDocument
@@ -55,7 +57,8 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 throw new Exception($"Failed to determine the EPCIS version of the XML document. Must contain a namespace with either '{Constants.EPCIS_2_NAMESPACE}' or '{Constants.EPCIS_1_NAMESPACE}'");
             }
 
-            // TODO: validate the schema depending on the version in the document
+            // validate the schema depending on the version in the document
+            ValidateSchema(xDoc, document.EPCISVersion.Value);
 
             // read the creation date
             string? creationDateAttributeStr = xDoc.Root.Attribute("creationDate")?.Value;
@@ -94,6 +97,8 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 throw new Exception("Failed to convert EPCIS Document into XML because the XDoc.Root is NULL. This should not happen.");
             }
+
+            ValidateSchema(xDoc, doc.EPCISVersion.Value);
 
             // set the creation date
             if (doc.CreationDate != null)
@@ -151,7 +156,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
 
         internal static string GetEventXName(IEvent e)
         {
-            if (e is ObjectEvent)
+            if (e.EventType == EventType.Object)
             {
                 return "ObjectEvent";
             }
@@ -174,6 +179,22 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             else
             {
                 throw new Exception("Failed to determine the event xname. Event C# type is " + e.GetType().FullName);
+            }
+        }
+
+        internal static void ValidateSchema(XDocument xdoc, EPCISVersion version)
+        {
+            if (version == EPCISVersion.V1)
+            {
+                // validate the schema depending on the version in the document
+                if (!EPCISDocumentBaseXMLMapper._schemaChecker.Validate(xdoc, "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-1_2.xsd", out string? error))
+                {
+                    throw new Exception($"Failed to validate the XML schema for the EPCIS XML.\n" + error);
+                }
+            }
+            else
+            {
+                throw new NotImplementedException("Have not added schema checking for EPCIS 2.0 yet.");
             }
         }
     }

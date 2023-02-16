@@ -18,7 +18,7 @@ namespace OpenTraceability
 
         static OpenTraceability()
         {
-            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(ObjectEvent), nameof(ObjectEvent)));
+            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(ObjectEvent<EventILMD>), "ObjectEvent"));
             RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransactionEvent), nameof(TransactionEvent)));
             RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransformationEvent), nameof(TransformationEvent)));
             RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(AggregationEvent), nameof(AggregationEvent)));

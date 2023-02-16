@@ -14,6 +14,7 @@ namespace OpenTraceability.GDST.Events
     /// </summary>
     public class GDSTILMD : EventILMD
     {
+        [OpenTraceabilityObject]
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "vesselCatchInformationList", 0)]
         public VesselCatchInformationList? VesselCatchInformationList { get; set; }
     }
