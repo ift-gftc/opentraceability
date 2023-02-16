@@ -7,13 +7,12 @@ namespace OpenTraceability.Models.Events
         // TODO: add in the default business transaction types
     }
 
-    [OpenTraceabilityXml("bizTransaction")]
     public class EventBusinessTransaction
     {
-        [OpenTraceabilityXml("@type")]
+        [OpenTraceability("@type")]
         public string RawType { get; set; } = string.Empty;
 
-        [OpenTraceabilityXml("text()")]
+        [OpenTraceability("text()")]
         public string? Value { get; set; }
 
         public EventBusinessTransactionType Type { get; set; }

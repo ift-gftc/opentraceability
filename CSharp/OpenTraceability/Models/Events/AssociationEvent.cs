@@ -1,6 +1,7 @@
 ﻿using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
+using OpenTraceability.Utility.Attributes;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -8,8 +9,56 @@ namespace OpenTraceability.Models.Events
 {
     public class AssociationEvent : EventBase, IEvent
     {
+        [OpenTraceability("parentID", 7)]
         public EPC? ParentID { get; set; }
+
+        [OpenTraceabilityProducts("childQuantityList", EPCISVersion.V2, EventProductType.Child, 9, OpenTraceabilityProductsListType.QuantityList)]
+        [OpenTraceabilityProducts("childEPCs", EventProductType.Child, 8, OpenTraceabilityProductsListType.EPCList)]
         public List<EventProduct> Children { get; set; } = new List<EventProduct>();
+
+        [OpenTraceability("action", 10)]
+        public EventAction? Action { get; set; }
+
+        [OpenTraceability("bizStep", 11)]
+        public Uri? BusinessStep { get; set; }
+
+        [OpenTraceability("disposition", 12)]
+        public Uri? Disposition { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceability("readPoint", 13)]
+        public EventReadPoint? ReadPoint { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceability("bizLocation", 14)]
+        public EventLocation? Location { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceabilityArray("bizTransaction")]
+        [OpenTraceability("bizTransactionList", 15, EPCISVersion.V2)]
+        public List<EventBusinessTransaction> BizTransactionList { get; set; } = new List<EventBusinessTransaction>();
+
+        [OpenTraceabilityObject]
+        [OpenTraceabilityArray("source")]
+        [OpenTraceability("sourceList", 16, EPCISVersion.V2)]
+        public List<EventSource> SourceList { get; set; } = new List<EventSource>();
+
+        [OpenTraceabilityObject]
+        [OpenTraceabilityArray("destination")]
+        [OpenTraceability("destinationList", 17, EPCISVersion.V2)]
+        public List<EventDestination> DestinationList { get; set; } = new List<EventDestination>();
+
+        [OpenTraceabilityObject]
+        [OpenTraceabilityArray("sensorElement")]
+        [OpenTraceability("sensorElementList", 18, EPCISVersion.V2)]
+        public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
+
+        [OpenTraceabilityObject]
+        [OpenTraceability("persistentDisposition", 19)]
+        public PersistentDisposition? PersistentDisposition { get; set; }
+
+        public EventILMD? ILMD { get => throw new Exception("AssociationEvent does not support ILMD."); set => throw new Exception("AssociationEvent does not support ILMD."); }
+
         public EventType EventType => EventType.Association;
 
         public ReadOnlyCollection<EventProduct> Products

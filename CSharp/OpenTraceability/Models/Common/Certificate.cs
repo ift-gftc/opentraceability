@@ -1,17 +1,22 @@
-﻿namespace OpenTraceability.Models.Common
+﻿using OpenTraceability.Utility.Attributes;
+
+namespace OpenTraceability.Models.Common
 {
     public class Certificate
     {
+        [OpenTraceability(Constants.GDST_NAMESPACE, "certificationType")]
         public string? CertificateType { get; set; }
+
+        [OpenTraceability("certificationAgency")]
         public string? Agency { get; set; }
+
+        [OpenTraceability("certificationStandard")]
         public string? Standard { get; set; }
+
+        [OpenTraceability("certificationValue")]
         public string? Value { get; set; }
+
+        [OpenTraceability("certificationIdentification")]
         public string? Identification { get; set; }
-        public DateTimeOffset? StartDate { get; set; }
-        public DateTimeOffset? EndDate { get; set; }
-        public Uri? URI { get; set; }
-        public Uri? AgencyURL { get; set; }
-        public DateTimeOffset? AuditDate { get; set; }
-        public string? Subject { get; set; }
     }
 }

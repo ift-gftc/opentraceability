@@ -63,25 +63,30 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 XElement x = xEvent;
 
-                // make sure we have created the xml element correctly.
-                List<string> xParts = kde.XPath.Split('/').ToList();
-                while (xParts.Count > 1)
-                {
-                    string p = xParts.First();
-                    xParts.RemoveAt(0);
-                    if (xEvent.Element(p) == null)
-                    {
-                        xEvent.Add(new XElement(p));
-                        x = xEvent.Element(p) ?? throw new Exception("Failed to add xml element, p=" + p);
-                    }
-                }
-
                 // check if the property on the event has a value and is not null...
                 if (kde.Property != null)
                 {
                     object? value = GetPropertyValue(e, kde.Property);
                     if (value != null)
                     {
+                        if (value is IList && kde.Required == false && ((IList)value).Count == 0)
+                        {
+                            continue;
+                        }
+
+                        // make sure we have created the xml element correctly.
+                        List<string> xParts = kde.XPath.Split('/').ToList();
+                        while (xParts.Count > 1)
+                        {
+                            string p = xParts.First();
+                            xParts.RemoveAt(0);
+                            if (x.Element(p) == null)
+                            {
+                                x.Add(new XElement(p));
+                            }
+                            x = x.Element(p) ?? throw new Exception("Failed to add xml element, p=" + p);
+                        }
+
                         // convert the C# property value into XML
                         switch (kde.Type)
                         {
@@ -93,9 +98,9 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                             case "GLN": WriteString(x, kde, value); break;
                             default:
                                 {
-                                    if (!string.IsNullOrWhiteSpace(value.ToString()))
+                                    if (value != null)
                                     {
-                                        XElement? xe = WriteObject(kde.XPath.Split('/').Last(), value);
+                                        XElement? xe = WriteObject(kde.XPath.Split('/').Last(), value, kde.Required);
                                         if (xe != null)
                                         {
                                             x.Add(xe);
@@ -115,10 +120,10 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                     string xname = kde.XPath.Split('/').Last();
                     switch (xname)
                     {
-                        case "epcList": WriteEPCList(kde, e, x, EventProductType.Reference); break;
-                        case "outputEPCList": WriteEPCList(kde, e, x, EventProductType.Output); break;
-                        case "inputEPCList": WriteEPCList(kde, e, x, EventProductType.Input); break;
-                        case "childEPCs": WriteEPCList(kde, e, x, EventProductType.Child); break;
+                        case "epcList": WriteEPCList(kde, e, x, EventProductType.Reference, kde.Required); break;
+                        case "outputEPCList": WriteEPCList(kde, e, x, EventProductType.Output, kde.Required); break;
+                        case "inputEPCList": WriteEPCList(kde, e, x, EventProductType.Input, kde.Required); break;
+                        case "childEPCs": WriteEPCList(kde, e, x, EventProductType.Child, kde.Required); break;
                         default: throw new Exception("Did not recognize epc list xpath. " + JsonConvert.SerializeObject(kde));
                     }
                 }
@@ -148,6 +153,11 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 {
                     xEvent.Add(xKDE);
                 }
+            }
+
+            if (e is TransformationEvent && epcisVersion == EPCISVersion.V1)
+            {
+                xEvent = new XElement("extension", xEvent);
             }
 
             return xEvent;
@@ -205,12 +215,25 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static void WriteEPCList(EPCISMappingKDE kde, IEvent e, XElement x, EventProductType productType)
+        private static void WriteEPCList(EPCISMappingKDE kde, IEvent e, XElement x, EventProductType productType, bool required=false)
         {
-            string xName = kde.XPath.Split('/').Last();
             List<EventProduct> products = e.Products.Where(p => p.Type == productType && p.Quantity == null).ToList();
-            if (products.Count > 0)
+            if (products.Count > 0 || required == true)
             {
+                // make sure we have created the xml element correctly.
+                List<string> xParts = kde.XPath.Split('/').ToList();
+                while (xParts.Count > 1)
+                {
+                    string p = xParts.First();
+                    xParts.RemoveAt(0);
+                    if (x.Element(p) == null)
+                    {
+                        x.Add(new XElement(p));
+                    }
+                    x = x.Element(p) ?? throw new Exception("Failed to add xml element, p=" + p);
+                }
+
+                string xName = kde.XPath.Split('/').Last();
                 XElement xEPCList = new XElement(xName);
                 foreach (EventProduct prod in products)
                 {
@@ -225,10 +248,23 @@ namespace OpenTraceability.Mappers.EPCIS.XML
 
         private static void WriteQuantityList(EPCISMappingKDE kde, IEvent e, XElement x, EventProductType productType)
         {
-            string xName = kde.XPath.Split('/').Last();
             List<EventProduct> products = e.Products.Where(p => p.Type == productType && p.Quantity != null).ToList();
             if (products.Count > 0)
             {
+                // make sure we have created the xml element correctly.
+                List<string> xParts = kde.XPath.Split('/').ToList();
+                while (xParts.Count > 1)
+                {
+                    string p = xParts.First();
+                    xParts.RemoveAt(0);
+                    if (x.Element(p) == null)
+                    {
+                        x.Add(new XElement(p));
+                    }
+                    x = x.Element(p) ?? throw new Exception("Failed to add xml element, p=" + p);
+                }
+
+                string xName = kde.XPath.Split('/').Last();
                 XElement xQuantityList = new XElement(xName);
                 foreach (EventProduct product in products)
                 {
@@ -260,142 +296,141 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
         }
 
-        private static XElement? WriteObject(XName xname, object? value)
+        private static XElement? WriteObject(XName xname, object? value, bool required=false)
         {
             XElement? xvalue = null;
-            if (value != null)
-            {
-                if (value is IList)
-                {
-                    xvalue = new XElement(xname);
+            //if (value != null)
+            //{
+            //    if (value is IList)
+            //    {
+            //        IList list = (IList)value;
+            //        if (list.Count > 0 || required == true)
+            //        {
+            //            xvalue = new XElement(xname);
+            //            Type t = list[0]?.GetType() ?? throw new Exception("Failed to get list item type.");
+            //            XName xchildname = t.GetCustomAttribute<OpenTraceabilityAttribute>()?.Name ?? throw new Exception("Failed to get xname from type. type = " + t.FullName);
+            //            foreach (var v in list)
+            //            {
+            //                XElement? xListValue = WriteObject(xchildname, v);
+            //                if (xListValue != null)
+            //                {
+            //                    xvalue.Add(xListValue);
+            //                }
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        xvalue = new XElement(xname);
+            //        Type t = value.GetType();
+            //        OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetTypeInfo(t);
+            //        foreach (var kvp in typeInfo.XmlAttributes)
+            //        {
+            //            object? obj = kvp.Value.GetValue(value);
+            //            if (obj != null)
+            //            {
+            //                string xchildname = kvp.Key.Name.ToString();
+            //                if (xchildname.StartsWith("@"))
+            //                {
+            //                    string objStr = WriteObjectToString(obj);
+            //                    if (!string.IsNullOrWhiteSpace(objStr))
+            //                    {
+            //                        XAttribute xatt = new XAttribute(xchildname.TrimStart('@'), objStr);
+            //                        xvalue.Add(xatt);
+            //                    }
+            //                }
+            //                else if (xchildname == "text()")
+            //                {
+            //                    string objStr = WriteObjectToString(obj);
+            //                    if (!string.IsNullOrWhiteSpace(objStr))
+            //                    {
+            //                        xvalue.Value = objStr;
+            //                    }
+            //                }
+            //                else if (kvp.Value.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
+            //                {
+            //                    XElement? xchild = WriteObject(xchildname, obj);
+            //                    if (xchild != null)
+            //                    {
+            //                        xvalue.Add(xchild);
+            //                    }
+            //                }
+            //                else if (kvp.Value.GetCustomAttribute<OpenTraceabilityArrayAttribute>() != null)
+            //                {
+            //                    foreach (var o in (IList)obj)
+            //                    {
+            //                        if (o.GetType() == typeof(Uri))
+            //                        {
+            //                            string objStr = WriteObjectToString(o);
+            //                            if (!string.IsNullOrWhiteSpace(objStr))
+            //                            {
+            //                                XElement xchild = new XElement(xchildname, objStr);
+            //                                xvalue.Add(xchild);
+            //                            }
+            //                        }
+            //                        else
+            //                        {
+            //                            XElement? xchild = WriteObject(xchildname, o);
+            //                            if (xchild != null)
+            //                            {
+            //                                xvalue.Add(xchild);
+            //                            }
+            //                        }
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    string objStr = WriteObjectToString(obj);
+            //                    if (!string.IsNullOrWhiteSpace(objStr))
+            //                    {
+            //                        XElement xchild = new XElement(xchildname, objStr);
+            //                        xvalue.Add(xchild);
+            //                    }
+            //                }
+            //            }
+            //        }
 
-                    IList list = (IList)value;
-                    if (list.Count > 0)
-                    {
-                        Type t = list[0]?.GetType() ?? throw new Exception("Failed to get list item type.");
-                        XName xchildname = t.GetCustomAttribute<OpenTraceabilityXmlAttribute>()?.Name ?? throw new Exception("Failed to get xname from type. type = " + t.FullName);
-                        foreach (var v in list)
-                        {
-                            XElement? xListValue = WriteObject(xchildname, v);
-                            if (xListValue != null)
-                            {
-                                xvalue.Add(xListValue);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    xvalue = new XElement(xname);
-                    Type t = value.GetType();
-                    OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetTypeInfo(t);
-                    foreach (var kvp in typeInfo.XmlAttributes)
-                    {
-                        object? obj = kvp.Value.GetValue(value);
-                        if (obj != null)
-                        {
-                            string xchildname = kvp.Key.Name.ToString();
-                            if (xchildname.StartsWith("@"))
-                            {
-                                string objStr = WriteObjectToString(obj);
-                                if (!string.IsNullOrWhiteSpace(objStr))
-                                {
-                                    XAttribute xatt = new XAttribute(xchildname.TrimStart('@'), objStr);
-                                    xvalue.Add(xatt);
-                                }
-                            }
-                            else if (xchildname == "text()")
-                            {
-                                string objStr = WriteObjectToString(obj);
-                                if (!string.IsNullOrWhiteSpace(objStr))
-                                {
-                                    xvalue.Value = objStr;
-                                }
-                            }
-                            else if (kvp.Value.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
-                            {
-                                XElement? xchild = WriteObject(xchildname, obj);
-                                if (xchild != null)
-                                {
-                                    xvalue.Add(xchild);
-                                }
-                            }
-                            else if (kvp.Value.GetCustomAttribute<OpenTraceabilityArrayAttribute>() != null)
-                            {
-                                foreach (var o in (IList)obj)
-                                {
-                                    if (o.GetType() == typeof(Uri))
-                                    {
-                                        string objStr = WriteObjectToString(o);
-                                        if (!string.IsNullOrWhiteSpace(objStr))
-                                        {
-                                            XElement xchild = new XElement(xchildname, objStr);
-                                            xvalue.Add(xchild);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        XElement? xchild = WriteObject(xchildname, o);
-                                        if (xchild != null)
-                                        {
-                                            xvalue.Add(xchild);
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                string objStr = WriteObjectToString(obj);
-                                if (!string.IsNullOrWhiteSpace(objStr))
-                                {
-                                    XElement xchild = new XElement(xchildname, objStr);
-                                    xvalue.Add(xchild);
-                                }
-                            }
-                        }
-                    }
+            //        if (typeInfo.ExtensionKDEs != null)
+            //        {
+            //            object? obj = typeInfo.ExtensionKDEs.GetValue(value);
+            //            if (obj != null && obj is IList<IEventKDE>)
+            //            {
+            //                IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
+            //                if (kdes != null)
+            //                {
+            //                    foreach (var kde in kdes)
+            //                    {
+            //                        XElement? xchild = kde.GetXml();
+            //                        if (xchild != null)
+            //                        {
+            //                            xvalue.Add(xchild);
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //        }
 
-                    if (typeInfo.ExtensionKDEs != null)
-                    {
-                        object? obj = typeInfo.ExtensionKDEs.GetValue(value);
-                        if (obj != null && obj is IList<IEventKDE>)
-                        {
-                            IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
-                            if (kdes != null)
-                            {
-                                foreach (var kde in kdes)
-                                {
-                                    XElement? xchild = kde.GetXml();
-                                    if (xchild != null)
-                                    {
-                                        xvalue.Add(xchild);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (typeInfo.ExtensionAttributes != null)
-                    {
-                        object? obj = typeInfo.ExtensionAttributes.GetValue(value);
-                        if (obj != null && obj is IList<IEventKDE>)
-                        {
-                            IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
-                            if (kdes != null)
-                            {
-                                foreach (IEventKDE kde in kdes)
-                                {
-                                    XElement? xKDE = kde.GetXml();
-                                    if (xKDE != null)
-                                    {
-                                        xvalue.Add(new XAttribute(xKDE.Name, xKDE.Value));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            //        if (typeInfo.ExtensionAttributes != null)
+            //        {
+            //            object? obj = typeInfo.ExtensionAttributes.GetValue(value);
+            //            if (obj != null && obj is IList<IEventKDE>)
+            //            {
+            //                IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
+            //                if (kdes != null)
+            //                {
+            //                    foreach (IEventKDE kde in kdes)
+            //                    {
+            //                        XElement? xKDE = kde.GetXml();
+            //                        if (xKDE != null)
+            //                        {
+            //                            xvalue.Add(new XAttribute(xKDE.Name, xKDE.Value));
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
             return xvalue;
         }
 
@@ -415,6 +450,11 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 bool b = (bool)obj;
                 return b.ToString()?.ToLower() ?? string.Empty;
+            }
+            else if (obj is Country)
+            {
+                Country b = (Country)obj;
+                return b.Abbreviation;
             }
             else
             {

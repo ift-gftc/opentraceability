@@ -1,33 +1,15 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Events.KDEs;
+using OpenTraceability.Utility.Attributes;
 using System.Xml.Linq;
 
 namespace OpenTraceability.GDST.Events.KDEs
 {
-    public class VesselCatchInformationList : EventKDEBase, IEventKDE
+    public class VesselCatchInformationList
     {
-        public Type ValueType => typeof(VesselCatchInformationList);
+        [OpenTraceabilityArray]
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "vesselCatchInformation", 1)]
         public List<VesselCatchInformation> Vessels { get; set; } = new List<VesselCatchInformation>();
-
-        public void SetFromJson(JToken json)
-        {
-            throw new NotImplementedException();
-        }
-
-        public JToken? GetJson()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetFromXml(XElement xml)
-        {
-            throw new NotImplementedException();
-        }
-
-        public XElement? GetXml()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

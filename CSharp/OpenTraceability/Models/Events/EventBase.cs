@@ -1,5 +1,6 @@
 ﻿using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Common;
+using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
@@ -53,41 +54,35 @@ namespace OpenTraceability.Models.Events
 
     public class EventBase
     {
-        public Dictionary<string, string> _namespaces = new Dictionary<string, string>();
-        public Dictionary<string, string> _prefixes = new Dictionary<string, string>();
-        private List<IEventKDE> _kdes = new List<IEventKDE>();
-
-        public long ID { get; set; }
-        public string? EventID { get; set; }
-        public string? CertificationInfo { get; set; }
+        [OpenTraceability("eventTime", 1)]
         public DateTimeOffset? EventTime { get; set; }
-        public double? EventTimeZoneOffset { get; set; }
-        public DateTimeOffset? RecordTime { get; set; }
-        public PGLN? DataOwner { get; set; }
-        public PGLN? Owner { get; set; }
-        public EventAction? Action { get; set; }
-        public Uri? BusinessStep { get; set; }
-        public Uri? Disposition { get; set; }
-        public PersistentDisposition? PersistentDisposition { get; set; }
-        public EventLocation? Location { get; set; }
-        public EventReadPoint? ReadPoint { get; set; }
-        public List<EventSource> SourceList { get; set; } = new List<EventSource>();
-        public List<EventDestination> DestinationList { get; set; } = new List<EventDestination>();
-        public List<Certificate> Certificates { get; set; } = new List<Certificate>();
-        public ReadOnlyCollection<IEventKDE> KDEs { get => new ReadOnlyCollection<IEventKDE>(_kdes); }
-        public List<EventBusinessTransaction> BizTransactionList { get; set; } = new List<EventBusinessTransaction>();
-        public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
-        public ErrorDeclaration? ErrorDeclaration { get; set; }
-        public EventILMD? ILMD { get; set; }
 
-        /// <summary>
-        /// Adds a KDE to the event.
-        /// </summary>
-        /// <param name="kde"></param>
-        public void AddKDE(IEventKDE kde)
-        {
-            _kdes.Add(kde);
-        }
+        [OpenTraceability("recordTime", 2)]
+        public DateTimeOffset? RecordTime { get; set; }
+
+        [OpenTraceability("eventTimeZoneOffset", 3)]
+        public TimeSpan? EventTimeZoneOffset { get; set; }
+
+        [OpenTraceability("eventID", 4, EPCISVersion.V2)]
+        [OpenTraceability("baseExtension/eventID", 4, EPCISVersion.V1)]
+        public Uri? EventID { get; set; }
+
+        [OpenTraceability("errorDeclaration", 5, EPCISVersion.V2)]
+        [OpenTraceability("baseExtension/errorDeclaration", 5, EPCISVersion.V1)]
+        public ErrorDeclaration? ErrorDeclaration { get; set; }
+
+        [OpenTraceability("certificationInfo", 6, EPCISVersion.V2)]
+        public string? CertificationInfo { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "certificationList")]
+        public CertificationList? CertificationList { get; set; }
+
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "informationProvider")]
+        public PGLN? InformationProvider { get; set; }
+
+        [OpenTraceabilityExtensionElements]
+        public List<IEventKDE> KDEs { get; set; } = new List<IEventKDE>();
 
         /// <summary>
         /// Gets a KDE by the type and key value.
@@ -97,13 +92,7 @@ namespace OpenTraceability.Models.Events
         /// <returns>The instance of the IEventKDE that matches the parameters.</returns>
         public T? GetKDE<T>(string ns, string name) where T : IEventKDE
         {
-            // if we are given the prefixes...
-            if (_prefixes.ContainsKey(ns))
-            {
-                ns = _prefixes[ns];
-            }
-
-            IEventKDE? kde = _kdes.Find(k => k.Namespace == ns && k.Name == name);
+            IEventKDE? kde = KDEs.Find(k => k.Namespace == ns && k.Name == name);
             if (kde != null)
             {
                 if (kde is T)
@@ -121,7 +110,7 @@ namespace OpenTraceability.Models.Events
         /// <returns>The instance of the IEventKDE that matches the parameters.</returns>
         public T? GetKDE<T>() where T : IEventKDE
         {
-            IEventKDE? kde = _kdes.Find(k => k.ValueType == typeof(T));
+            IEventKDE? kde = KDEs.Find(k => k.ValueType == typeof(T));
             if (kde != null)
             {
                 if (kde is T)
@@ -130,16 +119,6 @@ namespace OpenTraceability.Models.Events
                 }
             }
             return default;
-        }
-
-        /// <summary>
-        /// Sets the namespaces on the event. This will replace the existing namespaces.
-        /// </summary>
-        /// <param name="namespaces"></param>
-        public void SetNamespaces(Dictionary<string, string> namespaces)
-        {
-            _namespaces = namespaces;
-            _prefixes = namespaces.Reverse();
         }
     }
 }

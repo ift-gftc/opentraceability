@@ -27,10 +27,18 @@ namespace OpenTraceability.Utility
         /// </summary>
         public static DateTimeOffset? TryConvertToDateTimeOffset(this string str)
         {
-            for (int i = 1; i <= 7; i++)
+            if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dt))
+            {
+                return dt;
+            }
+            else if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ssK", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+            {
+                return dt;
+            }
+            for (int i = 0; i <= 7; i++)
             {
                 string f = "".PadLeft(i, 'f');
-                if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ss.{f}Z", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dt))
+                if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ss.{f}Z", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
                 {
                     return dt;
                 }
@@ -52,6 +60,35 @@ namespace OpenTraceability.Utility
             {
                 OTLogger.Error(Ex);
                 throw;
+            }
+        }
+
+        public static List<string> SplitXPath(this string str)
+        {
+            // find all namespaces in xpath...
+            if (str.IndexOf('{') < 0 && str.IndexOf('}') < 0)
+            {
+                return str.Split('/').ToList();
+            }
+            else
+            {
+                int i = str.IndexOf('/');
+                while (i >= 0)
+                {
+                    // if the slash falls between a } and {, then swap it for "%SLASH%"
+                    int nextOpen = str.IndexOf('{', i);
+                    int nextClose = str.IndexOf('}', i);
+
+                    if (nextOpen > nextClose)
+                    {
+                        str = str.Remove(i, 1);
+                        str.Insert(i, "%SLASH%");
+                    }
+
+                    i = str.IndexOf('/', i + 1);
+                }
+
+                return str.Split("%SLASH%").ToList();
             }
         }
     }

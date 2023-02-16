@@ -28,11 +28,12 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 XElement xDocId = new XElement(Constants.SBDH_XNAMESPACE + "DocumentIdentification");
                 xDocId.AddStringElement(Constants.SBDH_XNAMESPACE + "Standard", header.DocumentIdentification.Standard);
-                xDocId.AddStringElement(Constants.SBDH_XNAMESPACE + "Type", header.DocumentIdentification.Type);
                 xDocId.AddStringElement(Constants.SBDH_XNAMESPACE + "TypeVersion", header.DocumentIdentification.TypeVersion);
                 xDocId.AddStringElement(Constants.SBDH_XNAMESPACE + "InstanceIdentifier", header.DocumentIdentification.InstanceIdentifier);
+                xDocId.AddStringElement(Constants.SBDH_XNAMESPACE + "Type", header.DocumentIdentification.Type);
                 xDocId.AddStringElement(Constants.SBDH_XNAMESPACE + "MultipleType", header.DocumentIdentification.MultipleType);
                 xDocId.AddDateTimeOffsetISOElement(Constants.SBDH_XNAMESPACE + "CreationDateAndTime", header.DocumentIdentification.CreationDateAndTime);
+                xHeader.Add(xDocId);
             }
 
             return xHeader;
@@ -45,19 +46,20 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 XElement xOrg = new XElement(Constants.SBDH_XNAMESPACE + xName);
                 if (!string.IsNullOrWhiteSpace(org.Identifier))
                 {
-                    xOrg.Add(Constants.SBDH_XNAMESPACE + "Identifier", org.Identifier);
+                    xOrg.Add(new XElement(Constants.SBDH_XNAMESPACE + "Identifier", org.Identifier));
                 }
                 if (!string.IsNullOrWhiteSpace(org.ContactName) || !string.IsNullOrWhiteSpace(org.EmailAddress))
                 {
-                    XElement xContactInfo = new XElement(Constants.SBDH_NAMESPACE + "ContactInformation");
+                    XElement xContactInfo = new XElement(Constants.SBDH_XNAMESPACE + "ContactInformation");
                     if (!string.IsNullOrWhiteSpace(org.ContactName))
                     {
-                        xContactInfo.Add(new XElement(Constants.SBDH_NAMESPACE + "Contact"), org.ContactName);
+                        xContactInfo.Add(new XElement(Constants.SBDH_XNAMESPACE + "Contact", org.ContactName));
                     }
                     if (!string.IsNullOrWhiteSpace(org.EmailAddress))
                     {
-                        xContactInfo.Add(new XElement(Constants.SBDH_NAMESPACE + "EmailAddress"), org.EmailAddress);
+                        xContactInfo.Add(new XElement(Constants.SBDH_XNAMESPACE + "EmailAddress", org.EmailAddress));
                     }
+                    xOrg.Add(xContactInfo);
                 }
                 xHeader.Add(xOrg);
             }

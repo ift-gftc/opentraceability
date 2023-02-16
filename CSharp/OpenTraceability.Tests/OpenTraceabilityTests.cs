@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace OpenTraceability.Tests
 {
@@ -20,19 +22,20 @@ namespace OpenTraceability.Tests
             XMLCompare(x1, x2);
         }
 
-        private static void XMLCompare(XElement primary, XElement secondary)
+        private static void XMLCompare(XElement primary, XElement secondary, bool noAssertions=false)
         {
             if (primary.Name != secondary.Name)
             {
                 Assert.Fail($"The XML element name does not match where name={primary.Name}.\nprimary xml:\n{primary.ToString()}\n\nsecondary xml:\n{secondary.ToString()}");
             }
+
             if (primary.HasAttributes)
             {
                 if (primary.Attributes().Count() != secondary.Attributes().Count())
                 {
                     Assert.Fail($"The XML attribute counts to not match.\nprimary xml:\n{primary.ToString()}\n\nsecondary xml:\n{secondary.ToString()}");
                 }
-                    
+
                 foreach (XAttribute attr in primary.Attributes())
                 {
                     if (secondary.Attribute(attr.Name) == null)
@@ -42,7 +45,7 @@ namespace OpenTraceability.Tests
 
                     string? val1 = attr.Value;
                     string? val2 = secondary.Attribute(attr.Name)?.Value;
-                    if (val1 != val2)
+                    if (val1?.ToLower() != val2?.ToLower())
                     {
                         if (!TryAdvancedValueCompare(val1, val2))
                         {
@@ -51,24 +54,96 @@ namespace OpenTraceability.Tests
                     }
                 }
             }
-            if (primary.HasElements)
+
+            if (primary.HasElements || secondary.HasElements)
             {
                 if (primary.Elements().Count() != secondary.Elements().Count())
                 {
-                    Assert.Fail($"The XML child elements count does not match.\nprimary xml:\n{primary.ToString()}\n\nsecondary xml:\n{secondary.ToString()}");
+                    List<string> eles1 = primary.Elements().Select(s => s.Name.ToString()).ToList();
+                    List<string> eles2 = secondary.Elements().Select(s => s.Name.ToString()).ToList();
+
+                    List<string> missing1 = eles1.Where(e => !eles2.Contains(e)).ToList();
+                    List<string> missing2 = eles2.Where(e => !eles1.Contains(e)).ToList();
+
+                    Assert.Fail($"The XML child elements count does not match.\nElements only in primary xml: {string.Join(", ", missing1)}\nElements only in secondary xml: {string.Join(", ", missing2)}\nprimary xml:\n{primary.ToString()}\n\nsecondary xml:\n{secondary.ToString()}");
                 }
                 for (var i = 0; i <= primary.Elements().Count() - 1; i++)
                 {
                     XElement child1 = primary.Elements().Skip(i).Take(1).Single();
-                    XElement child2 = secondary.Elements().Skip(i).Take(1).Single();
-                    XMLCompare(child1, child2);
+
+                    // we will try and find the matching node...
+                    XElement? xchild2 = FindMatchingNode(child1, secondary, i);
+                    if (xchild2  == null)
+                    {
+                        Assert.Fail($"Failed to find matching node for comparison in the secondary xml.\nchild1={child1}\nprimary xml:\n{primary.ToString()}\n\nsecondary xml:\n{secondary.ToString()}");
+                    }
+
+                    XMLCompare(child1, xchild2);
                 }
             }
-            else if (primary.Value != secondary.Value)
+            else if (primary.Value.ToLower() != secondary.Value.ToLower())
             {
                 if (!TryAdvancedValueCompare(primary.Value, secondary.Value))
                 {
                     Assert.Fail($"The XML element value does not match where name={primary.Name} and value={primary.Value} with the after value={secondary.Value}.\nprimary xml:\n{primary.ToString()}\n\nsecondary xml:\n{secondary.ToString()}");
+                }
+            }
+        }
+
+        static XElement? FindMatchingNode(XElement xchild1, XElement x2, int i)
+        {
+            // lets see if there is more than one node with the same element name...
+            if (x2.Elements(xchild1.Name).Count() == 0)
+            {
+                return null;
+            }
+            else if (x2.Elements(xchild1.Name).Count() == 1)
+            {
+                return x2.Element(xchild1.Name);
+            }
+            else
+            {
+                XElement? xchild2 = null;
+                if (x2.Name == "EventList")
+                {
+                    List<string> eventxpaths = new List<string>() { "eventID", "baseExtension/eventID", "TransformationEvent/baseExtension/eventID" };
+                    foreach (string xp in eventxpaths)
+                    {
+                        if (xchild1.XPathSelectElement(xp) != null)
+                        {
+                            string? eventid = xchild1.XPathSelectElement(xp)?.Value;
+                            xchild2 = x2.Elements().FirstOrDefault(x => x.XPathSelectElement(xp)?.Value == eventid);
+                            return xchild2;
+                        }
+                    }
+                }
+                
+                string id = xchild1.Attribute("id")?.Value ?? string.Empty;
+                if (!string.IsNullOrEmpty(id))
+                {
+                    xchild2 = x2.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == id);
+                }
+                if (xchild2 == null)
+                {
+                    // try and find by internal value...
+                    string value = xchild1.Value;
+                    if (!string.IsNullOrEmpty(value) && x2.Elements().Where(x => x.Name == xchild1.Name && x.Value == value).Count() == 1)
+                    {
+                        xchild2 = x2.Elements().Where(x => x.Name == xchild1.Name && x.Value == value).FirstOrDefault();
+                    }
+                    if (xchild2 == null)
+                    {
+                        xchild2 = x2.Elements().Skip(i).Take(1).Single();
+                        return xchild2;
+                    }
+                    else
+                    {
+                        return xchild2;
+                    }
+                }
+                else
+                {
+                    return xchild2;
                 }
             }
         }

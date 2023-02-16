@@ -48,7 +48,8 @@
         "ObjectEvent": [
             {
                 "XPath": "epcList",
-                "Type": "EPCList"
+                "Type": "EPCList",
+                "Required": true
             },
             {
                 "XPath": "action",
@@ -141,7 +142,8 @@
             },
             {
                 "XPath": "epcList",
-                "Type": "EPCList"
+                "Type": "EPCList",
+                "Required": true
             },
             {
                 "XPath": "action",
@@ -308,7 +310,8 @@
             },
             {
                 "XPath": "childEPCs",
-                "Type": "EPCList"
+                "Type": "EPCList",
+                "Required": true
             },
             {
                 "XPath": "childQuantityList",
@@ -367,7 +370,8 @@
             },
             {
                 "XPath": "childEPCs",
-                "Type": "EPCList"
+                "Type": "EPCList",
+                "Required": true
             },
             {
                 "XPath": "action",

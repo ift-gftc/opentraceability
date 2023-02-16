@@ -1,4 +1,5 @@
 ﻿using OpenTraceability.Utility;
+using OpenTraceability.Utility.Attributes;
 using System.ComponentModel;
 
 namespace OpenTraceability.Models.Events
@@ -16,7 +17,7 @@ namespace OpenTraceability.Models.Events
 
     public class ErrorDeclaration
     {
-
+        [OpenTraceability("@type")]
         public Uri? RawReason { get; set; }
         public DateTimeOffset? DeclarationTime { get; set; }
         public List<string>? CorrectingEventIDs { get; set; }

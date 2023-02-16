@@ -26,7 +26,7 @@ namespace OpenTraceability.Utility
             string? data = null;
             data = StaticData.ReadData("Countries.xml");
             XDocument xmlCountries = XDocument.Parse(data);
-            foreach (XElement x in xmlCountries.Elements())
+            foreach (XElement x in xmlCountries.Root.Elements())
             {
                 Country country = new Country(x);
                 _dirCountries.TryAdd(country.Abbreviation.ToUpper(), country);
@@ -146,7 +146,6 @@ namespace OpenTraceability.Utility
     [DataContract]
     public class Country : IEquatable<Country>, IComparable<Country>
     {
-        public long ID { get; set; }
 
         public string CultureInfoCode { get; set; } = string.Empty;
 
@@ -168,7 +167,6 @@ namespace OpenTraceability.Utility
         {
             this.Abbreviation = other.Abbreviation;
             this.Alpha3 = other.Alpha3;
-            this.ID = other.ID;
             this.ISO = other.ISO;
             this.Name = other.Name;
             this.AlternativeName = other.AlternativeName;
@@ -177,12 +175,14 @@ namespace OpenTraceability.Utility
 
         public Country(XElement xmlCountry)
         {
-            this.ID = long.Parse(xmlCountry.Attribute("ID")?.Value ?? string.Empty);
             this.Name = xmlCountry.Attribute("Name")?.Value ?? string.Empty;
             this.AlternativeName = xmlCountry.Attribute("AlternativeName")?.Value ?? string.Empty;
             this.Abbreviation = xmlCountry.Attribute("Abbreviation")?.Value ?? string.Empty;
             this.Alpha3 = xmlCountry.Attribute("Alpha3")?.Value ?? string.Empty;
-            this.ISO = int.Parse(xmlCountry.Attribute("ISO")?.Value ?? string.Empty);
+            if (int.TryParse(xmlCountry.Attribute("ISO")?.Value, out int iso))
+            {
+                this.ISO = iso;
+            }
             this.CultureInfoCode = xmlCountry.Attribute("CultureInfoCode")?.Value ?? string.Empty;
         }
 

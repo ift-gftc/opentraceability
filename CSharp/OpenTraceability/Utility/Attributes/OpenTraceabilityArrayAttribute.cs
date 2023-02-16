@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace OpenTraceability.Utility.Attributes
 {
-    internal class OpenTraceabilityArrayAttribute : System.Attribute
+    public class OpenTraceabilityArrayAttribute : System.Attribute
     {
+        public string? ItemName { get; set; }
+
+        public OpenTraceabilityArrayAttribute() { }
+
+        public OpenTraceabilityArrayAttribute(string listXName)
+        {
+            ItemName = listXName;
+        }
     }
 }

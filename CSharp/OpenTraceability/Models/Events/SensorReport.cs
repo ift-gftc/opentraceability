@@ -6,73 +6,73 @@ namespace OpenTraceability.Models.Events
 {
     public class SensorReport
     {
-        [OpenTraceabilityXml("@time")]
+        [OpenTraceability("@time")]
         public DateTimeOffset? TimeStamp { get; set; }
 
-        [OpenTraceabilityXml("@type")]
+        [OpenTraceability("@type")]
         public Uri? Type { get; set; }
 
-        [OpenTraceabilityXml("@value")]
+        [OpenTraceability("@value")]
         public double? Value { get; internal set; }
 
-        [OpenTraceabilityXml("@stringValue")]
+        [OpenTraceability("@stringValue")]
         public string? StringValue { get; internal set; }
 
-        [OpenTraceabilityXml("@booleanValue")]
+        [OpenTraceability("@booleanValue")]
         public bool? BooleanValue { get; internal set; }
 
-        [OpenTraceabilityXml("@hexBinaryValue")]
+        [OpenTraceability("@hexBinaryValue")]
         public string? HexBinaryValue { get; internal set; }
 
-        [OpenTraceabilityXml("@uriValue")]
+        [OpenTraceability("@uriValue")]
         public Uri? URIValue { get; internal set; }
 
-        [OpenTraceabilityXml("@uom")]
+        [OpenTraceability("@uom")]
         public UOM? UOM { get; internal set; }
 
-        [OpenTraceabilityXml("@component")]
+        [OpenTraceability("@component")]
         public Uri? Component { get; internal set; }
 
-        [OpenTraceabilityXml("@minValue")]
+        [OpenTraceability("@minValue")]
         public double? MinValue { get; internal set; }
 
-        [OpenTraceabilityXml("@maxValue")]
+        [OpenTraceability("@maxValue")]
         public double? MaxValue { get; internal set; }
 
-        [OpenTraceabilityXml("@sDev")]
+        [OpenTraceability("@sDev")]
         public double? SDev { get; internal set; }
 
-        [OpenTraceabilityXml("@chemicalSubstance")]
+        [OpenTraceability("@chemicalSubstance")]
         public Uri? ChemicalSubstance { get; internal set; }
 
-        [OpenTraceabilityXml("@microorganism")]
+        [OpenTraceability("@microorganism")]
         public Uri? MicroOrganism { get; internal set; }
 
-        [OpenTraceabilityXml("@deviceID")]
+        [OpenTraceability("@deviceID")]
         public Uri? DeviceID { get; internal set; }
 
-        [OpenTraceabilityXml("@rawData")]
+        [OpenTraceability("@rawData")]
         public Uri? RawData { get; internal set; }
 
-        [OpenTraceabilityXml("@meanValue")]
+        [OpenTraceability("@meanValue")]
         public double? MeanValue { get; internal set; }
 
-        [OpenTraceabilityXml("@percRank")]
+        [OpenTraceability("@percRank")]
         public double? PercentageRank { get; internal set; }
 
-        [OpenTraceabilityXml("@dataProcessingMethod")]
+        [OpenTraceability("@dataProcessingMethod")]
         public Uri? DataProcessingMethod { get; internal set; }
 
-        [OpenTraceabilityXml("@coordinateReferenceSystem")]
+        [OpenTraceability("@coordinateReferenceSystem")]
         public Uri? CoordinateReferenceSystem { get; internal set; }
 
-        [OpenTraceabilityXml("@exception")]
+        [OpenTraceability("@exception")]
         public Uri? Exception { get; internal set; }
 
-        [OpenTraceabilityXml("@percValue")]
+        [OpenTraceability("@percValue")]
         public double? PercentageValue { get; internal set; }
 
-        [OpenTraceabilityXml("@deviceMetadata")]
+        [OpenTraceability("@deviceMetadata")]
         public Uri? DeviceMetadata { get; internal set; }
 
         [OpenTraceabilityExtensionAttributes]

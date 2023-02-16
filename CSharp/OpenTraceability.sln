@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraceability.Tests", "O
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "OpenTraceability.TypeScript", "OpenTraceability.TypeScript\OpenTraceability.TypeScript.esproj", "{61801F32-4176-49A2-80FB-36F906D8E28E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTraceability.GDST", "OpenTraceability.GDST\OpenTraceability.GDST.csproj", "{888B7C22-8817-41D2-9339-234E38DD2D6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraceability.GDST", "OpenTraceability.GDST\OpenTraceability.GDST.csproj", "{888B7C22-8817-41D2-9339-234E38DD2D6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

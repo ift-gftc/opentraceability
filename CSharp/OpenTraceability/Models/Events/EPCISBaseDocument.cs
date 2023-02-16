@@ -1,23 +1,20 @@
 ﻿using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Identifiers;
+using OpenTraceability.Models.MasterData;
+using OpenTraceability.Utility.Attributes;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Models.Events
 {
     public enum EPCISVersion
     {
-        Version_1_2 = 1,
-        Version_2_0 = 2
+        V1 = 1,
+        V2 = 2
     }
 
     public class EPCISBaseDocument
     {
-        /// <summary>
-        /// Represents a list of namespaces used in the document.
-        /// </summary>
-        internal Dictionary<string, string> Namespaces { get; set; } = new Dictionary<string, string>();
-
         /// <summary>
         /// The version of EPCIS used for this document.
         /// </summary>
@@ -34,14 +31,18 @@ namespace OpenTraceability.Models.Events
         public StandardBusinessDocumentHeader? Header { get; set; }
 
         /// <summary>
-        /// One or more events on the EPCIS Document.
+        /// One or more events on the EPCIS Query Document.
         /// </summary>
         public List<IEvent> Events { get; set; } = new List<IEvent>();
 
-        public Dictionary<string, string> GetNamespaces()
-        {
-            Dictionary<string, string> namespaces = new Dictionary<string, string>(Namespaces);
-            return namespaces;
-        }
+        /// <summary>
+        /// All of the master data vocab elements included in the EPCIS Query Document.
+        /// </summary>
+        public List<IVocabularyElement> MasterData { get; set; } = new List<IVocabularyElement>();
+
+        /// <summary>
+        /// These are attributes attached to the EPCIS document including all attributes except the creation date. Including things like namespaces.
+        /// </summary>
+        public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
     }
 }

@@ -1,27 +1,21 @@
-﻿using Newtonsoft.Json.Linq;
-using OpenTraceability.Mappers;
-using OpenTraceability.Mappers.EPCIS;
-using OpenTraceability.Mappers.EPCIS.XML;
+﻿using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
-using OpenTraceability.Models.Events.KDEs;
-using System.Xml.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace OpenTraceability.Tests.Events
 {
-    /// <summary>
-    /// This is a test class for handling the basic building and using of events.
-    /// </summary>
     [TestFixture]
-    public class BasicEventTests
+    public class EPCISQueryDocumentTests
     {
         /// <summary>
         /// Tests the building of an object event and manipulating it in C#.
         /// </summary>
         [Test]
-        [TestCase("object_event_all_possible_fields.xml")]
-        [TestCase("aggregation_event_all_possible_fields.xml")]
-        [TestCase("association_event_all_possible_fields.xml")]
-        [TestCase("transformation_event_all_possible_fields.xml")]
+        [TestCase("querydoc_example01.xml")]
         public void XML(string file)
         {
             // initialize the libraries.
@@ -31,10 +25,10 @@ namespace OpenTraceability.Tests.Events
             string xmlObjectEvents = OpenTraceabilityTests.ReadTestData(file);
 
             // deserialize object events into C# models
-            EPCISDocument doc = EPCISMappers.EPCISDocument.XML.Map(xmlObjectEvents);
+            EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(xmlObjectEvents);
 
             // serialize C# models into xml
-            string xmlObjectEventsAfter = EPCISMappers.EPCISDocument.XML.Map(doc); 
+            string xmlObjectEventsAfter = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(doc);
 
             // check that the XMLs match
             OpenTraceabilityTests.CompareXML(xmlObjectEvents, xmlObjectEventsAfter);

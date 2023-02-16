@@ -120,7 +120,7 @@ namespace OpenTraceability.Models.Identifiers
                 }
                 else
                 {
-                    return ("The PGLN is not in a valid EPCIS URI format or in GS1 (P)GLN-13 format.");
+                    return ("The PGLN is not in a valid EPCIS URI format or in GS1 (P)GLN-13 format. PGLN = " + pglnStr);
                 }
             }
             catch (Exception Ex)

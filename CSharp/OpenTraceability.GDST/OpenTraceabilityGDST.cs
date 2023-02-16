@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTraceability.GDST.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace OpenTraceability.GDST
     {
         public static void Initialize()
         {
-            // TODO: register all extension KDEs
+            OpenTraceability.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTFishingEvent), "ObjectEvent", "urn:gdst:bizStep:fishingEvent", Models.Events.EventAction.ADD));
         }
     }
 }

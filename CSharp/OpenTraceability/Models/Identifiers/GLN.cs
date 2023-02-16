@@ -67,7 +67,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static string DetectGLNIssue(string glnStr)
+        public static string? DetectGLNIssue(string glnStr)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace OpenTraceability.Models.Identifiers
                 }
                 else
                 {
-                    return ("The GLN is not in a valid EPCIS URI format or in GS1 GLN-13 format.");
+                    return ("The GLN is not in a valid EPCIS URI format or in GS1 GLN-13 format. Value = " + glnStr);
                 }
             }
             catch (Exception Ex)
@@ -149,7 +149,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string glnStr, out GLN gln, out string error)
+        public static bool TryParse(string glnStr, out GLN? gln, out string? error)
         {
             try
             {
@@ -208,7 +208,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool operator !=(GLN obj1, GLN obj2)
+        public static bool operator !=(GLN? obj1, GLN? obj2)
         {
             try
             {
@@ -236,7 +236,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             try
             {

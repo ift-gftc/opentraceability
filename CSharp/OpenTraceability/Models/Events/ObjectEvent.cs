@@ -1,6 +1,7 @@
 ﻿using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
+using OpenTraceability.Utility.Attributes;
 using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events
@@ -8,7 +9,59 @@ namespace OpenTraceability.Models.Events
     public class ObjectEvent : EventBase, IEvent
     {
         public EventType EventType => EventType.Object;
+
+        [OpenTraceabilityProducts("extension/quantityList", EPCISVersion.V1, EventProductType.Reference, 20, OpenTraceabilityProductsListType.QuantityList)]
+        [OpenTraceabilityProducts("quantityList", EPCISVersion.V2, EventProductType.Reference, 14, OpenTraceabilityProductsListType.QuantityList)]
+        [OpenTraceabilityProducts("epcList", EventProductType.Reference, 7, OpenTraceabilityProductsListType.EPCList, Required = true)]
         public List<EventProduct> ReferenceProducts { get; set; } = new List<EventProduct>();
+
+        [OpenTraceability("action", 8)]
+        public EventAction? Action { get; set; }
+
+        [OpenTraceability("bizStep", 9)]
+        public Uri? BusinessStep { get; set; }
+
+        [OpenTraceability("disposition", 10)]
+        public Uri? Disposition { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceability("readPoint", 11)]
+        public EventReadPoint? ReadPoint { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceability("bizLocation", 12)]
+        public EventLocation? Location { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceabilityArray("bizTransaction")]
+        [OpenTraceability("bizTransactionList", 13)]
+        public List<EventBusinessTransaction> BizTransactionList { get; set; } = new List<EventBusinessTransaction>();
+
+        [OpenTraceabilityObject]
+        [OpenTraceabilityArray("source")]
+        [OpenTraceability("sourceList", 15, EPCISVersion.V2)]
+        [OpenTraceability("extension/sourceList", 21, EPCISVersion.V1)]
+        public List<EventSource> SourceList { get; set; } = new List<EventSource>();
+
+        [OpenTraceabilityObject]
+        [OpenTraceabilityArray("destination")]
+        [OpenTraceability("destinationList", 16, EPCISVersion.V2)]
+        [OpenTraceability("extension/destinationList", 22, EPCISVersion.V1)]
+        public List<EventDestination> DestinationList { get; set; } = new List<EventDestination>();
+
+        [OpenTraceabilityObject]
+        [OpenTraceabilityArray("sensorElement")]
+        [OpenTraceability("sensorElementList", 17, EPCISVersion.V2)]
+        public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
+
+        [OpenTraceabilityObject]
+        [OpenTraceability("persistentDisposition", 18)]
+        public PersistentDisposition? PersistentDisposition { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceability("ilmd", 19, EPCISVersion.V2)]
+        [OpenTraceability("extension/ilmd", 23, EPCISVersion.V1)]
+        public EventILMD? ILMD { get; set; }
 
         public ReadOnlyCollection<EventProduct> Products
         {

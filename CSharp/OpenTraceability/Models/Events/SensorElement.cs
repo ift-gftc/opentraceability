@@ -3,15 +3,15 @@ using OpenTraceability.Utility.Attributes;
 
 namespace OpenTraceability.Models.Events
 {
-    [OpenTraceabilityXml("sensorElement")]
     public class SensorElement
     {
         [OpenTraceabilityObject]
-        [OpenTraceabilityXml("sensorMetadata", 0)]
+        [OpenTraceability("sensorMetadata", 0)]
         public SensorMetaData? MetaData { get; set; }
 
-        [OpenTraceabilityArrayAttribute]
-        [OpenTraceabilityXml("sensorReport", 1)]
+        [OpenTraceabilityArray]
+        [OpenTraceabilityObject]
+        [OpenTraceability("sensorReport", 1)]
         public List<SensorReport> Reports { get; set; } = new List<SensorReport>();
 
         [OpenTraceabilityExtensionElements]

@@ -123,9 +123,10 @@ namespace OpenTraceability.Models.Identifiers
                 }
             }
             catch (Exception Ex)
-            {
+            { 
+                Exception exception = new Exception("The EPC is not in a valid format and could not be parsed. EPC=" + epcStr, Ex);
                 OTLogger.Error(Ex);
-                throw;
+                throw exception;
             }
         }
 

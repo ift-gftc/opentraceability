@@ -15,6 +15,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Mappers\EPCIS\EPCISMappingKDE.cs" />
+	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlEventReader.cs" />
+	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlEventWriter.cs" />
+	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlHeaderReader.cs" />
+	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlHeaderWriter.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Remove="Mappers\EPCIS\mappings.json" />
 		<None Remove="Utility\Data\Countries.xml" />
 		<None Remove="Utility\Data\UnitDescriptors.xml" />
@@ -23,7 +31,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Mappers\EPCIS\mappings.json" />
 		<EmbeddedResource Include="Utility\Data\Countries.xml" />
 		<EmbeddedResource Include="Utility\Data\UnitDescriptors.xml" />
 		<EmbeddedResource Include="Utility\Data\UnitSystems.xml" />
@@ -37,7 +44,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Models\MasterData\KDEs\" />
+	  <Folder Include="Mappers\MasterData\" />
 	</ItemGroup>
 
 </Project>

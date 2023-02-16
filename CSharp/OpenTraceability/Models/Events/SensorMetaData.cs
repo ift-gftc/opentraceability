@@ -5,28 +5,28 @@ namespace OpenTraceability.Models.Events
 {
     public class SensorMetaData
     {
-        [OpenTraceabilityXml("@time")]
+        [OpenTraceability("@time")]
         public DateTimeOffset? TimeStamp { get; set; }
 
-        [OpenTraceabilityXml("@deviceID")]
+        [OpenTraceability("@deviceID")]
         public Uri? DeviceID { get; set; }
 
-        [OpenTraceabilityXml("@deviceMetadata")]
+        [OpenTraceability("@deviceMetadata")]
         public Uri? DeviceMetaData { get; set; }
 
-        [OpenTraceabilityXml("@rawData")]
+        [OpenTraceability("@rawData")]
         public Uri? RawData { get; set; }
 
-        [OpenTraceabilityXml("@startTime")]
+        [OpenTraceability("@startTime")]
         public DateTimeOffset? StartTime { get; internal set; }
 
-        [OpenTraceabilityXml("@bizRules")]
+        [OpenTraceability("@bizRules")]
         public Uri? BizRules { get; internal set; }
 
-        [OpenTraceabilityXml("@dataProcessingMethod")]
+        [OpenTraceability("@dataProcessingMethod")]
         public Uri? DataProcessingMethod { get; internal set; }
 
-        [OpenTraceabilityXml("@endTime")]
+        [OpenTraceability("@endTime")]
         public DateTimeOffset? EndTime { get; internal set; }
 
         [OpenTraceabilityExtensionAttributes]

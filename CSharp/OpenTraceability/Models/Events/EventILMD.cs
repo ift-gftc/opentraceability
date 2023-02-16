@@ -1,4 +1,5 @@
 ﻿using OpenTraceability.Interfaces;
+using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
 
@@ -9,44 +10,27 @@ namespace OpenTraceability.Models.Events
     /// </summary>
     public class EventILMD
     {
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "productionMethodForFishAndSeafoodCode")]
+        public string? SeafoodProductionMethod { get; set; }
+
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "itemExpirationDate")]
+        public DateTimeOffset? ItemExpirationDate { get; set; }
+
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "productionDate")]
+        public DateTimeOffset? ProductionDate { get; set; }
+
+        [OpenTraceabilityArray]
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "countryOfOrigin")]
+        public List<Country> CountryOfOrigin { get; set; } = new List<Country>();
+
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "lotNumber")]
+        public string? LotNumber { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "certificationList")]
+        public CertificationList? CertificationList { get; set; }
+
         [OpenTraceabilityExtensionElements]
         public List<IEventKDE> ExtensionKDEs { get; internal set; } = new List<IEventKDE>();
-
-        /// <summary>
-        /// Gets a KDE by the type and key value.
-        /// </summary>
-        /// <typeparam name="T">The C# type of the KDE.</typeparam>
-        /// <param name="key">The key value of the KDE.</param>
-        /// <returns>The instance of the IEventKDE that matches the parameters.</returns>
-        public T? GetKDE<T>(string ns, string name)
-        {
-            IEventKDE? kde = ExtensionKDEs.Find(k => k.Namespace == ns && k.Name == name);
-            if (kde != null)
-            {
-                if (kde is T)
-                {
-                    return (T)kde;
-                }
-            }
-            return default;
-        }
-
-        /// <summary>
-        /// Gets the first KDE that matches the type provided.
-        /// </summary>
-        /// <typeparam name="T">The C# type of the KDE.</typeparam>
-        /// <returns>The instance of the IEventKDE that matches the parameters.</returns>
-        public T? GetKDE<T>()
-        {
-            IEventKDE? kde = ExtensionKDEs.Find(k => k.ValueType == typeof(T));
-            if (kde != null)
-            {
-                if (kde is T)
-                {
-                    return (T)kde;
-                }
-            }
-            return default;
-        }
     }
 }

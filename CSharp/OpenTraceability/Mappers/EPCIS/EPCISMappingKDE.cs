@@ -59,6 +59,7 @@ namespace OpenTraceability.Mappers.EPCIS
         public string XPath { get; set; } = string.Empty;
         public string? Property { get; set; }
         public string? Type { get; set; }
+        public bool Required { get; set; } = false;
         public EPCISVersion? Version { get; set; }
     }
 }

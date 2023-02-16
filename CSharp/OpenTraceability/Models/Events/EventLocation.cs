@@ -1,4 +1,5 @@
 ﻿using OpenTraceability.Models.Identifiers;
+using OpenTraceability.Utility.Attributes;
 
 namespace OpenTraceability.Models.Events
 {
@@ -14,6 +15,7 @@ namespace OpenTraceability.Models.Events
             this.GLN = gln;
         }
 
+        [OpenTraceability("id")]
         public GLN? GLN { get; set; }
     }
 }
