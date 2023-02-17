@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers.EPCIS.XML;
@@ -14,10 +17,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 {
     public static class EPCISDocumentBaseJsonMapper
     {
+        static JObject? jEPCISContext = null;
+
         public static T ReadJSon<T>(string strValue, out JObject json) where T : EPCISBaseDocument, new()
         {
             // convert into XDocument
-            json = JObject.Parse(strValue);
+            var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
+            json = JsonConvert.DeserializeObject<JObject>(strValue, settings) ?? throw new Exception("Failed to parse json from string. " + strValue);
 
             // read all of the attributes
             T document = Activator.CreateInstance<T>();
@@ -99,6 +105,88 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             else
             {
                 throw new Exception("Failed to determine the event type. Event C# type is " + e.GetType().FullName);
+            }
+        }
+
+        /// <summary>
+        /// This will convert all CURIEs into full URIs using the https://ref.gs1.org/standards/epcis/epcis-context.jsonld
+        /// </summary>
+        /// <param name="jEvent"></param>
+        /// <returns></returns>
+        internal static void ExpandCURIEsIntoFullURIs(JObject jEvent)
+        {
+            if (jEPCISContext == null)
+            {
+                using (var wc = new HttpClient())
+                {
+                    jEPCISContext = JObject.Parse(wc.GetStringAsync("https://ref.gs1.org/standards/epcis/epcis-context.jsonld").Result);
+                }
+            }
+
+            // grab all of the namespaces
+            Dictionary<string, string> namespaces = new Dictionary<string, string>();
+            JObject jContext = jEPCISContext["@context"] as JObject ?? throw new Exception("Failed to grab the @context. " + jEPCISContext.ToString());
+            foreach (JProperty jprop in jContext.Properties())
+            {
+                if (jContext[jprop.Name] is JObject)
+                {
+                    continue;
+                }
+                string? value = jContext[jprop.Name]?.ToString();
+                if (value != null)
+                {
+                    if (Uri.TryCreate(value, UriKind.Absolute, out Uri? uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+                    {
+                        namespaces.Add(jprop.Name, value);
+                    }
+                }
+            }
+
+            // we will go through each property on the jEvent...
+            ExpandCURIEsIntoFullURIs_Internal(jEvent, jContext, namespaces);
+        }
+
+        private static void ExpandCURIEsIntoFullURIs_Internal(JObject json, JObject jContext, Dictionary<string, string> namespaces)
+        {
+            // we will go through each property on the jEvent...
+            foreach (JProperty jprop in json.Properties())
+            {
+                JObject? jContextProp = jContext[jprop.Name] as JObject;
+                if (jContextProp != null)
+                {
+                    if (jContextProp["@container"]?.ToString() == "@set")
+                    {
+                        // we are looking at expanding a list
+                        JArray? jArr = json[jprop.Name] as JArray;
+                        if (jArr != null)
+                        {
+                            JObject? jchildcontext = jContextProp["@context"] as JObject;
+                            if (jchildcontext != null)
+                            {
+                                foreach (JObject j in jArr)
+                                {
+                                    ExpandCURIEsIntoFullURIs_Internal(j, jchildcontext, namespaces);
+                                }
+                            }
+                        }
+                    }
+                    else if (jContextProp["@type"]?.ToString() == "@vocab")
+                    {
+                        // we will expand a single value
+                        string? value = json[jprop.Name]?.Value<string>();
+                        if (value != null)
+                        {
+                            JToken? jmapping = jContextProp["@context"]?[value];
+                            if (jmapping != null)
+                            {
+                                string uri = jmapping.ToString();
+                                string[] parts = uri.Split(':');
+                                string ns = namespaces[parts[0]];
+                                json[jprop.Name] = ns + parts[1];
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -33,7 +33,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     foreach (JObject jEvent in jEventList)
                     {
                         Type eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
-                        IEvent e = (IEvent)OpenTraceabilityJsonMapper.FromJson(jEvent, eventType);
+                        IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType);
                         doc.Events.Add(e);
                     }
                 }
@@ -67,7 +67,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             foreach (IEvent e in doc.Events)
             {
                 string xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
-                JToken? jEvent = OpenTraceabilityJsonMapper.ToJson(xname, e);
+                JToken? jEvent = OpenTraceabilityJsonLDMapper.ToJson(xname, e);
                 if (jEvent != null)
                 {
                     jEventList.Add(jEvent);

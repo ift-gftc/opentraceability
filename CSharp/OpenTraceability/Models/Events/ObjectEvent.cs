@@ -30,6 +30,7 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityObject]
         [OpenTraceability("bizLocation", 12)]
+        [OpenTraceabilityCURIEMapping("urn:epcglobal:cbv:bizstep:")]
         public EventLocation? Location { get; set; }
 
         [OpenTraceabilityObject]

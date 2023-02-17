@@ -107,6 +107,8 @@ namespace OpenTraceability.Mappers
                 this.IsArray = true;
                 this.ItemName = arrayAttribute.ItemName;
             }
+
+            this.CURIEMapping = property.GetCustomAttribute<OpenTraceabilityCURIEMapping>()?.URIPrefix;
         }
 
         public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityProductsAttribute att)
@@ -119,6 +121,8 @@ namespace OpenTraceability.Mappers
             this.IsQuantityList = att.ListType == OpenTraceabilityProductsListType.QuantityList;
             this.ProductType = att.ProductType;
             this.Required = att.Required;
+
+            this.CURIEMapping = property.GetCustomAttribute<OpenTraceabilityCURIEMapping>()?.URIPrefix;
         }
 
         public PropertyInfo Property { get; internal set; }
@@ -133,5 +137,6 @@ namespace OpenTraceability.Mappers
         public string? ItemName { get; internal set; } = null;
         public EPCISVersion? Version { get; internal set; } = null;
         public int? SequenceOrder { get; internal set; } = null;
+        public string? CURIEMapping { get; internal set; }
     }
 }

@@ -16,202 +16,188 @@ using Newtonsoft.Json.Linq;
 
 namespace OpenTraceability.Mappers
 {
-    public static class OpenTraceabilityJsonMapper
+    public static class OpenTraceabilityJsonLDMapper
     {
         public static JToken? ToJson(string xname, object? value, bool required = false)
         {
-            if (value != null)
+            try
             {
-                JToken? json = new JObject(xname);
-                JToken jpointer = json;
-
-                // make sure we have created the xml element correctly.
-                List<string> xParts = xname.SplitXPath();
-                while (xParts.Count > 1)
+                if (value != null)
                 {
-                    string p = xParts.First();
-                    xParts.RemoveAt(0);
-                    if (jpointer[p] == null)
-                    {
-                        jpointer[p] = new JObject();
-                    }
-                    jpointer = jpointer[p] ?? throw new Exception("Failed to add jpath, p=" + p);
-                }
-                xname = xParts.First();
+                    JToken? json = new JObject();
+                    JToken jpointer = json;
 
-                Type t = value.GetType();
-                OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetTypeInfo(t);
-                foreach (var property in typeInfo.Properties.Where(p => p.Version == null || p.Version == EPCISVersion.V2))
-                {
-                    object? obj = property.Property.GetValue(value);
-                    if (obj != null)
+                    Type t = value.GetType();
+                    OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetTypeInfo(t);
+                    foreach (var property in typeInfo.Properties.Where(p => p.Version == null || p.Version == EPCISVersion.V2))
                     {
-                        JToken jvaluepointer = jpointer;
-                        xParts = property.Name.SplitXPath();
-                        while (xParts.Count > 1)
+                        object? obj = property.Property.GetValue(value);
+                        if (obj != null)
                         {
-                            string p = xParts.First();
-                            xParts.RemoveAt(0);
-                            if (jvaluepointer[p] == null)
-                            {
-                                jvaluepointer[p] = new JObject();
-                            }
-                            jvaluepointer = jvaluepointer[p] ?? throw new Exception("Failed to add xml element, p=" + p);
-                        }
-                        string xchildname = xParts.First();
+                            JToken jvaluepointer = jpointer;
+                            string xchildname = property.Name;
 
-                        if (xchildname.StartsWith("@"))
-                        {
-                            string? objStr = WriteObjectToString(obj);
-                            if (!string.IsNullOrWhiteSpace(objStr))
+                            if (xchildname.StartsWith("@"))
                             {
-                                jvaluepointer[xchildname.Substring(1)] = objStr;
-                            }
-                        }
-                        else if (xchildname == "text()")
-                        {
-                            string? objStr = WriteObjectToString(obj);
-                            if (!string.IsNullOrWhiteSpace(objStr))
-                            {
-                                jvaluepointer["@value"] = objStr;
-                            }
-                        }
-                        else if (property.IsQuantityList)
-                        {
-                            List<EventProduct> products = (List<EventProduct>)obj;
-                            products = products.Where(p => p.Quantity != null && p.Type == property.ProductType).ToList();
-                            if (products.Count > 0)
-                            {
-                                JArray xQuantityList = new JArray();
-                                foreach (var product in products)
+                                string? objStr = WriteObjectToString(obj);
+                                if (!string.IsNullOrWhiteSpace(objStr))
                                 {
-                                    if (product.EPC != null && product.Quantity != null)
+                                    jvaluepointer[xchildname.Substring(1)] = objStr;
+                                }
+                            }
+                            else if (xchildname == "text()")
+                            {
+                                string? objStr = WriteObjectToString(obj);
+                                if (!string.IsNullOrWhiteSpace(objStr))
+                                {
+                                    jvaluepointer["@value"] = objStr;
+                                }
+                            }
+                            else if (property.IsQuantityList)
+                            {
+                                List<EventProduct> products = (List<EventProduct>)obj;
+                                products = products.Where(p => p.Quantity != null && p.Type == property.ProductType).ToList();
+                                if (products.Count > 0)
+                                {
+                                    JArray xQuantityList = new JArray();
+                                    foreach (var product in products)
                                     {
-                                        JObject xQuantity = new JObject();
-                                        xQuantity["epcClass"] = product.EPC.ToString();
-                                        xQuantity["quantity"] = product.Quantity.Value;
-                                        if (product.Quantity.UoM.UNCode != "EA")
+                                        if (product.EPC != null && product.Quantity != null)
                                         {
-                                            xQuantity["uom"] = product.Quantity.UoM.UNCode;
+                                            JObject xQuantity = new JObject();
+                                            xQuantity["epcClass"] = product.EPC.ToString();
+                                            xQuantity["quantity"] = product.Quantity.Value;
+                                            if (product.Quantity.UoM.UNCode != "EA")
+                                            {
+                                                xQuantity["uom"] = product.Quantity.UoM.UNCode;
+                                            }
+                                            xQuantityList.Add(xQuantity);
                                         }
-                                        xQuantityList.Add(xQuantity);
                                     }
+                                    jvaluepointer[xchildname] = xQuantityList;
                                 }
-                                jvaluepointer[xchildname] = xQuantityList;
                             }
-                        }
-                        else if (property.IsEPCList)
-                        {
-                            List<EventProduct> products = (List<EventProduct>)obj;
-                            products = products.Where(p => p.Quantity == null && p.Type == property.ProductType).ToList();
-                            if (products.Count > 0 || property.Required)
+                            else if (property.IsEPCList)
                             {
-                                JArray xEPCList = new JArray();
-                                foreach (var product in products)
+                                List<EventProduct> products = (List<EventProduct>)obj;
+                                products = products.Where(p => p.Quantity == null && p.Type == property.ProductType).ToList();
+                                if (products.Count > 0 || property.Required)
                                 {
-                                    if (product.EPC != null)
+                                    JArray xEPCList = new JArray();
+                                    foreach (var product in products)
                                     {
-                                        xEPCList.Add(product.EPC.ToString());
+                                        if (product.EPC != null)
+                                        {
+                                            xEPCList.Add(product.EPC.ToString());
+                                        }
+                                    }
+                                    jvaluepointer[xchildname] = xEPCList;
+                                }
+                            }
+                            else if (property.IsArray)
+                            {
+                                IList list = (IList)obj;
+                                JArray xlist = new JArray();
+
+                                foreach (var o in list)
+                                {
+                                    if (property.IsObject)
+                                    {
+                                        JToken? xchild = ToJson(property.ItemName ?? xchildname, o, property.Required);
+                                        if (xchild != null)
+                                        {
+                                            xlist.Add(xchild);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        string? objStr = WriteObjectToString(o);
+                                        if (!string.IsNullOrWhiteSpace(objStr))
+                                        {
+                                            XElement xchild = new XElement(property.ItemName ?? xchildname, objStr);
+                                            xlist.Add(xchild);
+                                        }
                                     }
                                 }
-                                jvaluepointer[xchildname] = xEPCList;
+
+                                jvaluepointer[xchildname] = xlist;
+                            }
+                            else if (property.IsObject)
+                            {
+                                JToken? xchild = ToJson(xchildname, obj, property.Required);
+                                if (xchild != null)
+                                {
+                                    jvaluepointer[xchildname] = xchild;
+                                }
+                            }
+                            else
+                            {
+                                string? objStr = WriteObjectToString(obj);
+                                if (!string.IsNullOrWhiteSpace(objStr))
+                                {
+                                    jvaluepointer[xchildname] = objStr;
+                                }
                             }
                         }
-                        else if (property.IsArray)
-                        {
-                            IList list = (IList)obj;
-                            JArray xlist = new JArray();
+                    }
 
-                            foreach (var o in list)
+                    if (typeInfo.ExtensionKDEs != null)
+                    {
+                        object? obj = typeInfo.ExtensionKDEs.GetValue(value);
+                        if (obj != null && obj is IList<IEventKDE>)
+                        {
+                            IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
+                            if (kdes != null)
                             {
-                                if (property.IsObject)
+                                foreach (var kde in kdes)
                                 {
-                                    JToken? xchild = ToJson(property.ItemName ?? xchildname, o, property.Required);
+                                    JToken? xchild = kde.GetJson();
                                     if (xchild != null)
                                     {
-                                        xlist.Add(xchild);
+                                        jpointer[kde.Name] = xchild;
                                     }
                                 }
-                                else
+                            }
+                        }
+                    }
+
+                    if (typeInfo.ExtensionAttributes != null)
+                    {
+                        object? obj = typeInfo.ExtensionAttributes.GetValue(value);
+                        if (obj != null && obj is IList<IEventKDE>)
+                        {
+                            IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
+                            if (kdes != null)
+                            {
+                                foreach (IEventKDE kde in kdes)
                                 {
-                                    string? objStr = WriteObjectToString(o);
-                                    if (!string.IsNullOrWhiteSpace(objStr))
+                                    JToken? xchild = kde.GetJson();
+                                    if (xchild != null)
                                     {
-                                        XElement xchild = new XElement(property.ItemName ?? xchildname, objStr);
-                                        xlist.Add(xchild);
+                                        jpointer[kde.Name] = xchild;
                                     }
                                 }
                             }
                         }
-                        else if (property.IsObject)
-                        {
-                            JToken? xchild = ToJson(xchildname, obj, property.Required);
-                            if (xchild != null)
-                            {
-                                jvaluepointer[xchildname] = xchild;
-                            }
-                        }
-                        else
-                        {
-                            string? objStr = WriteObjectToString(obj);
-                            if (!string.IsNullOrWhiteSpace(objStr))
-                            {
-                                jvaluepointer[xchildname] = objStr;
-                            }
-                        }
                     }
-                }
 
-                if (typeInfo.ExtensionKDEs != null)
+                    return json;
+                }
+                //else if (required == true)
+                //{
+                //    XElement x = new XElement(xname);
+                //    return x;
+                //}
+                else
                 {
-                    object? obj = typeInfo.ExtensionKDEs.GetValue(value);
-                    if (obj != null && obj is IList<IEventKDE>)
-                    {
-                        IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
-                        if (kdes != null)
-                        {
-                            foreach (var kde in kdes)
-                            {
-                                JToken? xchild = kde.GetJson();
-                                if (xchild != null)
-                                {
-                                    jpointer[kde.Name] = xchild;
-                                }
-                            }
-                        }
-                    }
+                    return null;
                 }
-
-                if (typeInfo.ExtensionAttributes != null)
-                {
-                    object? obj = typeInfo.ExtensionAttributes.GetValue(value);
-                    if (obj != null && obj is IList<IEventKDE>)
-                    {
-                        IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
-                        if (kdes != null)
-                        {
-                            foreach (IEventKDE kde in kdes)
-                            {
-                                JToken? xchild = kde.GetJson();
-                                if (xchild != null)
-                                {
-                                    jpointer[kde.Name] = xchild;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return json;
             }
-            //else if (required == true)
-            //{
-            //    XElement x = new XElement(xname);
-            //    return x;
-            //}
-            else
+            catch (Exception ex)
             {
-                return null;
+                Exception e = new Exception($"Failed to parse json. value={value} and xname={xname}", ex);
+                OTLogger.Error(e);
+                throw e;
             }
         }
 
@@ -392,7 +378,7 @@ namespace OpenTraceability.Mappers
                     mappingProp.Property.SetValue(value, list);
                 }
 
-                Type itemType = value.GetType().GenericTypeArguments[0];
+                Type itemType = list.GetType().GenericTypeArguments[0];
 
                 JArray? jArr = json as JArray;
                 if (jArr != null)
@@ -423,10 +409,10 @@ namespace OpenTraceability.Mappers
             }
             else
             {
-                string? eleText = json.ToString();
-                if (!string.IsNullOrWhiteSpace(eleText))
+                string v = json.ToString();
+                if (!string.IsNullOrWhiteSpace(v))
                 {
-                    object o = ReadObjectFromString(eleText, mappingProp.Property.PropertyType);
+                    object o = ReadObjectFromString(v, mappingProp.Property.PropertyType);
                     mappingProp.Property.SetValue(value, o);
                 }
             }
@@ -434,65 +420,74 @@ namespace OpenTraceability.Mappers
 
         private static object ReadObjectFromString(string value, Type t)
         {
-            if (t == typeof(DateTimeOffset) || t == typeof(DateTimeOffset?))
+            try
             {
-                DateTimeOffset dt = value.TryConvertToDateTimeOffset() ?? throw new Exception("Failed to convert string to datetimeoffset where value = " + value);
-                return dt;
+                if (t == typeof(DateTimeOffset) || t == typeof(DateTimeOffset?))
+                {
+                    DateTimeOffset dt = value.TryConvertToDateTimeOffset() ?? throw new Exception("Failed to convert string to datetimeoffset where value = " + value);
+                    return dt;
+                }
+                else if (t == typeof(UOM))
+                {
+                    UOM uom = UOM.LookUpFromUNCode(value);
+                    return uom;
+                }
+                else if (t == typeof(bool) || t == typeof(bool?))
+                {
+                    bool v = bool.Parse(value);
+                    return v;
+                }
+                else if (t == typeof(double) || t == typeof(double?))
+                {
+                    double v = double.Parse(value);
+                    return v;
+                }
+                else if (t == typeof(Uri))
+                {
+                    Uri v = new Uri(value);
+                    return v;
+                }
+                else if (t == typeof(TimeSpan) || t == typeof(TimeSpan?))
+                {
+                    if (value.StartsWith("+")) value = value.Substring(1);
+                    TimeSpan ts = TimeSpan.Parse(value);
+                    return ts;
+                }
+                else if (t == typeof(EventAction) || t == typeof(EventAction?))
+                {
+                    EventAction action = Enum.Parse<EventAction>(value);
+                    return action;
+                }
+                else if (t == typeof(PGLN))
+                {
+                    PGLN pgln = new PGLN(value);
+                    return pgln;
+                }
+                else if (t == typeof(GLN))
+                {
+                    GLN gln = new GLN(value);
+                    return gln;
+                }
+                else if (t == typeof(EPC))
+                {
+                    EPC epc = new EPC(value);
+                    return epc;
+                }
+                else if (t == typeof(Country))
+                {
+                    Country c = Countries.Parse(value);
+                    return c;
+                }
+                else
+                {
+                    return value;
+                }
             }
-            else if (t == typeof(UOM))
+            catch (Exception ex)
             {
-                UOM uom = UOM.LookUpFromUNCode(value);
-                return uom;
-            }
-            else if (t == typeof(bool) || t == typeof(bool?))
-            {
-                bool v = bool.Parse(value);
-                return v;
-            }
-            else if (t == typeof(double) || t == typeof(double?))
-            {
-                double v = double.Parse(value);
-                return v;
-            }
-            else if (t == typeof(Uri))
-            {
-                Uri v = new Uri(value);
-                return v;
-            }
-            else if (t == typeof(TimeSpan) || t == typeof(TimeSpan?))
-            {
-                if (value.StartsWith("+")) value = value.Substring(1);
-                TimeSpan ts = TimeSpan.Parse(value);
-                return ts;
-            }
-            else if (t == typeof(EventAction) || t == typeof(EventAction?))
-            {
-                EventAction action = Enum.Parse<EventAction>(value);
-                return action;
-            }
-            else if (t == typeof(PGLN))
-            {
-                PGLN pgln = new PGLN(value);
-                return pgln;
-            }
-            else if (t == typeof(GLN))
-            {
-                GLN gln = new GLN(value);
-                return gln;
-            }
-            else if (t == typeof(EPC))
-            {
-                EPC epc = new EPC(value);
-                return epc;
-            }
-            else if (t == typeof(Country))
-            {
-                Country c = Countries.Parse(value);
-                return c;
-            }
-            else
-            {
-                return value;
+                Exception e = new Exception($"Failed to convert string into object. value={value} and t={t}", ex);
+                OTLogger.Error(e);
+                throw e;
             }
         }
 
