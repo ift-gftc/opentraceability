@@ -48,7 +48,6 @@ namespace OpenTraceability.Mappers
                     IList list = (IList)value;
                     if (list.Count > 0)
                     {
-                        xvalue = new XElement(xname);
                         Type t = list[0]?.GetType() ?? throw new Exception("Failed to get list item type.");
                         XName xchildname = t.GetCustomAttribute<OpenTraceabilityAttribute>()?.Name ?? throw new Exception("Failed to get xname from type. type = " + t.FullName);
                         foreach (var v in list)
