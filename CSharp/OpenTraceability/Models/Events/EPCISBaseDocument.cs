@@ -18,7 +18,7 @@ namespace OpenTraceability.Models.Events
         /// <summary>
         /// The version of EPCIS used for this document.
         /// </summary>
-        public EPCISVersion? EPCISVersion { get; set; }
+        public EPCISVersion? EPCISVersion { get; internal set; }
 
         /// <summary>
         /// The date that the EPCIS Document was created.

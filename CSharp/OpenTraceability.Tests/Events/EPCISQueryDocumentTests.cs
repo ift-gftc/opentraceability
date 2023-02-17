@@ -33,5 +33,22 @@ namespace OpenTraceability.Tests.Events
             // check that the XMLs match
             OpenTraceabilityTests.CompareXML(xmlObjectEvents, xmlObjectEventsAfter);
         }
+
+        [Test]
+        [TestCase("EPCISQueryDocument.jsonld")]
+        public void JSONLD(string file)
+        {
+            // initialize the libraries.
+            OpenTraceability.Initialize();
+
+            // read object events from test data specified in the file argument
+            string xmlObjectEvents = OpenTraceabilityTests.ReadTestData(file);
+
+            // deserialize object events into C# models
+            EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(xmlObjectEvents);
+
+            // serialize C# models into xml
+            string xmlObjectEventsAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc);
+        }
     }
 }

@@ -4,10 +4,14 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<SynchReleaseVersion>false</SynchReleaseVersion>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <DefineConstants>$(DefineConstants)TRACE;STANDALONE_WASM</DefineConstants>
+	  <WarningLevel>4</WarningLevel>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -40,7 +44,6 @@
 	<ItemGroup>
 		<PackageReference Include="Crc32.NET" Version="1.2.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-		<PackageReference Include="Wasi.Sdk" Version="0.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -155,19 +155,19 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 return "ObjectEvent";
             }
-            else if (e is TransformationEvent)
+            else if (e.EventType == EventType.Transformation)
             {
                 return "TransformationEvent";
             }
-            else if (e is TransactionEvent)
+            else if (e.EventType == EventType.Transaction)
             {
                 return "TransactionEvent";
             }
-            else if (e is AggregationEvent)
+            else if (e.EventType == EventType.Aggregation)
             {
                 return "AggregationEvent";
             }
-            else if (e is AssociationEvent)
+            else if (e.EventType == EventType.Association)
             {
                 return "AssociationEvent";
             }
