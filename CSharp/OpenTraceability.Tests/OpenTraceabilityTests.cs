@@ -1,4 +1,5 @@
-﻿using OpenTraceability.Utility;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,7 +91,7 @@ namespace OpenTraceability.Tests
             }
         }
 
-        static XElement? FindMatchingNode(XElement xchild1, XElement x2, int i)
+        private static XElement? FindMatchingNode(XElement xchild1, XElement x2, int i)
         {
             // lets see if there is more than one node with the same element name...
             if (x2.Elements(xchild1.Name).Count() == 0)
@@ -148,13 +149,13 @@ namespace OpenTraceability.Tests
             }
         }
 
-        internal static bool TryAdvancedValueCompare(string? str1, string? str2)
+        private static bool TryAdvancedValueCompare(string? str1, string? str2)
         {
             return (TryCompareDouble(str1, str2) 
                 || TryCompareXMLDateTime(str1, str2));
         }
 
-        internal static bool TryCompareXMLDateTime(string? str1, string? str2)
+        private static bool TryCompareXMLDateTime(string? str1, string? str2)
         {
             if (str1 != null && str2 != null)
             {
@@ -168,7 +169,7 @@ namespace OpenTraceability.Tests
             return false;
         }
 
-        internal static bool TryCompareDouble(string? str1, string? str2)
+        private static bool TryCompareDouble(string? str1, string? str2)
         {
             if (str1 != null && str2 != null)
             {
@@ -179,6 +180,98 @@ namespace OpenTraceability.Tests
             }
             return false;
         }
+
+
+        internal static void CompareJSON(string json, string jsonAfter)
+        {
+            JObject j1 = JObject.Parse(json);
+            JObject j2 = JObject.Parse(jsonAfter);
+            JSONCompare(j1, j2);
+        }
+
+        private static void JSONCompare(JObject j1, JObject j2)
+        {
+            List<JProperty> j1props = j1.Properties().ToList();
+            List<JProperty> j2props = j2.Properties().ToList();
+
+            // go through each property
+            foreach (var prop in j1props)
+            {
+                if (j2[prop.Name] == null)
+                {
+                    Assert.Fail($"j1 has property {prop.Name}, but as not found on j2.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
+                }
+
+                if (j1[prop.Name]?.GetType() != j2[prop.Name]?.GetType())
+                {
+                    Assert.Fail($"j1 property value type for {prop.Name} is {j1[prop.Name]?.GetType()}, but on j2 it is {j2[prop.Name]?.GetType()}.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
+                }
+
+                JArray? jarr1 = j1[prop.Name] as JArray;
+                if (jarr1 != null)
+                {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                    JArray jarr2 = (JArray)j2[prop.Name];
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
+                    if (jarr1.Count() != jarr2.Count())
+                    {
+                        Assert.Fail($"j1 property value type for {prop.Name} is an array with {jarr1.Count()} items, but the same property on j2 has only {jarr2.Count()} items.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
+                    }
+
+                    for(int i = 0; i < jarr1.Count(); i++)
+                    {
+                        JToken jt1 = jarr1[i];
+                        JToken jt2 = jarr2[i];
+                        if (jt1.GetType() != jt2.GetType())
+                        {
+                            Assert.Fail($"j1 property array {prop.Name} has item[{i}] with type {jt1.GetType()}, but on j2 it is {jt2.GetType()}.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
+                        }
+
+                        if (jt1 is JObject && jt2 is JObject)
+                        {
+                            JSONCompare((JObject)jt1, (JObject)jt2);
+                        }
+                        else
+                        {
+                            string? str1 = jt1.ToString();
+                            string? str2 = jt2.ToString();
+                            if (!TryAdvancedValueCompare(str1, str2))
+                            {
+                                if (str1?.ToLower() != str2?.ToLower())
+                                {
+                                    Assert.Fail($"j1 property array {prop.Name} has item[{i}] with value {str1}, but on j2 it the value is {str2}.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (j1[prop.Name] is JObject)
+                {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                    JObject jobj1 = (JObject)j1[prop.Name];
+                    JObject jobj2 = (JObject)j2[prop.Name];
+
+#pragma warning disable CS8604 // Possible null reference argument.
+                    JSONCompare(jobj1, jobj2);
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+                }
+                else
+                {
+                    string? str1 = j1[prop.Name]?.ToString();
+                    string? str2 = j2[prop.Name]?.ToString();
+                    if (!TryAdvancedValueCompare(str1, str2))
+                    {
+                        if (str1?.ToLower() != str2?.ToLower())
+                        {
+                            Assert.Fail($"j1 property {prop.Name} has string value {str1}, but on j2 it the value is {str2}.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
+                        }
+                    }
+                }
+            }
+        }
+
 
         internal static string ReadTestData(string v)
         {
