@@ -67,7 +67,7 @@ namespace OpenTraceability.Mappers
                 else
                 {
                     Type t = value.GetType();
-                    OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetTypeInfo(t);
+                    OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetXmlTypeInfo(t);
                     foreach (var property in typeInfo.Properties.Where(p => p.Version == null || p.Version == version))
                     {
                         object? obj = property.Property.GetValue(value);
@@ -286,7 +286,7 @@ namespace OpenTraceability.Mappers
 
             try
             {
-                OTMappingTypeInformation mappingInfo = OTMappingTypeInformation.GetTypeInfo(type);
+                OTMappingTypeInformation mappingInfo = OTMappingTypeInformation.GetXmlTypeInfo(type);
 
                 // if this is a list, then we will make a list of the objects...
                 if (value is IList)
@@ -313,7 +313,7 @@ namespace OpenTraceability.Mappers
                 // else, try and parse the object...
                 else
                 {
-                    OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetTypeInfo(type);
+                    OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetXmlTypeInfo(type);
 
                     List<IEventKDE>? extensionKDEs = null;
                     List<IEventKDE>? extensionAttributes = null;

@@ -67,6 +67,7 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("baseExtension/eventID", 4, EPCISVersion.V1)]
         public Uri? EventID { get; set; }
 
+        [OpenTraceabilityObject]
         [OpenTraceability("errorDeclaration", 5, EPCISVersion.V2)]
         [OpenTraceability("baseExtension/errorDeclaration", 5, EPCISVersion.V1)]
         public ErrorDeclaration? ErrorDeclaration { get; set; }

@@ -28,7 +28,7 @@ namespace OpenTraceability.Mappers
                     JToken jpointer = json;
 
                     Type t = value.GetType();
-                    OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetTypeInfo(t);
+                    OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetXmlTypeInfo(t);
                     foreach (var property in typeInfo.Properties.Where(p => p.Version == null || p.Version == EPCISVersion.V2))
                     {
                         object? obj = property.Property.GetValue(value);
@@ -37,23 +37,7 @@ namespace OpenTraceability.Mappers
                             JToken jvaluepointer = jpointer;
                             string xchildname = property.Name;
 
-                            if (xchildname.StartsWith("@"))
-                            {
-                                string? objStr = WriteObjectToString(obj);
-                                if (!string.IsNullOrWhiteSpace(objStr))
-                                {
-                                    jvaluepointer[xchildname.Substring(1)] = objStr;
-                                }
-                            }
-                            else if (xchildname == "text()")
-                            {
-                                string? objStr = WriteObjectToString(obj);
-                                if (!string.IsNullOrWhiteSpace(objStr))
-                                {
-                                    jvaluepointer["@value"] = objStr;
-                                }
-                            }
-                            else if (property.IsQuantityList)
+                            if (property.IsQuantityList)
                             {
                                 List<EventProduct> products = (List<EventProduct>)obj;
                                 products = products.Where(p => p.Quantity != null && p.Type == property.ProductType).ToList();
@@ -114,8 +98,7 @@ namespace OpenTraceability.Mappers
                                         string? objStr = WriteObjectToString(o);
                                         if (!string.IsNullOrWhiteSpace(objStr))
                                         {
-                                            XElement xchild = new XElement(property.ItemName ?? xchildname, objStr);
-                                            xlist.Add(xchild);
+                                            xlist.Add(objStr);
                                         }
                                     }
                                 }
@@ -213,9 +196,7 @@ namespace OpenTraceability.Mappers
 
             try
             {
-                OTMappingTypeInformation mappingInfo = OTMappingTypeInformation.GetTypeInfo(type);
-
-                OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetTypeInfo(type);
+                OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetXmlTypeInfo(type);
 
                 List<IEventKDE>? extensionKDEs = null;
                 List<IEventKDE>? extensionAttributes = null;
@@ -232,36 +213,23 @@ namespace OpenTraceability.Mappers
 
                 OTMappingTypeInformationProperty? mappingProp;
 
-                mappingProp = typeInfo["text()"];
-                if (mappingProp != null)
+                JObject? jobj = json as JObject;
+                if (jobj != null)
                 {
-                    string? eleText = json["value"]?.Value<string>();
-                    if (!string.IsNullOrWhiteSpace(eleText))
+                    foreach (JProperty jprop in jobj.Properties())
                     {
-                        object o = ReadObjectFromString(eleText, mappingProp.Property.PropertyType);
-                        mappingProp.Property.SetValue(value, o);
-                    }
-                }
-                else
-                {
-                    JObject? jobj = json as JObject;
-                    if (jobj != null)
-                    {
-                        foreach (JProperty jprop in jobj.Properties())
+                        mappingProp = typeInfo[jprop.Name];
+                        JToken? jchild = jobj[jprop.Name];
+                        if (jchild != null)
                         {
-                            mappingProp = typeInfo[jprop.Name];
-                            JToken? jchild = jobj[jprop.Name];
-                            if (jchild != null)
+                            if (mappingProp != null)
                             {
-                                if (mappingProp != null)
-                                {
-                                    ReadPropertyMapping(mappingProp, jchild, value);
-                                }
-                                else if (extensionKDEs != null)
-                                {
-                                    IEventKDE kde = ReadKDE(jprop.Name, jchild);
-                                    extensionKDEs.Add(kde);
-                                }
+                                ReadPropertyMapping(mappingProp, jchild, value);
+                            }
+                            else if (extensionKDEs != null)
+                            {
+                                IEventKDE kde = ReadKDE(jprop.Name, jchild);
+                                extensionKDEs.Add(kde);
                             }
                         }
                     }
@@ -400,12 +368,8 @@ namespace OpenTraceability.Mappers
             }
             else if (mappingProp.IsObject)
             {
-                JToken? j = json[mappingProp.Name];
-                if (j != null)
-                {
-                    object o = FromJson(json, mappingProp.Property.PropertyType);
-                    mappingProp.Property.SetValue(value, o);
-                }
+                object o = FromJson(json, mappingProp.Property.PropertyType);
+                mappingProp.Property.SetValue(value, o);
             }
             else
             {

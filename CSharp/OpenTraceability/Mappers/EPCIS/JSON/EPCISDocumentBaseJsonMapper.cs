@@ -157,15 +157,53 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     if (jContextProp["@container"]?.ToString() == "@set")
                     {
                         // we are looking at expanding a list
-                        JArray? jArr = json[jprop.Name] as JArray;
-                        if (jArr != null)
+                        JToken jpropvalue = json[jprop.Name];
+                        if (jpropvalue != null)
                         {
-                            JObject? jchildcontext = jContextProp["@context"] as JObject;
-                            if (jchildcontext != null)
+                            if (jpropvalue is JArray)
                             {
-                                foreach (JObject j in jArr)
+                                JArray? jArr = json[jprop.Name] as JArray;
+                                if (jArr != null)
                                 {
-                                    ExpandCURIEsIntoFullURIs_Internal(j, jchildcontext, namespaces);
+                                    JObject? jchildcontext = jContextProp["@context"] as JObject;
+                                    if (jchildcontext != null)
+                                    {
+                                        for (int i = 0; i < jArr.Count; i++) 
+                                        {
+                                            JToken j = jArr[i];
+                                            if (j is JObject)
+                                            {
+                                                ExpandCURIEsIntoFullURIs_Internal(j as JObject, jchildcontext, namespaces);
+                                            }
+                                            else
+                                            {
+                                                JToken? jmapping = jContextProp["@context"]?[j.ToString()];
+                                                if (jmapping != null)
+                                                {
+                                                    string uri = jmapping.ToString();
+                                                    string[] parts = uri.Split(':');
+                                                    string ns = namespaces[parts[0]];
+                                                    jArr[i] = ns + parts[1];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else if (jpropvalue is JObject)
+                            {
+                                JArray? jchildcontext = jContextProp["@context"] as JArray;
+                                if (jchildcontext != null)
+                                {
+                                    JObject jnewcontext = jchildcontext[1] as JObject;
+                                    foreach (JProperty jnewprop in jnewcontext.Properties())
+                                    {
+                                        if (jnewcontext[jnewprop.Name] is JObject)
+                                        {
+                                            jnewcontext[jnewprop.Name]["@context"] = jchildcontext[0];
+                                        }
+                                    }
+                                    ExpandCURIEsIntoFullURIs_Internal(jpropvalue as JObject, jnewcontext, namespaces);
                                 }
                             }
                         }

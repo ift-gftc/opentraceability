@@ -32,6 +32,9 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 {
                     foreach (JObject jEvent in jEventList)
                     {
+                        // expand the CURIE's (bizStep, disposition, source, etc...)
+                        EPCISDocumentBaseJsonMapper.ExpandCURIEsIntoFullURIs(jEvent);
+
                         Type eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
                         IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType);
                         doc.Events.Add(e);

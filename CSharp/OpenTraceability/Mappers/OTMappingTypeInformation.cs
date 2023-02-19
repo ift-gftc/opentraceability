@@ -14,7 +14,7 @@ namespace OpenTraceability.Mappers
     {
         private static object _locker = new object();
         private static Dictionary<Type, OTMappingTypeInformation> _typeInfos = new Dictionary<Type, OTMappingTypeInformation>();
-        public static OTMappingTypeInformation GetTypeInfo(Type t)
+        public static OTMappingTypeInformation GetXmlTypeInfo(Type t)
         {
             if (!_typeInfos.ContainsKey(t))
             {
@@ -107,8 +107,6 @@ namespace OpenTraceability.Mappers
                 this.IsArray = true;
                 this.ItemName = arrayAttribute.ItemName;
             }
-
-            this.CURIEMapping = property.GetCustomAttribute<OpenTraceabilityCURIEMapping>()?.URIPrefix;
         }
 
         public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityProductsAttribute att)
@@ -121,8 +119,6 @@ namespace OpenTraceability.Mappers
             this.IsQuantityList = att.ListType == OpenTraceabilityProductsListType.QuantityList;
             this.ProductType = att.ProductType;
             this.Required = att.Required;
-
-            this.CURIEMapping = property.GetCustomAttribute<OpenTraceabilityCURIEMapping>()?.URIPrefix;
         }
 
         public PropertyInfo Property { get; internal set; }

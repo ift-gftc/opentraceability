@@ -9,9 +9,11 @@ namespace OpenTraceability.Models.Events
 
     public class EventBusinessTransaction
     {
+        [OpenTraceabilityJson("type")]
         [OpenTraceability("@type")]
         public string RawType { get; set; } = string.Empty;
 
+        [OpenTraceabilityJson("bizTransaction")]
         [OpenTraceability("text()")]
         public string? Value { get; set; }
 
