@@ -42,13 +42,16 @@ namespace OpenTraceability.Tests.Events
             OpenTraceability.Initialize();
 
             // read object events from test data specified in the file argument
-            string strEvents = OpenTraceabilityTests.ReadTestData(file);
+            string json = OpenTraceabilityTests.ReadTestData(file);
 
             // deserialize object events into C# models
-            EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(strEvents);
+            EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(json);
 
             // serialize C# models into xml
-            string strEventsAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc);
+            string jsonAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc);
+
+            // compare the JSON
+            OpenTraceabilityTests.CompareJSON(json, jsonAfter);
         }
     }
 }
