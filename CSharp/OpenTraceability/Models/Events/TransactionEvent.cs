@@ -40,22 +40,24 @@ namespace OpenTraceability.Models.Events
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("source")]
         [OpenTraceability("sourceList", 16, EPCISVersion.V2)]
-        [OpenTraceability("baseExtension/sourceList", 21, EPCISVersion.V1)]
+        [OpenTraceability("extension/sourceList", 21, EPCISVersion.V1)]
         public List<EventSource> SourceList { get; set; } = new List<EventSource>();
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("destination")]
         [OpenTraceability("destinationList", 17, EPCISVersion.V2)]
-        [OpenTraceability("baseExtension/destinationList", 22, EPCISVersion.V1)]
+        [OpenTraceability("extension/destinationList", 22, EPCISVersion.V1)]
         public List<EventDestination> DestinationList { get; set; } = new List<EventDestination>();
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("sensorElement")]
-        [OpenTraceability("sensorElementList", 18, EPCISVersion.V1)]
+        [OpenTraceability("sensorElementList", 18, EPCISVersion.V2)]
+        [OpenTraceability("extension/sensorElementList", EPCISVersion.V1)]
         public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
 
         [OpenTraceabilityObject]
         [OpenTraceability("persistentDisposition", 19, EPCISVersion.V2)]
+        [OpenTraceability("extension/persistentDisposition", EPCISVersion.V1)]
         public PersistentDisposition? PersistentDisposition { get; set; }
 
         public EventILMD? ILMD { get => throw new Exception("TransactionEvent does not support ILMD."); set => throw new Exception("TransactionEvent does not support ILMD."); }

@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events
 {
-    public class TransformationEvent : EventBase, IEvent
+    public class TransformationEvent<T> : EventBase, IEvent where T : EventILMD
     {
         [OpenTraceabilityProducts("inputQuantityList", EventProductType.Input, 8, OpenTraceabilityProductsListType.QuantityList)]
         [OpenTraceabilityProducts("inputEPCList", EventProductType.Input, 7, OpenTraceabilityProductsListType.EPCList)]
@@ -61,7 +61,7 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityObject]
         [OpenTraceability("ilmd", 21)]
-        public EventILMD? ILMD { get; set; }
+        public T? ILMD { get; set; }
 
         public EventType EventType => EventType.Transformation;
 

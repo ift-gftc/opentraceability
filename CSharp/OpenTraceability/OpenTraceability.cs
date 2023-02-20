@@ -20,8 +20,8 @@ namespace OpenTraceability
         {
             RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(ObjectEvent<EventILMD>), "ObjectEvent"));
             RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransactionEvent), nameof(TransactionEvent)));
-            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransformationEvent), nameof(TransformationEvent)));
-            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(AggregationEvent), nameof(AggregationEvent)));
+            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransformationEvent<EventILMD>), "TransformationEvent"));
+            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(AggregationEvent<EventILMD>), "AggregationEvent"));
             RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(AssociationEvent), nameof(AssociationEvent)));
         }
 

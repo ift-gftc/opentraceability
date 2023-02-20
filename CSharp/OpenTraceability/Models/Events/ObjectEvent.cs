@@ -53,10 +53,12 @@ namespace OpenTraceability.Models.Events
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("sensorElement")]
         [OpenTraceability("sensorElementList", 17, EPCISVersion.V2)]
+        [OpenTraceability("extension/sensorElementList", EPCISVersion.V1)]
         public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
 
         [OpenTraceabilityObject]
         [OpenTraceability("persistentDisposition", 18)]
+        [OpenTraceability("extension/persistentDisposition", EPCISVersion.V1)]
         public PersistentDisposition? PersistentDisposition { get; set; }
 
         [OpenTraceabilityObject]

@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events
 {
-    public class AggregationEvent : EventBase, IEvent
+    public class AggregationEvent<T> : EventBase, IEvent where T : EventILMD
     {
         [OpenTraceability("parentID", 7)]
         public EPC? ParentID { get; set; }
@@ -42,22 +42,24 @@ namespace OpenTraceability.Models.Events
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("source")]
         [OpenTraceability("sourceList", 16, EPCISVersion.V2)]
-        [OpenTraceability("baseExtension/sourceList", 22, EPCISVersion.V1)]
+        [OpenTraceability("extension/sourceList", 22, EPCISVersion.V1)]
         public List<EventSource> SourceList { get; set; } = new List<EventSource>();
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("destination")]
         [OpenTraceability("destinationList", 17, EPCISVersion.V2)]
-        [OpenTraceability("baseExtension/destinationList", 23, EPCISVersion.V1)]
+        [OpenTraceability("extension/destinationList", 23, EPCISVersion.V1)]
         public List<EventDestination> DestinationList { get; set; } = new List<EventDestination>();
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("sensorElement")]
         [OpenTraceability("sensorElementList", 18, EPCISVersion.V2)]
+        [OpenTraceability("extension/sensorElementList", EPCISVersion.V1)]
         public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
 
         [OpenTraceabilityObject]
         [OpenTraceability("persistentDisposition", 19, EPCISVersion.V2)]
+        [OpenTraceability("extension/persistentDisposition", EPCISVersion.V1)]
         public PersistentDisposition? PersistentDisposition { get; set; }
 
         [OpenTraceabilityObject]

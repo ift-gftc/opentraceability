@@ -105,7 +105,7 @@ namespace GS1.Mappers.EPCIS
             {
                 string xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
                 XElement? xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.EPCISVersion.Value);
-                if (e is TransformationEvent && doc.EPCISVersion.Value == EPCISVersion.V1)
+                if (e.EventType == EventType.Transformation && doc.EPCISVersion.Value == EPCISVersion.V1)
                 {
                     xEvent = new XElement("extension", xEvent);
                 }
