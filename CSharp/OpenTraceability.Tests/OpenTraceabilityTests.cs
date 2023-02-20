@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OpenTraceability.Utility;
 using System;
 using System.Collections.Generic;
@@ -184,8 +185,9 @@ namespace OpenTraceability.Tests
 
         internal static void CompareJSON(string json, string jsonAfter)
         {
-            JObject j1 = JObject.Parse(json);
-            JObject j2 = JObject.Parse(jsonAfter);
+            var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
+            JObject j1 = JsonConvert.DeserializeObject<JObject>(json, settings) ?? throw new Exception("Failed to parse json from string. " + json);
+            JObject j2 = JsonConvert.DeserializeObject<JObject>(jsonAfter, settings) ?? throw new Exception("Failed to parse json from string. " + jsonAfter);
             JSONCompare(j1, j2);
         }
 

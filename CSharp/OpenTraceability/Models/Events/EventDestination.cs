@@ -20,6 +20,7 @@ namespace OpenTraceability.Models.Events
 
     public class EventDestination
     {
+        [OpenTraceabilityJson("type")]
         [OpenTraceability("@type")]
         public string RawType { get; set; } = string.Empty;
 
@@ -39,6 +40,7 @@ namespace OpenTraceability.Models.Events
             }
         }
 
+        [OpenTraceabilityJson("destination")]
         [OpenTraceability("text()")]
         public string? Value { get; set; }
 

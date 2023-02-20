@@ -19,7 +19,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             {
                 // TODO: validate the JSON schema
 
-                EPCISQueryDocument doc = EPCISDocumentBaseJsonMapper.ReadJSon<EPCISQueryDocument>(strValue, out JObject json);
+                EPCISQueryDocument doc = EPCISDocumentBaseJsonMapper.ReadJSON<EPCISQueryDocument>(strValue, out JObject json);
 
                 if (doc.EPCISVersion != EPCISVersion.V2)
                 {
@@ -28,6 +28,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 
                 // read the query name
                 doc.QueryName = json["epcisBody"]?["queryResults"]?["queryName"]?.ToString() ?? string.Empty;
+                doc.SubscriptionID = json["epcisBody"]?["queryResults"]?["subscriptionID"]?.ToString() ?? string.Empty;
 
                 // read the events
                 JArray? jEventsList = json["epcisBody"]?["queryResults"]?["resultsBody"]?["eventList"] as JArray;
@@ -35,9 +36,6 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 {
                     foreach (JObject jEvent in jEventsList)
                     {
-                        // expand the CURIE's (bizStep, disposition, source, etc...)
-                        EPCISDocumentBaseJsonMapper.ExpandCURIEsIntoFullURIs(jEvent);
-
                         Type eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
                         IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType);
                         doc.Events.Add(e);
@@ -70,6 +68,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             JObject jResultsBody = new JObject();
 
             jQueryResults["queryName"] = doc.QueryName;
+            jQueryResults["subscriptionID"] = doc.SubscriptionID;
 
             // write the events
             JArray jEventsList = new JArray();
@@ -84,7 +83,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
 
 
-            jResultsBody["eventsList"] = jEventsList;
+            jResultsBody["eventList"] = jEventsList;
             jQueryResults["resultsBody"] = jResultsBody;
             jEPCISBody["queryResults"] = jQueryResults;
             json["epcisBody"] = jEPCISBody;

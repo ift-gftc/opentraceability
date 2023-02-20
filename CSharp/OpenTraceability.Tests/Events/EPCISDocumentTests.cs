@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenTraceability.Mappers;
 using OpenTraceability.Mappers.EPCIS;
+using OpenTraceability.Mappers.EPCIS.JSON;
 using OpenTraceability.Mappers.EPCIS.XML;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Events.KDEs;
@@ -55,6 +56,11 @@ namespace OpenTraceability.Tests.Events
 
             // serialize C# models into xml
             string strEventsAfter = OpenTraceabilityMappers.EPCISDocument.JSON.Map(doc);
+
+            // we need to normalize the JSON-LD before we compare it first...
+            strEvents = OpenTraceabilityJsonLDMapper.NormalizeEPCISJsonLD(strEvents);
+
+            OpenTraceabilityTests.CompareJSON(strEvents, strEventsAfter);
         }
     }
 }

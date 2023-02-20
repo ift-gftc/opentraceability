@@ -8,5 +8,7 @@ namespace OpenTraceability.Models.Events
     {
 
         public string QueryName { get; set; } = string.Empty;
+
+        public string SubscriptionID { get; set; } = string.Empty;
     }
 }

@@ -10,24 +10,46 @@ using System.Threading.Tasks;
 
 namespace OpenTraceability.Mappers
 {
+    public enum OTMappingFormat
+    {
+        XML,
+        JSON
+    }
+
     public class OTMappingTypeInformation
     {
         private static object _locker = new object();
-        private static Dictionary<Type, OTMappingTypeInformation> _typeInfos = new Dictionary<Type, OTMappingTypeInformation>();
+        private static Dictionary<Type, OTMappingTypeInformation> _XmlTypeInfos = new Dictionary<Type, OTMappingTypeInformation>();
+        private static Dictionary<Type, OTMappingTypeInformation> _JsonTypeInfos = new Dictionary<Type, OTMappingTypeInformation>();
         public static OTMappingTypeInformation GetXmlTypeInfo(Type t)
         {
-            if (!_typeInfos.ContainsKey(t))
+            if (!_XmlTypeInfos.ContainsKey(t))
             {
                 lock(_locker)
                 {
-                    if (!_typeInfos.ContainsKey(t))
+                    if (!_XmlTypeInfos.ContainsKey(t))
                     {
-                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t);
-                        _typeInfos.Add(t, typeInfo);
+                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t, OTMappingFormat.XML);
+                        _XmlTypeInfos.Add(t, typeInfo);
                     }
                 }
             }
-            return _typeInfos[t];
+            return _XmlTypeInfos[t];
+        }
+        public static OTMappingTypeInformation GetJsonTypeInfo(Type t)
+        {
+            if (!_JsonTypeInfos.ContainsKey(t))
+            {
+                lock (_locker)
+                {
+                    if (!_JsonTypeInfos.ContainsKey(t))
+                    {
+                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t, OTMappingFormat.JSON);
+                        _JsonTypeInfos.Add(t, typeInfo);
+                    }
+                }
+            }
+            return _JsonTypeInfos[t];
         }
 
         private Dictionary<string, OTMappingTypeInformationProperty> _dic = new Dictionary<string, OTMappingTypeInformationProperty>();
@@ -37,7 +59,7 @@ namespace OpenTraceability.Mappers
         public PropertyInfo? ExtensionKDEs { get; set; }
         public PropertyInfo? ExtensionAttributes { get; set; }
 
-        public OTMappingTypeInformation(Type type)
+        public OTMappingTypeInformation(Type type, OTMappingFormat format)
         {
             Type = type;
 
@@ -49,7 +71,7 @@ namespace OpenTraceability.Mappers
                 {
                     foreach (var att in atts)
                     {
-                        OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(p, att);
+                        OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(p, att, format);
                         this.Properties.Add(property);
                         _dic.Add(property.Name, property);
                     }
@@ -58,7 +80,7 @@ namespace OpenTraceability.Mappers
                 {
                     foreach (var att in productAtts)
                     {
-                        OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(p, att);
+                        OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(p, att, format);
                         this.Properties.Add(property);
                         _dic.Add(property.Name, property);
                     }
@@ -93,7 +115,7 @@ namespace OpenTraceability.Mappers
 
     public class OTMappingTypeInformationProperty
     {
-        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityAttribute att)
+        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityAttribute att, OTMappingFormat format)
         {
             this.Property = property;
             this.IsObject = property.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null;
@@ -107,9 +129,18 @@ namespace OpenTraceability.Mappers
                 this.IsArray = true;
                 this.ItemName = arrayAttribute.ItemName;
             }
+
+            if (format == OTMappingFormat.JSON)
+            {
+                var jsonAtt = property.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
+                if (jsonAtt != null)
+                {
+                    this.Name = jsonAtt.Name;
+                }
+            }
         }
 
-        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityProductsAttribute att)
+        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityProductsAttribute att, OTMappingFormat format)
         {
             this.Property = property;
             this.Name = att.Name;
@@ -119,6 +150,15 @@ namespace OpenTraceability.Mappers
             this.IsQuantityList = att.ListType == OpenTraceabilityProductsListType.QuantityList;
             this.ProductType = att.ProductType;
             this.Required = att.Required;
+
+            if (format == OTMappingFormat.JSON)
+            {
+                var jsonAtt = property.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
+                if (jsonAtt != null)
+                {
+                    this.Name = jsonAtt.Name;
+                }
+            }
         }
 
         public PropertyInfo Property { get; internal set; }

@@ -17,9 +17,15 @@ namespace OpenTraceability.Models.Events
 
     public class ErrorDeclaration
     {
+        [OpenTraceabilityJson("reason")]
         [OpenTraceability("@type")]
         public Uri? RawReason { get; set; }
+
+        [OpenTraceability("declarationTime")]
         public DateTimeOffset? DeclarationTime { get; set; }
+
+        [OpenTraceabilityArray("correctiveEventID")]
+        [OpenTraceability("correctiveEventIDs")]
         public List<string>? CorrectingEventIDs { get; set; }
 
         public EventErrorType Reason
