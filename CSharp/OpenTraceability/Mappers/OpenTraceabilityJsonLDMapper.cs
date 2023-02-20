@@ -21,7 +21,10 @@ namespace OpenTraceability.Mappers
     {
         private static JObject? jEPCISContext;
 
-        public static JToken? ToJson(string xname, object? value, bool required = false)
+        /// <summary>
+        /// Converts an object into JSON.
+        /// </summary>
+        public static JToken? ToJson(object? value, bool required = false)
         {
             try
             {
@@ -86,31 +89,45 @@ namespace OpenTraceability.Mappers
                                 IList list = (IList)obj;
                                 JArray xlist = new JArray();
 
-                                foreach (var o in list)
+                                if (list.Count > 0 || property.Required == true)
                                 {
-                                    if (property.IsObject)
+                                    if (property.IsRepeating && list.Count == 1)
                                     {
-                                        JToken? xchild = ToJson(property.ItemName ?? xchildname, o, property.Required);
-                                        if (xchild != null)
+                                        JToken? jt = WriteObjectToJToken(list[0]);
+                                        if (jt != null)
                                         {
-                                            xlist.Add(xchild);
+                                            jvaluepointer[xchildname] = jt;
                                         }
                                     }
                                     else
                                     {
-                                        string? objStr = WriteObjectToString(o);
-                                        if (!string.IsNullOrWhiteSpace(objStr))
+                                        foreach (var o in list)
                                         {
-                                            xlist.Add(objStr);
+                                            if (property.IsObject)
+                                            {
+                                                JToken? xchild = ToJson(o, property.Required);
+                                                if (xchild != null)
+                                                {
+                                                    xlist.Add(xchild);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                JToken? jt = WriteObjectToJToken(o);
+                                                if (jt != null)
+                                                {
+                                                    xlist.Add(jt);
+                                                }
+                                            }
                                         }
+
+                                        jvaluepointer[xchildname] = xlist;
                                     }
                                 }
-
-                                jvaluepointer[xchildname] = xlist;
                             }
                             else if (property.IsObject)
                             {
-                                JToken? xchild = ToJson(xchildname, obj, property.Required);
+                                JToken? xchild = ToJson(obj, property.Required);
                                 if (xchild != null)
                                 {
                                     jvaluepointer[xchildname] = xchild;
@@ -118,10 +135,10 @@ namespace OpenTraceability.Mappers
                             }
                             else
                             {
-                                string? objStr = WriteObjectToString(obj);
-                                if (!string.IsNullOrWhiteSpace(objStr))
+                                JToken? jt = WriteObjectToJToken(obj);
+                                if (jt != null)
                                 {
-                                    jvaluepointer[xchildname] = objStr;
+                                    jvaluepointer[xchildname] = jt;
                                 }
                             }
                         }
@@ -169,11 +186,6 @@ namespace OpenTraceability.Mappers
 
                     return json;
                 }
-                //else if (required == true)
-                //{
-                //    XElement x = new XElement(xname);
-                //    return x;
-                //}
                 else
                 {
                     return null;
@@ -181,18 +193,24 @@ namespace OpenTraceability.Mappers
             }
             catch (Exception ex)
             {
-                Exception e = new Exception($"Failed to parse json. value={value} and xname={xname}", ex);
+                Exception e = new Exception($"Failed to parse json. value={value}", ex);
                 OTLogger.Error(e);
                 throw e;
             }
         }
 
+        /// <summary>
+        /// Converts a JSON object into the generic type specified.
+        /// </summary>
         public static T FromJson<T>(JToken json)
         {
             T o = (T)FromJson(json, typeof(T));
             return o;
         }
 
+        /// <summary>
+        /// Converts a JSON object into the type specified.
+        /// </summary>
         public static object FromJson(JToken json, Type type)
         {
             object value = Activator.CreateInstance(type) ?? throw new Exception("Failed to create instance of type " + type.FullName);
@@ -262,7 +280,46 @@ namespace OpenTraceability.Mappers
             return value;
         }
 
-        private static string? WriteObjectToString(object obj)
+        /// <summary>
+        /// This will take an EPCIS JSON-LD document and make sure that everything is set for
+        /// it to pass the JSON schema for EPCIS 2.0. This includes expanding the CURIEs, etc.
+        /// </summary>
+        /// <param name="jEPCISStr"></param>
+        /// <returns></returns>
+        internal static void ConformEPCISJsonLD(JObject json)
+        {
+            CompactURIsIntoCURIEs_Internal(json);
+        }
+
+        /// <summary>
+        /// This will take an EPCIS Query Document or an EPCIS Document in the JSON-LD format
+        /// and it will normalize the document so that all of the CURIEs are expanded into full
+        /// URIs and that the JSON-LD is compacted.
+        /// https://ref.gs1.org/standards/epcis/epcis-context.jsonld
+        /// </summary>
+        internal static string NormalizeEPCISJsonLD(string jEPCISStr)
+        {
+            // convert into XDocument
+            var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
+            JObject json = JsonConvert.DeserializeObject<JObject>(jEPCISStr, settings) ?? throw new Exception("Failed to parse json from string. " + jEPCISStr);
+
+            JArray? jEventList = json["epcisBody"]?["eventList"] as JArray;
+            if (jEventList == null)
+            {
+                jEventList = json["epcisBody"]?["queryResults"]?["resultsBody"]?["eventList"] as JArray;
+            }
+            if (jEventList != null)
+            {
+                foreach (JObject jEvent in jEventList)
+                {
+                    ExpandCURIEsIntoFullURIs_Event(jEvent);
+                }
+            }
+
+            return json.ToString(Formatting.Indented);
+        }
+
+        private static JToken? WriteObjectToJToken(object obj)
         {
             if (obj == null)
             {
@@ -278,10 +335,13 @@ namespace OpenTraceability.Mappers
                 UOM uom = (UOM)obj;
                 return uom.UNCode;
             }
+            else if (obj is double)
+            {
+                return JToken.FromObject(obj);
+            }
             else if (obj is bool)
             {
-                bool b = (bool)obj;
-                return b.ToString()?.ToLower() ?? string.Empty;
+                return JToken.FromObject(obj);
             }
             else if (obj is Country)
             {
@@ -356,20 +416,32 @@ namespace OpenTraceability.Mappers
 
                 Type itemType = list.GetType().GenericTypeArguments[0];
 
-                JArray? jArr = json as JArray;
-                if (jArr != null)
+                if (mappingProp.IsRepeating && !(json is JArray))
                 {
-                    foreach (JToken j in jArr)
+                    string v = json.ToString();
+                    if (!string.IsNullOrWhiteSpace(v))
                     {
-                        if (mappingProp.IsObject)
+                        object o = ReadObjectFromString(v, itemType);
+                        list.Add(o);
+                    }
+                }
+                else
+                {
+                    JArray? jArr = json as JArray;
+                    if (jArr != null)
+                    {
+                        foreach (JToken j in jArr)
                         {
-                            object o = FromJson(j, itemType);
-                            list.Add(o);
-                        }
-                        else
-                        {
-                            object o = ReadObjectFromString(j.ToString(), itemType);
-                            list.Add(o);
+                            if (mappingProp.IsObject)
+                            {
+                                object o = FromJson(j, itemType);
+                                list.Add(o);
+                            }
+                            else
+                            {
+                                object o = ReadObjectFromString(j.ToString(), itemType);
+                                list.Add(o);
+                            }
                         }
                     }
                 }
@@ -493,32 +565,62 @@ namespace OpenTraceability.Mappers
             return kde;
         }
 
-        /// <summary>
-        /// This will take an EPCIS Query Document or an EPCIS Document in the JSON-LD format
-        /// and it will normalize the document so that all of the CURIEs are expanded into full
-        /// URIs and that the JSON-LD is compacted.
-        /// https://ref.gs1.org/standards/epcis/epcis-context.jsonld
-        /// </summary>
-        public static string NormalizeEPCISJsonLD(string jEPCISStr)
+        private static void CompactURIsIntoCURIEs_Internal(JObject jEvent)
         {
-            // convert into XDocument
-            var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
-            JObject json = JsonConvert.DeserializeObject<JObject>(jEPCISStr, settings) ?? throw new Exception("Failed to parse json from string. " + jEPCISStr);
-
-            JArray? jEventList = json["epcisBody"]?["eventList"] as JArray;
-            if (jEventList == null)
+            // all of the CURIEs either start with the "https://ref.gs1.org/cbv/" or the "https://gs1.org/voc/", 
+            // if it starts with "https://ref.gs1.org/cbv/", then we want to split the remaining value on '-' and take 
+            // the last
+            foreach (JProperty jprop in jEvent.Properties())
             {
-                jEventList = json["epcisBody"]?["queryResults"]?["resultsBody"]?["eventList"] as JArray;
-            }
-            if (jEventList != null)
-            {
-                foreach (JObject jEvent in jEventList)
+                if (jprop.Name == "@context") continue;
+                JToken? jt = jEvent[jprop.Name];
+                if (jt is JArray)
                 {
-                    ExpandCURIEsIntoFullURIs_Event(jEvent);
+                    JArray ja = (JArray)jt;
+                    for (int i = 0; i < ja.Count(); i++)
+                    {
+                        JToken j = ja[i];
+                        if (j is JObject)
+                        {
+                            CompactURIsIntoCURIEs_Internal((JObject)j);
+                        }
+                        else
+                        {
+                            // check if is CURIE for compacting...
+                            string strValue = j.ToString();
+                            if (strValue.StartsWith("https://gs1.org/voc/"))
+                            {
+                                strValue = strValue.Replace("https://gs1.org/voc/", "");
+                                ja[i] = JToken.FromObject(strValue);
+                            }
+                            else if (strValue.StartsWith("https://ref.gs1.org/cbv/"))
+                            {
+                                strValue = strValue.Replace("https://ref.gs1.org/cbv/", "").Split('-').Last();
+                                ja[i] = JToken.FromObject(strValue);
+                            }
+                        }
+                    }
+                }
+                else if (jt is JObject)
+                {
+                    CompactURIsIntoCURIEs_Internal((JObject)jt);
+                }
+                else
+                {
+                    // TODO: check if is CURIE for compacting...
+                    string strValue = jt.ToString();
+                    if (strValue.StartsWith("https://gs1.org/voc/"))
+                    {
+                        strValue = strValue.Replace("https://gs1.org/voc/", "");
+                        jEvent[jprop.Name] = JToken.FromObject(strValue);
+                    }
+                    else if (strValue.StartsWith("https://ref.gs1.org/cbv/"))
+                    {
+                        strValue = strValue.Replace("https://ref.gs1.org/cbv/", "").Split('-').Last();
+                        jEvent[jprop.Name] = JToken.FromObject(strValue);
+                    }
                 }
             }
-
-            return json.ToString(Formatting.Indented);
         }
 
         private static void ExpandCURIEsIntoFullURIs_Event(JObject jEvent)
@@ -583,7 +685,7 @@ namespace OpenTraceability.Mappers
                                                 JToken j = jArr[i];
                                                 if (j is JObject)
                                                 {
-                                                    ExpandCURIEsIntoFullURIs_Internal(j as JObject, jchildcontext, namespaces);
+                                                    ExpandCURIEsIntoFullURIs_Internal((JObject)j, jchildcontext, namespaces);
                                                 }
                                                 else
                                                 {
@@ -605,15 +707,19 @@ namespace OpenTraceability.Mappers
                                     JArray? jchildcontext = jContextProp["@context"] as JArray;
                                     if (jchildcontext != null)
                                     {
-                                        JObject jnewcontext = jchildcontext[1] as JObject;
-                                        foreach (JProperty jnewprop in jnewcontext.Properties())
+                                        JObject? jnewcontext = jchildcontext[1] as JObject;
+                                        if (jnewcontext != null)
                                         {
-                                            if (jnewcontext[jnewprop.Name] is JObject)
+                                            foreach (JProperty jnewprop in jnewcontext.Properties())
                                             {
-                                                jnewcontext[jnewprop.Name]["@context"] = jchildcontext[0];
+                                                JObject? jnewcontextprop = jnewcontext[jnewprop.Name] as JObject;
+                                                if (jnewcontextprop != null)
+                                                {
+                                                    jnewcontextprop["@context"] = jchildcontext[0];
+                                                }
                                             }
+                                            ExpandCURIEsIntoFullURIs_Internal((JObject)jpropvalue, jnewcontext, namespaces);
                                         }
-                                        ExpandCURIEsIntoFullURIs_Internal((JObject)jpropvalue, jnewcontext, namespaces);
                                     }
                                 }
                             }
@@ -627,6 +733,18 @@ namespace OpenTraceability.Mappers
                                 if (jchildcontext != null)
                                 {
                                     ExpandCURIEsIntoFullURIs_Internal((JObject)jpropvalue, jchildcontext, namespaces);
+                                }
+                            }
+                            else if (jpropvalue is JArray)
+                            {
+                                JArray jarr = (JArray)jpropvalue;
+                                JObject? jchildcontext = jContextProp["@context"] as JObject;
+                                if (jchildcontext != null)
+                                {
+                                    foreach (JObject jobj in jarr)
+                                    {
+                                        ExpandCURIEsIntoFullURIs_Internal(jobj, jchildcontext, namespaces);
+                                    }
                                 }
                             }
                             else if (jContextProp["@type"]?.ToString() == "@vocab")

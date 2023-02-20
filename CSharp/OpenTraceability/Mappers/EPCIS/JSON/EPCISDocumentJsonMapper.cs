@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers.EPCIS.XML;
 using OpenTraceability.Models.Events;
+using OpenTraceability.Utility;
 
 namespace OpenTraceability.Mappers.EPCIS.JSON
 {
@@ -23,8 +24,6 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 {
                     throw new Exception("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
                 }
-
-                // TODO: validate json-ld schema
 
                 // read the events
                 JArray? jEventList = json["epcisBody"]?["eventList"] as JArray;
@@ -66,15 +65,18 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             json["epcisBody"] = jEventBody;
             foreach (IEvent e in doc.Events)
             {
-                string xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
-                JToken? jEvent = OpenTraceabilityJsonLDMapper.ToJson(xname, e);
+                JToken? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e);
                 if (jEvent != null)
                 {
                     jEventList.Add(jEvent);
                 }
             }
 
-            // TODO: validate the JSON-LD schema
+            // conform the JSON-LD to the compacted version with CURIE's that EPCIS 2.0 likes
+            OpenTraceabilityJsonLDMapper.ConformEPCISJsonLD(json);
+
+            // validate the JSON-LD schema
+            EPCISDocumentBaseJsonMapper.CheckSchema(json);
 
             return json.ToString(Newtonsoft.Json.Formatting.Indented);
         }

@@ -77,9 +77,11 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityObject]
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "certificationList")]
+        [OpenTraceabilityJson("cbvmda:certificationList")]
         public CertificationList? CertificationList { get; set; }
 
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "informationProvider")]
+        [OpenTraceabilityJson("cbvmda:informationProvider")]
         public PGLN? InformationProvider { get; set; }
 
         [OpenTraceabilityExtensionElements]

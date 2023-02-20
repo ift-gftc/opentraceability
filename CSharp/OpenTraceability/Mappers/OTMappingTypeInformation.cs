@@ -119,6 +119,7 @@ namespace OpenTraceability.Mappers
         {
             this.Property = property;
             this.IsObject = property.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null;
+            this.IsRepeating = property.GetCustomAttribute<OpenTraceabilityRepeating>() != null;
             this.Name = att.Name;
             this.Version = att.Version;
             this.SequenceOrder = att.SequenceOrder;
@@ -166,6 +167,7 @@ namespace OpenTraceability.Mappers
         public bool Required { get; internal set; } = false;
         public bool IsObject { get; internal set; } = false;
         public bool IsArray { get; internal set; } = false;
+        public bool IsRepeating { get; internal set; } = false;
         public bool IsEPCList { get; internal set; } = false;
         public bool IsQuantityList { get; internal set; } = false;
         public EventProductType ProductType { get; internal set; }

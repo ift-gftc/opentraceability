@@ -21,6 +21,9 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 
         public static T ReadJSON<T>(string strValue, out JObject json) where T : EPCISBaseDocument, new()
         {
+            // validate the JSON...
+            CheckSchema(JObject.Parse(strValue));
+
             // normalize the json-ld
             strValue = OpenTraceabilityJsonLDMapper.NormalizeEPCISJsonLD(strValue);
 
@@ -65,7 +68,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             return document;
         }
 
-        public static JObject WriteJson(EPCISBaseDocument doc, XNamespace epcisNS, string rootEleName)
+        public static JObject WriteJson(EPCISBaseDocument doc, XNamespace epcisNS, string docType)
         {
             if (doc.EPCISVersion != EPCISVersion.V2)
             {
@@ -74,7 +77,12 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 
             // create a new xdocument with all of the namespaces...
             JObject json = new JObject();
-            json["type"] = rootEleName;
+
+            // write the context
+            json["@context"] = JToken.Parse(doc.Attributes["@context"]);
+
+            // write the type
+            json["type"] = docType;
 
             // set the creation date
             if (doc.CreationDate != null)
@@ -84,9 +92,6 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 
             json["schemaVersion"] = "2.0";
 
-            // write the context
-            json["@context"] = JToken.Parse(doc.Attributes["@context"]);
-
             // extra attributes
             if (doc.Attributes.ContainsKey("id"))
             {
@@ -94,22 +99,19 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
 
             // write the header
-            if (doc.Header != null)
+            if (!string.IsNullOrWhiteSpace(doc.Header?.Sender?.Identifier))
             {
-                if (doc.Header.Sender != null)
-                {
-                    json["sender"] = doc.Header.Sender.Identifier;
-                }
+                json["sender"] = doc.Header.Sender.Identifier;
+            }
 
-                if (doc.Header.Receiver != null)
-                {
-                    json["receiver"] = doc.Header.Receiver.Identifier;
-                }
+            if (!string.IsNullOrWhiteSpace(doc.Header?.Receiver?.Identifier))
+            {
+                json["receiver"] = doc.Header.Receiver.Identifier;
+            }
 
-                if (doc.Header.DocumentIdentification != null)
-                {
-                    json["instanceIdentifier"] = doc.Header.DocumentIdentification.InstanceIdentifier;
-                }
+            if (!string.IsNullOrWhiteSpace(doc.Header?.DocumentIdentification?.InstanceIdentifier))
+            {
+                json["instanceIdentifier"] = doc.Header.DocumentIdentification.InstanceIdentifier;
             }
 
             return json;
@@ -129,6 +131,14 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             else
             {
                 return profile.EventClassType;
+            }
+        }
+
+        internal static void CheckSchema(JObject json)
+        {
+            if (!JsonSchemaChecker.IsValid(json, "https://ref.gs1.org/standards/epcis/epcis-json-schema.json", out List<string> errors))
+            {
+                throw new Exception("Failed to validate JSON schema with errors:\n" + string.Join('\n', errors) + "\n\n and json " + json.ToString(Formatting.Indented));
             }
         }
 

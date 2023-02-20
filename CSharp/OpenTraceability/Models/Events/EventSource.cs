@@ -22,23 +22,7 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceabilityJson("type")]
         [OpenTraceability("@type")]
-        public string RawType { get; set; } = string.Empty;
-
-        public EventSourceType Type
-        {
-            get
-            {
-                EventSourceType type = EventSourceType.Unknown;
-                foreach (EventSourceType t in Enum.GetValues(typeof(EventSourceType)))
-                {
-                    if (EnumUtil.GetEnumDescription(t).Trim().ToLower() == RawType?.Trim().ToLower())
-                    {
-                        type = t;
-                    }
-                }
-                return type;
-            }
-        }
+        public Uri? Type { get; set; }
 
         [OpenTraceabilityJson("source")]
         [OpenTraceability("text()")]

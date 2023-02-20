@@ -17,8 +17,6 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         {
             try
             {
-                // TODO: validate the JSON schema
-
                 EPCISQueryDocument doc = EPCISDocumentBaseJsonMapper.ReadJSON<EPCISQueryDocument>(strValue, out JObject json);
 
                 if (doc.EPCISVersion != EPCISVersion.V2)
@@ -74,8 +72,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             JArray jEventsList = new JArray();
             foreach (IEvent e in doc.Events)
             {
-                string xname = EPCISDocumentBaseJsonMapper.GetEventType(e);
-                JObject? jEvent = OpenTraceabilityJsonLDMapper.ToJson(xname, e) as JObject;
+                JObject? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e) as JObject;
                 if (jEvent != null)
                 {
                     jEventsList.Add(jEvent);
@@ -88,7 +85,11 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             jEPCISBody["queryResults"] = jQueryResults;
             json["epcisBody"] = jEPCISBody;
 
-            // TODO: validate the json-ld schema
+            // conform the JSON-LD to the compacted version with CURIE's that EPCIS 2.0 likes
+            OpenTraceabilityJsonLDMapper.ConformEPCISJsonLD(json);
+
+            // validate the JSON-LD schema
+            EPCISDocumentBaseJsonMapper.CheckSchema(json);
 
             return json.ToString();
         }

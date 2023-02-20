@@ -50,9 +50,6 @@ namespace OpenTraceability.Tests.Events
             // serialize C# models into xml
             string jsonAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc);
 
-            // we need to normalize the JSON-LD before we compare it first...
-            json = OpenTraceabilityJsonLDMapper.NormalizeEPCISJsonLD(json);
-
             OpenTraceabilityTests.CompareJSON(json, jsonAfter);
         }
     }

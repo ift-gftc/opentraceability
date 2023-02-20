@@ -10,9 +10,9 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("parentID", 8)]
         public EPC? ParentID { get; set; }
 
-        [OpenTraceabilityProducts("extension/quantityList", EPCISVersion.V1, EventProductType.Child, 20, OpenTraceabilityProductsListType.QuantityList)]
-        [OpenTraceabilityProducts("quantityList", EPCISVersion.V2, EventProductType.Child, 15, OpenTraceabilityProductsListType.QuantityList)]
-        [OpenTraceabilityProducts("epcList", EventProductType.Child, 9, OpenTraceabilityProductsListType.EPCList)]
+        [OpenTraceabilityProducts("extension/quantityList", EPCISVersion.V1, EventProductType.Reference, 20, OpenTraceabilityProductsListType.QuantityList)]
+        [OpenTraceabilityProducts("quantityList", EPCISVersion.V2, EventProductType.Reference, 15, OpenTraceabilityProductsListType.QuantityList)]
+        [OpenTraceabilityProducts("epcList", EventProductType.Reference, 9, OpenTraceabilityProductsListType.EPCList)]
         public List<EventProduct> ReferenceProducts { get; set; } = new List<EventProduct>();
 
         [OpenTraceability("action", 10)]

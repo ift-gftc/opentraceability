@@ -1,4 +1,5 @@
-﻿using OpenTraceability.Utility;
+﻿using OpenTraceability.Interfaces;
+using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
 using System.ComponentModel;
 
@@ -19,7 +20,7 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceabilityJson("reason")]
         [OpenTraceability("@type")]
-        public Uri? RawReason { get; set; }
+        public Uri? Reason { get; set; }
 
         [OpenTraceability("declarationTime")]
         public DateTimeOffset? DeclarationTime { get; set; }
@@ -28,25 +29,28 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("correctiveEventIDs")]
         public List<string>? CorrectingEventIDs { get; set; }
 
-        public EventErrorType Reason
-        {
-            get
-            {
-                EventErrorType type = EventErrorType.Unknown;
-                foreach (EventErrorType t in Enum.GetValues(typeof(EventErrorType)))
-                {
-                    if (EnumUtil.GetEnumDescription(t) == RawReason?.ToString())
-                    {
-                        type = t;
-                    }
-                }
-                return type;
-            }
-            set
-            {
-                string reason = EnumUtil.GetEnumDescription(value);
-                this.RawReason = new Uri(reason);
-            }
-        }
+        [OpenTraceabilityExtensionElements]
+        public List<IEventKDE> ExtensionKDEs { get; internal set; } = new List<IEventKDE>();
+
+        //public EventErrorType Reason
+        //{
+        //    get
+        //    {
+        //        EventErrorType type = EventErrorType.Unknown;
+        //        foreach (EventErrorType t in Enum.GetValues(typeof(EventErrorType)))
+        //        {
+        //            if (EnumUtil.GetEnumDescription(t) == Reason?.ToString())
+        //            {
+        //                type = t;
+        //            }
+        //        }
+        //        return type;
+        //    }
+        //    set
+        //    {
+        //        string reason = EnumUtil.GetEnumDescription(value);
+        //        this.Reason = new Uri(reason);
+        //    }
+        //}
     }
 }

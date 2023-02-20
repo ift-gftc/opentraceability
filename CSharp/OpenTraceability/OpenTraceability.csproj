@@ -24,6 +24,7 @@
 	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlEventWriter.cs" />
 	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlHeaderReader.cs" />
 	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlHeaderWriter.cs" />
+	  <Compile Remove="Utility\UnitSystems.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -31,19 +32,19 @@
 		<None Remove="Utility\Data\Countries.xml" />
 		<None Remove="Utility\Data\UnitDescriptors.xml" />
 		<None Remove="Utility\Data\UnitSystems.xml" />
+		<None Remove="Utility\Data\uoms.json" />
 		<None Remove="Utility\Data\UOMs.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<EmbeddedResource Include="Utility\Data\Countries.xml" />
-		<EmbeddedResource Include="Utility\Data\UnitDescriptors.xml" />
-		<EmbeddedResource Include="Utility\Data\UnitSystems.xml" />
-		<EmbeddedResource Include="Utility\Data\UOMs.xml" />
+		<EmbeddedResource Include="Utility\Data\uoms.json" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Crc32.NET" Version="1.2.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.14" />
 	</ItemGroup>
 
 	<ItemGroup>

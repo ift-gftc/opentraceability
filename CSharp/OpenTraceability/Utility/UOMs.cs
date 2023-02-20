@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
@@ -13,35 +14,6 @@ namespace OpenTraceability.Utility
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
     public static class UOMS
     {
-        #region Static
-        [Obsolete("Use built in conversion support")]
-        public static double ConvertToKilograms(UOM uom, double netweight)
-        {
-            try
-            {
-                switch (uom.ID)
-                {
-                    case 1: return netweight / 1000.0;      // 1000 grams per kilogram
-                    case 2: return netweight * 0.453592;    // 0.453592 kilograms per pound
-                    case 3: return netweight;
-                    case 4: return netweight * 1000;        // 1000 kilograms in a metric ton
-                    case 8: return netweight / 1000000;     // 1,000,000 milligrams in a kilogram
-                    case 9: return netweight / 100000;      // 100,000 centigrams in a kilogram
-                    case 10: return netweight / 10000;      // 10,000 decigrams in a kilogram
-                    case 11: return netweight / 100;        // 100 dekagrams in a kilogram
-                    case 12: return netweight / 10;         // 10 hectograms in a kilogram
-                    case 13: return netweight / 35.274;     // 35.274 ounces in a kilogram
-                    default: throw new Exception(string.Format("Failed to convert UOM (id: {0}, name: {1}) into kilograms because this unit is not a weight.", uom.ID, uom.Name));
-                }
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-        #endregion
-
         private static ConcurrentDictionary<string, UOM> uomsAbbrevDict;
         private static ConcurrentDictionary<string, UOM> uomsUNCodeDict;
         private static object _locker = new object();
@@ -61,15 +33,10 @@ namespace OpenTraceability.Utility
             {
                 // load the subscriptions xml
                 EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                XDocument xUOMs = loader.ReadXML("OpenTraceability", "OpenTraceability.Utility.Data.UOMs.xml");
-                if (xUOMs.Root == null)
+                JArray jarr = JArray.Parse(loader.ReadString("OpenTraceability", "OpenTraceability.Utility.Data.uoms.json"));
+                foreach (JObject juom in jarr)
                 {
-                    throw new Exception("Failed to load UOMs.xml, the XDocument.Root is null.");
-                }
-
-                foreach (XElement x in xUOMs.Root.Elements())
-                {
-                    UOM uom = new UOM(x);
+                    UOM uom = new UOM(juom);
                     if (!uomsAbbrevDict.ContainsKey(uom.Abbreviation.ToLower()))
                     {
                         uomsAbbrevDict.TryAdd(uom.Abbreviation.ToLower(), uom);
@@ -186,7 +153,7 @@ namespace OpenTraceability.Utility
             return (uom);
         }
 
-        static public List<UOM> UOMList
+        static public List<UOM> List
         {
             get
             {
@@ -198,25 +165,6 @@ namespace OpenTraceability.Utility
                         lst.Add(kvp.Value);
                     }
                     return lst;
-                }
-            }
-        }
-
-        static public void AddUOM(UOM uom)
-        {
-            lock (_locker)
-            {
-                if (uom == null)
-                {
-                    throw new ArgumentNullException("uom argument can not be null");
-                }
-                if (!uomsAbbrevDict.ContainsKey(uom.Name))
-                {
-                    uomsAbbrevDict.TryAdd(uom.Name, uom);
-                }
-                else
-                {
-                    throw new Exception("Unit already exists in units collection");
                 }
             }
         }
@@ -235,7 +183,7 @@ namespace OpenTraceability.Utility
             {
                 lock (_locker)
                 {
-                    UOM? uom = UOMS.UOMList.Find(u => u.UNCode == unCode);
+                    UOM? uom = UOMS.List.Find(u => u.UNCode == unCode);
                     if (uom == null)
                     {
                         uom = new UOM();
@@ -280,12 +228,11 @@ namespace OpenTraceability.Utility
                 if (uom != null)
                 {
                     u = new UOM();
-                    u.ID = uom.ID;
                     u.Name = uom.Name;
                     u.Abbreviation = uom.Abbreviation;
                     u.UnitDimension = uom.UnitDimension;
                     u.UNCode = uom.UNCode;
-                    u.LegacyID = uom.LegacyID;
+                    u.Offset = uom.Offset;
                     u.SubGroup = uom.SubGroup;
                     u.A = uom.A;
                     u.B = uom.B;
@@ -298,13 +245,12 @@ namespace OpenTraceability.Utility
                     if (uom != null)
                     {
                         u = new UOM();
-                        u.ID = uom.ID;
                         u.Name = uom.Name;
                         u.Abbreviation = uom.Abbreviation;
                         u.UnitDimension = uom.UnitDimension;
                         u.SubGroup = uom.SubGroup;
                         u.UNCode = uom.UNCode;
-                        u.LegacyID = uom.LegacyID;
+                        u.Offset = uom.Offset;
                         u.A = uom.A;
                         u.B = uom.B;
                         u.C = uom.C;
@@ -332,12 +278,11 @@ namespace OpenTraceability.Utility
             this.UnitDimension = uom.UnitDimension;
             this.UNCode = uom.UNCode;
             this.SubGroup = uom.SubGroup;
-            this.ID = uom.ID;
+            this.Offset = uom.Offset;
             this.A = uom.A;
             this.B = uom.B;
             this.C = uom.C;
             this.D = uom.D;
-            this.LegacyID = uom.LegacyID;
         }
 
         public void CopyFrom(UOM uom)
@@ -347,12 +292,11 @@ namespace OpenTraceability.Utility
             this.UnitDimension = uom.UnitDimension;
             this.UNCode = uom.UNCode;
             this.SubGroup = uom.SubGroup;
-            this.ID = uom.ID;
+            this.Offset = uom.Offset;
             this.A = uom.A;
             this.B = uom.B;
             this.C = uom.C;
             this.D = uom.D;
-            this.LegacyID = uom.LegacyID;
         }
         public bool IsBase()
         {
@@ -394,10 +338,6 @@ namespace OpenTraceability.Utility
 
         }
 
-        public Int64 ID { get; set; }
-
-        public int LegacyID { get; set; }
-
         public string Key
         {
             get
@@ -424,6 +364,8 @@ namespace OpenTraceability.Utility
 
         public double D { get; private set; }
 
+        public double Offset { get; private set; }
+
         public UOM()
         {
             A = 0.0;
@@ -432,39 +374,68 @@ namespace OpenTraceability.Utility
             D = 0.0;
         }
 
-        public UOM(XElement xmlUOM)
+        //public UOM(XElement xmlUOM)
+        //{
+        //    A = 0.0;
+        //    B = 1.0;
+        //    C = 1.0;
+        //    D = 0.0;
+
+        //    Name = xmlUOM.Attribute("Name")?.Value ?? string.Empty;
+        //    Abbreviation = xmlUOM.Attribute("Abbreviation")?.Value ?? string.Empty;
+        //    UnitDimension = xmlUOM.Attribute("Dimension")?.Value ?? string.Empty;
+        //    UNCode = xmlUOM.Attribute("UNCode")?.Value ?? string.Empty;
+        //    SubGroup = xmlUOM.Attribute("SubGroup")?.Value ?? string.Empty;
+
+        //    if (xmlUOM.Attribute("Factor") != null)
+        //    {
+        //        A = 0.0;
+        //        B = double.Parse(xmlUOM.Attribute("Factor")?.Value ?? string.Empty);
+        //        C = 1.0;
+        //        D = 0.0;
+        //    }
+        //    else if (xmlUOM.Attribute("Numerator") != null)
+        //    {
+        //        A = 0.0;
+        //        B = double.Parse(xmlUOM.Attribute("Numerator")?.Value ?? string.Empty);
+        //        C = double.Parse(xmlUOM.Attribute("Denominator")?.Value ?? string.Empty);
+        //        D = 0.0;
+        //    }
+        //    else if (xmlUOM.Attribute("A") != null)
+        //    {
+        //        A = double.Parse(xmlUOM.Attribute("A")?.Value ?? string.Empty);
+        //        B = double.Parse(xmlUOM.Attribute("B")?.Value ?? string.Empty);
+        //        C = double.Parse(xmlUOM.Attribute("C")?.Value ?? string.Empty);
+        //        D = double.Parse(xmlUOM.Attribute("D")?.Value ?? string.Empty);
+        //    }
+        //}
+
+        public UOM(JObject juom)
         {
             A = 0.0;
             B = 1.0;
             C = 1.0;
             D = 0.0;
 
-            Name = xmlUOM.Attribute("Name")?.Value ?? string.Empty;
-            Abbreviation = xmlUOM.Attribute("Abbreviation")?.Value ?? string.Empty;
-            UnitDimension = xmlUOM.Attribute("Dimension")?.Value ?? string.Empty;
-            UNCode = xmlUOM.Attribute("UNCode")?.Value ?? string.Empty;
-            SubGroup = xmlUOM.Attribute("SubGroup")?.Value ?? string.Empty;
+            Name = juom.Value<string>("name") ?? throw new Exception("name not set on uom json. " + juom.ToString());
+            UNCode = juom.Value<string>("UNCode") ?? throw new Exception("UNCode not set on uom json. " + juom.ToString());
+            Abbreviation = juom.Value<string>("symbol") ?? throw new Exception("symbol not set on uom json. " + juom.ToString());
+            UnitDimension = juom.Value<string>("type") ?? throw new Exception("type not set on uom json. " + juom.ToString());
 
-            if (xmlUOM.Attribute("Factor") != null)
+            Offset = juom.Value<double>("offset");
+
+            string multiplierString = juom.Value<string>("multiplier") ?? throw new Exception("multiplier not set on uom json. " + juom.ToString());
+            if (multiplierString.Contains("/"))
             {
-                A = 0.0;
-                B = double.Parse(xmlUOM.Attribute("Factor")?.Value ?? string.Empty);
-                C = 1.0;
-                D = 0.0;
+                int numerator = int.Parse(multiplierString.Split('/').First());
+                int denominator = int.Parse(multiplierString.Split('/').Last());
+                B = numerator;
+                C = denominator;
             }
-            else if (xmlUOM.Attribute("Numerator") != null)
+            else
             {
-                A = 0.0;
-                B = double.Parse(xmlUOM.Attribute("Numerator")?.Value ?? string.Empty);
-                C = double.Parse(xmlUOM.Attribute("Denominator")?.Value ?? string.Empty);
-                D = 0.0;
-            }
-            else if (xmlUOM.Attribute("A") != null)
-            {
-                A = double.Parse(xmlUOM.Attribute("A")?.Value ?? string.Empty);
-                B = double.Parse(xmlUOM.Attribute("B")?.Value ?? string.Empty);
-                C = double.Parse(xmlUOM.Attribute("C")?.Value ?? string.Empty);
-                D = double.Parse(xmlUOM.Attribute("D")?.Value ?? string.Empty);
+                double multiplier = juom.Value<double>("multiplier");
+                B = multiplier;
             }
         }
 
@@ -484,13 +455,13 @@ namespace OpenTraceability.Utility
 
         public double ToBase(double value)
         {
-            double baseValue = (A + B * value) / (C + D * value);
+            double baseValue = ((A + B * value) / (C + D * value)) - Offset;
             return baseValue;
         }
 
         public double FromBase(double baseValue)
         {
-            double value = (A - C * baseValue) / (D * baseValue - B);
+            double value = ((A - C * baseValue) / (D * baseValue - B)) + Offset;
             return value;
         }
 

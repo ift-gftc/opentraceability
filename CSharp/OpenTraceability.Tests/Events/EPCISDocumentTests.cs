@@ -42,7 +42,53 @@ namespace OpenTraceability.Tests.Events
         }
 
         [Test]
+        [TestCase("aggregation_event_all_possible_fields.jsonld")]
+        [TestCase("AssociationEvent-a.jsonld")]
+        [TestCase("AssociationEvent-b.jsonld")]
+        [TestCase("AssociationEvent-c.jsonld")]
+        [TestCase("AssociationEvent-d.jsonld")]
+        [TestCase("AssociationEvent-e.jsonld")]
+        [TestCase("AssociationEvent-f.jsonld")]
+        [TestCase("AssociationEvent-g.jsonld")]
+        [TestCase("AssociationEvent-h.jsonld")]
+        [TestCase("association_event_all_possible_fields.jsonld")]
         [TestCase("EPCISDocument_objectevents_complete.jsonld")]
+        [TestCase("ErrorDeclarationAndCorrectiveEvent.jsonld")]
+        [TestCase("Example-TransactionEvents-2020_07_03y.jsonld")]
+        [TestCase("Example-Type-sourceOrDestination,measurement,bizTransaction.jsonld")]
+        [TestCase("Example_9.6.1-ObjectEvent-with-error-declaration.jsonld")]
+        [TestCase("Example_9.6.1-ObjectEvent-with-pseudo-SBDH-headers.jsonld")]
+        [TestCase("Example_9.6.1-ObjectEvent.jsonld")]
+        [TestCase("Example_9.6.1-ObjectEventWithDigitalLink.jsonld")]
+        [TestCase("Example_9.6.1-with-comment.jsonld")]
+        [TestCase("Example_9.6.2-ObjectEvent.jsonld")]
+        [TestCase("Example_9.6.2-ObjectEventWithDigitalLink.jsonld")]
+        [TestCase("Example_9.6.3-AggregationEvent.jsonld")]
+        [TestCase("Example_9.6.3-AggregationEventWithDigitalLink.jsonld")]
+        [TestCase("Example_9.6.4-TransformationEvent.jsonld")]
+        [TestCase("Example_9.6.4-TransformationEventWithDigitalLink.jsonld")]
+        [TestCase("object_event_all_possible_fields.jsonld")]
+        [TestCase("PersistentDisposition-example.jsonld")]
+        [TestCase("SensorDataExample1.jsonld")]
+        [TestCase("SensorDataExample10.jsonld")]
+        [TestCase("SensorDataExample11.jsonld")]
+        [TestCase("SensorDataExample12.jsonld")]
+        [TestCase("SensorDataExample13.jsonld")]
+        [TestCase("SensorDataExample14.jsonld")]
+        [TestCase("SensorDataExample15.jsonld")]
+        [TestCase("SensorDataExample16.jsonld")]
+        [TestCase("SensorDataExample17.jsonld")]
+        [TestCase("SensorDataExample1b.jsonld")]
+        [TestCase("SensorDataExample2.jsonld")]
+        [TestCase("SensorDataExample3.jsonld")]
+        [TestCase("SensorDataExample4.jsonld")]
+        [TestCase("SensorDataExample5.jsonld")]
+        [TestCase("SensorDataExample6.jsonld")]
+        [TestCase("SensorDataExample7.jsonld")]
+        [TestCase("SensorDataExample8.jsonld")]
+        [TestCase("SensorDataExample9.jsonld")]
+        [TestCase("transaction_event_all_possible_fields.jsonld")]
+        [TestCase("transformation_event_all_possible_fields.jsonld")]
         public void JSONLD(string file)
         {
             // initialize the libraries.
@@ -56,9 +102,6 @@ namespace OpenTraceability.Tests.Events
 
             // serialize C# models into xml
             string strEventsAfter = OpenTraceabilityMappers.EPCISDocument.JSON.Map(doc);
-
-            // we need to normalize the JSON-LD before we compare it first...
-            strEvents = OpenTraceabilityJsonLDMapper.NormalizeEPCISJsonLD(strEvents);
 
             OpenTraceabilityTests.CompareJSON(strEvents, strEventsAfter);
         }

@@ -113,24 +113,6 @@ namespace OpenTraceability.Utility
             return (trBase);
         }
 
-        public Measurement ToSystem(UnitSystem unitSystem)
-        {
-            Measurement trBase = new Measurement();
-            trBase.UoM = unitSystem.GetSystemUOM(this.UoM);
-            trBase.Value = UoM.Convert(this.Value, trBase.UoM);
-            trBase.Value = trBase.Value.Round();
-            return (trBase);
-        }
-
-        public Measurement ToSystem(UnitSystem unitSystem, string subGroup)
-        {
-            Measurement trBase = new Measurement();
-            trBase.UoM = unitSystem.GetSystemUOM(this.UoM, subGroup);
-            trBase.Value = UoM.Convert(this.Value, trBase.UoM);
-            trBase.Value = trBase.Value.Round();
-            return (trBase);
-        }
-
         public Measurement ConvertTo(string uomStr)
         {
             if (string.IsNullOrEmpty(uomStr))
@@ -233,7 +215,7 @@ namespace OpenTraceability.Utility
                 numberStr = numberStr.Trim();
                 uomStr = uomStr.Trim();
 
-                List<UOM> uoms = UOMS.UOMList;
+                List<UOM> uoms = UOMS.List;
 
                 double dblValue = double.Parse(numberStr);
                 UOM? uom = UOMS.GetUOMFromUNCode(uomStr);
