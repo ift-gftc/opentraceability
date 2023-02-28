@@ -4,6 +4,7 @@ namespace OpenTraceability.Models.Common
 {
     public class Certificate
     {
+        [OpenTraceabilityJson("gdst:certificationType")]
         [OpenTraceability(Constants.GDST_NAMESPACE, "certificationType")]
         public string? CertificateType { get; set; }
 

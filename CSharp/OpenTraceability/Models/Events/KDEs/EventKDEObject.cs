@@ -44,8 +44,14 @@ namespace OpenTraceability.Models.Events.KDEs
             if (_xml != null)
             {
                 // convert _xml to JObject
-                var j = Newtonsoft.Json.JsonConvert.SerializeXNode(_xml);
-                return j;
+                using (XmlReader xmlReader = _xml.CreateReader())
+                {
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.Load(xmlReader);
+
+                    var j = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.Indented, true);
+                    return JToken.Parse(j);
+                }
             }
             else if (_json != null)
             {
@@ -75,7 +81,8 @@ namespace OpenTraceability.Models.Events.KDEs
                 string? xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString()) as XmlDocument)?.OuterXml;
                 if (!string.IsNullOrEmpty(xmlStr))
                 {
-                    return XElement.Parse(xmlStr);
+                    XElement x = new XElement((XNamespace)Namespace + Name, XElement.Parse(xmlStr));
+                    return x;
                 }
                 else
                 {

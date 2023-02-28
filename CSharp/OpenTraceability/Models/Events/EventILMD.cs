@@ -12,7 +12,7 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "productionMethodForFishAndSeafoodCode")]
         [OpenTraceabilityJson("cbvmda:productionMethodForFishAndSeafoodCode")]
-        public string? SeafoodProductionMethod { get; set; }
+        public string? ProductionMethodForFishAndSeafoodCode { get; set; }
 
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "itemExpirationDate")]
         [OpenTraceabilityJson("cbvmda:itemExpirationDate")]
@@ -23,7 +23,7 @@ namespace OpenTraceability.Models.Events
         public DateTimeOffset? ProductionDate { get; set; }
 
         [OpenTraceabilityArray]
-        [OpenTraceabilityRepeating]
+        [OpenTraceabilityRepeatingAttribute]
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "countryOfOrigin")]
         [OpenTraceabilityJson("cbvmda:countryOfOrigin")]
         public List<Country> CountryOfOrigin { get; set; } = new List<Country>();

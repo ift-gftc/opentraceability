@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -29,9 +30,19 @@ namespace OpenTraceability.Interfaces
         public string? ID { get; }
 
         /// <summary>
-        /// The type of the vocabulary.
+        /// The EPCIS type of the vocabulary.
         /// </summary>
-        public string? Type { get; set; }
+        public string? EPCISType { get; set; }
+
+        /// <summary>
+        /// The JSON-LD type of the vocabulary element.
+        /// </summary>
+        public string? JsonLDType { get; set; }
+
+        /// <summary>
+        /// The JSON-LD context of the vocabulary element.
+        /// </summary>
+        public JToken? Context { get; set; }
 
         /// <summary>
         /// The enum representing the vocabulary type.

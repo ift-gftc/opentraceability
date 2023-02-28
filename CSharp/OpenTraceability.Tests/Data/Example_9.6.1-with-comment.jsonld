@@ -3,9 +3,6 @@
 		"https://gs1.github.io/EPCIS/epcis-context.jsonld",
 		{
 			"example": "http://ns.example.com/epcis/"
-		},
-		{
-			"rdfs": "http://www.w3.org/2000/01/rdf-schema#"
 		}
 	],
 	"id": "https://id.example.org/document1",

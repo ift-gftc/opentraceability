@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace OpenTraceability.Mappers.EPCIS.XML
 {
@@ -38,23 +39,30 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 }
                 else
                 {
-                    document.Attributes.Add(xatt.Name.ToString(), xatt.Value);
+                    if (xatt.Name.Namespace == Constants.XMLNS_NAMEPSACE)
+                    {
+                        document.Namespaces.Add(xatt.Name.LocalName, xatt.Value);
+                    }
+                    else
+                    {
+                        document.Attributes.Add(xatt.Name.ToString(), xatt.Value);
+                    }
                 }
             }
 
             // determine epcis version
-            if (document.Attributes.Values.ToList().Contains(Constants.EPCIS_2_NAMESPACE))
+            if (document.Namespaces.Values.ToList().Contains(Constants.EPCIS_2_NAMESPACE) || document.Namespaces.Values.ToList().Contains(Constants.EPCISQUERY_2_NAMESPACE))
             {
                 document.EPCISVersion = EPCISVersion.V2;
             }
-            else if (document.Attributes.Values.ToList().Contains(Constants.EPCIS_1_NAMESPACE))
+            else if (document.Namespaces.Values.ToList().Contains(Constants.EPCIS_1_NAMESPACE) || document.Namespaces.Values.ToList().Contains(Constants.EPCISQUERY_1_NAMESPACE))
             {
                 document.EPCISVersion = EPCISVersion.V1;
             }
 
             if (document.EPCISVersion == null)
             {
-                throw new Exception($"Failed to determine the EPCIS version of the XML document. Must contain a namespace with either '{Constants.EPCIS_2_NAMESPACE}' or '{Constants.EPCIS_1_NAMESPACE}'");
+                throw new Exception($"Failed to determine the EPCIS version of the XML document. Must contain a namespace with either '{Constants.EPCIS_2_NAMESPACE}' or '{Constants.EPCIS_1_NAMESPACE}' or '{Constants.EPCISQUERY_2_NAMESPACE}' or '{Constants.EPCISQUERY_1_NAMESPACE}'");
             }
 
             // read the creation date
@@ -93,6 +101,11 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             if (xDoc.Root == null)
             {
                 throw new Exception("Failed to convert EPCIS Document into XML because the XDoc.Root is NULL. This should not happen.");
+            }
+
+            foreach (var ns in doc.Namespaces)
+            {
+                xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + ns.Key, ns.Value));
             }
 
             // set the creation date
@@ -138,36 +151,52 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 eventType = xEvent.Elements().First().Name.LocalName;
             }
 
-            OpenTraceabilityEventProfile? profile = OpenTraceability.Profiles.Where(p => p.EventType == eventType && (p.Action == null || p.Action == action) && (p.BusinessStep == null || p.BusinessStep == bizStep)).OrderByDescending(p => p.SpecificityScore).FirstOrDefault();
-            if (profile == null)
+            var profiles = OpenTraceability.Profiles.Where(p => p.EventType.ToString() == eventType && (p.Action == null || p.Action == action) && (p.BusinessStep == null || p.BusinessStep.ToLower() == bizStep?.ToLower())).OrderByDescending(p => p.SpecificityScore).ToList();
+            if (profiles.Count() == 0)
             {
                 throw new Exception("Failed to create event from profile. Type=" + eventType + " and BizStep=" + bizStep + " and Action=" + action);
             }
             else
             {
-                return profile.EventClassType;
+                foreach (var profile in profiles.Where(p => p.KDEProfiles != null).ToList())
+                {
+                    foreach (var kdeProfile in profile.KDEProfiles)
+                    {
+                        if (xEvent.QueryXPath(kdeProfile.XPath_V1) == null)
+                        {
+                            profiles.Remove(profile);
+                        }
+                    }
+                }
+
+                if (profiles.Count() == 0)
+                {
+                    throw new Exception("Failed to create event from profile. Type=" + eventType + " and BizStep=" + bizStep + " and Action=" + action);
+                }
+
+                return profiles.First().EventClassType;
             }
         }
 
         internal static string GetEventXName(IEvent e)
         {
-            if (e.EventType == EventType.Object)
+            if (e.EventType == EventType.ObjectEvent)
             {
                 return "ObjectEvent";
             }
-            else if (e.EventType == EventType.Transformation)
+            else if (e.EventType == EventType.TransformationEvent)
             {
                 return "TransformationEvent";
             }
-            else if (e.EventType == EventType.Transaction)
+            else if (e.EventType == EventType.TransactionEvent)
             {
                 return "TransactionEvent";
             }
-            else if (e.EventType == EventType.Aggregation)
+            else if (e.EventType == EventType.AggregationEvent)
             {
                 return "AggregationEvent";
             }
-            else if (e.EventType == EventType.Association)
+            else if (e.EventType == EventType.AssociationEvent)
             {
                 return "AssociationEvent";
             }

@@ -202,7 +202,7 @@ namespace OpenTraceability.Utility
 
         public override string ToString()
         {
-            return this.ISO.ToString();
+            return this.Abbreviation.ToString();
         }
 
         public override bool Equals(object? obj)

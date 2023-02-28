@@ -1,6 +1,9 @@
-﻿using OpenTraceability.Interfaces;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.Interfaces;
+using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Models.Identifiers;
+using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
 using System;
 using System.Collections.Generic;
@@ -13,19 +16,38 @@ namespace OpenTraceability.Models.MasterData
     public class TradingParty : IVocabularyElement
     {
         public string? ID { get => PGLN?.ToString(); }
-        public string? Type { get; set; } = "urn:epcglobal:epcis:vtype:Party";
+
+        public string? EPCISType { get; set; } = "urn:epcglobal:epcis:vtype:Party";
+
+        [OpenTraceabilityJson("@type")]
+        public string? JsonLDType { get; set; } = "gs1:Organization";
+
         public VocabularyType VocabularyType => VocabularyType.TradingParty;
 
+        public JToken? Context { get; set; }
+
+        [OpenTraceabilityJson("globalLocationNumber")]
         public PGLN? PGLN { get; set; }
 
-        [OpenTraceability("urn:epcglobal:cbv:owning_Party", 1)]
+        [OpenTraceabilityJson("cbvmda:owning_party")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:owning_Party")]
         public PGLN? OwningParty { get; set; }
 
-        [OpenTraceability("urn:epcglobal:cbv:mda#informationProvider", 2)]
+        [OpenTraceabilityJson("cbvmda:informationProvider")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#informationProvider")]
         public PGLN? InformationProvider { get; set; }
 
-        [OpenTraceability("https://gs1.org/cbv/cbvmda:certificationList", Events.EPCISVersion.V1)]
-        public CertificationList? CertificationList { get; set; }
+        [OpenTraceabilityJson("organizationName")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#name")]
+        public List<LanguageString>? Name { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceabilityJson("address")]
+        public Address? Address { get; set; }
+
+        [OpenTraceabilityJson("gdst:iftp")]
+        [OpenTraceabilityMasterData("urn:gdst:kde#iftp")]
+        public string? IFTP { get; set; }
 
         /// <summary>
         /// These are additional KDEs that were not mapped into the object.

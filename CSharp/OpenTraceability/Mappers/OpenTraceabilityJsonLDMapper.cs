@@ -14,17 +14,16 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using OpenTraceability.Models.Common;
 
 namespace OpenTraceability.Mappers
 {
     public static class OpenTraceabilityJsonLDMapper
     {
-        private static JObject? jEPCISContext;
-
         /// <summary>
         /// Converts an object into JSON.
         /// </summary>
-        public static JToken? ToJson(object? value, bool required = false)
+        public static JToken? ToJson(object? value, Dictionary<string, string> namespacesReversed, bool required = false)
         {
             try
             {
@@ -105,7 +104,7 @@ namespace OpenTraceability.Mappers
                                         {
                                             if (property.IsObject)
                                             {
-                                                JToken? xchild = ToJson(o, property.Required);
+                                                JToken? xchild = ToJson(o, namespacesReversed, property.Required);
                                                 if (xchild != null)
                                                 {
                                                     xlist.Add(xchild);
@@ -127,7 +126,7 @@ namespace OpenTraceability.Mappers
                             }
                             else if (property.IsObject)
                             {
-                                JToken? xchild = ToJson(obj, property.Required);
+                                JToken? xchild = ToJson(obj, namespacesReversed, property.Required);
                                 if (xchild != null)
                                 {
                                     jvaluepointer[xchildname] = xchild;
@@ -157,7 +156,17 @@ namespace OpenTraceability.Mappers
                                     JToken? xchild = kde.GetJson();
                                     if (xchild != null)
                                     {
-                                        jpointer[kde.Name] = xchild;
+                                        string name = kde.Name;
+                                        if (kde.Namespace != null)
+                                        {
+                                            if (!namespacesReversed.ContainsKey(kde.Namespace))
+                                            {
+                                                throw new Exception($"The namespace {kde.Namespace} is not recognized in the EPCIS Document / EPCIS Query Document.");
+                                            }
+                                            name = namespacesReversed[kde.Namespace] + ":" + name;
+                                        }
+
+                                        jpointer[name] = xchild;
                                     }
                                 }
                             }
@@ -177,7 +186,17 @@ namespace OpenTraceability.Mappers
                                     JToken? xchild = kde.GetJson();
                                     if (xchild != null)
                                     {
-                                        jpointer[kde.Name] = xchild;
+                                        string name = kde.Name;
+                                        if (kde.Namespace != null)
+                                        {
+                                            if (!namespacesReversed.ContainsKey(kde.Namespace))
+                                            {
+                                                throw new Exception($"The namespace {kde.Namespace} is not recognized in the EPCIS Document / EPCIS Query Document.");
+                                            }
+                                            name = namespacesReversed[kde.Namespace] + ":" + name;
+                                        }
+
+                                        jpointer[name] = xchild;
                                     }
                                 }
                             }
@@ -202,16 +221,16 @@ namespace OpenTraceability.Mappers
         /// <summary>
         /// Converts a JSON object into the generic type specified.
         /// </summary>
-        public static T FromJson<T>(JToken json)
+        public static T FromJson<T>(JToken json, Dictionary<string, string> namespaces)
         {
-            T o = (T)FromJson(json, typeof(T));
+            T o = (T)FromJson(json, typeof(T), namespaces);
             return o;
         }
 
         /// <summary>
         /// Converts a JSON object into the type specified.
         /// </summary>
-        public static object FromJson(JToken json, Type type)
+        public static object FromJson(JToken json, Type type, Dictionary<string, string> namespaces)
         {
             object value = Activator.CreateInstance(type) ?? throw new Exception("Failed to create instance of type " + type.FullName);
 
@@ -240,21 +259,27 @@ namespace OpenTraceability.Mappers
                     foreach (JProperty jprop in jobj.Properties())
                     {
                         mappingProp = typeInfo[jprop.Name];
+
+                        if (mappingProp != null && mappingProp.Property.SetMethod == null)
+                        {
+                            continue;
+                        }
+
                         JToken? jchild = jobj[jprop.Name];
                         if (jchild != null)
                         {
                             if (mappingProp != null)
                             {
-                                ReadPropertyMapping(mappingProp, jchild, value);
+                                ReadPropertyMapping(mappingProp, jchild, value, namespaces);
                             }
                             else if (extensionKDEs != null)
                             {
-                                IEventKDE kde = ReadKDE(jprop.Name, jchild);
+                                IEventKDE kde = ReadKDE(jprop.Name, jchild, namespaces);
                                 extensionKDEs.Add(kde);
                             }
                             else if (extensionAttributes != null)
                             {
-                                IEventKDE kde = ReadKDE(jprop.Name, jchild);
+                                IEventKDE kde = ReadKDE(jprop.Name, jchild, namespaces);
                                 extensionAttributes.Add(kde);
                             }
                         }
@@ -280,50 +305,16 @@ namespace OpenTraceability.Mappers
             return value;
         }
 
-        /// <summary>
-        /// This will take an EPCIS JSON-LD document and make sure that everything is set for
-        /// it to pass the JSON schema for EPCIS 2.0. This includes expanding the CURIEs, etc.
-        /// </summary>
-        /// <param name="jEPCISStr"></param>
-        /// <returns></returns>
-        internal static void ConformEPCISJsonLD(JObject json)
-        {
-            CompactURIsIntoCURIEs_Internal(json);
-        }
-
-        /// <summary>
-        /// This will take an EPCIS Query Document or an EPCIS Document in the JSON-LD format
-        /// and it will normalize the document so that all of the CURIEs are expanded into full
-        /// URIs and that the JSON-LD is compacted.
-        /// https://ref.gs1.org/standards/epcis/epcis-context.jsonld
-        /// </summary>
-        internal static string NormalizeEPCISJsonLD(string jEPCISStr)
-        {
-            // convert into XDocument
-            var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
-            JObject json = JsonConvert.DeserializeObject<JObject>(jEPCISStr, settings) ?? throw new Exception("Failed to parse json from string. " + jEPCISStr);
-
-            JArray? jEventList = json["epcisBody"]?["eventList"] as JArray;
-            if (jEventList == null)
-            {
-                jEventList = json["epcisBody"]?["queryResults"]?["resultsBody"]?["eventList"] as JArray;
-            }
-            if (jEventList != null)
-            {
-                foreach (JObject jEvent in jEventList)
-                {
-                    ExpandCURIEsIntoFullURIs_Event(jEvent);
-                }
-            }
-
-            return json.ToString(Formatting.Indented);
-        }
-
         private static JToken? WriteObjectToJToken(object obj)
         {
             if (obj == null)
             {
                 return null;
+            }
+            else if (obj is List<LanguageString>)
+            {
+                string json = JsonConvert.SerializeObject(obj);
+                return JArray.Parse(json);
             }
             else if (obj is DateTimeOffset)
             {
@@ -366,7 +357,7 @@ namespace OpenTraceability.Mappers
             }
         }
 
-        private static void ReadPropertyMapping(OTMappingTypeInformationProperty mappingProp, JToken json, object value)
+        private static void ReadPropertyMapping(OTMappingTypeInformationProperty mappingProp, JToken json, object value, Dictionary<string,string> namespaces)
         {
             if (mappingProp.IsQuantityList)
             {
@@ -376,10 +367,11 @@ namespace OpenTraceability.Mappers
                 {
                     foreach (JObject jQuantity in jQuantityList)
                     {
-                        EventProduct product = new EventProduct();
-                        product.Type = mappingProp.ProductType;
-                        product.EPC = new EPC(jQuantity["epcClass"]?.Value<string>() ?? string.Empty);
+                        EPC epc = new EPC(jQuantity["epcClass"]?.Value<string>() ?? string.Empty);
 
+                        EventProduct product = new EventProduct(epc);
+                        product.Type = mappingProp.ProductType;
+                        
                         double quantity = jQuantity.Value<double>("quantity");
                         string uom = jQuantity.Value<string>("uom") ?? "EA";
                         product.Quantity = new Measurement(quantity, uom);
@@ -396,9 +388,9 @@ namespace OpenTraceability.Mappers
                 {
                     foreach (JToken jEPC in jEPCList)
                     {
-                        EventProduct product = new EventProduct();
+                        EPC epc = new EPC(jEPC.ToString());
+                        EventProduct product = new EventProduct(epc);
                         product.Type = mappingProp.ProductType;
-                        product.EPC = new EPC(jEPC.ToString());
                         e.AddProduct(product);
                     }
                 }
@@ -434,7 +426,7 @@ namespace OpenTraceability.Mappers
                         {
                             if (mappingProp.IsObject)
                             {
-                                object o = FromJson(j, itemType);
+                                object o = FromJson(j, itemType, namespaces);
                                 list.Add(o);
                             }
                             else
@@ -448,8 +440,16 @@ namespace OpenTraceability.Mappers
             }
             else if (mappingProp.IsObject)
             {
-                object o = FromJson(json, mappingProp.Property.PropertyType);
+                object o = FromJson(json, mappingProp.Property.PropertyType, namespaces);
                 mappingProp.Property.SetValue(value, o);
+            }
+            else if (mappingProp.Property.PropertyType == typeof(List<LanguageString>))
+            {
+                List<LanguageString>? languageStrings = JsonConvert.DeserializeObject<List<LanguageString>>(json.ToString());
+                if (languageStrings != null)
+                {
+                    mappingProp.Property.SetValue(value, languageStrings);
+                }
             }
             else
             {
@@ -512,6 +512,11 @@ namespace OpenTraceability.Mappers
                     GLN gln = new GLN(value);
                     return gln;
                 }
+                else if (t == typeof(GTIN))
+                {
+                    GTIN gtin = new GTIN(value);
+                    return gtin;
+                }
                 else if (t == typeof(EPC))
                 {
                     EPC epc = new EPC(value);
@@ -535,21 +540,34 @@ namespace OpenTraceability.Mappers
             }
         }
 
-        private static IEventKDE ReadKDE(string name, JToken json)
+        private static IEventKDE ReadKDE(string name, JToken json, Dictionary<string, string> namespaces)
         {
             IEventKDE? kde = null;
 
             //if not, check if it is a simple value or an object
             if (kde == null)
             {
+                string ns = string.Empty;
+                if (name.Contains(":"))
+                {
+                    ns = name.Split(":").First();
+                    name = name.Split(":").Last();
+
+                    if (!namespaces.ContainsKey(ns))
+                    {
+                        throw new Exception("The KDE has a namespace prefix, but there is no such namespace in the dictionary. " + ns);
+                    }
+                    ns = namespaces[ns];
+                }
+
                 if (json is JObject || json is JArray)
                 {
-                    kde = new EventKDEObject(string.Empty, name);
+                    kde = new EventKDEObject(ns, name);
                 }
                 //else if simple value, then we will consume it as a string
                 else
                 {
-                    kde = new EventKDEString(string.Empty, name);
+                    kde = new EventKDEString(ns, name);
                 }
             }
 
@@ -563,216 +581,6 @@ namespace OpenTraceability.Mappers
             }
 
             return kde;
-        }
-
-        private static void CompactURIsIntoCURIEs_Internal(JObject jEvent)
-        {
-            // all of the CURIEs either start with the "https://ref.gs1.org/cbv/" or the "https://gs1.org/voc/", 
-            // if it starts with "https://ref.gs1.org/cbv/", then we want to split the remaining value on '-' and take 
-            // the last
-            foreach (JProperty jprop in jEvent.Properties())
-            {
-                if (jprop.Name == "@context") continue;
-                JToken? jt = jEvent[jprop.Name];
-                if (jt is JArray)
-                {
-                    JArray ja = (JArray)jt;
-                    for (int i = 0; i < ja.Count(); i++)
-                    {
-                        JToken j = ja[i];
-                        if (j is JObject)
-                        {
-                            CompactURIsIntoCURIEs_Internal((JObject)j);
-                        }
-                        else
-                        {
-                            // check if is CURIE for compacting...
-                            string strValue = j.ToString();
-                            if (strValue.StartsWith("https://gs1.org/voc/"))
-                            {
-                                strValue = strValue.Replace("https://gs1.org/voc/", "");
-                                ja[i] = JToken.FromObject(strValue);
-                            }
-                            else if (strValue.StartsWith("https://ref.gs1.org/cbv/"))
-                            {
-                                strValue = strValue.Replace("https://ref.gs1.org/cbv/", "").Split('-').Last();
-                                ja[i] = JToken.FromObject(strValue);
-                            }
-                        }
-                    }
-                }
-                else if (jt is JObject)
-                {
-                    CompactURIsIntoCURIEs_Internal((JObject)jt);
-                }
-                else
-                {
-                    // TODO: check if is CURIE for compacting...
-                    string strValue = jt.ToString();
-                    if (strValue.StartsWith("https://gs1.org/voc/"))
-                    {
-                        strValue = strValue.Replace("https://gs1.org/voc/", "");
-                        jEvent[jprop.Name] = JToken.FromObject(strValue);
-                    }
-                    else if (strValue.StartsWith("https://ref.gs1.org/cbv/"))
-                    {
-                        strValue = strValue.Replace("https://ref.gs1.org/cbv/", "").Split('-').Last();
-                        jEvent[jprop.Name] = JToken.FromObject(strValue);
-                    }
-                }
-            }
-        }
-
-        private static void ExpandCURIEsIntoFullURIs_Event(JObject jEvent)
-        {
-            if (jEPCISContext == null)
-            {
-                using (var wc = new HttpClient())
-                {
-                    jEPCISContext = JObject.Parse(wc.GetStringAsync("https://ref.gs1.org/standards/epcis/epcis-context.jsonld").Result);
-                }
-            }
-
-            // grab all of the namespaces
-            Dictionary<string, string> namespaces = new Dictionary<string, string>();
-            JObject jContext = jEPCISContext["@context"] as JObject ?? throw new Exception("Failed to grab the @context. " + jEPCISContext.ToString());
-            foreach (JProperty jprop in jContext.Properties())
-            {
-                if (jContext[jprop.Name] is JObject)
-                {
-                    continue;
-                }
-                string? value = jContext[jprop.Name]?.ToString();
-                if (value != null)
-                {
-                    if (Uri.TryCreate(value, UriKind.Absolute, out Uri? uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-                    {
-                        namespaces.Add(jprop.Name, value);
-                    }
-                }
-            }
-
-            // we will go through each property on the jEvent...
-            ExpandCURIEsIntoFullURIs_Internal(jEvent, jContext, namespaces);
-        }
-
-        private static void ExpandCURIEsIntoFullURIs_Internal(JObject json, JObject jContext, Dictionary<string, string> namespaces)
-        {
-            try
-            {
-                // we will go through each property on the jEvent...
-                foreach (JProperty jprop in json.Properties())
-                {
-                    JObject? jContextProp = jContext[jprop.Name] as JObject;
-                    if (jContextProp != null)
-                    {
-                        if (jContextProp["@container"]?.ToString() == "@set")
-                        {
-                            // we are looking at expanding a list
-                            JToken? jpropvalue = json[jprop.Name];
-                            if (jpropvalue != null)
-                            {
-                                if (jpropvalue is JArray)
-                                {
-                                    JArray? jArr = json[jprop.Name] as JArray;
-                                    if (jArr != null)
-                                    {
-                                        JObject? jchildcontext = jContextProp["@context"] as JObject;
-                                        if (jchildcontext != null)
-                                        {
-                                            for (int i = 0; i < jArr.Count; i++)
-                                            {
-                                                JToken j = jArr[i];
-                                                if (j is JObject)
-                                                {
-                                                    ExpandCURIEsIntoFullURIs_Internal((JObject)j, jchildcontext, namespaces);
-                                                }
-                                                else
-                                                {
-                                                    JToken? jmapping = jContextProp["@context"]?[j.ToString()];
-                                                    if (jmapping != null)
-                                                    {
-                                                        string uri = jmapping.ToString();
-                                                        string[] parts = uri.Split(':');
-                                                        string ns = namespaces[parts[0]];
-                                                        jArr[i] = ns + parts[1];
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                else if (jpropvalue is JObject)
-                                {
-                                    JArray? jchildcontext = jContextProp["@context"] as JArray;
-                                    if (jchildcontext != null)
-                                    {
-                                        JObject? jnewcontext = jchildcontext[1] as JObject;
-                                        if (jnewcontext != null)
-                                        {
-                                            foreach (JProperty jnewprop in jnewcontext.Properties())
-                                            {
-                                                JObject? jnewcontextprop = jnewcontext[jnewprop.Name] as JObject;
-                                                if (jnewcontextprop != null)
-                                                {
-                                                    jnewcontextprop["@context"] = jchildcontext[0];
-                                                }
-                                            }
-                                            ExpandCURIEsIntoFullURIs_Internal((JObject)jpropvalue, jnewcontext, namespaces);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            JToken? jpropvalue = json[jprop.Name];
-                            if (jpropvalue is JObject)
-                            {
-                                JObject? jchildcontext = jContextProp["@context"] as JObject;
-                                if (jchildcontext != null)
-                                {
-                                    ExpandCURIEsIntoFullURIs_Internal((JObject)jpropvalue, jchildcontext, namespaces);
-                                }
-                            }
-                            else if (jpropvalue is JArray)
-                            {
-                                JArray jarr = (JArray)jpropvalue;
-                                JObject? jchildcontext = jContextProp["@context"] as JObject;
-                                if (jchildcontext != null)
-                                {
-                                    foreach (JObject jobj in jarr)
-                                    {
-                                        ExpandCURIEsIntoFullURIs_Internal(jobj, jchildcontext, namespaces);
-                                    }
-                                }
-                            }
-                            else if (jContextProp["@type"]?.ToString() == "@vocab")
-                            {
-                                // we will expand a single value
-                                string? value = json[jprop.Name]?.Value<string>();
-                                if (value != null)
-                                {
-                                    JToken? jmapping = jContextProp["@context"]?[value];
-                                    if (jmapping != null)
-                                    {
-                                        string uri = jmapping.ToString();
-                                        string[] parts = uri.Split(':');
-                                        string ns = namespaces[parts[0]];
-                                        json[jprop.Name] = ns + parts[1];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Exception e = new Exception($"Failed to expand CURIEs,\njson={json.ToString(Formatting.Indented)}\njContext={jContext.ToString(Formatting.Indented)}", ex);
-                OTLogger.Error(e);
-                throw e;
-            }
         }
     }
 }

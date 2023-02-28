@@ -15,7 +15,20 @@ namespace OpenTraceability.GDST.Events
     public class GDSTILMD : EventILMD
     {
         [OpenTraceabilityObject]
-        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "vesselCatchInformationList", 0)]
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "vesselCatchInformationList")]
+        [OpenTraceabilityJson("cbvmda:vesselCatchInformationList")]
         public VesselCatchInformationList? VesselCatchInformationList { get; set; }
+
+        [OpenTraceability(Constants.GDST_NAMESPACE, "broodstockSource")]
+        [OpenTraceabilityJson("gdst:broodstockSource")]
+        public string? BroodstockSource { get; set; }
+
+        [OpenTraceability(Constants.GDST_NAMESPACE, "aquacultureMethod")]
+        [OpenTraceabilityJson("gdst:aquacultureMethod")]
+        public string? AquacultureMethod { get; set; }
+
+        [OpenTraceability(Constants.GDST_NAMESPACE, "proteinSource")]
+        [OpenTraceabilityJson("gdst:proteinSource")]
+        public string? ProteinSource { get; set; }
     }
 }

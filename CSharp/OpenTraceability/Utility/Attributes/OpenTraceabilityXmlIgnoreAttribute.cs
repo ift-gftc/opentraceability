@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace OpenTraceability.Utility.Attributes
 {
     /// <summary>
-    /// This is an attribute that indicates it should only be an arry if there is more than one item.
+    /// Tells the XML serializer to ignore this property. It is for JSON-LD only.
     /// </summary>
-    public class OpenTraceabilityRepeating : System.Attribute
+    internal class OpenTraceabilityXmlIgnoreAttribute : System.Attribute
     {
     }
 }

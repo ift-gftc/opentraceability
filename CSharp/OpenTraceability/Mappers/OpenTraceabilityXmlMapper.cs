@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
+using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Models.Identifiers;
@@ -367,10 +368,10 @@ namespace OpenTraceability.Mappers
                             XElement xchild = xc;
 
                             mappingProp = typeInfo[xchild.Name.ToString()];
-                            if (mappingProp == null && typeInfo.Properties.Exists(p => p.Name.Split('/').First() == xchild.Name))
+                            if (mappingProp == null && typeInfo.Properties.Exists(p => p.Name.SplitXPath().First() == xchild.Name))
                             {
                                 // see if we have a parent matching way...
-                                foreach (var mp in typeInfo.Properties.Where(p => p.Name.Split('/').First() == xchild.Name))
+                                foreach (var mp in typeInfo.Properties.Where(p => p.Name.SplitXPath().First() == xchild.Name))
                                 {
                                     XElement? xgrandchild = x.XPathSelectElement(mp.Name);
                                     if (xgrandchild != null)
@@ -417,6 +418,18 @@ namespace OpenTraceability.Mappers
             {
                 return null;
             }
+            else if (obj is List<LanguageString>)
+            {
+                var l = (List<LanguageString>)obj;
+                if (l.Count == 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    return l.First().Value;
+                }
+            }
             else if (obj is DateTimeOffset)
             {
                 DateTimeOffset dt = (DateTimeOffset)obj;
@@ -462,9 +475,9 @@ namespace OpenTraceability.Mappers
                 IEvent e = (IEvent)value;
                 foreach (var xQuantity in xchild.Elements("quantityElement"))
                 {
-                    EventProduct product = new EventProduct();
+                    EPC epc = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
+                    EventProduct product = new EventProduct(epc);
                     product.Type = mappingProp.ProductType;
-                    product.EPC = new EPC(xQuantity.Element("epcClass")?.Value ?? string.Empty);
 
                     double quantity = double.Parse(xQuantity.Element("quantity")?.Value ?? string.Empty);
                     string uom = xQuantity.Element("uom")?.Value ?? "EA";
@@ -478,9 +491,9 @@ namespace OpenTraceability.Mappers
                 IEvent e = (IEvent)value;
                 foreach (var xEPC in xchild.Elements("epc"))
                 {
-                    EventProduct product = new EventProduct();
+                    EPC epc = new EPC(xEPC.Value);
+                    EventProduct product = new EventProduct(epc);
                     product.Type = mappingProp.ProductType;
-                    product.EPC = new EPC(xEPC.Value);
                     e.AddProduct(product);
                 }
             }
@@ -548,6 +561,16 @@ namespace OpenTraceability.Mappers
             {
                 DateTimeOffset dt = value.TryConvertToDateTimeOffset() ?? throw new Exception("Failed to convert string to datetimeoffset where value = " + value);
                 return dt;
+            }
+            else if (t == typeof(List<LanguageString>))
+            {
+                List<LanguageString> l = new List<LanguageString>();
+                l.Add(new LanguageString()
+                {
+                    Language = "en-US",
+                    Value = value
+                });
+                return l;
             }
             else if (t == typeof(UOM))
             {

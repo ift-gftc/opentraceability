@@ -63,7 +63,9 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("ilmd", 21)]
         public T? ILMD { get; set; }
 
-        public EventType EventType => EventType.Transformation;
+        [OpenTraceabilityXmlIgnore]
+        [OpenTraceability("type", 0)]
+        public EventType EventType => EventType.TransformationEvent;
 
         public ReadOnlyCollection<EventProduct> Products
         {

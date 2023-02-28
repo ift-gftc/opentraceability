@@ -12,7 +12,7 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("parentID", 7)]
         public EPC? ParentID { get; set; }
 
-        [OpenTraceabilityProducts("childQuantityList", EventProductType.Child, 9, OpenTraceabilityProductsListType.QuantityList)]
+        [OpenTraceabilityProducts("childQuantityList", EPCISVersion.V2, EventProductType.Child, 9, OpenTraceabilityProductsListType.QuantityList)]
         [OpenTraceabilityProducts("childEPCs", EventProductType.Child, 8, OpenTraceabilityProductsListType.EPCList)]
         public List<EventProduct> Children { get; set; } = new List<EventProduct>();
 
@@ -35,22 +35,22 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("bizTransaction")]
-        [OpenTraceability("bizTransactionList", 15)]
+        [OpenTraceability("bizTransactionList", 15, EPCISVersion.V2)]
         public List<EventBusinessTransaction> BizTransactionList { get; set; } = new List<EventBusinessTransaction>();
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("source")]
-        [OpenTraceability("sourceList", 16)]
+        [OpenTraceability("sourceList", 16, EPCISVersion.V2)]
         public List<EventSource> SourceList { get; set; } = new List<EventSource>();
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("destination")]
-        [OpenTraceability("destinationList", 17)]
+        [OpenTraceability("destinationList", 17, EPCISVersion.V2)]
         public List<EventDestination> DestinationList { get; set; } = new List<EventDestination>();
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("sensorElement")]
-        [OpenTraceability("sensorElementList", 18)]
+        [OpenTraceability("sensorElementList", 18, EPCISVersion.V2)]
         public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
 
         [OpenTraceabilityObject]
@@ -59,18 +59,23 @@ namespace OpenTraceability.Models.Events
 
         public EventILMD? ILMD { get => throw new Exception("AssociationEvent does not support ILMD."); set => throw new Exception("AssociationEvent does not support ILMD."); }
 
-        public EventType EventType => EventType.Association;
+
+        [OpenTraceabilityXmlIgnore]
+        [OpenTraceability("type", 0)]
+        public EventType EventType => EventType.AssociationEvent;
 
         public ReadOnlyCollection<EventProduct> Products
         {
             get
             {
                 List<EventProduct> products = new List<EventProduct>();
-                products.Add(new EventProduct()
+                if (this.ParentID != null)
                 {
-                    EPC = this.ParentID,
-                    Type = EventProductType.Parent
-                });
+                    products.Add(new EventProduct(this.ParentID)
+                    {
+                        Type = EventProductType.Parent
+                    });
+                }                
                 products.AddRange(this.Children);
                 return new ReadOnlyCollection<EventProduct>(products);
             }

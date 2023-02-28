@@ -62,18 +62,23 @@ namespace OpenTraceability.Models.Events
 
         public EventILMD? ILMD { get => throw new Exception("TransactionEvent does not support ILMD."); set => throw new Exception("TransactionEvent does not support ILMD."); }
 
-        public EventType EventType => EventType.Transaction;
+
+        [OpenTraceabilityXmlIgnore]
+        [OpenTraceability("type", 0)]
+        public EventType EventType => EventType.TransactionEvent;
 
         public ReadOnlyCollection<EventProduct> Products
         {
             get
             {
                 List<EventProduct> products = new List<EventProduct>();
-                products.Add(new EventProduct()
+                if (this.ParentID != null)
                 {
-                    EPC = this.ParentID,
-                    Type = EventProductType.Parent
-                });
+                    products.Add(new EventProduct(this.ParentID)
+                    {
+                        Type = EventProductType.Parent
+                    });
+                }
                 products.AddRange(this.ReferenceProducts);
                 return new ReadOnlyCollection<EventProduct>(products);
             }

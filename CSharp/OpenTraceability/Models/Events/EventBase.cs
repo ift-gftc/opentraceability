@@ -19,11 +19,11 @@ namespace OpenTraceability.Models.Events
 
     public enum EventType
     {
-        Object,
-        Transformation,
-        Aggregation,
-        Transaction,
-        Association
+        ObjectEvent,
+        TransformationEvent,
+        AggregationEvent,
+        TransactionEvent,
+        AssociationEvent
     }
 
     public enum EventAction

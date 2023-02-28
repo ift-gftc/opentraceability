@@ -8,7 +8,10 @@ namespace OpenTraceability.Models.Events
 {
     public class ObjectEvent<T> : EventBase, IEvent where T : EventILMD
     {
-        public EventType EventType => EventType.Object;
+
+        [OpenTraceabilityXmlIgnore]
+        [OpenTraceability("type", 0)]
+        public EventType EventType => EventType.ObjectEvent;
 
         [OpenTraceabilityProducts("extension/quantityList", EPCISVersion.V1, EventProductType.Reference, 20, OpenTraceabilityProductsListType.QuantityList)]
         [OpenTraceabilityProducts("quantityList", EPCISVersion.V2, EventProductType.Reference, 14, OpenTraceabilityProductsListType.QuantityList)]
@@ -30,7 +33,6 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityObject]
         [OpenTraceability("bizLocation", 12)]
-        [OpenTraceabilityCURIEMapping("urn:epcglobal:cbv:bizstep:")]
         public EventLocation? Location { get; set; }
 
         [OpenTraceabilityObject]

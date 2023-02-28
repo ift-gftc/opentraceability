@@ -5,7 +5,7 @@ namespace OpenTraceability.Interfaces
 	{
 		string Map(IVocabularyElement vocab);
 
-		IVocabularyElement Map(string value);
+		IVocabularyElement Map<T>(string value) where T : IVocabularyElement;
 	}
 }
 

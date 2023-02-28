@@ -1,4 +1,5 @@
-﻿using OpenTraceability.Interfaces;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Utility;
 using System;
@@ -13,7 +14,11 @@ namespace OpenTraceability.Models.MasterData
     {
         public string? ID { get; set; }
 
-        public string? Type { get; set; }
+        public string? EPCISType { get; set; }
+
+        public string? JsonLDType { get; set; }
+
+        public JToken? Context { get; set; }
 
         public VocabularyType VocabularyType
         {
@@ -22,7 +27,7 @@ namespace OpenTraceability.Models.MasterData
                 VocabularyType type = VocabularyType.Unknown;
                 foreach (VocabularyType t in Enum.GetValues(typeof(VocabularyType)))
                 {
-                    if (EnumUtil.GetEnumDescription(t).Trim().ToLower() == Type?.Trim().ToLower())
+                    if (EnumUtil.GetEnumDescription(t).Trim().ToLower() == EPCISType?.Trim().ToLower())
                     {
                         type = t;
                     }

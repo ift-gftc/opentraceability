@@ -32,7 +32,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     foreach (JObject jEvent in jEventList)
                     {
                         Type eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
-                        IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType);
+                        IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType, doc.Namespaces);
                         doc.Events.Add(e);
                     }
                 }
@@ -56,24 +56,43 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 
             XNamespace epcisNS = (doc.EPCISVersion == EPCISVersion.V2) ? Constants.EPCIS_2_NAMESPACE : Constants.EPCIS_1_NAMESPACE;
 
-            JObject json = EPCISDocumentBaseJsonMapper.WriteJson(doc, epcisNS, "EPCISDocument");
+            var namespacesReversed = doc.Namespaces.Reverse();
 
             // write the events
             JArray jEventList = new JArray();
             JObject jEventBody = new JObject();
             jEventBody["eventList"] = jEventList;
-            json["epcisBody"] = jEventBody;
             foreach (IEvent e in doc.Events)
             {
-                JToken? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e);
+                JToken? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed);
                 if (jEvent != null)
                 {
                     jEventList.Add(jEvent);
                 }
             }
 
+            JObject json = EPCISDocumentBaseJsonMapper.WriteJson(doc, epcisNS, "EPCISDocument");
+
+            // write the header
+            if (!string.IsNullOrWhiteSpace(doc.Header?.Sender?.Identifier))
+            {
+                json["sender"] = doc.Header.Sender.Identifier;
+            }
+
+            if (!string.IsNullOrWhiteSpace(doc.Header?.Receiver?.Identifier))
+            {
+                json["receiver"] = doc.Header.Receiver.Identifier;
+            }
+
+            if (!string.IsNullOrWhiteSpace(doc.Header?.DocumentIdentification?.InstanceIdentifier))
+            {
+                json["instanceIdentifier"] = doc.Header.DocumentIdentification.InstanceIdentifier;
+            }
+
+            json["epcisBody"] = jEventBody;
+
             // conform the JSON-LD to the compacted version with CURIE's that EPCIS 2.0 likes
-            OpenTraceabilityJsonLDMapper.ConformEPCISJsonLD(json);
+            EPCISDocumentBaseJsonMapper.ConformEPCISJsonLD(json, doc.Namespaces);
 
             // validate the JSON-LD schema
             EPCISDocumentBaseJsonMapper.CheckSchema(json);

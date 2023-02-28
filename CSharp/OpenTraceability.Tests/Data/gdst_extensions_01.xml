@@ -3,14 +3,14 @@
 		<sbdh:StandardBusinessDocumentHeader>
 			<sbdh:HeaderVersion>1.0</sbdh:HeaderVersion>
 			<sbdh:Sender>
-				<sbdh:Identifier>test</sbdh:Identifier>
+				<sbdh:Identifier>urn:uuid:test</sbdh:Identifier>
 				<sbdh:ContactInformation>
 					<sbdh:Contact>test</sbdh:Contact>
 					<sbdh:EmailAddress>test@test.com</sbdh:EmailAddress>
 				</sbdh:ContactInformation>
 			</sbdh:Sender>
 			<sbdh:Receiver>
-				<sbdh:Identifier>test</sbdh:Identifier>
+				<sbdh:Identifier>urn:uuid:test</sbdh:Identifier>
 				<sbdh:ContactInformation>
 					<sbdh:Contact>test</sbdh:Contact>
 					<sbdh:EmailAddress>test@test.com</sbdh:EmailAddress>
@@ -19,7 +19,7 @@
 			<sbdh:DocumentIdentification>
 				<sbdh:Standard>GS1</sbdh:Standard>
 				<sbdh:TypeVersion>3.0</sbdh:TypeVersion>
-				<sbdh:InstanceIdentifier>9999</sbdh:InstanceIdentifier>
+				<sbdh:InstanceIdentifier>urn:uuid:test</sbdh:InstanceIdentifier>
 				<sbdh:Type>Seafood Traceability</sbdh:Type>
 				<sbdh:MultipleType>false</sbdh:MultipleType>
 				<sbdh:CreationDateAndTime>2022-02-03T08:43:18.142-03:00</sbdh:CreationDateAndTime>

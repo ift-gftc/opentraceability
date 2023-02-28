@@ -42,42 +42,45 @@ namespace OpenTraceability.Models.Events
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("source")]
         [OpenTraceability("sourceList", 16, EPCISVersion.V2)]
-        [OpenTraceability("extension/sourceList", 22, EPCISVersion.V1)]
+        [OpenTraceability("baseExtension/sourceList", 22, EPCISVersion.V1)]
         public List<EventSource> SourceList { get; set; } = new List<EventSource>();
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("destination")]
         [OpenTraceability("destinationList", 17, EPCISVersion.V2)]
-        [OpenTraceability("extension/destinationList", 23, EPCISVersion.V1)]
+        [OpenTraceability("baseExtension/destinationList", 23, EPCISVersion.V1)]
         public List<EventDestination> DestinationList { get; set; } = new List<EventDestination>();
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("sensorElement")]
         [OpenTraceability("sensorElementList", 18, EPCISVersion.V2)]
-        [OpenTraceability("extension/sensorElementList", EPCISVersion.V1)]
         public List<SensorElement> SensorElementList { get; set; } = new List<SensorElement>();
 
         [OpenTraceabilityObject]
         [OpenTraceability("persistentDisposition", 19, EPCISVersion.V2)]
-        [OpenTraceability("extension/persistentDisposition", EPCISVersion.V1)]
         public PersistentDisposition? PersistentDisposition { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("ilmd", 20, EPCISVersion.V2)]
-        public EventILMD? ILMD { get; set; }
+        public T? ILMD { get; set; }
 
-        public EventType EventType => EventType.Aggregation;
+
+        [OpenTraceabilityXmlIgnore]
+        [OpenTraceability("type", 0)]
+        public EventType EventType => EventType.AggregationEvent;
 
         public ReadOnlyCollection<EventProduct> Products
         {
             get
             {
                 List<EventProduct> products = new List<EventProduct>();
-                products.Add(new EventProduct()
+                if (this.ParentID != null)
                 {
-                    EPC = this.ParentID,
-                    Type = EventProductType.Parent
-                });
+                    products.Add(new EventProduct(this.ParentID)
+                    {
+                        Type = EventProductType.Parent
+                    });
+                }
                 products.AddRange(this.Children);
                 return new ReadOnlyCollection<EventProduct>(products);
             }

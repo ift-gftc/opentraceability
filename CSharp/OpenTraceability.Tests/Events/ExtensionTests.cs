@@ -1,5 +1,6 @@
 ﻿using OpenTraceability.GDST;
 using OpenTraceability.GDST.Events;
+using OpenTraceability.GDST.MasterData;
 using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
 using System;
@@ -31,9 +32,15 @@ namespace OpenTraceability.Tests.Events
 
             // check that we find an GDST fishing event...
             Assert.That(doc.Events.Exists(e => e is GDSTFishingEvent), Is.True);
-
             GDSTFishingEvent fishingEvent = (GDSTFishingEvent)doc.Events.First(e => e is GDSTFishingEvent);
             Assert.That(fishingEvent.ILMD.VesselCatchInformationList?.Vessels.Count() > 0, Is.True);
+
+            // check other event types were profiled correctly
+            GDSTProcessingEvent processingEvent = (GDSTProcessingEvent)doc.Events.First(e => e is GDSTProcessingEvent);
+            GDSTFeedmillObjectEvent feedmillEvent = (GDSTFeedmillObjectEvent)doc.Events.First(e => e is GDSTFeedmillObjectEvent);
+
+            // check master data was profiled correctly
+            Assert.That(doc.GetMasterData<GDSTLocation>().Count > 0, Is.True);
         }
     }
 }

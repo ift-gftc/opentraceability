@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
-using OpenTraceability.Mappers.EPCIS.XML;
 using OpenTraceability.Models.Events;
+using OpenTraceability.Utility;
+using System.Xml.Linq;
 
 namespace OpenTraceability.Mappers.EPCIS.JSON
 {
@@ -35,7 +30,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     foreach (JObject jEvent in jEventsList)
                     {
                         Type eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
-                        IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType);
+                        IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType, doc.Namespaces);
                         doc.Events.Add(e);
                     }
                 }
@@ -59,6 +54,19 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 
             XNamespace epcisNS = (doc.EPCISVersion == EPCISVersion.V2) ? Constants.EPCISQUERY_2_NAMESPACE : Constants.EPCISQUERY_1_NAMESPACE;
 
+            var namespacesReversed = doc.Namespaces.Reverse();
+
+            // write the events
+            JArray jEventsList = new JArray();
+            foreach (IEvent e in doc.Events)
+            {
+                JObject? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed) as JObject;
+                if (jEvent != null)
+                {
+                    jEventsList.Add(jEvent);
+                }
+            }
+
             JObject json = EPCISDocumentBaseJsonMapper.WriteJson(doc, epcisNS, "EPCISQueryDocument");
 
             JObject jEPCISBody = new JObject();
@@ -68,25 +76,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             jQueryResults["queryName"] = doc.QueryName;
             jQueryResults["subscriptionID"] = doc.SubscriptionID;
 
-            // write the events
-            JArray jEventsList = new JArray();
-            foreach (IEvent e in doc.Events)
-            {
-                JObject? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e) as JObject;
-                if (jEvent != null)
-                {
-                    jEventsList.Add(jEvent);
-                }
-            }
-
-
             jResultsBody["eventList"] = jEventsList;
             jQueryResults["resultsBody"] = jResultsBody;
             jEPCISBody["queryResults"] = jQueryResults;
             json["epcisBody"] = jEPCISBody;
 
             // conform the JSON-LD to the compacted version with CURIE's that EPCIS 2.0 likes
-            OpenTraceabilityJsonLDMapper.ConformEPCISJsonLD(json);
+            EPCISDocumentBaseJsonMapper.ConformEPCISJsonLD(json, doc.Namespaces);
 
             // validate the JSON-LD schema
             EPCISDocumentBaseJsonMapper.CheckSchema(json);

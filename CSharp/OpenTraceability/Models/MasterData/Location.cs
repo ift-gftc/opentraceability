@@ -1,6 +1,9 @@
-﻿using OpenTraceability.Interfaces;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.Interfaces;
+using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Models.Identifiers;
+using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
 using System;
 using System.Collections.Generic;
@@ -13,19 +16,43 @@ namespace OpenTraceability.Models.MasterData
     public class Location : IVocabularyElement
     {
         public string? ID { get => GLN?.ToString(); }
-        public string? Type { get; set; } = "urn:epcglobal:epcis:vtype:Location";
+
+        public string? EPCISType { get; set; } = "urn:epcglobal:epcis:vtype:Location";
+
+        [OpenTraceabilityJson("@type")]
+        public string? JsonLDType { get; set; } = "gs1:Place";
+
         public VocabularyType VocabularyType => VocabularyType.Location;
 
+        public JToken? Context { get; set; }
+
+        [OpenTraceabilityJson("globalLocationNumber")]
         public GLN? GLN { get; set; }
 
-        [OpenTraceability("urn:epcglobal:cbv:owning_Party", 1)]
+        [OpenTraceabilityJson("cbvmda:owning_party")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:owning_party")]
         public PGLN? OwningParty { get; set; }
 
-        [OpenTraceability("urn:epcglobal:cbv:mda#informationProvider", 2)]
+        [OpenTraceabilityJson("cbvmda:informationProvider")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#informationProvider")]
         public PGLN? InformationProvider { get; set; }
 
-        [OpenTraceability("https://gs1.org/cbv/cbvmda:certificationList", Events.EPCISVersion.V1)]
+        [OpenTraceabilityObject]
+        [OpenTraceabilityMasterData("https://gs1.org/cbv/cbvmda:certificationList")]
         public CertificationList? CertificationList { get; set; }
+
+        [OpenTraceabilityJson("name")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#name")]
+        public List<LanguageString>? Name { get; set; }
+
+        [OpenTraceabilityObject]
+        [OpenTraceabilityJson("address")]
+        [OpenTraceabilityMasterData]
+        public Address? Address { get; set; }
+
+        [OpenTraceabilityJson("cbvmda:unloadingPort")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#unloadingPort")]
+        public string? UnloadingPort { get; set; }
 
         /// <summary>
         /// These are additional KDEs that were not mapped into the object.

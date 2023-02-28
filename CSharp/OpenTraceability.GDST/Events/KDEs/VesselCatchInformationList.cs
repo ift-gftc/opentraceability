@@ -10,6 +10,7 @@ namespace OpenTraceability.GDST.Events.KDEs
     {
         [OpenTraceabilityArray]
         [OpenTraceabilityObject]
+        [OpenTraceabilityJson("cbvmda:vesselCatchInformation")]
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "vesselCatchInformation", 1)]
         public List<VesselCatchInformation> Vessels { get; set; } = new List<VesselCatchInformation>();
     }

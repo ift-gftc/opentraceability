@@ -3,9 +3,6 @@
 		"https://gs1.github.io/EPCIS/epcis-context.jsonld",
 		{
 			"ex": "http://ns.example.com/epcis/"
-		},
-		{
-			"gs1": "https://gs1.org/voc/"
 		}
 	],
 	"id": "https://id.example.org/document1",

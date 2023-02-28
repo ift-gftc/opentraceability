@@ -57,12 +57,13 @@
   },
   "@context": [
     "https://gs1.github.io/EPCIS/epcis-context.jsonld",
-    {"rail": "urn:gs1:epcisapp:rail:",
-     "rail:vehicleMasterGIAI": {"@type": "@id"},
-     "rail:trainAxleCount": {"@type": "xsd:integer"},
-     "rail:vehicleAxleCount": {"@type": "xsd:integer"},
-     "rail:vehiclePosition": {"@type": "xsd:integer"},
-     "rail:vehicleUniquelyIdentified": {"@type": "xsd:boolean"}
+    {
+        "rail": "urn:gs1:epcisapp:rail:",
+        "rail:vehicleMasterGIAI": { "@type": "@id" },
+        "rail:trainAxleCount": { "@type": "xsd:integer" },
+        "rail:vehicleAxleCount": { "@type": "xsd:integer" },
+        "rail:vehiclePosition": { "@type": "xsd:integer" },
+        "rail:vehicleUniquelyIdentified": { "@type": "xsd:boolean" }
     }
   ]
 }

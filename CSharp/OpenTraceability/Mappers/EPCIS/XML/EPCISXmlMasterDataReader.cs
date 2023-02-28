@@ -1,4 +1,6 @@
-﻿using OpenTraceability.Interfaces;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.Interfaces;
+using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Models.Identifiers;
@@ -19,28 +21,6 @@ namespace OpenTraceability.Mappers.EPCIS.XML
 {
     public static class EPCISXmlMasterDataReader
     {
-        public static Dictionary<Type, Dictionary<string, PropertyInfo>> ObjectPropertyMappings = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
-        static EPCISXmlMasterDataReader()
-        {
-            Action<Type> func = (t) =>
-            {
-                Dictionary<string, PropertyInfo> mappedProperties = new Dictionary<string, PropertyInfo>();
-                foreach (PropertyInfo p in t.GetProperties())
-                {
-                    var att = p.GetCustomAttribute<OpenTraceabilityAttribute>();
-                    if (att != null)
-                    {
-                        mappedProperties.Add(att.Name, p);
-                    }
-                }
-                ObjectPropertyMappings.Add(t, mappedProperties);
-            };
-
-            func(typeof(Tradeitem));
-            func(typeof(Location));
-            func(typeof(TradingParty));
-        }
-
         public static void ReadMasterData(EPCISBaseDocument doc, XElement xMasterData)
         {
             //<VocabularyList>
@@ -81,7 +61,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             string id = xTradeitem.Attribute("id")?.Value ?? string.Empty;
             Tradeitem tradeitem = new Tradeitem();
             tradeitem.GTIN = new Models.Identifiers.GTIN(id);
-            tradeitem.Type = type;
+            tradeitem.EPCISType = type;
 
             // read the object
             ReadMasterDataObject(tradeitem, xTradeitem);
@@ -92,9 +72,10 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             // read the GLN from the id
             string id = xLocation.Attribute("id")?.Value ?? string.Empty;
-            Location loc = new Location();
+            Type t = OpenTraceability.MasterDataTypes[type];
+            Location loc = (Location)Activator.CreateInstance(t);
             loc.GLN = new Models.Identifiers.GLN(id);
-            loc.Type = type;
+            loc.EPCISType = type;
 
             // read the object
             ReadMasterDataObject(loc, xLocation);
@@ -107,7 +88,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             string id = xTradingParty.Attribute("id")?.Value ?? string.Empty;
             TradingParty tp = new TradingParty();
             tp.PGLN = new Models.Identifiers.PGLN(id);
-            tp.Type = type;
+            tp.EPCISType = type;
 
             // read the object
             ReadMasterDataObject(tp, xTradingParty);
@@ -120,31 +101,69 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             string id = xVocabElement.Attribute("id")?.Value ?? string.Empty;
             VocabularyElement ele = new VocabularyElement();
             ele.ID = id;
-            ele.Type = type;
+            ele.EPCISType = type;
 
             // read the object
             ReadMasterDataObject(ele, xVocabElement);
             doc.MasterData.Add(ele);
         }
 
-        private static void ReadMasterDataObject(IVocabularyElement md, XElement xMasterData)
+        private static void ReadMasterDataObject(IVocabularyElement md, XElement xMasterData, bool readKDEs=true)
         {
-            var mappedProperties = ObjectPropertyMappings[md.GetType()];
+            var mappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(md.GetType());
 
-            // go through each attribute...
+            // work on expanded objects...
+            // these are objects on the vocab element represented by one or more attributes in the EPCIS master data
+            List<string> ignoreAttributes = new List<string>();
+            foreach (var property in mappedProperties.Properties.Where(p => p.Name == string.Empty))
+            {
+                var subMappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(property.Property.PropertyType);
+                bool setAttribute = false;
+                object? subObject = Activator.CreateInstance(property.Property.PropertyType);
+                if (subObject != null)
+                {
+                    foreach (XElement xeAtt in xMasterData.Elements("attribute"))
+                    {
+                        string id = xeAtt.Attribute("id")?.Value ?? string.Empty;
+                        var propMapping = subMappedProperties[id];
+                        if (propMapping != null)
+                        {
+                            if (!TrySetValueType(xeAtt.Value, propMapping.Property, subObject))
+                            {
+                                object value = ReadKDEObject(xeAtt, propMapping.Property.PropertyType);
+                                propMapping.Property.SetValue(subObject, value);
+                            }
+                            setAttribute = true;
+                            ignoreAttributes.Add(id);
+                        }
+                    }
+                    if (setAttribute)
+                    {
+                        property.Property.SetValue(md, subObject);
+                    }
+                }
+            }
+
+            // go through each standard attribute...
             foreach (XElement xeAtt in xMasterData.Elements("attribute")) 
             {
                 string id = xeAtt.Attribute("id")?.Value ?? string.Empty;
-                if (mappedProperties.ContainsKey(id))
+
+                if (ignoreAttributes.Contains(id))
                 {
-                    PropertyInfo pInfo = mappedProperties[id];
-                    if (!TrySetValueType(xeAtt.Value, pInfo, md))
+                    continue;
+                }
+
+                var propMapping = mappedProperties[id];
+                if (propMapping != null)
+                {
+                    if (!TrySetValueType(xeAtt.Value, propMapping.Property, md))
                     {
-                        object value = ReadKDEObject(xeAtt, pInfo.PropertyType);
-                        pInfo.SetValue(md, value);
+                        object value = ReadKDEObject(xeAtt, propMapping.Property.PropertyType);
+                        propMapping.Property.SetValue(md, value);
                     }
                 }
-                else
+                else if (readKDEs)
                 {
                     if (xeAtt.HasElements)
                     {
@@ -212,6 +231,17 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 p.SetValue(o, val);
                 return true;
             }
+            else if (p.PropertyType == typeof(List<string>))
+            {
+                List<string>? cur = p.GetValue(o) as List<string>;
+                if (cur == null)
+                {
+                    cur = new List<string>();
+                    p.SetValue(o, cur);
+                }
+                cur.Add(val);
+                return true;
+            }
             else if (p.PropertyType == typeof(bool) || p.PropertyType == typeof(bool?))
             {
                 bool v = bool.Parse(val);
@@ -228,6 +258,17 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 Uri v = new Uri(val);
                 p.SetValue(o, v);
+                return true;
+            }
+            else if (p.PropertyType == typeof(List<LanguageString>))
+            {
+                List<LanguageString> l = new List<LanguageString>();
+                l.Add(new LanguageString()
+                {
+                    Language = "en-US",
+                    Value = val
+                });
+                p.SetValue(o, l);
                 return true;
             }
             else if (p.PropertyType == typeof(Country))

@@ -1,9 +1,12 @@
-﻿using OpenTraceability.Interfaces;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.Interfaces;
+using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Models.MasterData;
 using OpenTraceability.Utility.Attributes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -32,7 +35,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 }
                 XElement xVocabList = xDocument.XPathSelectElement("EPCISHeader/extension/EPCISMasterData/VocabularyList") ?? throw new Exception("Failed to grab the element EPCISHeader/extension/EPCISMasterData/VocabularyList.");
 
-                foreach (var mdList in doc.MasterData.GroupBy(m => m.Type))
+                foreach (var mdList in doc.MasterData.GroupBy(m => m.EPCISType))
                 {
                     if (mdList.Key != null)
                     {
@@ -68,20 +71,80 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             XElement xVocabEle = new XElement("VocabularyElement");
             xVocabEle.Add(new XAttribute("id", md.ID ?? string.Empty));
 
-            var mappings = EPCISXmlMasterDataReader.ObjectPropertyMappings[md.GetType()];
-            foreach (var mapping in mappings)
+            var mappings = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(md.GetType());
+
+            foreach (var mapping in mappings.Properties)
             {
-                string id = mapping.Key;
-                PropertyInfo p = mapping.Value;
+                string id = mapping.Name;
+                PropertyInfo p = mapping.Property;
 
                 object? o = p.GetValue(md);
                 if (o != null)
                 {
-                    if (p.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
+                    if (id == string.Empty)
+                    {
+                        var subMappings = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(o.GetType());
+                        foreach (var subMapping in subMappings.Properties)
+                        {
+                            string subID = subMapping.Name;
+                            PropertyInfo subProperty = subMapping.Property;
+                            object? subObj = subProperty.GetValue(o);
+                            if (subObj != null)
+                            {
+                                if (subObj.GetType() == typeof(List<LanguageString>))
+                                {
+                                    List<LanguageString> l = (List<LanguageString>)subObj;
+                                    string? str = l.FirstOrDefault()?.Value;
+                                    if (str != null)
+                                    {
+                                        XElement xAtt = new XElement("attribute", new XAttribute("id", subID));
+                                        xAtt.Value = str;
+                                        xVocabEle.Add(xAtt);
+                                    }
+                                }
+                                else
+                                {
+                                    string? str = subObj.ToString();
+                                    if (str != null)
+                                    {
+                                        XElement xAtt = new XElement("attribute", new XAttribute("id", subID));
+                                        xAtt.Value = str;
+                                        xVocabEle.Add(xAtt);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (p.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
                     {
                         XElement xAtt = new XElement("attribute", new XAttribute("id", id));
                         WriteObject(xAtt, p.PropertyType, o);
                         xVocabEle.Add(xAtt);
+                    }
+                    else if (p.GetCustomAttribute<OpenTraceabilityArrayAttribute>() != null)
+                    {
+                        IList l = (IList)o;
+                        foreach (var i in l)
+                        {
+                            string? str = i.ToString();
+                            if (str != null)
+                            {
+                                XElement xAtt = new XElement("attribute", new XAttribute("id", id));
+                                xAtt.Value = str;
+                                xVocabEle.Add(xAtt);
+                            }
+                        }
+                    }
+                    else if (o.GetType() == typeof(List<LanguageString>))
+                    {
+                        List<LanguageString> l = (List<LanguageString>)o;
+                        string? str = l.FirstOrDefault()?.Value;
+                        if (str != null)
+                        {
+                            XElement xAtt = new XElement("attribute", new XAttribute("id", id));
+                            xAtt.Value = str;
+                            xVocabEle.Add(xAtt);
+                        }
                     }
                     else
                     {

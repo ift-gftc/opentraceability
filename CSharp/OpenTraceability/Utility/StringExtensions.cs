@@ -65,31 +65,12 @@ namespace OpenTraceability.Utility
 
         public static List<string> SplitXPath(this string str)
         {
-            // find all namespaces in xpath...
-            if (str.IndexOf('{') < 0 && str.IndexOf('}') < 0)
+            Regex r = new Regex("(?=[^{}]*(?:{[^{}]*}[^{}]*)*$)\\/");
+            while (r.IsMatch(str))
             {
-                return str.Split('/').ToList();
+                str = r.Replace(str, "%SLASH%");
             }
-            else
-            {
-                int i = str.IndexOf('/');
-                while (i >= 0)
-                {
-                    // if the slash falls between a } and {, then swap it for "%SLASH%"
-                    int nextOpen = str.IndexOf('{', i);
-                    int nextClose = str.IndexOf('}', i);
-
-                    if (nextOpen > nextClose)
-                    {
-                        str = str.Remove(i, 1);
-                        str.Insert(i, "%SLASH%");
-                    }
-
-                    i = str.IndexOf('/', i + 1);
-                }
-
-                return str.Split("%SLASH%").ToList();
-            }
+            return str.Split("%SLASH%").ToList();
         }
     }
 }

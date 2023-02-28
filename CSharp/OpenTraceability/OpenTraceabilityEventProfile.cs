@@ -31,6 +31,10 @@ namespace OpenTraceability
                 {
                     score++;
                 }
+                if (KDEProfiles != null)
+                {
+                    score += KDEProfiles.Count;
+                }
                 return score;
             } 
         }
@@ -38,7 +42,7 @@ namespace OpenTraceability
         /// <summary>
         /// This should either be ObjectEvent, TransformationEvent, TransactionEvent, AggregationEvent, or AssociationEvent.
         /// </summary>
-        public string EventType { get; set; } = string.Empty;
+        public EventType EventType { get; set; }
 
         /// <summary>
         /// This will match the action on the event to the this action for profiling.
@@ -55,28 +59,65 @@ namespace OpenTraceability
         /// </summary>
         public Type EventClassType { get; set; }
 
-        public OpenTraceabilityEventProfile(Type eventClassType, string eventType)
+        /// <summary>
+        /// One or more KDEs required to be present on the event to be profiled as this event.
+        /// </summary>
+        public List<OpenTraceabilityEventKDEProfile>? KDEProfiles { get; set; }
+
+        public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType)
         {
             EventType = eventType;
             EventClassType = eventClassType;
         }
 
-        public OpenTraceabilityEventProfile(Type eventClassType, string eventType, string businessStep)
+        public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, string businessStep)
         {
             EventType = eventType;
             EventClassType = eventClassType;
             BusinessStep = businessStep;
         }
 
-        public OpenTraceabilityEventProfile(Type eventClassType, string eventType, EventAction action)
+        public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, EventAction action)
         {
             EventType = eventType;
             EventClassType = eventClassType;
             Action = action;
         }
 
-        public OpenTraceabilityEventProfile(Type eventClassType, string eventType, string businessStep, EventAction action)
+        public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, string businessStep, EventAction action)
         {
+            EventType = eventType;
+            EventClassType = eventClassType;
+            Action = action;
+            BusinessStep = businessStep;
+        }
+
+        public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, List<OpenTraceabilityEventKDEProfile> kdeProfiles)
+        {
+            KDEProfiles = kdeProfiles;
+            EventType = eventType;
+            EventClassType = eventClassType;
+        }
+
+        public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, string businessStep, List<OpenTraceabilityEventKDEProfile> kdeProfiles)
+        {
+            KDEProfiles = kdeProfiles;
+            EventType = eventType;
+            EventClassType = eventClassType;
+            BusinessStep = businessStep;
+        }
+
+        public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, EventAction action, List<OpenTraceabilityEventKDEProfile> kdeProfiles)
+        {
+            KDEProfiles = kdeProfiles;
+            EventType = eventType;
+            EventClassType = eventClassType;
+            Action = action;
+        }
+
+        public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, string businessStep, EventAction action, List<OpenTraceabilityEventKDEProfile> kdeProfiles)
+        {
+            KDEProfiles = kdeProfiles;
             EventType = eventType;
             EventClassType = eventClassType;
             Action = action;

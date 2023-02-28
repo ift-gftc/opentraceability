@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +24,42 @@ namespace OpenTraceability.Utility
                                      g => g.First().NamespaceName);
 
             return result;
+        }
+
+        public static XElement? QueryXPath(this XElement x, string xpath)
+        {
+            List<string> xpath_parts = xpath.SplitXPath();
+            XElement? xfind = x.Element(xpath_parts[0]);
+            if (xfind == null)
+            {
+                return xfind;
+            }
+            else if (xpath_parts.Count > 1)
+            {
+                return xfind.QueryXPath(string.Join("/", xpath_parts.Skip(1)));
+            }
+            else
+            {
+                return xfind;
+            }
+        }
+
+        public static JToken? QueryJPath(this JToken j, string jpath)
+        {
+            List<string> jpath_parts = jpath.Split('.').ToList();
+            JToken? jfind = j[jpath_parts[0]];
+            if (jfind == null)
+            {
+                return jfind;
+            }
+            else if (jpath_parts.Count > 1)
+            {
+                return jfind.QueryJPath(string.Join("/", jpath_parts.Skip(1)));
+            }
+            else
+            {
+                return jfind;
+            }
         }
 
         public static DateTimeOffset? AttributeISODateTime(this XElement x, string attName)
