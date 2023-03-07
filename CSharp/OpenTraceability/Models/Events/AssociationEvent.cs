@@ -57,12 +57,14 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("persistentDisposition", 19)]
         public PersistentDisposition? PersistentDisposition { get; set; }
 
-        public EventILMD? ILMD { get => throw new Exception("AssociationEvent does not support ILMD."); set => throw new Exception("AssociationEvent does not support ILMD."); }
+        public EventILMD? ILMD { get => null; }
 
 
         [OpenTraceabilityXmlIgnore]
         [OpenTraceability("type", 0)]
         public EventType EventType => EventType.AssociationEvent;
+
+        public EventILMD? GetILMD() => ILMD;
 
         public ReadOnlyCollection<EventProduct> Products
         {

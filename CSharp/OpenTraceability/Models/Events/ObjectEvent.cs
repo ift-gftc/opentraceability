@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events
 {
-    public class ObjectEvent<T> : EventBase, IEvent where T : EventILMD
+    public class ObjectEvent<T> : EventBase, IILMDEvent<T> where T : EventILMD
     {
 
         [OpenTraceabilityXmlIgnore]
@@ -67,6 +67,8 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("ilmd", 19, EPCISVersion.V2)]
         [OpenTraceability("extension/ilmd", 23, EPCISVersion.V1)]
         public T? ILMD { get; set; }
+
+        public EventILMD? GetILMD() => ILMD;
 
         public ReadOnlyCollection<EventProduct> Products
         {

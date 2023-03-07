@@ -60,12 +60,14 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("extension/persistentDisposition", EPCISVersion.V1)]
         public PersistentDisposition? PersistentDisposition { get; set; }
 
-        public EventILMD? ILMD { get => throw new Exception("TransactionEvent does not support ILMD."); set => throw new Exception("TransactionEvent does not support ILMD."); }
+        public EventILMD? ILMD { get => null; }
 
 
         [OpenTraceabilityXmlIgnore]
         [OpenTraceability("type", 0)]
         public EventType EventType => EventType.TransactionEvent;
+
+        public EventILMD? GetILMD() => ILMD;
 
         public ReadOnlyCollection<EventProduct> Products
         {

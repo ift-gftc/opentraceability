@@ -1,4 +1,5 @@
-﻿using OpenTraceability.Models.Identifiers;
+﻿using OpenTraceability.Interfaces;
+using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility.Attributes;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenTraceability.GDST.Events
 {
-    public interface IGDSTEvent
+    public interface IGDSTEvent : IEvent
     {
         PGLN? ProductOwner { get; set; }
         PGLN? InformationProvider { get; set; }

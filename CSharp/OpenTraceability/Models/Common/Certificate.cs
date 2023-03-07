@@ -19,5 +19,11 @@ namespace OpenTraceability.Models.Common
 
         [OpenTraceability("certificationIdentification")]
         public string? Identification { get; set; }
+
+        [OpenTraceability("certificationStartDate")]
+        public DateTimeOffset? StartDate { get; set; }
+
+        [OpenTraceability("certificationEndDate")]
+        public DateTimeOffset? EndDate { get; set; }
     }
 }

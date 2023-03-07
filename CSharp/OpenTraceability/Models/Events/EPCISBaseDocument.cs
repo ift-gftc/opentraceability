@@ -68,18 +68,37 @@ namespace OpenTraceability.Models.Events
         /// <summary>
         /// Returns master data elements of a specific type.
         /// </summary>
-        public T? GetMasterData<T>(string id) where T : IVocabularyElement
+        public T? GetMasterData<T>(string? id) where T : IVocabularyElement
         {
-            return this.GetMasterData<T>().FirstOrDefault(m => m is T && m.ID?.ToLower() == id.ToLower());
+            return this.GetMasterData<T>().FirstOrDefault(m => m is T && m.ID?.ToLower() == id?.ToLower());
         }
 
         /// <summary>
-        /// Merges the epcis document into the this one.
+        /// Merges the epcis document into the this one. If multiple copies of an event exist in the case of an error declaration,
+        /// we will keep the error declared event.
         /// </summary>
         /// <param name="data"></param>
         public void Merge(EPCISBaseDocument data)
         {
-            this.Events.AddRange(data.Events.Where(e => !this.Events.Exists(e2 => e.EventID == e2.EventID)));
+            foreach (var e in data.Events)
+            {
+                bool found = false;
+                foreach (var e2 in this.Events.ToList())
+                {
+                    if (e.EventID == e2.EventID)
+                    {
+                        if (e.ErrorDeclaration == null && e2.ErrorDeclaration != null)
+                        {
+                            this.Events.Remove(e);
+                            this.Events.Add(e2);
+                        }
+                    }
+                }
+                if (!found)
+                {
+                    this.Events.Add(e);
+                }
+            }
             this.MasterData.AddRange(data.MasterData.Where(p => !this.MasterData.Exists(p2 => p.ID == p2.ID)));
         }
     }

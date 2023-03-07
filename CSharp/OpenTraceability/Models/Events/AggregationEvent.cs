@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events
 {
-    public class AggregationEvent<T> : EventBase, IEvent where T : EventILMD
+    public class AggregationEvent<T> : EventBase, IILMDEvent<T> where T : EventILMD
     {
         [OpenTraceability("parentID", 7)]
         public EPC? ParentID { get; set; }
@@ -64,10 +64,11 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("ilmd", 20, EPCISVersion.V2)]
         public T? ILMD { get; set; }
 
-
         [OpenTraceabilityXmlIgnore]
         [OpenTraceability("type", 0)]
         public EventType EventType => EventType.AggregationEvent;
+
+        public EventILMD? GetILMD() => ILMD;
 
         public ReadOnlyCollection<EventProduct> Products
         {

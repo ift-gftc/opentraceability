@@ -1,6 +1,8 @@
 ﻿using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Events;
+using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Models.Identifiers;
+using OpenTraceability.Utility.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,5 +39,7 @@ namespace OpenTraceability.Interfaces
         T? GetKDE<T>(string ns, string name) where T : IEventKDE;
         T? GetKDE<T>() where T : IEventKDE;
         void AddProduct(EventProduct product);
+        CertificationList? CertificationList { get; set; }
+        EventILMD? GetILMD();
     }
 }
