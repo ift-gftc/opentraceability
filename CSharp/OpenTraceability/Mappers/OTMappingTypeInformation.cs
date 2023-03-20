@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OpenTraceability.Mappers
 {
-    public enum OTMappingFormat
+    public enum EPCISDataFormat
     {
         XML,
         JSON
@@ -32,7 +32,7 @@ namespace OpenTraceability.Mappers
                 {
                     if (!_XmlTypeInfos.ContainsKey(t))
                     {
-                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t, OTMappingFormat.XML);
+                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t, EPCISDataFormat.XML);
                         _XmlTypeInfos.Add(t, typeInfo);
                     }
                 }
@@ -47,7 +47,7 @@ namespace OpenTraceability.Mappers
                 {
                     if (!_JsonTypeInfos.ContainsKey(t))
                     {
-                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t, OTMappingFormat.JSON);
+                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t, EPCISDataFormat.JSON);
                         _JsonTypeInfos.Add(t, typeInfo);
                     }
                 }
@@ -62,7 +62,7 @@ namespace OpenTraceability.Mappers
                 {
                     if (!_masterDataXmlTypeInfos.ContainsKey(t))
                     {
-                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t, OTMappingFormat.XML, true);
+                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t, EPCISDataFormat.XML, true);
                         _masterDataXmlTypeInfos.Add(t, typeInfo);
                     }
                 }
@@ -77,7 +77,7 @@ namespace OpenTraceability.Mappers
                 {
                     if (!_masterDataJsonTypeInfos.ContainsKey(t))
                     {
-                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t, OTMappingFormat.JSON, true);
+                        OTMappingTypeInformation typeInfo = new OTMappingTypeInformation(t, EPCISDataFormat.JSON, true);
                         _masterDataJsonTypeInfos.Add(t, typeInfo);
                     }
                 }
@@ -94,13 +94,13 @@ namespace OpenTraceability.Mappers
         public PropertyInfo? ExtensionKDEs { get; set; }
         public PropertyInfo? ExtensionAttributes { get; set; }
 
-        public OTMappingTypeInformation(Type type, OTMappingFormat format, bool isMasterDataMapping=false)
+        public OTMappingTypeInformation(Type type, EPCISDataFormat format, bool isMasterDataMapping=false)
         {
             Type = type;
 
             foreach (PropertyInfo p in type.GetProperties())
             {
-                if (format == OTMappingFormat.XML && p.GetCustomAttribute<OpenTraceabilityXmlIgnoreAttribute>() != null)
+                if (format == EPCISDataFormat.XML && p.GetCustomAttribute<OpenTraceabilityXmlIgnoreAttribute>() != null)
                 {
                     continue;
                 }
@@ -131,7 +131,7 @@ namespace OpenTraceability.Mappers
                             _dic.Add(property.Name, property);
                         }
                     }
-                    else if (jsonAtt != null && format == OTMappingFormat.JSON)
+                    else if (jsonAtt != null && format == EPCISDataFormat.JSON)
                     {
                         OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(p, jsonAtt, format);
                         this.Properties.Add(property);
@@ -177,7 +177,7 @@ namespace OpenTraceability.Mappers
 
     public class OTMappingTypeInformationProperty
     {
-        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityMasterDataAttribute att, OTMappingFormat format)
+        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityMasterDataAttribute att, EPCISDataFormat format)
         {
             this.Property = property;
             this.IsObject = property.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null;
@@ -192,7 +192,7 @@ namespace OpenTraceability.Mappers
             }
         }
 
-        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityAttribute att, OTMappingFormat format)
+        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityAttribute att, EPCISDataFormat format)
         {
             this.Property = property;
             this.IsObject = property.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null;
@@ -208,7 +208,7 @@ namespace OpenTraceability.Mappers
                 this.ItemName = arrayAttribute.ItemName;
             }
 
-            if (format == OTMappingFormat.JSON)
+            if (format == EPCISDataFormat.JSON)
             {
                 var jsonAtt = property.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
                 if (jsonAtt != null)
@@ -218,7 +218,7 @@ namespace OpenTraceability.Mappers
             }
         }
 
-        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityJsonAttribute att, OTMappingFormat format)
+        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityJsonAttribute att, EPCISDataFormat format)
         {
             this.Property = property;
             this.IsObject = property.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null;
@@ -232,7 +232,7 @@ namespace OpenTraceability.Mappers
                 this.ItemName = arrayAttribute.ItemName;
             }
 
-            if (format == OTMappingFormat.JSON)
+            if (format == EPCISDataFormat.JSON)
             {
                 var jsonAtt = property.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
                 if (jsonAtt != null)
@@ -242,7 +242,7 @@ namespace OpenTraceability.Mappers
             }
         }
 
-        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityProductsAttribute att, OTMappingFormat format)
+        public OTMappingTypeInformationProperty(PropertyInfo property, OpenTraceabilityProductsAttribute att, EPCISDataFormat format)
         {
             this.Property = property;
             this.Name = att.Name;
@@ -253,7 +253,7 @@ namespace OpenTraceability.Mappers
             this.ProductType = att.ProductType;
             this.Required = att.Required;
 
-            if (format == OTMappingFormat.JSON)
+            if (format == EPCISDataFormat.JSON)
             {
                 var jsonAtt = property.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
                 if (jsonAtt != null)

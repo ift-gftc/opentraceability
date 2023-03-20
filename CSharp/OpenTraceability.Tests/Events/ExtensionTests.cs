@@ -21,7 +21,7 @@ namespace OpenTraceability.Tests.Events
         public void XML(string file)
         {
             // initialize the libraries.
-            OpenTraceability.Initialize();
+            OpenTraceabilityInitializer.Initialize();
             OpenTraceabilityGDST.Initialize();
 
             // read object events from test data specified in the file argument

@@ -23,10 +23,19 @@
     <None Remove="Data\SensorDataExample11.jsonld" />
     <None Remove="Data\SensorDataExample8.jsonld" />
     <None Remove="Data\transformation_event_all_possible_fields.xml" />
+    <None Remove="Queries\" />
+    <None Remove="Configurations\" />
+    <None Remove="Configurations\appsettings.json" />
+    <None Remove="Configurations\appsettings.TestServer.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Data\*" />
+    <EmbeddedResource Include="Configurations\appsettings.TestServer.json" Condition="'$(ExcludeConfigFilesFromBuildOutput)'!='true'">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -40,11 +49,17 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OpenTraceability.GDST\OpenTraceability.GDST.csproj" />
     <ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
+    <ProjectReference Include="..\OpenTraceability.TestServer\OpenTraceability.TestServer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Queries\" />
+    <Folder Include="Configurations\" />
+  </ItemGroup>
 </Project>

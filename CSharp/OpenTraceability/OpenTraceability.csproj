@@ -34,6 +34,7 @@
 		<None Remove="Utility\Data\UnitSystems.xml" />
 		<None Remove="Utility\Data\uoms.json" />
 		<None Remove="Utility\Data\UOMs.xml" />
+		<None Remove="Queries\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -49,6 +50,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Mappers\MasterData\" />
+	  <Folder Include="Queries\" />
 	</ItemGroup>
 
 </Project>

@@ -14,12 +14,12 @@ namespace OpenTraceability
     /// <summary>
     /// Static helper class for the Open Traceability library.
     /// </summary>
-    public static class OpenTraceability
+    public static class OpenTraceabilityInitializer
     {
         internal static ConcurrentBag<OpenTraceabilityEventProfile> Profiles = new ConcurrentBag<OpenTraceabilityEventProfile>();
         internal static ConcurrentDictionary<string, Type> MasterDataTypes = new ConcurrentDictionary<string, Type>();
 
-        static OpenTraceability()
+        static OpenTraceabilityInitializer()
         {
             RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(ObjectEvent<EventILMD>), EventType.ObjectEvent));
             RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransactionEvent), EventType.TransactionEvent));

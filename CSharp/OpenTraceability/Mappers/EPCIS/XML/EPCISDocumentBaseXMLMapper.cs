@@ -151,7 +151,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 eventType = xEvent.Elements().First().Name.LocalName;
             }
 
-            var profiles = OpenTraceability.Profiles.Where(p => p.EventType.ToString() == eventType && (p.Action == null || p.Action == action) && (p.BusinessStep == null || p.BusinessStep.ToLower() == bizStep?.ToLower())).OrderByDescending(p => p.SpecificityScore).ToList();
+            var profiles = OpenTraceabilityInitializer.Profiles.Where(p => p.EventType.ToString() == eventType && (p.Action == null || p.Action == action) && (p.BusinessStep == null || p.BusinessStep.ToLower() == bizStep?.ToLower())).OrderByDescending(p => p.SpecificityScore).ToList();
             if (profiles.Count() == 0)
             {
                 throw new Exception("Failed to create event from profile. Type=" + eventType + " and BizStep=" + bizStep + " and Action=" + action);
@@ -213,7 +213,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 // validate the schema depending on the version in the document
                 if (!EPCISDocumentBaseXMLMapper._schemaChecker.Validate(xdoc, "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-1_2.xsd", out string? error))
                 {
-                    throw new Exception($"Failed to validate the XML schema for the EPCIS XML.\n" + error);
+                    throw new OpenTraceabilitySchemaException($"Failed to validate the XML schema for the EPCIS XML.\n" + error);
                 }
             }
             else
@@ -221,7 +221,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 // https://ref.gs1.org/standards/epcis/epcglobal-epcis-2_0.xsd
                 if (!EPCISDocumentBaseXMLMapper._schemaChecker.Validate(xdoc, "https://ref.gs1.org/standards/epcis/epcglobal-epcis-2_0.xsd", out string? error))
                 {
-                    throw new Exception($"Failed to validate the XML schema for the EPCIS XML.\n" + error);
+                    throw new OpenTraceabilitySchemaException($"Failed to validate the XML schema for the EPCIS XML.\n" + error);
                 }
             }
         }

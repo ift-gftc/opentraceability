@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenTraceability.Utility;
 using System;
@@ -280,6 +281,44 @@ namespace OpenTraceability.Tests
             EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
             string str = loader.ReadString("OpenTraceability.Tests", $"OpenTraceability.Tests.Data.{v}");
             return str;
+        }
+
+        public static IConfiguration GetConfiguration(string appsettingsName)
+        {
+            // first we are going to remove any of the appsettings.json from our directory so that it 
+            // does not interfere with anything...
+            // this is because by referencing the web service / web application projects, it copies these files into
+            // there because they are included in copy always / content
+            string currentDirectory = Directory.GetCurrentDirectory();
+            foreach (var file in (new DirectoryInfo(currentDirectory)).GetFiles("appsettings*"))
+            {
+                File.Delete(file.FullName);
+            }
+
+            var configBuilder = new ConfigurationBuilder();
+
+            EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+            var jsonString = loader.ReadString("OpenTraceability.Tests", $"OpenTraceability.Tests.Configurations.{appsettingsName}.json");
+            var appsettings = JObject.Parse(jsonString);
+            configBuilder.AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes(appsettings.ToString())));
+
+            // try and load any machine dependent app settings for the unit test
+            try
+            {
+                var maschineJsonStr = loader.ReadString("OpenTraceability.Tests", $"OpenTraceability.Tests.Configurations.AppSettings.{appsettingsName}.{Environment.MachineName}.json");
+                var machineAppSettings = JObject.Parse(maschineJsonStr);
+                configBuilder.AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes(machineAppSettings.ToString())));
+            }
+            catch (Exception ex)
+            {
+                if (!ex.Message.Contains("Failed to find the resource in the assembly"))
+                {
+                    throw;
+                }
+            }
+
+            var config = configBuilder.Build() as IConfiguration;
+            return config;
         }
     }
 }

@@ -72,7 +72,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             // read the GLN from the id
             string id = xLocation.Attribute("id")?.Value ?? string.Empty;
-            Type t = OpenTraceability.MasterDataTypes[type];
+            Type t = OpenTraceabilityInitializer.MasterDataTypes[type];
             Location loc = (Location)Activator.CreateInstance(t);
             loc.GLN = new Models.Identifiers.GLN(id);
             loc.EPCISType = type;

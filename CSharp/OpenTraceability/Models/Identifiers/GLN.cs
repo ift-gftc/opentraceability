@@ -180,7 +180,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region Overrides
 
-        public static bool operator ==(GLN obj1, GLN obj2)
+        public static bool operator ==(GLN? obj1, GLN? obj2)
         {
             try
             {
@@ -189,7 +189,7 @@ namespace OpenTraceability.Models.Identifiers
                     return true;
                 }
 
-                if (!Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
+                if (Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
                 {
                     return false;
                 }
@@ -199,7 +199,9 @@ namespace OpenTraceability.Models.Identifiers
                     return false;
                 }
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 return obj1.Equals(obj2);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
             catch (Exception Ex)
             {

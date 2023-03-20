@@ -21,7 +21,7 @@ namespace OpenTraceability.Tests.Events
         public void XML(string file)
         {
             // initialize the libraries.
-            OpenTraceability.Initialize();
+            OpenTraceabilityInitializer.Initialize();
 
             // read object events from test data specified in the file argument
             string xmlObjectEvents = OpenTraceabilityTests.ReadTestData(file);
@@ -41,7 +41,7 @@ namespace OpenTraceability.Tests.Events
         public void XML_1_2__to__JSON_LD(string file)
         {
             // initialize the libraries.
-            OpenTraceability.Initialize();
+            OpenTraceabilityInitializer.Initialize();
             OpenTraceabilityGDST.Initialize();
 
             // read object events from test data specified in the file argument
@@ -80,7 +80,7 @@ namespace OpenTraceability.Tests.Events
         public void JSONLD(string file)
         {
             // initialize the libraries.
-            OpenTraceability.Initialize();
+            OpenTraceabilityInitializer.Initialize();
 
             // read object events from test data specified in the file argument
             string json = OpenTraceabilityTests.ReadTestData(file);
