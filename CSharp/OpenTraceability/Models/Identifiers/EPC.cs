@@ -348,14 +348,6 @@ namespace OpenTraceability.Models.Identifiers
         /// </summary>
         public bool Matches(EPC targetEPC)
         {
-            if (!(this.Type == EPCType.Instance || this.Type == EPCType.Class))
-            {
-                throw new Exception("The source EPC (this), is not of type Instance or Class.");
-            }
-            if (!(targetEPC.Type == EPCType.Instance || targetEPC.Type == EPCType.Class))
-            {
-                throw new Exception("The targetEPC is not of type Instance or Class.");
-            }
             if (this.Equals(targetEPC))
             {
                 return true;

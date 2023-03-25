@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Microsoft.Data.Sqlite;
 using OpenTraceability.TestServer.Services;
 using OpenTraceability.TestServer.Services.Interfaces;
@@ -10,6 +11,13 @@ namespace OpenTraceability.TestServer
     /// </summary>
     public class Startup
     {
+        [ModuleInitializer]
+        public static void Init()
+        {
+            OpenTraceability.Setup.Initialize();
+            OpenTraceability.GDST.Setup.Initialize();
+        }
+
         public static string Error = "";
 
         public Startup(IConfiguration configuration)
@@ -23,9 +31,6 @@ namespace OpenTraceability.TestServer
         {
             try
             {
-                OpenTraceabilityInitializer.Initialize();
-                OpenTraceability.GDST.OpenTraceabilityGDST.Initialize();
-
                 services.AddControllers();
 
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

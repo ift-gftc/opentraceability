@@ -20,9 +20,6 @@ namespace OpenTraceability.Tests.Events
         [TestCase("querydoc_example01.xml")]
         public void XML(string file)
         {
-            // initialize the libraries.
-            OpenTraceabilityInitializer.Initialize();
-
             // read object events from test data specified in the file argument
             string xmlObjectEvents = OpenTraceabilityTests.ReadTestData(file);
 
@@ -40,10 +37,6 @@ namespace OpenTraceability.Tests.Events
         [TestCase("gdst_extensions_01.xml")]
         public void XML_1_2__to__JSON_LD(string file)
         {
-            // initialize the libraries.
-            OpenTraceabilityInitializer.Initialize();
-            OpenTraceabilityGDST.Initialize();
-
             // read object events from test data specified in the file argument
             string stringXmlEvents = OpenTraceabilityTests.ReadTestData(file);
 
@@ -79,9 +72,6 @@ namespace OpenTraceability.Tests.Events
         [TestCase("EPCISQueryDocument.jsonld")]
         public void JSONLD(string file)
         {
-            // initialize the libraries.
-            OpenTraceabilityInitializer.Initialize();
-
             // read object events from test data specified in the file argument
             string json = OpenTraceabilityTests.ReadTestData(file);
 

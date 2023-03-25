@@ -4,8 +4,10 @@ using Newtonsoft.Json.Linq;
 using OpenTraceability.Utility;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -18,6 +20,13 @@ namespace OpenTraceability.Tests
     /// </summary>
     public static class OpenTraceabilityTests
     {
+        [ModuleInitializer]
+        public static void Init()
+        {
+            OpenTraceability.Setup.Initialize();
+            OpenTraceability.GDST.Setup.Initialize();
+        }
+
         internal static void CompareXML(string xml, string xmlAfter)
         {
             XElement x1 = XElement.Parse(xml);

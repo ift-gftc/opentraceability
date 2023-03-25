@@ -1,11 +1,16 @@
-﻿using OpenTraceability.Interfaces;
+﻿using Newtonsoft.Json;
+using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.MasterData;
+using OpenTraceability.Utility;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,12 +19,12 @@ namespace OpenTraceability
     /// <summary>
     /// Static helper class for the Open Traceability library.
     /// </summary>
-    public static class OpenTraceabilityInitializer
+    public static class Setup
     {
         internal static ConcurrentBag<OpenTraceabilityEventProfile> Profiles = new ConcurrentBag<OpenTraceabilityEventProfile>();
         internal static ConcurrentDictionary<string, Type> MasterDataTypes = new ConcurrentDictionary<string, Type>();
 
-        static OpenTraceabilityInitializer()
+        public static void Initialize()
         {
             RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(ObjectEvent<EventILMD>), EventType.ObjectEvent));
             RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransactionEvent), EventType.TransactionEvent));
@@ -30,6 +35,50 @@ namespace OpenTraceability
             RegisterMasterDataType<Tradeitem>();
             RegisterMasterDataType<Location>();
             RegisterMasterDataType<TradingParty>();
+
+            var assemblies = GetAssemblies();
+            foreach (var assembly in assemblies.Where(a => a.FullName?.StartsWith("OpenTraceability.") == true))
+            {
+                foreach (var t in assembly.GetTypes())
+                {
+
+                }
+            }
+
+            JsonConvert.DefaultSettings = () =>
+            {
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.Converters.Add(new EPCConverter());
+
+                return settings;
+            };
+        }
+
+        internal static List<Assembly> GetAssemblies()
+        {
+            var returnAssemblies = new List<Assembly>();
+            var loadedAssemblies = new HashSet<string>();
+            var assembliesToCheck = new Queue<Assembly>();
+
+            assembliesToCheck.Enqueue(Assembly.GetEntryAssembly());
+
+            while (assembliesToCheck.Count > 0)
+            {
+                var assemblyToCheck = assembliesToCheck.Dequeue();
+
+                foreach (var reference in assemblyToCheck.GetReferencedAssemblies())
+                {
+                    if (!loadedAssemblies.Contains(reference.FullName))
+                    {
+                        var assembly = Assembly.Load(reference);
+                        assembliesToCheck.Enqueue(assembly);
+                        loadedAssemblies.Add(reference.FullName);
+                        returnAssemblies.Add(assembly);
+                    }
+                }
+            }
+
+            return returnAssemblies;
         }
 
         /// <summary>
@@ -64,14 +113,6 @@ namespace OpenTraceability
             {
                 MasterDataTypes[type] = typeof(T);
             }
-        }
-
-        /// <summary>
-        /// You must call this prior to utilizing the open traceability libraries.
-        /// </summary>
-        public static void Initialize()
-        {
-
         }
     }
 }

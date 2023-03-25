@@ -123,7 +123,7 @@ namespace OpenTraceability.Queries
 		/// <returns>The epcis query results.</returns>
 		public async Task<EPCISQueryResults> Traceback(string blob_id, EPC epc)
 		{
-            string url = $"{_baseURL.TrimEnd('/')}/{_user_id}/{blob_id}";
+            string url = $"{_baseURL.TrimEnd('/')}/epcis/{_user_id}/{blob_id}";
             EPCISQueryInterfaceOptions options = new EPCISQueryInterfaceOptions()
             {
                 URL = new Uri(url),

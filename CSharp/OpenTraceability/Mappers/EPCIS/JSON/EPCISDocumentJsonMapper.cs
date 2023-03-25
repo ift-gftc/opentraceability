@@ -25,6 +25,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     throw new Exception("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
                 }
 
+                // read the master data
+                JObject? jMasterData = json["epcisHeader"]?["epcisMasterData"] as JObject;
+                if (jMasterData != null)
+                {
+                    EPCISJsonMasterDataReader.ReadMasterData(doc, jMasterData);
+                }
+
                 // read the events
                 JArray? jEventList = json["epcisBody"]?["eventList"] as JArray;
                 if (jEventList != null)
@@ -88,6 +95,8 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             {
                 json["instanceIdentifier"] = doc.Header.DocumentIdentification.InstanceIdentifier;
             }
+
+            EPCISJsonMasterDataWriter.WriteMasterData(json, doc);
 
             json["epcisBody"] = jEventBody;
 

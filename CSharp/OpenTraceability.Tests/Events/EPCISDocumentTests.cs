@@ -25,9 +25,6 @@ namespace OpenTraceability.Tests.Events
         [TestCase("transformation_event_all_possible_fields.xml")]
         public void XML(string file)
         {
-            // initialize the libraries.
-            OpenTraceabilityInitializer.Initialize();
-
             // read object events from test data specified in the file argument
             string xmlObjectEvents = OpenTraceabilityTests.ReadTestData(file);
 
@@ -42,6 +39,7 @@ namespace OpenTraceability.Tests.Events
         }
 
         [Test]
+        [TestCase("gdst_data_withmasterdata.jsonld")]
         [TestCase("aggregation_event_all_possible_fields.jsonld")]
         [TestCase("AssociationEvent-a.jsonld")]
         [TestCase("AssociationEvent-b.jsonld")]
@@ -91,9 +89,6 @@ namespace OpenTraceability.Tests.Events
         [TestCase("transformation_event_all_possible_fields.jsonld")]
         public void JSONLD(string file)
         {
-            // initialize the libraries.
-            OpenTraceabilityInitializer.Initialize();
-
             // read object events from test data specified in the file argument
             string strEvents = OpenTraceabilityTests.ReadTestData(file);
 

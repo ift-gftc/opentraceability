@@ -24,6 +24,29 @@ namespace OpenTraceability.Tests.Queries
 			// do nothing, the static initializers does it all
 		}
 
+        [Test]
+        public async Task QueryParameters()
+        {
+            EPCISQueryParameters parameters = new EPCISQueryParameters();
+            parameters.query.MATCH_epc = new List<string>() { "https://id.gs1.org/01/00614141777778/10/987" };
+            parameters.query.MATCH_anyEPC = new List<string>() { "https://id.gs1.org/01/00614141777778/10/987", "https://id.gs1.org/01/00614141777778/10/987" };
+            parameters.query.MATCH_epcClass = new List<string>() { "urn:epc:class:lgtin:4012345.012345.998877" };
+            parameters.query.MATCH_anyEPCClass = new List<string>() { "urn:epc:class:lgtin:4012345.012345.998877", "urn:epc:class:lgtin:4012345.012345.998877" };
+            parameters.query.GE_eventTime = DateTime.UtcNow;
+            parameters.query.GE_recordTime = DateTime.UtcNow;
+            parameters.query.LE_eventTime = DateTime.UtcNow;
+            parameters.query.LE_recordTime = DateTime.UtcNow;
+            parameters.query.EQ_bizLocation = new List<Uri>() { new Uri("urn:epc:id:sgln:0614141.00888.0"), new Uri("urn:epc:id:sgln:0614141.00888.0") };
+            parameters.query.EQ_bizStep = new List<string>() { "https://ref.gs1.org/cbv/BizStep-shipping", "receiving" };
+
+            string queryParameters = parameters.ToQueryParameters();
+            Uri uri = new Uri("https://example.org" + queryParameters);
+
+            EPCISQueryParameters paramsAfter = new EPCISQueryParameters(uri);
+
+            OpenTraceabilityTests.CompareJSON(parameters.ToJSON(), paramsAfter.ToJSON());
+        }
+
 		[Test]
         [TestCase("aggregation_event_all_possible_fields.jsonld")]
         public async Task QueryEvents(string filename)

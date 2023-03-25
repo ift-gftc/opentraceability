@@ -78,12 +78,19 @@ namespace OpenTraceability.Models.Events.KDEs
 
         public void SetFromGS1WebVocabJson(JToken json)
         {
-            throw new NotImplementedException();
+            this.Value = json.ToString();
         }
 
         public JToken? GetGS1WebVocabJson()
         {
-            throw new NotImplementedException();
+            if (this.Value != null)
+            {
+                return JToken.FromObject(this.Value);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void SetFromEPCISXml(XElement xml)

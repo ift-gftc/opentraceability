@@ -102,9 +102,6 @@ namespace OpenTraceability.Queries
         /// <returns>EPCIS Query Results</returns>
 		public static async Task<EPCISQueryResults> QueryEvents(EPCISQueryInterfaceOptions options, EPCISQueryParameters parameters)
         {
-            // convert the parameters into JSON
-            string queryBody = parameters.ToJson();
-
             // determine the mapper for deserialize the contents
             IEPCISQueryDocumentMapper mapper = OpenTraceabilityMappers.EPCISQueryDocument.JSON;
             if (options.Format == EPCISDataFormat.XML)
@@ -122,7 +119,7 @@ namespace OpenTraceability.Queries
 
             // build the HTTP request
             HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri(options.URL + "/events");
+            request.RequestUri = new Uri(options.URL + "/events" + parameters.ToQueryParameters());
             request.Method = HttpMethod.Get;
 
             if (!string.IsNullOrWhiteSpace(options.XAPIKey))

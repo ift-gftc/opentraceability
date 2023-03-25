@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
@@ -25,10 +26,14 @@ public class EPCISQueryInterfaceController : ControllerBase
 
     [HttpGet]
     [Route("{user_id}/{blob_id}/events")]
-    public async Task<IActionResult> GetEvents(string user_id, string blob_id, [FromRoute] EPCISQueryParameters parameters)
+    public async Task<IActionResult> GetEvents(string user_id, string blob_id)
     {
         try
         {
+            string url = this.HttpContext.Request.GetEncodedUrl();
+            Uri relativeUri = new Uri(url, UriKind.Absolute);
+            EPCISQueryParameters parameters = new EPCISQueryParameters(relativeUri);
+
             // load the blob
             var blob = await _blobService.LoadBlob(blob_id);
 
@@ -220,7 +225,7 @@ public class EPCISQueryInterfaceController : ControllerBase
             // filter: EQ_bizStep
             if (parameters.query.EQ_bizStep != null && parameters.query.EQ_bizStep.Count > 0)
             {
-                if (evt.BusinessStep == null || !parameters.query.EQ_bizStep.Contains(evt.BusinessStep))
+                if (!HasUriMatch(evt.BusinessStep, parameters.query.EQ_bizStep, "https://ref.gs1.org/cbv/BizStep-", "urn:epcglobal:cbv:bizstep:"))
                 {
                     continue;
                 }
@@ -294,6 +299,45 @@ public class EPCISQueryInterfaceController : ControllerBase
             }
         }
         return false;
+    }
+
+    private bool HasUriMatch(Uri? uri, List<string> filter, string prefix, string replacePrefix)
+    {
+        // make sure all of the EQ_bizStep are converted into URI format before comparing
+        for (int i = 0; i < filter.Count; i++)
+        {
+            string bizStep = filter[i];
+            if (!Uri.TryCreate(bizStep, UriKind.Absolute, out Uri? u))
+            {
+                filter[i] = replacePrefix + bizStep;
+            }
+            else if (bizStep.StartsWith(prefix))
+            {
+                filter[i] = replacePrefix + bizStep.Split('-').Last();
+            }
+        }
+
+        // we need to handle the various formats that the bizStep can occur in
+        if (uri != null)
+        {
+            Uri bizStep = new Uri(uri.ToString());
+            if (bizStep.ToString().StartsWith(prefix))
+            {
+                bizStep = new Uri(replacePrefix + uri.ToString().Split('-').Last());
+            }
+
+            List<Uri> filter_uris = filter.Select(x => new Uri(x)).ToList();
+            if (!filter_uris.Contains(bizStep))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
     }
 }
 
