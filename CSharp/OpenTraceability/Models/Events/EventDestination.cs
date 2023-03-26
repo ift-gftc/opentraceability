@@ -24,6 +24,8 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("@type")]
         public Uri? Type { get; set; }
 
+        public EventDestinationType ParsedType { get; set; }
+
         [OpenTraceabilityJson("destination")]
         [OpenTraceability("text()")]
         public string? Value { get; set; }
