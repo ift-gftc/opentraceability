@@ -16,11 +16,6 @@ namespace OpenTraceability.TestServer.Models
         public string ID { get; set; } = string.Empty;
 
         /// <summary>
-        /// The user ID that stored the blob.
-        /// </summary>
-        public string UserID { get; set; } = string.Empty;
-
-        /// <summary>
         /// The EPCIS version of the data stored.
         /// </summary>
         public EPCISVersion Version { get; set; }

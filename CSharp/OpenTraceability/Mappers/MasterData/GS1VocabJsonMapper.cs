@@ -9,6 +9,17 @@ namespace OpenTraceability.Mappers.MasterData
     {
         public string Map(IVocabularyElement vocab)
         {
+            if (vocab.Context == null)
+            {
+                vocab.Context = JObject.Parse(@"{
+                                    ""cbvmda"": ""urn:epcglobal:cbvmda:mda"",
+                                    ""xsd"": ""http://www.w3.org/2001/XMLSchema#"",
+                                    ""gs1"": ""http://gs1.org/voc/"",
+                                    ""@vocab"": ""http://gs1.org/voc/"",
+                                    ""gdst"": ""https://traceability-dialogue.org/vocab""
+                                }"); 
+            }
+
             Dictionary<string, string> namespaces = GetNamespaces(vocab.Context ?? throw new Exception("vocab.Context is null."));
             JObject json = OpenTraceabilityJsonLDMapper.ToJson(vocab, namespaces.Reverse()) as JObject ?? throw new Exception("Failed to map master data into GS1 web vocab.");
             json["@context"] = vocab.Context;
@@ -17,9 +28,14 @@ namespace OpenTraceability.Mappers.MasterData
 
         public IVocabularyElement Map<T>(string value) where T : IVocabularyElement
         {
+            return Map(typeof(T), value);
+        }
+
+        public IVocabularyElement Map(Type type, string value)
+        {
             JObject json = JObject.Parse(value);
             Dictionary<string, string> namespaces = GetNamespaces(json["@context"] ?? throw new Exception("@context is null on the JSON-LD when deserializing GS1 Web Vocab. " + value));
-            T obj = OpenTraceabilityJsonLDMapper.FromJson<T>(json, namespaces);
+            IVocabularyElement obj = (IVocabularyElement)OpenTraceabilityJsonLDMapper.FromJson(json, type, namespaces);
             obj.Context = json["@context"];
             return obj;
         }

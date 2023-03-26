@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using OpenTraceability.GDST.MasterData;
 using OpenTraceability.Mappers;
 using OpenTraceability.Queries;
 
@@ -47,11 +48,48 @@ namespace OpenTraceability.Tests.Queries
             OpenTraceabilityTests.CompareJSON(parameters.ToJSON(), paramsAfter.ToJSON());
         }
 
+        [Test]
+        [TestCase("testserver_advancedfilters.jsonld")]
+        public async Task MasterData(string filename)
+        {
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+
+            // upload a blob of events
+            string data = OpenTraceabilityTests.ReadTestData(filename);
+            var doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
+            string blob_id = await client.Post(doc);
+
+            bool foundOneGDSTLocation = false;
+
+            // grab the traceability data...
+            foreach (var e in doc.Events)
+            {
+                foreach (var p in e.Products)
+                {
+                    EPCISQueryParameters parameters = new EPCISQueryParameters(p.EPC);
+                    var results = await client.QueryEvents(blob_id, parameters);
+                    Assert.AreEqual(0, results.Errors.Count, "errors found in the query events");
+                    Assert.AreNotEqual(0, results.Document.Events.Count, "no events returned");
+
+                    // grab the master data
+                    await client.ResolveMasterData(blob_id, results.Document);
+                    Assert.AreNotEqual(0, results.Document.MasterData.Count, "no master data resolved");
+
+                    if (results.Document.MasterData.Exists(m => m is GDSTLocation))
+                    {
+                        foundOneGDSTLocation = true;
+                    }
+                }
+            }
+
+            Assert.IsTrue(foundOneGDSTLocation, "Did not find GDSTLocation.");
+        }
+
 		[Test]
         [TestCase("aggregation_event_all_possible_fields.jsonld")]
         public async Task QueryEvents(string filename)
 		{
-			EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2, Guid.NewGuid().ToString());
+			EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
 			// upload a blob of events
 			string data = OpenTraceabilityTests.ReadTestData(filename);
@@ -66,15 +104,38 @@ namespace OpenTraceability.Tests.Queries
 					EPCISQueryParameters parameters = new EPCISQueryParameters(p.EPC);
 					var results = await client.QueryEvents(blob_id, parameters);
 					Assert.AreEqual(0, results.Errors.Count, "errors found in the query events");
-				}
+                    Assert.AreEqual(1, results.Document.Events.Count, "no events returned");
+                }
 			}
 		}
+
+        [Test]
+        [TestCase("testserver_advancedfilters.jsonld", "urn:epc:id:sscc:08600031303.0004", "urn:epcglobal:cbv:bizStep:receiving", "urn:gdst:example.org:location:loc:importer.123u")]
+        public async Task AdvancedFilters(string filename, string epc, string bizStep, string bizLocation)
+        {
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+
+            // upload a blob of events
+            string data = OpenTraceabilityTests.ReadTestData(filename);
+            var doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
+            string blob_id = await client.Post(doc);
+
+            // query for the events for each epc in the blob
+            EPCISQueryParameters parameters = new EPCISQueryParameters(new Models.Identifiers.EPC(epc));
+            parameters.query.EQ_bizStep = new List<string>() { bizStep };
+            parameters.query.EQ_bizLocation = new List<Uri>() { new Uri(bizLocation) };
+
+            var results = await client.QueryEvents(blob_id, parameters);
+            Assert.AreEqual(0, results.Errors.Count, "errors found in the query events");
+            Assert.AreEqual(1, results.Document.Events.Count, "no events returned");
+        }
+
 
 		[Test]
         [TestCase("aggregation_event_all_possible_fields.jsonld")]
         public async Task Traceback(string filename)
 		{
-            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2, Guid.NewGuid().ToString());
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
             string data = OpenTraceabilityTests.ReadTestData(filename);

@@ -25,8 +25,8 @@ public class EPCISQueryInterfaceController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{user_id}/{blob_id}/events")]
-    public async Task<IActionResult> GetEvents(string user_id, string blob_id)
+    [Route("{blob_id}/events")]
+    public async Task<IActionResult> GetEvents(string blob_id)
     {
         try
         {
@@ -39,12 +39,6 @@ public class EPCISQueryInterfaceController : ControllerBase
 
             // throw an error if the blob does not exist
             if (blob == null)
-            {
-                return BadRequest("blob does not exist");
-            }
-
-            // throw an error if the user id does not match the blob
-            if (blob.UserID != user_id)
             {
                 return BadRequest("blob does not exist");
             }
@@ -91,8 +85,8 @@ public class EPCISQueryInterfaceController : ControllerBase
     /// Expects the events posted to be a valid EPCIS Document. (not an EPCIS Query Document)
     /// </summary>
     [HttpPost]
-    [Route("{user_id}/{blob_id}/events")]
-    public async Task<IActionResult> PostEvents(string user_id, string blob_id)
+    [Route("{blob_id}/events")]
+    public async Task<IActionResult> PostEvents(string blob_id)
     {
         string? versionStr = this.HttpContext.Request.Headers["GS1-EPCIS-Version"].FirstOrDefault();
 
@@ -151,7 +145,6 @@ public class EPCISQueryInterfaceController : ControllerBase
             // create the blob
             EPCISBlob blob = new EPCISBlob()
             {
-                UserID = user_id,
                 ID = blob_id,
                 RawData = rawRequestBody,
                 Version = version,
@@ -327,7 +320,7 @@ public class EPCISQueryInterfaceController : ControllerBase
             }
 
             List<Uri> filter_uris = filter.Select(x => new Uri(x)).ToList();
-            if (!filter_uris.Contains(bizStep))
+            if (!filter_uris.Select(u => u.ToString().ToLower()).Contains(bizStep.ToString().ToLower()))
             {
                 return false;
             }

@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using NUnit.Framework.Internal;
 using OpenTraceability.GDST.MasterData;
+using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
+using OpenTraceability.Models.Events;
 using OpenTraceability.Models.MasterData;
 using System;
 using System.Collections.Generic;
@@ -63,6 +65,31 @@ namespace OpenTraceability.Tests.Events
 
             // compare the JSON
             OpenTraceabilityTests.CompareJSON(json, jsonAfter);
+        }
+
+        [Test]
+        [TestCase("testserver_advancedfilters.jsonld")]
+        public void GS1WebVocab_EPCISDocument(string file)
+        {
+            // read object events from test data specified in the file argument
+            string json = OpenTraceabilityTests.ReadTestData(file);
+
+            // map into a trade item
+            EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(json);
+
+            // foreach master data item
+            foreach (var md in doc.MasterData)
+            {
+                string jsonMD = OpenTraceabilityMappers.MasterData.GS1WebVocab.Map(md);
+
+                IVocabularyElement mdAfter = OpenTraceabilityMappers.MasterData.GS1WebVocab.Map(md.GetType(), jsonMD);
+
+                // map back into json
+                string jsonMDAfter = OpenTraceabilityMappers.MasterData.GS1WebVocab.Map(mdAfter);
+
+                // compare the JSON
+                OpenTraceabilityTests.CompareJSON(jsonMD, jsonMDAfter);
+            }
         }
     }
 }

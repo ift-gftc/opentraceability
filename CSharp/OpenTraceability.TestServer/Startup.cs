@@ -68,7 +68,6 @@ namespace OpenTraceability.TestServer
             string tableCmd = @"
                     CREATE TABLE IF NOT EXISTS data (
                         id varchar(128) PRIMARY KEY,
-                        user_id varchar(128) NOT NULL,
                         version int NOT NULL,
                         format int NOT NULL,
                         raw_data text NOT NULL,

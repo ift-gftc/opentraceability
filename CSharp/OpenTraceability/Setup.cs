@@ -23,6 +23,7 @@ namespace OpenTraceability
     {
         internal static ConcurrentBag<OpenTraceabilityEventProfile> Profiles = new ConcurrentBag<OpenTraceabilityEventProfile>();
         internal static ConcurrentDictionary<string, Type> MasterDataTypes = new ConcurrentDictionary<string, Type>();
+        internal static ConcurrentDictionary<Type, Type> MasterDataTypeDefault = new ConcurrentDictionary<Type, Type>();
 
         public static void Initialize()
         {
@@ -49,6 +50,9 @@ namespace OpenTraceability
             {
                 JsonSerializerSettings settings = new JsonSerializerSettings();
                 settings.Converters.Add(new EPCConverter());
+                settings.Converters.Add(new GTINConverter());
+                settings.Converters.Add(new GLNConverter());
+                settings.Converters.Add(new PGLNConverter());
 
                 return settings;
             };
@@ -95,7 +99,7 @@ namespace OpenTraceability
         /// </summary>
         /// <param name="type">This is the VocabularyElementList type value in the XML/JSON.</param>
         /// <param name="classType">This is the C# class to use when deserializing.</param>
-        public static void RegisterMasterDataType<T>() where T : IVocabularyElement
+        public static void RegisterMasterDataType<T>(Type? defaultFor=null) where T : IVocabularyElement
         {
             IVocabularyElement? v = Activator.CreateInstance(typeof(T)) as IVocabularyElement;
             if (v == null)
@@ -112,6 +116,41 @@ namespace OpenTraceability
             else
             {
                 MasterDataTypes[type] = typeof(T);
+            }
+
+            if (defaultFor != null)
+            {
+                if (!MasterDataTypeDefault.TryGetValue(defaultFor, out Type? t2))
+                {
+                    MasterDataTypeDefault.TryAdd(defaultFor, typeof(T));
+                }
+                else
+                {
+                    MasterDataTypeDefault[defaultFor] = typeof(T);
+                }
+            }
+        }
+
+        /// <summary>
+        /// This will register a class as a master data type to be deserialized from the master data in an EPCIS Document. If a previouisly
+        /// registered C# type has the same EPCIS Vocabulary Element type, it will be repleaced with the new registered class type.
+        /// </summary>
+        /// <param name="type">This is the VocabularyElementList type value in the XML/JSON.</param>
+        /// <param name="classType">This is the C# class to use when deserializing.</param>
+        public static void RegisterMasterDataType<T, TDefaultFor>() where T : IVocabularyElement
+        {
+            RegisterMasterDataType<T>(typeof(TDefaultFor));
+        }
+
+        public static Type? GetMasterDataTypeDefault(Type type)
+        {
+            if (MasterDataTypeDefault.TryGetValue(type, out Type? t))
+            {
+                return t;
+            }
+            else
+            {
+                return null;
             }
         }
     }

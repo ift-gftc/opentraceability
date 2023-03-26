@@ -31,7 +31,7 @@ namespace OpenTraceability.TestServer.Services
                 con.Open();
 
                 // query the database by the id
-                string stm = "SELECT id, user_id, format, version, raw_data, created FROM data WHERE id=@id";
+                string stm = "SELECT id, format, version, raw_data, created FROM data WHERE id=@id";
 
                 using var cmd = new SqliteCommand(stm, con);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -45,11 +45,10 @@ namespace OpenTraceability.TestServer.Services
                     // read the blob
                     blob = new EPCISBlob();
                     blob.ID = rdr.GetString(0);
-                    blob.UserID = rdr.GetString(1);
-                    blob.Format = (EPCISDataFormat)rdr.GetInt32(2);
-                    blob.Version = (EPCISVersion)rdr.GetInt32(3);
-                    blob.RawData = rdr.GetString(4);
-                    blob.Created = rdr.GetDateTime(5);
+                    blob.Format = (EPCISDataFormat)rdr.GetInt32(1);
+                    blob.Version = (EPCISVersion)rdr.GetInt32(2);
+                    blob.RawData = rdr.GetString(3);
+                    blob.Created = rdr.GetDateTime(4);
                     break;
                 }
 
@@ -81,13 +80,12 @@ namespace OpenTraceability.TestServer.Services
 
             // TODO: write blob into database
             {
-                string cmdText = @"INSERT INTO data(id, user_id, format, version, raw_data, created)
-                                   VALUES(@id, @user_id, @format, @version, @raw_data, @created)";
+                string cmdText = @"INSERT INTO data(id, format, version, raw_data, created)
+                                   VALUES(@id, @format, @version, @raw_data, @created)";
 
                 using var cmd = new SqliteCommand(cmdText, con);
 
                 cmd.Parameters.AddWithValue("@id", blob.ID);
-                cmd.Parameters.AddWithValue("@user_id", blob.UserID);
                 cmd.Parameters.AddWithValue("@format", (int)blob.Format);
                 cmd.Parameters.AddWithValue("@version", (int)blob.Version);
                 cmd.Parameters.AddWithValue("@raw_data", blob.RawData);

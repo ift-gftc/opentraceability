@@ -78,9 +78,9 @@ namespace OpenTraceability.Queries
                     PropertyInfo prop = _prop_mapping[key];
                     if (prop != null)
                     {
-                        if (prop.PropertyType == typeof(DateTime?))
+                        if (prop.PropertyType == typeof(DateTimeOffset?))
                         {
-                            DateTime dt = DateTime.Parse(value);
+                            DateTimeOffset dt = DateTimeOffset.Parse(value);
                             prop.SetValue(query, dt);
                         }
                         else if (prop.PropertyType == typeof(List<string>))
@@ -131,12 +131,12 @@ namespace OpenTraceability.Queries
             // go through each property on the on the query
             foreach (var prop in typeof(EPCISQuery).GetProperties())
             {
-                if (prop.PropertyType == typeof(DateTime?))
+                if (prop.PropertyType == typeof(DateTimeOffset?))
                 {
-                    DateTime? dateTime = (DateTime?)prop.GetValue(query);
+                    DateTimeOffset? dateTime = (DateTimeOffset?)prop.GetValue(query);
                     if (dateTime != null)
                     {
-                        string queryParam = $"{prop.Name}={dateTime.Value.ToString("o")}";
+                        string queryParam = $"{prop.Name}={HttpUtility.UrlEncode(dateTime.Value.ToString("o"))}";
                         queryParameters.Add(queryParam);
                     }
                 }
@@ -163,14 +163,74 @@ namespace OpenTraceability.Queries
             string q = "?" + string.Join("&", queryParameters.ToArray());
             return q;
         }
+
+        public void Merge(EPCISQueryParameters queryParameters)
+        {
+            // go through each property on the on the query
+            foreach (var prop in typeof(EPCISQuery).GetProperties())
+            {
+                if (prop.PropertyType == typeof(DateTimeOffset?))
+                {
+                    DateTimeOffset? otherDateTime = (DateTimeOffset?)prop.GetValue(queryParameters.query);
+                    if (otherDateTime != null)
+                    {
+                        prop.SetValue(this.query, otherDateTime);
+                    }
+                }
+                else if (prop.PropertyType == typeof(List<string>))
+                {
+                    List<string>? list = prop.GetValue(this.query) as List<string>;
+                    List<string>? otherList = prop.GetValue(queryParameters.query) as List<string>;
+                    if (otherList != null)
+                    {
+                        if (list == null)
+                        {
+                            prop.SetValue(this.query, otherList);
+                        }
+                        else if (list != null)
+                        {
+                            foreach (var s in otherList)
+                            {
+                                if (!list.Contains(s))
+                                {
+                                    list.Add(s);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (prop.PropertyType == typeof(List<Uri>))
+                {
+                    List<Uri>? list = prop.GetValue(this.query) as List<Uri>;
+                    List<Uri>? otherList = prop.GetValue(queryParameters.query) as List<Uri>;
+                    if (otherList != null)
+                    {
+                        if (list == null)
+                        {
+                            prop.SetValue(this.query, otherList);
+                        }
+                        else if (list != null)
+                        {
+                            foreach (var s in otherList)
+                            {
+                                if (!list.Contains(s))
+                                {
+                                    list.Add(s);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public class EPCISQuery
     {
-        public DateTime? GE_recordTime { get; set; }
-        public DateTime? LE_recordTime { get; set; }
-        public DateTime? GE_eventTime { get; set; }
-        public DateTime? LE_eventTime { get; set; }
+        public DateTimeOffset? GE_recordTime { get; set; }
+        public DateTimeOffset? LE_recordTime { get; set; }
+        public DateTimeOffset? GE_eventTime { get; set; }
+        public DateTimeOffset? LE_eventTime { get; set; }
         public List<string>? eventTypes { get; set; }
         public List<string>? MATCH_epc { get; set; }
         public List<string>? MATCH_epcClass { get; set; }

@@ -74,7 +74,7 @@ namespace OpenTraceability.Models.Events
         }
 
         /// <summary>
-        /// Merges the epcis document into the this one. If multiple copies of an event exist in the case of an error declaration,
+        /// Merges the EPCIS document into the this one. If multiple copies of an event exist in the case of an error declaration,
         /// we will keep the error declared event.
         /// </summary>
         /// <param name="data"></param>
@@ -101,5 +101,11 @@ namespace OpenTraceability.Models.Events
             }
             this.MasterData.AddRange(data.MasterData.Where(p => !this.MasterData.Exists(p2 => p.ID == p2.ID)));
         }
+
+        /// <summary>
+        /// Builds a product tree from a single EPC given the event history.
+        /// </summary>
+        /// <returns></returns>
+        public EPCISProductTree CreateProductTree()
     }
 }

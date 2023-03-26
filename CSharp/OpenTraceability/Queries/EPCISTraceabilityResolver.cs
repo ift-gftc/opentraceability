@@ -3,6 +3,7 @@ using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Identifiers;
+using OpenTraceability.Models.MasterData;
 using OpenTraceability.Utility;
 
 namespace OpenTraceability.Queries
@@ -19,12 +20,18 @@ namespace OpenTraceability.Queries
         /// <param name="options">Options for talking to the EPCIS Query Interface.</param>
         /// <param name="epc">The EPC to perform the traceback on.</param>
         /// <returns>The summarized EPCIS query results.</returns>
-        public static async Task<EPCISQueryResults> Traceback(EPCISQueryInterfaceOptions options, EPC epc)
+        public static async Task<EPCISQueryResults> Traceback(EPCISQueryInterfaceOptions options, EPC epc, EPCISQueryParameters? additionalParameters = null)
         {
             HashSet<EPC> queried_epcs = new HashSet<EPC>() { epc };
 
             // query for all events pertaining to the EPC
             var paramters = new EPCISQueryParameters(epc);
+            if (additionalParameters != null)
+            {
+                paramters.Merge(additionalParameters);
+            }
+
+
             var results = await QueryEvents(options, paramters);
 
             // if an error occured, lets stop here and return the results that we have
@@ -114,119 +121,122 @@ namespace OpenTraceability.Queries
                 }
             }
 
-            // TODO: get the http client from a pool
-            HttpClient client = new HttpClient();
-
-            // build the HTTP request
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri(options.URL + "/events" + parameters.ToQueryParameters());
-            request.Method = HttpMethod.Get;
-
-            if (!string.IsNullOrWhiteSpace(options.XAPIKey))
+            // get the http client from a pool
+            using (var clientItem = HttpClientPool.GetClient())
             {
-                request.Headers.Add("X-API-Key", options.XAPIKey);
-            }
+                HttpClient client = clientItem.Value;
 
-            if (!string.IsNullOrWhiteSpace(options.BearerToken))
-            {
-                request.Headers.Add("Authorization", "Bearer " + options.BearerToken);
-            }
+                // build the HTTP request
+                HttpRequestMessage request = new HttpRequestMessage();
+                request.RequestUri = new Uri(options.URL + "/events" + parameters.ToQueryParameters());
+                request.Method = HttpMethod.Get;
 
-            if (options.Version == EPCISVersion.V1)
-            {
-                request.Headers.Add("Accept", "application/xml");
-                request.Headers.Add("GS1-EPCIS-Version", "1.2");
-                request.Headers.Add("GS1-EPCIS-Min", "1.2");
-                request.Headers.Add("GS1-EPCIS-Max", "1.2");
-                request.Headers.Add("GS1-CBV-Version", "1.2");
-                request.Headers.Add("GS1-CBV-XML-Format", "ALWAYS_URN");
-            }
-            else if (options.Version == EPCISVersion.V2)
-            {
-                if (options.Format == EPCISDataFormat.XML)
+                if (!string.IsNullOrWhiteSpace(options.XAPIKey))
+                {
+                    request.Headers.Add("X-API-Key", options.XAPIKey);
+                }
+
+                if (!string.IsNullOrWhiteSpace(options.BearerToken))
+                {
+                    request.Headers.Add("Authorization", "Bearer " + options.BearerToken);
+                }
+
+                if (options.Version == EPCISVersion.V1)
                 {
                     request.Headers.Add("Accept", "application/xml");
+                    request.Headers.Add("GS1-EPCIS-Version", "1.2");
+                    request.Headers.Add("GS1-EPCIS-Min", "1.2");
+                    request.Headers.Add("GS1-EPCIS-Max", "1.2");
+                    request.Headers.Add("GS1-CBV-Version", "1.2");
+                    request.Headers.Add("GS1-CBV-XML-Format", "ALWAYS_URN");
+                }
+                else if (options.Version == EPCISVersion.V2)
+                {
+                    if (options.Format == EPCISDataFormat.XML)
+                    {
+                        request.Headers.Add("Accept", "application/xml");
+                    }
+                    else
+                    {
+                        request.Headers.Add("Accept", "application/json");
+                    }
+                    request.Headers.Add("GS1-EPCIS-Version", "2.0");
+                    request.Headers.Add("GS1-EPCIS-Min", "2.0");
+                    request.Headers.Add("GS1-EPCIS-Max", "2.0");
+                    request.Headers.Add("GS1-CBV-Version", "2.0");
+                    request.Headers.Add("GS1-CBV-XML-Format", "ALWAYS_URN");
                 }
                 else
                 {
-                    request.Headers.Add("Accept", "application/json");
+                    throw new Exception($"Unrecognized EPCISVersion {options.Version} on the options.");
                 }
-                request.Headers.Add("GS1-EPCIS-Version", "2.0");
-                request.Headers.Add("GS1-EPCIS-Min", "2.0");
-                request.Headers.Add("GS1-EPCIS-Max", "2.0");
-                request.Headers.Add("GS1-CBV-Version", "2.0");
-                request.Headers.Add("GS1-CBV-XML-Format", "ALWAYS_URN");
-            }
-            else
-            {
-                throw new Exception($"Unrecognized EPCISVersion {options.Version} on the options.");
-            }
 
-            EPCISQueryResults results = new EPCISQueryResults();
+                EPCISQueryResults results = new EPCISQueryResults();
 
-            // execute the request
-            HttpResponseMessage? response = null;
-            string? responseBody = null;
-            try
-            {
-                response = await client.SendAsync(request);
-                responseBody = await response.Content.ReadAsStringAsync();
-                if (response.IsSuccessStatusCode)
+                // execute the request
+                HttpResponseMessage? response = null;
+                string? responseBody = null;
+                try
                 {
-                    try
+                    response = await client.SendAsync(request);
+                    responseBody = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
                     {
-                        var doc = mapper.Map(responseBody);
-                        results.Document = doc;
+                        try
+                        {
+                            var doc = mapper.Map(responseBody);
+                            results.Document = doc;
+                        }
+                        catch (OpenTraceabilitySchemaException schemaEx)
+                        {
+                            results.Errors.Add(new EPCISQueryError()
+                            {
+                                Type = EPCISQueryErrorType.Schema,
+                                Details = schemaEx.Message
+                            });
+                        }
                     }
-                    catch (OpenTraceabilitySchemaException schemaEx)
+                    else
                     {
+                        // if it fails, record the error
                         results.Errors.Add(new EPCISQueryError()
                         {
-                            Type = EPCISQueryErrorType.Schema,
-                            Details = schemaEx.Message
+                            Type = EPCISQueryErrorType.HTTP,
+                            Details = $"{(int)response.StatusCode} - {response.StatusCode} - {responseBody}"
                         });
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    // if it fails, record the error
                     results.Errors.Add(new EPCISQueryError()
                     {
-                        Type = EPCISQueryErrorType.HTTP,
-                        Details = $"{(int)response.StatusCode} - {response.StatusCode} - {responseBody}"
+                        Type = EPCISQueryErrorType.Exception,
+                        Details = ex.Message
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                results.Errors.Add(new EPCISQueryError()
-                {
-                    Type = EPCISQueryErrorType.Exception,
-                    Details = ex.Message
-                });
-            }
 
-            // if stack trace is enabled, record the stack trace item
-            if (options.EnableStackTrace)
-            {
-                EPCISQueryStackTraceItem item = new EPCISQueryStackTraceItem()
+                // if stack trace is enabled, record the stack trace item
+                if (options.EnableStackTrace)
                 {
-                    RelativeURL = request.RequestUri,
-                    RequestHeaders = request.Headers.ToList(),
-                    ResponseStatusCode = response?.StatusCode,
-                    ResponseBody = responseBody,
-                    ResponseHeaders = response?.Headers.ToList()
-                };
+                    EPCISQueryStackTraceItem item = new EPCISQueryStackTraceItem()
+                    {
+                        RelativeURL = request.RequestUri,
+                        RequestHeaders = request.Headers.ToList(),
+                        ResponseStatusCode = response?.StatusCode,
+                        ResponseBody = responseBody,
+                        ResponseHeaders = response?.Headers.ToList()
+                    };
 
-                results.StackTrace.Add(item);
+                    results.StackTrace.Add(item);
 
-                foreach (var e in results.Errors)
-                {
-                    e.StackTraceItemID = item.ID;
+                    foreach (var e in results.Errors)
+                    {
+                        e.StackTraceItemID = item.ID;
+                    }
                 }
-            }
 
-            return results;
+                return results;
+            }
         }
 	}
 }

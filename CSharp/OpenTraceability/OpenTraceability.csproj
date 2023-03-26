@@ -50,7 +50,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Mappers\MasterData\" />
-	  <Folder Include="Queries\" />
 	</ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 ﻿using OpenTraceability.GDST.Events;
 using OpenTraceability.GDST.MasterData;
 using OpenTraceability.Models.Events;
+using OpenTraceability.Models.MasterData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace OpenTraceability.GDST
             OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTFeedmillObjectEvent), EventType.ObjectEvent, "urn:epcglobal:cbv:bizstep:commissioning", Models.Events.EventAction.ADD, feedmillKDEProfile));
             OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTFeedmillObjectEvent), EventType.ObjectEvent, "https://ref.gs1.org/cbv/BizStep-commissioning", Models.Events.EventAction.ADD, feedmillKDEProfile));
 
-            OpenTraceability.Setup.RegisterMasterDataType<GDSTLocation>();
+            OpenTraceability.Setup.RegisterMasterDataType<GDSTLocation, Location>();
         }
     }
 }

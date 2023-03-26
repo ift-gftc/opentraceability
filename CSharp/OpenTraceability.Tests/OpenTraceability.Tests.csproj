@@ -23,6 +23,7 @@
     <None Remove="Data\querydoc_fail_schemacheck.xml" />
     <None Remove="Data\SensorDataExample11.jsonld" />
     <None Remove="Data\SensorDataExample8.jsonld" />
+    <None Remove="Data\testserver_advancedfilters.jsonld" />
     <None Remove="Data\transformation_event_all_possible_fields.xml" />
     <None Remove="Queries\" />
     <None Remove="Configurations\" />
