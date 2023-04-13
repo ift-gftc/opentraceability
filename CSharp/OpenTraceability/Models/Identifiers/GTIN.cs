@@ -1,9 +1,11 @@
-﻿using OpenTraceability.Utility;
+﻿using Newtonsoft.Json;
+using OpenTraceability.Utility;
 using System.Runtime.Serialization;
 
 namespace OpenTraceability.Models.Identifiers
 {
     [DataContract]
+    [JsonConverter(typeof(GTINConverter))]
     public class GTIN : IEquatable<GTIN>, IComparable<GTIN>
     {
         private string _gtinStr;
@@ -53,11 +55,26 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public string ToDigitalLinkURL(string baseURL)
+        public bool IsGS1GTIN()
+        {
+            return _gtinStr.Contains(":idpat:sgtin:");
+        }
+
+        public string ToDigitalLinkURL()
         {
             try
             {
-                return $"{baseURL}/gln/{this._gtinStr}";
+                if (IsGS1GTIN())
+                {
+                    string[] gtinParts = _gtinStr.Split(':').Last().Split('.');
+                    string gtin14 = gtinParts[1][0] + gtinParts[0] + gtinParts[1].Skip(1);
+                    gtin14 = gtin14 + GS1Util.CalculateGTIN14CheckSum(gtin14);
+                    return $"01/{gtin14}";
+                }
+                else
+                {
+                    return $"01/{this._gtinStr}";
+                }
             }
             catch (Exception Ex)
             {
@@ -170,7 +187,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region Overrides
 
-        public static bool operator ==(GTIN obj1, GTIN obj2)
+        public static bool operator ==(GTIN? obj1, GTIN? obj2)
         {
             try
             {
@@ -189,7 +206,7 @@ namespace OpenTraceability.Models.Identifiers
                     return false;
                 }
 
-                return obj1.Equals(obj2);
+                return obj1?.Equals(obj2) ?? false;
             }
             catch (Exception Ex)
             {
@@ -198,7 +215,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool operator !=(GTIN obj1, GTIN obj2)
+        public static bool operator !=(GTIN? obj1, GTIN? obj2)
         {
             try
             {
@@ -217,7 +234,7 @@ namespace OpenTraceability.Models.Identifiers
                     return true;
                 }
 
-                return !obj1.Equals(obj2);
+                return !obj1?.Equals(obj2) ?? false;
             }
             catch (Exception Ex)
             {
@@ -226,7 +243,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             try
             {

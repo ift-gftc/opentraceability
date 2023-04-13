@@ -2,6 +2,7 @@
 using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Models.MasterData;
+using OpenTraceability.Queries;
 using OpenTraceability.Utility.Attributes;
 using System.Xml.Linq;
 
@@ -103,9 +104,166 @@ namespace OpenTraceability.Models.Events
         }
 
         /// <summary>
-        /// Builds a product tree from a single EPC given the event history.
+        /// Applies one or more EPCIS Query Parameters to the events and returns the ones that match the parameters.
         /// </summary>
-        /// <returns></returns>
-        public EPCISProductTree CreateProductTree()
+        public List<IEvent> FilterEvents(EPCISQueryParameters parameters)
+        {
+            List<IEvent> events = new List<IEvent>();
+
+            foreach (var evt in this.Events)
+            {
+                // filter: GE_eventTime
+                if (parameters.query.GE_eventTime != null)
+                {
+                    if (evt.EventTime == null || evt.EventTime < parameters.query.GE_eventTime)
+                    {
+                        continue;
+                    }
+                }
+
+                // filter: LE_eventTime
+                if (parameters.query.LE_eventTime != null)
+                {
+                    if (evt.EventTime == null || evt.EventTime > parameters.query.LE_eventTime)
+                    {
+                        continue;
+                    }
+                }
+
+                // filter: GE_recordTime
+                if (parameters.query.GE_recordTime != null)
+                {
+                    if (evt.RecordTime == null || evt.RecordTime < parameters.query.GE_recordTime)
+                    {
+                        continue;
+                    }
+                }
+
+                // filter: LE_recordTime
+                if (parameters.query.LE_recordTime != null)
+                {
+                    if (evt.RecordTime == null || evt.RecordTime > parameters.query.LE_recordTime)
+                    {
+                        continue;
+                    }
+                }
+
+                // filter: EQ_bizStep
+                if (parameters.query.EQ_bizStep != null && parameters.query.EQ_bizStep.Count > 0)
+                {
+                    if (!HasUriMatch(evt.BusinessStep, parameters.query.EQ_bizStep, "https://ref.gs1.org/cbv/BizStep-", "urn:epcglobal:cbv:bizstep:"))
+                    {
+                        continue;
+                    }
+                }
+
+                // filter: EQ_bizLocation
+                if (parameters.query.EQ_bizLocation != null && parameters.query.EQ_bizLocation.Count > 0)
+                {
+                    if (evt.Location?.GLN == null || !parameters.query.EQ_bizLocation.Select(e => e.ToString().ToLower()).Contains(evt.Location.GLN.ToString().ToLower()))
+                    {
+                        continue;
+                    }
+                }
+
+                // filter: MATCH_anyEPC
+                if (parameters.query.MATCH_anyEPC != null && parameters.query.MATCH_anyEPC.Count > 0)
+                {
+                    if (!HasMatch(evt, parameters.query.MATCH_anyEPC))
+                    {
+                        continue;
+                    }
+                }
+
+                // filter: MATCH_anyEPCClass
+                if (parameters.query.MATCH_anyEPCClass != null && parameters.query.MATCH_anyEPCClass.Count > 0)
+                {
+                    if (!HasMatch(evt, parameters.query.MATCH_anyEPCClass))
+                    {
+                        continue;
+                    }
+                }
+
+                // filter: MATCH_epc
+                if (parameters.query.MATCH_epc != null && parameters.query.MATCH_epc.Count > 0)
+                {
+                    if (!HasMatch(evt, parameters.query.MATCH_epc, EventProductType.Reference, EventProductType.Child))
+                    {
+                        continue;
+                    }
+                }
+
+                // filter: MATCH_epcClass
+                if (parameters.query.MATCH_epcClass != null && parameters.query.MATCH_epcClass.Count > 0)
+                {
+                    if (!HasMatch(evt, parameters.query.MATCH_epcClass, EventProductType.Reference, EventProductType.Child))
+                    {
+                        continue;
+                    }
+                }
+
+                events.Add(evt);
+            }
+
+            return events;
+        }
+
+        private bool HasMatch(IEvent evt, List<string> epcs, params EventProductType[] allowedTypes)
+        {
+            foreach (var epc_matchStr in epcs)
+            {
+                EPC epc_match = new EPC(epc_matchStr);
+                foreach (var product in evt.Products)
+                {
+                    if (allowedTypes.Count() == 0 || allowedTypes.Contains(product.Type))
+                    {
+                        if (epc_match.Matches(product.EPC))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool HasUriMatch(Uri? uri, List<string> filter, string prefix, string replacePrefix)
+        {
+            // make sure all of the EQ_bizStep are converted into URI format before comparing
+            for (int i = 0; i < filter.Count; i++)
+            {
+                string bizStep = filter[i];
+                if (!Uri.TryCreate(bizStep, UriKind.Absolute, out Uri? u))
+                {
+                    filter[i] = replacePrefix + bizStep;
+                }
+                else if (bizStep.StartsWith(prefix))
+                {
+                    filter[i] = replacePrefix + bizStep.Split('-').Last();
+                }
+            }
+
+            // we need to handle the various formats that the bizStep can occur in
+            if (uri != null)
+            {
+                Uri bizStep = new Uri(uri.ToString());
+                if (bizStep.ToString().StartsWith(prefix))
+                {
+                    bizStep = new Uri(replacePrefix + uri.ToString().Split('-').Last());
+                }
+
+                List<Uri> filter_uris = filter.Select(x => new Uri(x)).ToList();
+                if (!filter_uris.Select(u => u.ToString().ToLower()).Contains(bizStep.ToString().ToLower()))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

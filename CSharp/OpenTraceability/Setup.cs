@@ -37,15 +37,6 @@ namespace OpenTraceability
             RegisterMasterDataType<Location>();
             RegisterMasterDataType<TradingParty>();
 
-            var assemblies = GetAssemblies();
-            foreach (var assembly in assemblies.Where(a => a.FullName?.StartsWith("OpenTraceability.") == true))
-            {
-                foreach (var t in assembly.GetTypes())
-                {
-
-                }
-            }
-
             JsonConvert.DefaultSettings = () =>
             {
                 JsonSerializerSettings settings = new JsonSerializerSettings();
@@ -56,33 +47,6 @@ namespace OpenTraceability
 
                 return settings;
             };
-        }
-
-        internal static List<Assembly> GetAssemblies()
-        {
-            var returnAssemblies = new List<Assembly>();
-            var loadedAssemblies = new HashSet<string>();
-            var assembliesToCheck = new Queue<Assembly>();
-
-            assembliesToCheck.Enqueue(Assembly.GetEntryAssembly());
-
-            while (assembliesToCheck.Count > 0)
-            {
-                var assemblyToCheck = assembliesToCheck.Dequeue();
-
-                foreach (var reference in assemblyToCheck.GetReferencedAssemblies())
-                {
-                    if (!loadedAssemblies.Contains(reference.FullName))
-                    {
-                        var assembly = Assembly.Load(reference);
-                        assembliesToCheck.Enqueue(assembly);
-                        loadedAssemblies.Add(reference.FullName);
-                        returnAssemblies.Add(assembly);
-                    }
-                }
-            }
-
-            return returnAssemblies;
         }
 
         /// <summary>

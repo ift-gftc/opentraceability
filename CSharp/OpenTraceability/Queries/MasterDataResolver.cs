@@ -6,6 +6,7 @@ using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Models.MasterData;
 using OpenTraceability.Utility;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace OpenTraceability.Queries
     /// </summary>
     public class MasterDataResolver
     {
-        public static async Task ResolveMasterData(MasterDataQueryOptions options, EPCISBaseDocument doc)
+        public static async Task ResolveMasterData(DigitalLinkQueryOptions options, EPCISBaseDocument doc, HttpClient client)
         {
             // find all master data we have not resolved yet...
             foreach (var evt in doc.Events)
@@ -29,11 +30,52 @@ namespace OpenTraceability.Queries
                 {
                     if (p.EPC.Type == EPCType.Class || p.EPC.Type == EPCType.Instance)
                     {
-                        ResolveTradeitem(options, p.EPC.GTIN, doc);
+                        await ResolveTradeitem(options, p.EPC.GTIN, doc, client);
                     }
                 }
 
-                await ResolveLocation(options, evt.Location?.GLN, doc);
+                await ResolveLocation(options, evt.Location?.GLN, doc, client);
+
+                foreach (var source in evt.SourceList)
+                {
+                    if (source.ParsedType == EventDestinationType.Owner)
+                    {
+                        var pgln = new PGLN(source.Value ?? throw new Exception("source in event source list has NULL value."));
+                        if (pgln != null)
+                        {
+                            await ResolveTradingParty(options, pgln, doc, client);
+                        }
+                    }
+                }
+
+                foreach (var dest in evt.DestinationList)
+                {
+                    if (dest.ParsedType == EventDestinationType.Owner)
+                    {
+                        var pgln = new PGLN(dest.Value ?? throw new Exception("source in event source list has NULL value."));
+                        if (pgln != null)
+                        {
+                            await ResolveTradingParty(options, pgln, doc, client);
+                        }
+                    }
+                }
+            }
+        }
+
+        public static async Task ResolveMasterData<TTradeitem, TLocation, TTradingParty>(DigitalLinkQueryOptions options, EPCISBaseDocument doc, HttpClient client) where TTradeitem: Tradeitem, new() where TLocation: Location, new() where TTradingParty : TradingParty, new()
+        {
+            // find all master data we have not resolved yet...
+            foreach (var evt in doc.Events)
+            {
+                foreach (var p in evt.Products)
+                {
+                    if (p.EPC.Type == EPCType.Class || p.EPC.Type == EPCType.Instance)
+                    {
+                        ResolveTradeitem<TTradeitem>(options, p.EPC.GTIN, doc, client);
+                    }
+                }
+
+                await ResolveLocation(options, evt.Location?.GLN, doc, client);
 
                 foreach (var source in evt.SourceList)
                 {
@@ -42,7 +84,7 @@ namespace OpenTraceability.Queries
                         var pgln = new PGLN(source.Value ?? throw new Exception("source in event source list has NULL value."));
                         if (pgln != null)
                         {
-                            await ResolveTradingParty(options, pgln, doc);
+                            await ResolveTradingParty<TTradingParty>(options, pgln, doc, client);
                         }
                     }
                 }
@@ -54,62 +96,21 @@ namespace OpenTraceability.Queries
                         var pgln = new PGLN(dest.Value ?? throw new Exception("source in event source list has NULL value."));
                         if (pgln != null)
                         {
-                            await ResolveTradingParty(options, pgln, doc);
+                            await ResolveTradingParty<TTradingParty>(options, pgln, doc, client);
                         }
                     }
                 }
             }
         }
 
-        public static async Task ResolveMasterData<TTradeitem, TLocation, TTradingParty>(MasterDataQueryOptions options, EPCISBaseDocument doc) where TTradeitem: Tradeitem, new() where TLocation: Location, new() where TTradingParty : TradingParty, new()
-        {
-            // find all master data we have not resolved yet...
-            foreach (var evt in doc.Events)
-            {
-                foreach (var p in evt.Products)
-                {
-                    if (p.EPC.Type == EPCType.Class || p.EPC.Type == EPCType.Instance)
-                    {
-                        ResolveTradeitem<TTradeitem>(options, p.EPC.GTIN, doc);
-                    }
-                }
-
-                await ResolveLocation(options, evt.Location?.GLN, doc);
-
-                foreach (var source in evt.SourceList)
-                {
-                    if (source.Type == OpenTraceability.Constants.EPCIS.URN.SDT_Owner)
-                    {
-                        var pgln = new PGLN(source.Value ?? throw new Exception("source in event source list has NULL value."));
-                        if (pgln != null)
-                        {
-                            await ResolveTradingParty<TTradingParty>(options, pgln, doc);
-                        }
-                    }
-                }
-
-                foreach (var dest in evt.DestinationList)
-                {
-                    if (dest.Type == OpenTraceability.Constants.EPCIS.URN.SDT_Owner)
-                    {
-                        var pgln = new PGLN(dest.Value ?? throw new Exception("source in event source list has NULL value."));
-                        if (pgln != null)
-                        {
-                            await ResolveTradingParty<TTradingParty>(options, pgln, doc);
-                        }
-                    }
-                }
-            }
-        }
-
-        public static async Task ResolveTradeitem(MasterDataQueryOptions options, GTIN? gtin, EPCISBaseDocument doc)
+        public static async Task ResolveTradeitem(DigitalLinkQueryOptions options, GTIN? gtin, EPCISBaseDocument doc, HttpClient client)
         {
             if (gtin != null)
             {
                 if (doc.GetMasterData<Tradeitem>(gtin.ToString()) == null)
                 {
                     Type t = Setup.GetMasterDataTypeDefault(typeof(Tradeitem)) ?? typeof(Tradeitem);
-                    var ti = (await ResolveMasterDataItem(t, options, $"/01/{gtin}?linkType=gs1:masterData")) as Tradeitem;
+                    var ti = (await ResolveMasterDataItem(t, options, $"/01/{gtin}?linkType=gs1:masterData", client)) as Tradeitem;
                     if (ti != null)
                     {
                         doc.MasterData.Add(ti);
@@ -118,14 +119,14 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveLocation(MasterDataQueryOptions options, GLN? gln, EPCISBaseDocument doc)
+        public static async Task ResolveLocation(DigitalLinkQueryOptions options, GLN? gln, EPCISBaseDocument doc, HttpClient client)
         {
             if (gln != null)
             {
                 if (doc.GetMasterData<Location>(gln.ToString()) == null)
                 {
                     Type t = Setup.GetMasterDataTypeDefault(typeof(Location)) ?? typeof(Location);
-                    var l = (await ResolveMasterDataItem(t, options, $"/414/{gln}?linkType=gs1:masterData")) as Location;
+                    var l = (await ResolveMasterDataItem(t, options, $"/414/{gln}?linkType=gs1:masterData", client)) as Location;
                     if (l != null)
                     {
                         doc.MasterData.Add(l);
@@ -134,14 +135,14 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradingParty(MasterDataQueryOptions options, PGLN? pgln, EPCISBaseDocument doc)
+        public static async Task ResolveTradingParty(DigitalLinkQueryOptions options, PGLN? pgln, EPCISBaseDocument doc, HttpClient client)
         {
             if (pgln != null)
             {
                 if (doc.GetMasterData<TradingParty>(pgln.ToString()) == null)
                 {
                     Type t = Setup.GetMasterDataTypeDefault(typeof(TradingParty)) ?? typeof(TradingParty);
-                    var tp = (await ResolveMasterDataItem(t, options, $"/417/{pgln}?linkType=gs1:masterData")) as TradingParty;
+                    var tp = (await ResolveMasterDataItem(t, options, $"/417/{pgln}?linkType=gs1:masterData", client)) as TradingParty;
                     if (tp != null)
                     {
                         doc.MasterData.Add(tp);
@@ -150,13 +151,13 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradeitem<T>(MasterDataQueryOptions options, GTIN? gtin, EPCISBaseDocument doc) where T : Tradeitem
+        public static async Task ResolveTradeitem<T>(DigitalLinkQueryOptions options, GTIN? gtin, EPCISBaseDocument doc, HttpClient client) where T : Tradeitem
         {
             if (gtin != null)
             {
                 if (doc.GetMasterData<Tradeitem>(gtin.ToString()) == null)
                 {
-                    var ti = await ResolverMasterDataItem<T>(options, $"/01/{gtin}?linkType=gs1:masterData");
+                    var ti = await ResolverMasterDataItem<T>(options, $"/01/{gtin}?linkType=gs1:masterData", client);
                     if (ti != null)
                     {
                         doc.MasterData.Add(ti);
@@ -165,13 +166,13 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveLocation<T>(MasterDataQueryOptions options, GLN? gln, EPCISBaseDocument doc) where T : Location
+        public static async Task ResolveLocation<T>(DigitalLinkQueryOptions options, GLN? gln, EPCISBaseDocument doc, HttpClient client) where T : Location
         {
             if (gln != null)
             {
                 if (doc.GetMasterData<Location>(gln.ToString()) == null)
                 {
-                    var l = await ResolverMasterDataItem<T>(options, $"/414/{gln}?linkType=gs1:masterData");
+                    var l = await ResolverMasterDataItem<T>(options, $"/414/{gln}?linkType=gs1:masterData", client);
                     if (l != null)
                     {
                         doc.MasterData.Add(l);
@@ -180,13 +181,13 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradingParty<T>(MasterDataQueryOptions options, PGLN? pgln, EPCISBaseDocument doc) where T : TradingParty
+        public static async Task ResolveTradingParty<T>(DigitalLinkQueryOptions options, PGLN? pgln, EPCISBaseDocument doc, HttpClient client) where T : TradingParty
         {
             if (pgln != null)
             {
                 if (doc.GetMasterData<TradingParty>(pgln.ToString()) == null)
                 {
-                    var tp = await ResolverMasterDataItem<T>(options, $"/417/{pgln}?linkType=gs1:masterData");
+                    var tp = await ResolverMasterDataItem<T>(options, $"/417/{pgln}?linkType=gs1:masterData", client);
                     if (tp != null)
                     {
                         doc.MasterData.Add(tp);
@@ -195,11 +196,11 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task<Tradeitem?> ResolveTradeitem(MasterDataQueryOptions options, GTIN? gtin)
+        public static async Task<Tradeitem?> ResolveTradeitem(DigitalLinkQueryOptions options, GTIN? gtin, HttpClient client)
         {
             if (gtin != null)
             {
-                var ti = await ResolverMasterDataItem<Tradeitem>(options, $"/01/{gtin}?linkType=gs1:masterData");
+                var ti = await ResolverMasterDataItem<Tradeitem>(options, $"/01/{gtin}?linkType=gs1:masterData", client);
                 if (ti != null)
                 {
                     return ti;
@@ -208,11 +209,11 @@ namespace OpenTraceability.Queries
             return null;
         }
 
-        public static async Task<Location?> ResolveLocation(MasterDataQueryOptions options, GLN? gln)
+        public static async Task<Location?> ResolveLocation(DigitalLinkQueryOptions options, GLN? gln, HttpClient client)
         {
             if (gln != null)
             {
-                var l = await ResolverMasterDataItem<Location>(options, $"/414/{gln}?linkType=gs1:masterData");
+                var l = await ResolverMasterDataItem<Location>(options, $"/414/{gln}?linkType=gs1:masterData", client);
                 if (l != null)
                 {
                     return l;
@@ -221,11 +222,11 @@ namespace OpenTraceability.Queries
             return null;
         }
 
-        public static async Task<TradingParty?> ResolveTradingParty(MasterDataQueryOptions options, PGLN? pgln)
+        public static async Task<TradingParty?> ResolveTradingParty(DigitalLinkQueryOptions options, PGLN? pgln, HttpClient client)
         {
             if (pgln != null)
             {
-                var tp = await ResolverMasterDataItem<TradingParty>(options, $"/417/{pgln}?linkType=gs1:masterData");
+                var tp = await ResolverMasterDataItem<TradingParty>(options, $"/417/{pgln}?linkType=gs1:masterData", client);
                 if (tp != null)
                 {
                     return tp;
@@ -234,9 +235,9 @@ namespace OpenTraceability.Queries
             return null;
         }
 
-        public static async Task<T?> ResolverMasterDataItem<T>(MasterDataQueryOptions options, string relativeURL) where T : IVocabularyElement
+        public static async Task<T?> ResolverMasterDataItem<T>(DigitalLinkQueryOptions options, string relativeURL, HttpClient client) where T : IVocabularyElement
         {
-            var response = await ResolveMasterDataItem(typeof(T), options, relativeURL);
+            var response = await ResolveMasterDataItem(typeof(T), options, relativeURL, client);
             if (response == null)
             {
                 return default(T);
@@ -247,29 +248,17 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task<object?> ResolveMasterDataItem(Type type, MasterDataQueryOptions options, string relativeURL)
+        public static async Task<object?> ResolveMasterDataItem(Type type, DigitalLinkQueryOptions options, string relativeURL, HttpClient httpClient)
         {
             if (options.URL == null)
             {
-                throw new Exception("options.Uri is null on the MasterDataQueryOptions");
+                throw new Exception("options.Uri is null on the DigitalLinkQueryOptions");
             }
 
             HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri(options.URL + relativeURL);
+            request.RequestUri = new Uri(options.URL.ToString().TrimEnd('/') + "/" + relativeURL.TrimStart('/'));
             request.Method = HttpMethod.Get;
 
-            if (!string.IsNullOrWhiteSpace(options.XAPIKey))
-            {
-                request.Headers.Add("X-API-Key", options.XAPIKey);
-            }
-
-            if (!string.IsNullOrWhiteSpace(options.BearerToken))
-            {
-                request.Headers.Add("Authorization", "Bearer " + options.BearerToken);
-            }
-
-            using var clientItem = HttpClientPool.GetClient();
-            var httpClient = clientItem.Value;
             var response = await httpClient.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
@@ -285,19 +274,6 @@ namespace OpenTraceability.Queries
                             request = new HttpRequestMessage();
                             request.RequestUri = new Uri(link.link);
                             request.Method = HttpMethod.Get;
-
-                            if (link.authRequired == true)
-                            {
-                                if (!string.IsNullOrWhiteSpace(options.XAPIKey))
-                                {
-                                    request.Headers.Add("X-API-Key", options.XAPIKey);
-                                }
-
-                                if (!string.IsNullOrWhiteSpace(options.BearerToken))
-                                {
-                                    request.Headers.Add("Authorization", "Bearer " + options.BearerToken);
-                                }
-                            }
 
                             response = await httpClient.SendAsync(request);
 
@@ -328,7 +304,8 @@ namespace OpenTraceability.Queries
             }
             else
             {
-                throw new HttpRequestException($"There was an error trying to fetch digital links from {relativeURL}");
+                string contentStr = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"There was an error trying to fetch digital links from {relativeURL} - {contentStr} - {response.ToString()}");
             }
 
             return null;

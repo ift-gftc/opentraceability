@@ -31,9 +31,13 @@ namespace OpenTraceability.Queries
 		/// </summary>
 		/// <param name="doc"></param>
 		/// <returns>The blob ID of the uploaded traceability data.</returns>
-		public async Task<string> Post(EPCISDocument doc)
+		public async Task<string> Post(EPCISDocument doc, string? blob_id = null)
 		{
-			string blob_id = Guid.NewGuid().ToString();
+			if (blob_id == null)
+            {
+                blob_id = Guid.NewGuid().ToString();
+            }
+
             string url = $"{_baseURL.TrimEnd('/')}/epcis/{blob_id}/events";
 
 			IEPCISDocumentMapper mapper = OpenTraceabilityMappers.EPCISDocument.XML;
@@ -105,16 +109,20 @@ namespace OpenTraceability.Queries
 		/// <returns>The EPCIS Query results.</returns>
 		public async Task<EPCISQueryResults> QueryEvents(string blob_id, EPCISQueryParameters parameters)
 		{
-			string url = $"{_baseURL.TrimEnd('/')}/epcis/{blob_id}";
-			EPCISQueryInterfaceOptions options = new EPCISQueryInterfaceOptions()
-			{
-				URL = new Uri(url),
-				Format = _format,
-				Version = _version,
-				EnableStackTrace = true
-			};
+            using (var clientItem = HttpClientPool.GetClient())
+            {
+                var client = clientItem.Value;
+                string url = $"{_baseURL.TrimEnd('/')}/epcis/{blob_id}";
+                EPCISQueryInterfaceOptions options = new EPCISQueryInterfaceOptions()
+                {
+                    URL = new Uri(url),
+                    Format = _format,
+                    Version = _version,
+                    EnableStackTrace = true
+                };
 
-            return await EPCISTraceabilityResolver.QueryEvents(options, parameters);
+                return await EPCISTraceabilityResolver.QueryEvents(options, parameters, client);
+            }
         }
 
 		/// <summary>
@@ -124,17 +132,21 @@ namespace OpenTraceability.Queries
 		/// <param name="epc">The EPC to perform the traceback on.</param>
 		/// <returns>The epcis query results.</returns>
 		public async Task<EPCISQueryResults> Traceback(string blob_id, EPC epc)
-		{
-            string url = $"{_baseURL.TrimEnd('/')}/epcis/{blob_id}";
-            EPCISQueryInterfaceOptions options = new EPCISQueryInterfaceOptions()
+        {
+            using (var clientItem = HttpClientPool.GetClient())
             {
-                URL = new Uri(url),
-                Format = _format,
-                Version = _version,
-                EnableStackTrace = true
-            };
+                var client = clientItem.Value;
+                string url = $"{_baseURL.TrimEnd('/')}/epcis/{blob_id}";
+                EPCISQueryInterfaceOptions options = new EPCISQueryInterfaceOptions()
+                {
+                    URL = new Uri(url),
+                    Format = _format,
+                    Version = _version,
+                    EnableStackTrace = true
+                };
 
-			return await EPCISTraceabilityResolver.Traceback(options, epc);
+                return await EPCISTraceabilityResolver.Traceback(options, epc, client);
+            }
         }
 
         /// <summary>
@@ -144,14 +156,18 @@ namespace OpenTraceability.Queries
         /// <param name="doc">The EPCIS document to resolve the master data for.</param>
         public async Task ResolveMasterData(string blob_id, EPCISBaseDocument doc)
         {
-            string url = $"{_baseURL.TrimEnd('/')}/digitallink/{blob_id}";
-            MasterDataQueryOptions options = new MasterDataQueryOptions()
+            using (var clientItem = HttpClientPool.GetClient())
             {
-                URL = new Uri(url),
-                EnableStackTrace = true
-            };
+                var client = clientItem.Value;
+                string url = $"{_baseURL.TrimEnd('/')}/digitallink/{blob_id}";
+                DigitalLinkQueryOptions options = new DigitalLinkQueryOptions()
+                {
+                    URL = new Uri(url),
+                    EnableStackTrace = true
+                };
 
-            await MasterDataResolver.ResolveMasterData(options, doc);
+                await MasterDataResolver.ResolveMasterData(options, doc, client);
+            }
         }
     }
 }

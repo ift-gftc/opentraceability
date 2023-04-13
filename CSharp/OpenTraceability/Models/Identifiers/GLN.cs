@@ -1,4 +1,5 @@
-﻿using OpenTraceability.Utility;
+﻿using Newtonsoft.Json;
+using OpenTraceability.Utility;
 using System.Runtime.Serialization;
 
 namespace OpenTraceability.Models.Identifiers
@@ -7,9 +8,10 @@ namespace OpenTraceability.Models.Identifiers
     /// Global Location Number - used for identifying SCE's in Full Chain Traceability.
     /// </summary>
     [DataContract]
+    [JsonConverter(typeof(GLNConverter))]
     public class GLN : IEquatable<GLN>, IComparable<GLN>
     {
-        private string _glnStr;
+        private string _glnStr = string.Empty;
 
         public GLN()
         {
@@ -34,11 +36,26 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public string ToDigitalLinkURL(string baseURL)
+        public bool IsGS1PGLN()
+        {
+            return (_glnStr.Contains(":id:sgln:"));
+        }
+
+        public string ToDigitalLinkURL()
         {
             try
             {
-                return $"{baseURL}/gln/{this._glnStr}";
+                if (IsGS1PGLN())
+                {
+                    string[] gtinParts = _glnStr.Split(':').Last().Split('.');
+                    string pgln = gtinParts[0] + gtinParts[1];
+                    pgln = pgln + GS1Util.CalculateGLN13CheckSum(pgln);
+                    return $"414/{pgln}";
+                }
+                else
+                {
+                    return $"414/{this._glnStr}";
+                }
             }
             catch (Exception Ex)
             {

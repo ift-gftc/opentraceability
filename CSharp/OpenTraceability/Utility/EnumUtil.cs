@@ -73,7 +73,28 @@ namespace OpenTraceability.Utility
                 OTLogger.Error(Ex);
                 throw;
             }
-        }        
+        }
+
+        public static List<T> GetEnumAttributes<T>(object value)
+        {
+            try
+            {
+                FieldInfo? fi = value.GetType().GetRuntimeField(value.ToString() ?? string.Empty);
+
+                if (fi != null)
+                {
+                    T[] attributes = fi.GetCustomAttributes(typeof(T), false).Where(o => o is T).Select(o => (T)o).ToArray();
+                    return attributes.ToList();
+                }
+
+                return new List<T>();
+            }
+            catch (Exception Ex)
+            {
+                OTLogger.Error(Ex);
+                throw;
+            }
+        }
 
         public static IEnumerable<T> GetValues<T>()
         {

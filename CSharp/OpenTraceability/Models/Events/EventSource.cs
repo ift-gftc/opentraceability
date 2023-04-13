@@ -8,13 +8,19 @@ namespace OpenTraceability.Models.Events
     {
         Unknown = 0,
 
-        [Description("urn:epcglobal:cbv:sdt:owning_party")]
+        [CBV("owning_party")]
+        [CBV("https://ref.gs1.org/cbv/SDT-owning_party")]
+        [CBV("urn:epcglobal:cbv:sdt:owning_party")]
         Owner = 1,
 
-        [Description("urn:epcglobal:cbv:sdt:possessing_party")]
+        [CBV("possessing_party")]
+        [CBV("https://ref.gs1.org/cbv/SDT-possessing_party")]
+        [CBV("urn:epcglobal:cbv:sdt:possessing_party")]
         Possessor = 2,
 
-        [Description("urn:epcglobal:cbv:sdt:location")]
+        [CBV("location")]
+        [CBV("https://ref.gs1.org/cbv/SDT-location")]
+        [CBV("urn:epcglobal:cbv:sdt:location")]
         Location = 3
     }
 
@@ -23,6 +29,32 @@ namespace OpenTraceability.Models.Events
         [OpenTraceabilityJson("type")]
         [OpenTraceability("@type")]
         public Uri? Type { get; set; }
+
+        public EventDestinationType ParsedType
+        {
+            get
+            {
+                EventDestinationType type = EventDestinationType.Unknown;
+
+                foreach (var e in Enum.GetValues<EventDestinationType>())
+                {
+                    if (EnumUtil.GetEnumAttributes<CBVAttribute>(e).Exists(e => e.Value.ToLower() == Type?.ToString().ToLower()))
+                    {
+                        return e;
+                    }
+                }
+
+                return type;
+            }
+            set
+            {
+                string? t = EnumUtil.GetEnumAttributes<CBVAttribute>(value).Where(e => e.Value.StartsWith("urn")).FirstOrDefault()?.Value;
+                if (!string.IsNullOrWhiteSpace(t))
+                {
+                    this.Type = new Uri(t);
+                }
+            }
+        }
 
         [OpenTraceabilityJson("source")]
         [OpenTraceability("text()")]

@@ -1,4 +1,5 @@
-﻿using OpenTraceability.Utility;
+﻿using Newtonsoft.Json;
+using OpenTraceability.Utility;
 using System.Runtime.Serialization;
 
 namespace OpenTraceability.Models.Identifiers
@@ -8,9 +9,10 @@ namespace OpenTraceability.Models.Identifiers
     /// Business Regions, Business Groups, and Private Trading Partners in Full Chain Traceability.
     /// </summary>
     [DataContract]
+    [JsonConverter(typeof(PGLNConverter))]
     public class PGLN : IEquatable<PGLN>, IComparable<PGLN>
     {
-        private string _pglnStr;
+        private string _pglnStr = string.Empty;
 
         public PGLN()
         {
@@ -19,7 +21,7 @@ namespace OpenTraceability.Models.Identifiers
 
         public PGLN(string pglnStr)
         {
-            string error = DetectPGLNIssue(pglnStr);
+            string? error = DetectPGLNIssue(pglnStr);
             if (!string.IsNullOrWhiteSpace(error))
             {
                 throw new Exception($"The PGLN {pglnStr} is not valid. {error}");
@@ -27,11 +29,26 @@ namespace OpenTraceability.Models.Identifiers
             this._pglnStr = pglnStr;
         }
 
-        public string ToDigitalLinkURL(string baseURL)
+        public bool IsGS1PGLN()
+        {
+            return (_pglnStr.Contains(":id:pgln:") || _pglnStr.Contains(":id:sgln:"));
+        }
+
+        public string ToDigitalLinkURL()
         {
             try
             {
-                return $"{baseURL}/pgln/{this._pglnStr}";
+                if (IsGS1PGLN())
+                {
+                    string[] gtinParts = _pglnStr.Split(':').Last().Split('.');
+                    string pgln = gtinParts[0] + gtinParts[1];
+                    pgln = pgln + GS1Util.CalculateGLN13CheckSum(pgln);
+                    return $"417/{pgln}";
+                }
+                else
+                {
+                    return $"417/{this._pglnStr}";
+                }
             }
             catch (Exception Ex)
             {
@@ -161,7 +178,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region Overrides
 
-        public static bool operator ==(PGLN obj1, PGLN obj2)
+        public static bool operator ==(PGLN? obj1, PGLN? obj2)
         {
             try
             {
@@ -176,6 +193,11 @@ namespace OpenTraceability.Models.Identifiers
                 }
 
                 if (Object.ReferenceEquals(null, obj1) && !Object.ReferenceEquals(null, obj2))
+                {
+                    return false;
+                }
+
+                if (obj1 == null)
                 {
                     return false;
                 }
@@ -189,7 +211,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool operator !=(PGLN obj1, PGLN obj2)
+        public static bool operator !=(PGLN? obj1, PGLN? obj2)
         {
             try
             {
@@ -208,6 +230,11 @@ namespace OpenTraceability.Models.Identifiers
                     return true;
                 }
 
+                if (obj1 == null)
+                {
+                    return false;
+                }
+
                 return !obj1.Equals(obj2);
             }
             catch (Exception Ex)
@@ -217,7 +244,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             try
             {

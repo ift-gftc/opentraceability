@@ -18,16 +18,6 @@ namespace OpenTraceability.Queries
         public Uri? URL { get; set; }
 
         /// <summary>
-        /// The API Key value to include in the 'X-API-Key' HTTP header of the request.
-        /// </summary>
-        public string? XAPIKey { get; set; }
-
-        /// <summary>
-        /// The bearer token to be included in the 'Authorization' HTTP header of the request.
-        /// </summary>
-        public string? BearerToken { get; set; }
-
-        /// <summary>
         /// The version of EPCIS that we are querying for. This defaults to EPCIS 2.0
         /// </summary>
         public EPCISVersion Version { get; set; } = EPCISVersion.V2;

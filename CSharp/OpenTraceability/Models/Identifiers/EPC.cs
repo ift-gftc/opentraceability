@@ -1,4 +1,5 @@
-﻿using OpenTraceability.Utility;
+﻿using Newtonsoft.Json;
+using OpenTraceability.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace OpenTraceability.Models.Identifiers
         URI = 3
     }
 
+    [JsonConverter(typeof(EPCConverter))]
     public class EPC
     {
         private string _epcStr;

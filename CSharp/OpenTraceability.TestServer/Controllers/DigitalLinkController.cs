@@ -133,6 +133,35 @@ public class DigitalLinkController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{blob_id}/00/{sscc}")]
+    public async Task<IActionResult> GetSSCCLinks(string blob_id, string sscc, [FromQuery] string linkType)
+    {
+        try
+        {
+            string baseURL = Request.GetDisplayUrl().Split("/digitallink/").First();
+
+            List<DigitalLink> links = new List<DigitalLink>();
+
+            if (linkType == null || linkType.ToLower() == "gs1:epcis")
+            {
+                links.Add(new DigitalLink()
+                {
+                    link = baseURL + $"/epcis/{blob_id}",
+                    linkType = "gs1:epcis",
+                    authRequired = true
+                });
+            }
+
+            return Ok(links);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
+        }
+    }
+
+    [HttpGet]
     [Route("{blob_id}/01/{gtin}/10/{lot}")]
     public async Task<IActionResult> GetEPCClassLinks(string blob_id, string gtin, string lot, [FromQuery] string linkType)
     {
