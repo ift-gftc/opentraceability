@@ -112,7 +112,12 @@ namespace OpenTraceability.Tests.Queries
         [TestCase("testserver_advancedfilters.jsonld")]
         public async Task GetEPCISQueryInterfaceURL(string filename)
         {
-            using HttpClient httpClient = new HttpClient();
+            using HttpClientHandler httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback += (m, e, c, h) =>
+            {
+                return true;
+            };
+            using HttpClient httpClient = new HttpClient(httpClientHandler);
             EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
