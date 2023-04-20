@@ -175,8 +175,8 @@ namespace OpenTraceability.Tests.Queries
             parameters.query.EQ_bizLocation = new List<Uri>() { new Uri(bizLocation) };
 
             var results = await client.QueryEvents(blob_id, parameters);
-            Assert.AreEqual(0, results.Errors.Count, "errors found in the query events");
-            Assert.AreEqual(1, results.Document.Events.Count, "no events returned");
+            Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the query events");
+            Assert.That(results.Document.Events.Count, Is.EqualTo(1), "no events returned");
         }
 
         [Test]
