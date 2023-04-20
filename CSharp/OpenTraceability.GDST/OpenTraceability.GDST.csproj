@@ -15,6 +15,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="..\..\..\..\TSC\GDSTTools\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
 	</ItemGroup>
 
