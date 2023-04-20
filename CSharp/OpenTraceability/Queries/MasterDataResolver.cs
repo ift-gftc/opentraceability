@@ -62,7 +62,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveMasterData<TTradeitem, TLocation, TTradingParty>(DigitalLinkQueryOptions options, EPCISBaseDocument doc, HttpClient client) where TTradeitem: Tradeitem, new() where TLocation: Location, new() where TTradingParty : TradingParty, new()
+        public static async Task ResolveMasterData<TTradeitem, TLocation, TTradingParty>(DigitalLinkQueryOptions options, EPCISBaseDocument doc, HttpClient client) where TTradeitem : Tradeitem, new() where TLocation : Location, new() where TTradingParty : TradingParty, new()
         {
             // find all master data we have not resolved yet...
             foreach (var evt in doc.Events)
@@ -71,7 +71,7 @@ namespace OpenTraceability.Queries
                 {
                     if (p.EPC.Type == EPCType.Class || p.EPC.Type == EPCType.Instance)
                     {
-                        ResolveTradeitem<TTradeitem>(options, p.EPC.GTIN, doc, client);
+                        await ResolveTradeitem<TTradeitem>(options, p.EPC.GTIN, doc, client);
                     }
                 }
 

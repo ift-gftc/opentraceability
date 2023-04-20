@@ -10,5 +10,11 @@
         "type": "Instance",
         "gtin": "urn:gdst:example.org:product:class:feedmill.1u",
         "lotOrSerial": "ff11252021"
+    },
+    {
+        "epc": "urn:gdst:example.org:product:lot:class:processor.2u.v1-0122-2022",
+        "type": "Class",
+        "gtin": "urn:gdst:example.org:product:class:processor.2u",
+        "lotOrSerial": "v1-0122-2022"
     }
 ]

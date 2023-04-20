@@ -19,10 +19,15 @@ namespace OpenTraceability.Tests.Identifiers
             JArray jarr = JArray.Parse(jsonStr);
             foreach (JObject jTestcase in jarr)
             {
-                string epcStr = jTestcase["epc"]?.ToString();
-                EPCType expectedType = Enum.Parse<EPCType>(jTestcase.Value<string>("type"));
+                string? epcStr = jTestcase["epc"]?.ToString();
+                EPCType expectedType = Enum.Parse<EPCType>(jTestcase.Value<string>("type") ?? string.Empty);
                 string? expectedGTIN = jTestcase.Value<string>("gtin");
                 string? expectedLotOrSerial = jTestcase.Value<string>("lotOrSerial");
+
+                if (!EPC.TryParse(epcStr, out EPC? e, out string? err))
+                {
+                    Assert.Fail("Failed EPC.TryParse " + err);
+                }
 
                 EPC epc = new EPC(epcStr);
 

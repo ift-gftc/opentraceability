@@ -15,7 +15,6 @@ namespace OpenTraceability.Models.Identifiers
 
         public GLN()
         {
-
         }
 
         public GLN(string glnStr)
@@ -242,6 +241,11 @@ namespace OpenTraceability.Models.Identifiers
                 }
 
                 if (Object.ReferenceEquals(null, obj1) && !Object.ReferenceEquals(null, obj2))
+                {
+                    return true;
+                }
+
+                if (obj1 == null)
                 {
                     return true;
                 }

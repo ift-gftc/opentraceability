@@ -25,16 +25,14 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
     {
         public static void ReadMasterData(EPCISBaseDocument doc, JObject jMasterData)
         {
-            JArray? jVocabList = jMasterData["vocabularyList"] as JArray;
-            if (jVocabList != null)
+            if (jMasterData["vocabularyList"] is JArray jVocabList)
             {
                 foreach (JObject jVocabListItem in jVocabList)
                 {
                     string? type = jVocabListItem["type"]?.ToString()?.ToLower();
                     if (type != null)
                     {
-                        JArray? jVocabElementaryList = jVocabListItem["vocabularyElementList"] as JArray;
-                        if (jVocabElementaryList != null)
+                        if (jVocabListItem["vocabularyElementList"] is JArray jVocabElementaryList)
                         {
                             foreach (JObject jVocabEle in jVocabElementaryList)
                             {
@@ -70,13 +68,19 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             // read the GLN from the id
             string id = xLocation["id"]?.ToString() ?? string.Empty;
             Type t = Setup.MasterDataTypes[type];
-            Location loc = (Location)Activator.CreateInstance(t);
-            loc.GLN = new Models.Identifiers.GLN(id);
-            loc.EPCISType = type;
+            if (Activator.CreateInstance(t) is not Location loc)
+            {
+                throw new Exception($"Failed to activate instance Location of {t}");
+            }
+            else
+            {
+                loc.GLN = new Models.Identifiers.GLN(id);
+                loc.EPCISType = type;
 
-            // read the object
-            ReadMasterDataObject(loc, xLocation);
-            doc.MasterData.Add(loc);
+                // read the object
+                ReadMasterDataObject(loc, xLocation);
+                doc.MasterData.Add(loc);
+            }
         }
 
         private static void ReadTradingParty(EPCISBaseDocument doc, JObject xTradingParty, string type)

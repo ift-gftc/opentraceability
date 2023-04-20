@@ -12,14 +12,13 @@ namespace OpenTraceability.Models.Identifiers
     [JsonConverter(typeof(PGLNConverter))]
     public class PGLN : IEquatable<PGLN>, IComparable<PGLN>
     {
-        private string _pglnStr = string.Empty;
+        private string? _pglnStr = string.Empty;
 
         public PGLN()
         {
-
         }
 
-        public PGLN(string pglnStr)
+        public PGLN(string? pglnStr)
         {
             string? error = DetectPGLNIssue(pglnStr);
             if (!string.IsNullOrWhiteSpace(error))
@@ -77,7 +76,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static string? DetectPGLNIssue(string pglnStr)
+        public static string? DetectPGLNIssue(string? pglnStr)
         {
             try
             {
@@ -147,7 +146,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string pglnStr, out PGLN pgln, out string error)
+        public static bool TryParse(string? pglnStr, out PGLN? pgln, out string? error)
         {
             try
             {

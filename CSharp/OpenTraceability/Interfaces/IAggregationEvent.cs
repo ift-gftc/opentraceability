@@ -3,9 +3,8 @@ using OpenTraceability.Models.Identifiers;
 
 namespace OpenTraceability.Interfaces
 {
-	public interface IAggregationEvent : IEvent
-	{
-		EPC ParentID { get; set; }
-	}
+    public interface IAggregationEvent : IEvent
+    {
+        EPC? ParentID { get; set; }
+    }
 }
-

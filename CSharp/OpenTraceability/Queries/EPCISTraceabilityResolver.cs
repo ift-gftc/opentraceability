@@ -14,7 +14,7 @@ namespace OpenTraceability.Queries
     /// an EPCIS Query Interface.
     /// </summary>
     public static class EPCISTraceabilityResolver
-	{
+    {
         /// <summary>
         /// Tries to get the EPCIS Query Interface URL from the Digital Link Resolver for the given EPC.
         /// </summary>
@@ -31,8 +31,8 @@ namespace OpenTraceability.Queries
             string? relativeUrl = null;
             switch (epc.Type)
             {
-                case EPCType.Class: relativeUrl = epc.GTIN.ToDigitalLinkURL() + "/10/" + epc.SerialLotNumber; break;
-                case EPCType.Instance: relativeUrl = epc.GTIN.ToDigitalLinkURL() + "/21/" + epc.SerialLotNumber; break;
+                case EPCType.Class: relativeUrl = epc.GTIN?.ToDigitalLinkURL() + "/10/" + epc.SerialLotNumber; break;
+                case EPCType.Instance: relativeUrl = epc.GTIN?.ToDigitalLinkURL() + "/21/" + epc.SerialLotNumber; break;
                 case EPCType.SSCC: relativeUrl = "00/" + epc.ToString(); break;
                 default: throw new Exception($"Cannot build Digital Link URL with EPC {epc}. We need either GTIN+LOT, GTIN+SERIAL, or SSCC.");
             }
@@ -108,7 +108,6 @@ namespace OpenTraceability.Queries
             {
                 paramters.Merge(additionalParameters);
             }
-
 
             var results = await QueryEvents(options, paramters, client);
 
@@ -216,7 +215,6 @@ namespace OpenTraceability.Queries
                     break;
                 }
             }
-
 
             return results;
         }
@@ -342,6 +340,5 @@ namespace OpenTraceability.Queries
 
             return results;
         }
-	}
+    }
 }
-

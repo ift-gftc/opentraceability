@@ -305,7 +305,7 @@ namespace OpenTraceability.Mappers
             return value;
         }
 
-        private static JToken? WriteObjectToJToken(object obj)
+        private static JToken? WriteObjectToJToken(object? obj)
         {
             if (obj == null)
             {
@@ -357,7 +357,7 @@ namespace OpenTraceability.Mappers
             }
         }
 
-        private static void ReadPropertyMapping(OTMappingTypeInformationProperty mappingProp, JToken json, object value, Dictionary<string,string> namespaces)
+        private static void ReadPropertyMapping(OTMappingTypeInformationProperty mappingProp, JToken json, object value, Dictionary<string, string> namespaces)
         {
             if (mappingProp.IsQuantityList)
             {
@@ -371,7 +371,7 @@ namespace OpenTraceability.Mappers
 
                         EventProduct product = new EventProduct(epc);
                         product.Type = mappingProp.ProductType;
-                        
+
                         double quantity = jQuantity.Value<double>("quantity");
                         string uom = jQuantity.Value<string>("uom") ?? "EA";
                         product.Quantity = new Measurement(quantity, uom);

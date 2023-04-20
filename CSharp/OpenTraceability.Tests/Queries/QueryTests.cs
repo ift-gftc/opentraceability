@@ -7,26 +7,26 @@ using OpenTraceability.Queries;
 
 namespace OpenTraceability.Tests.Queries
 {
-	[TestFixture]
-	public class QueryTests
-	{
-		static IWebHost _testServer;
-		static IConfiguration _config;
+    [TestFixture]
+    public class QueryTests
+    {
+        private static IWebHost _testServer;
+        private static IConfiguration _config;
 
-		static QueryTests()
-		{
-			_config = OpenTraceabilityTests.GetConfiguration("appsettings.TestServer");
-			_testServer = OpenTraceability.TestServer.WebServiceFactory.Create("https://localhost:4001", _config);
+        static QueryTests()
+        {
+            _config = OpenTraceabilityTests.GetConfiguration("appsettings.TestServer");
+            _testServer = OpenTraceability.TestServer.WebServiceFactory.Create("https://localhost:4001", _config);
         }
 
-		[Test]
-		public async Task TestServer()
-		{
-			// do nothing, the static initializers does it all
-		}
+        [Test]
+        public void TestServer()
+        {
+            // do nothing, the static initializers does it all
+        }
 
         [Test]
-        public async Task QueryParameters()
+        public void QueryParameters()
         {
             EPCISQueryParameters parameters = new EPCISQueryParameters();
             parameters.query.MATCH_epc = new List<string>() { "https://id.gs1.org/01/00614141777778/10/987" };
@@ -49,7 +49,7 @@ namespace OpenTraceability.Tests.Queries
         }
 
         [Test]
-        public async Task QueryParameters02()
+        public void QueryParameters02()
         {
             EPCISQueryParameters parameters = new EPCISQueryParameters();
             parameters.query.MATCH_epc = new List<string>() { "https://id.gs1.org/01/00614141777778/10/987" };
@@ -90,8 +90,9 @@ namespace OpenTraceability.Tests.Queries
                 {
                     EPCISQueryParameters parameters = new EPCISQueryParameters(p.EPC);
                     var results = await client.QueryEvents(blob_id, parameters);
+                    Assert.IsNotNull(results.Document);
                     Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the query events");
-                    Assert.That(results.Document.Events.Count, Is.Not.EqualTo(0), "no events returned");
+                    Assert.That(results.Document.Events, Is.Not.Empty, "no events returned");
 
                     // grab the master data
                     await client.ResolveMasterData(blob_id, results.Document);
@@ -133,29 +134,29 @@ namespace OpenTraceability.Tests.Queries
             }
         }
 
-		[Test]
+        [Test]
         [TestCase("aggregation_event_all_possible_fields.jsonld")]
         public async Task QueryEvents(string filename)
-		{
-			EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+        {
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
-			// upload a blob of events
-			string data = OpenTraceabilityTests.ReadTestData(filename);
-			var doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
-			string blob_id = await client.Post(doc);
+            // upload a blob of events
+            string data = OpenTraceabilityTests.ReadTestData(filename);
+            var doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
+            string blob_id = await client.Post(doc);
 
-			// query for the events for each epc in the blob
-			foreach (var e in doc.Events)
-			{
-				foreach (var p in e.Products)
-				{
-					EPCISQueryParameters parameters = new EPCISQueryParameters(p.EPC);
-					var results = await client.QueryEvents(blob_id, parameters);
-					Assert.AreEqual(0, results.Errors.Count, "errors found in the query events");
-                    Assert.AreEqual(1, results.Document.Events.Count, "no events returned");
+            // query for the events for each epc in the blob
+            foreach (var e in doc.Events)
+            {
+                foreach (var p in e.Products)
+                {
+                    EPCISQueryParameters parameters = new EPCISQueryParameters(p.EPC);
+                    var results = await client.QueryEvents(blob_id, parameters);
+                    Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the query events");
+                    Assert.That(results.Document.Events.Count, Is.EqualTo(1), "no events returned");
                 }
-			}
-		}
+            }
+        }
 
         [Test]
         [TestCase("testserver_advancedfilters.jsonld", "urn:epc:id:sscc:08600031303.0004", "urn:epcglobal:cbv:bizStep:receiving", "urn:gdst:example.org:location:loc:importer.123u")]
@@ -178,10 +179,10 @@ namespace OpenTraceability.Tests.Queries
             Assert.AreEqual(1, results.Document.Events.Count, "no events returned");
         }
 
-		[Test]
+        [Test]
         [TestCase("traceback_tests.jsonld")]
         public async Task Traceback(string filename)
-		{
+        {
             EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
@@ -196,4 +197,3 @@ namespace OpenTraceability.Tests.Queries
         }
     }
 }
-

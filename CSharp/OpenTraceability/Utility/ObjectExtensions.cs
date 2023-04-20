@@ -32,7 +32,9 @@ namespace OpenTraceability.Utility
             {
                 //Unicode Encode Covering all characterset
                 byte[] byteContents = Encoding.Unicode.GetBytes(strText);
+#pragma warning disable SYSLIB0021 // Type or member is obsolete
                 System.Security.Cryptography.SHA256 hash = new System.Security.Cryptography.SHA256CryptoServiceProvider();
+#pragma warning restore SYSLIB0021 // Type or member is obsolete
                 byte[] hashText = hash.ComputeHash(byteContents);
                 //32Byte hashText separate
                 //hashCodeStart = 0~7  8Byte

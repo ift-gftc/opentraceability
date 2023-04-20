@@ -24,7 +24,7 @@ namespace OpenTraceability.Tests.Events
                 EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, Models.Events.EPCISVersion.V1);
                 Assert.That(pass, Is.True);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Assert.That(pass, Is.False);
             }

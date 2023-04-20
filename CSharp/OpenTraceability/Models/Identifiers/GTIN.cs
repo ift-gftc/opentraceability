@@ -8,17 +8,17 @@ namespace OpenTraceability.Models.Identifiers
     [JsonConverter(typeof(GTINConverter))]
     public class GTIN : IEquatable<GTIN>, IComparable<GTIN>
     {
-        private string _gtinStr;
+        private string? _gtinStr;
 
         public GTIN()
         {
         }
 
-        public GTIN(string gtinStr)
+        public GTIN(string? gtinStr)
         {
             try
             {
-                string error = GTIN.DetectGTINIssue(gtinStr);
+                string? error = GTIN.DetectGTINIssue(gtinStr);
                 if (!string.IsNullOrWhiteSpace(error))
                 {
                     throw new Exception($"The GTIN {gtinStr} is invalid. {error}");
@@ -32,7 +32,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string gtinStr, out GTIN gtin, out string error)
+        public static bool TryParse(string? gtinStr, out GTIN? gtin, out string? error)
         {
             try
             {
@@ -64,7 +64,11 @@ namespace OpenTraceability.Models.Identifiers
         {
             try
             {
-                if (IsGS1GTIN())
+                if (_gtinStr == null)
+                {
+                    return string.Empty;
+                }
+                else if (IsGS1GTIN())
                 {
                     string[] gtinParts = _gtinStr.Split(':').Last().Split('.');
                     string gtin14 = gtinParts[1][0] + gtinParts[0] + gtinParts[1].Skip(1);
@@ -88,7 +92,7 @@ namespace OpenTraceability.Models.Identifiers
         /// </summary>
         /// <param name="gtinStr">The GTIN string.</param>
         /// <returns>An error if a problem is detected, otherwise returns NULL if no problem detected and the GTIN is valid.</returns>
-        public static string DetectGTINIssue(string gtinStr)
+        public static string? DetectGTINIssue(string? gtinStr)
         {
             try
             {
@@ -289,7 +293,7 @@ namespace OpenTraceability.Models.Identifiers
         {
             try
             {
-                return this._gtinStr.ToLower();
+                return this._gtinStr?.ToLower() ?? string.Empty;
             }
             catch (Exception Ex)
             {

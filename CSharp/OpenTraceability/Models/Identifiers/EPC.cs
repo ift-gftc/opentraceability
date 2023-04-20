@@ -19,21 +19,27 @@ namespace OpenTraceability.Models.Identifiers
     [JsonConverter(typeof(EPCConverter))]
     public class EPC
     {
-        private string _epcStr;
+        private string _epcStr = string.Empty;
 
         public EPCType Type { get; private set; }
-        public GTIN GTIN { get; private set; }
-        public string SerialLotNumber { get; private set; }
+        public GTIN? GTIN { get; private set; }
+        public string? SerialLotNumber { get; private set; }
 
-        public EPC(string epcStr)
+        public EPC(string? epcStr)
         {
             try
             {
-                string error = EPC.DetectEPCIssue(epcStr);
+                string? error = EPC.DetectEPCIssue(epcStr);
+
                 if (!string.IsNullOrWhiteSpace(error))
                 {
                     throw new Exception($"The EPC {epcStr} is invalid. {error}");
                 }
+                else if (epcStr == null)
+                {
+                    throw new ArgumentNullException(nameof(epcStr));
+                }
+
                 this._epcStr = epcStr;
 
                 // if this is a GS1 class level epc (GS1 GTIN + Lot Number)
@@ -83,7 +89,7 @@ namespace OpenTraceability.Models.Identifiers
                     this.SerialLotNumber = parts2[2];
                     this.GTIN = new GTIN(gtinStr);
                 }
-                // else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number) 
+                // else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
                 else if (epcStr.StartsWith("urn:") && epcStr.Contains(":product:serial:obj:"))
                 {
                     this.Type = EPCType.Instance;
@@ -114,7 +120,7 @@ namespace OpenTraceability.Models.Identifiers
                     this.Type = EPCType.Instance;
                     this.SerialLotNumber = epcStr.Split('/').LastOrDefault();
                 }
-                else if (Uri.IsWellFormedUriString(epcStr, UriKind.Absolute)&& epcStr.StartsWith("http") && epcStr.Contains("/class/"))
+                else if (Uri.IsWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.StartsWith("http") && epcStr.Contains("/class/"))
                 {
                     this.Type = EPCType.Class;
                     this.SerialLotNumber = epcStr.Split('/').LastOrDefault();
@@ -125,7 +131,7 @@ namespace OpenTraceability.Models.Identifiers
                 }
             }
             catch (Exception Ex)
-            { 
+            {
                 Exception exception = new Exception("The EPC is not in a valid format and could not be parsed. EPC=" + epcStr, Ex);
                 OTLogger.Error(Ex);
                 throw exception;
@@ -180,7 +186,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static string DetectEPCIssue(string epcStr)
+        public static string? DetectEPCIssue(string? epcStr)
         {
             try
             {
@@ -206,7 +212,7 @@ namespace OpenTraceability.Models.Identifiers
                     }
                     else
                     {
-                        return null;
+                        return string.Empty;
                     }
                 }
                 // else if this is a GS1 instance level epc (GS1 GTIN + Serial Number)
@@ -249,7 +255,7 @@ namespace OpenTraceability.Models.Identifiers
                         return null;
                     }
                 }
-                // else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number) 
+                // else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
                 else if (epcStr.StartsWith("urn:") && epcStr.Contains(":product:serial:obj:"))
                 {
                     if (!epcStr.IsURICompatibleChars())
@@ -320,7 +326,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string epcStr, out EPC epc, out string error)
+        public static bool TryParse(string? epcStr, out EPC? epc, out string? error)
         {
             try
             {
@@ -368,6 +374,7 @@ namespace OpenTraceability.Models.Identifiers
         }
 
         #region Overrides
+
         public static bool operator ==(EPC? obj1, EPC? obj2)
         {
             try
@@ -387,6 +394,11 @@ namespace OpenTraceability.Models.Identifiers
                     return false;
                 }
 
+                if (obj1 == null)
+                {
+                    return false;
+                }
+
                 return obj1.Equals(obj2);
             }
             catch (Exception Ex)
@@ -395,6 +407,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public static bool operator !=(EPC? obj1, EPC? obj2)
         {
             try
@@ -414,6 +427,11 @@ namespace OpenTraceability.Models.Identifiers
                     return true;
                 }
 
+                if (obj1 == null)
+                {
+                    return true;
+                }
+
                 return !obj1.Equals(obj2);
             }
             catch (Exception Ex)
@@ -422,6 +440,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override bool Equals(object? obj)
         {
             try
@@ -449,6 +468,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override int GetHashCode()
         {
             try
@@ -462,6 +482,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
+
         public override string ToString()
         {
             try
@@ -474,9 +495,11 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
+
+        #endregion Overrides
 
         #region IEquatable<EPC>
+
         public bool Equals(EPC? epc)
         {
             try
@@ -524,9 +547,11 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
 
-        #region IComparable 
+        #endregion IEquatable<EPC>
+
+        #region IComparable
+
         public int CompareTo(EPC epc)
         {
             try
@@ -550,6 +575,7 @@ namespace OpenTraceability.Models.Identifiers
                 throw;
             }
         }
-        #endregion
+
+        #endregion IComparable
     }
 }

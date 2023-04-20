@@ -1,24 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Microsoft.VisualBasic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
-using OpenTraceability.Mappers.EPCIS.XML;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Utility;
+using System.Xml.Linq;
 
 namespace OpenTraceability.Mappers.EPCIS.JSON
 {
     public static class EPCISDocumentBaseJsonMapper
     {
-        static JObject? jEPCISContext = null;
-
         public static T ReadJSON<T>(string strValue, out JObject json) where T : EPCISBaseDocument, new()
         {
             // validate the JSON...
@@ -210,11 +200,14 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             {
                 foreach (var profile in profiles.Where(p => p.KDEProfiles != null).ToList())
                 {
-                    foreach (var kdeProfile in profile.KDEProfiles)
+                    if (profile.KDEProfiles != null)
                     {
-                        if (jEvent.QueryJPath(kdeProfile.JPath) == null)
+                        foreach (var kdeProfile in profile.KDEProfiles)
                         {
-                            profiles.Remove(profile);
+                            if (jEvent.QueryJPath(kdeProfile.JPath) == null)
+                            {
+                                profiles.Remove(profile);
+                            }
                         }
                     }
                 }
@@ -304,7 +297,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     else if (jvalue is JArray)
                     {
                         JArray ja = (JArray)jvalue;
-                        for (int i = 0; i < ja.Count;i++)
+                        for (int i = 0; i < ja.Count; i++)
                         {
                             JToken jt = ja[i];
                             ja[i] = CompressVocab(jt);

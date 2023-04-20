@@ -17,7 +17,7 @@ public class DigitalLinkController : ControllerBase
 {
     [HttpGet]
     [Route("{blob_id}/417/{pgln}")]
-    public async Task<IActionResult> GetPartyLinks(string blob_id, string pgln, [FromQuery] string linkType)
+    public Task<IActionResult> GetPartyLinks(string blob_id, string pgln, [FromQuery] string linkType)
     {
         try
         {
@@ -34,7 +34,7 @@ public class DigitalLinkController : ControllerBase
                     authRequired = true
                 });
             }
-            
+
             if (linkType == null || linkType.ToLower() == "gs1:masterdata")
             {
                 links.Add(new DigitalLink()
@@ -45,7 +45,7 @@ public class DigitalLinkController : ControllerBase
                 });
             }
 
-            return Ok(links);
+            return Task.FromResult<IActionResult>(Ok(links));
         }
         catch (Exception ex)
         {
@@ -56,7 +56,7 @@ public class DigitalLinkController : ControllerBase
 
     [HttpGet]
     [Route("{blob_id}/414/{gln}")]
-    public async Task<IActionResult> GetLocationLinks(string blob_id, string gln, [FromQuery] string linkType)
+    public Task<IActionResult> GetLocationLinks(string blob_id, string gln, [FromQuery] string linkType)
     {
         try
         {
@@ -84,7 +84,7 @@ public class DigitalLinkController : ControllerBase
                 });
             }
 
-            return Ok(links);
+            return Task.FromResult<IActionResult>(Ok(links));
         }
         catch (Exception ex)
         {
@@ -95,7 +95,7 @@ public class DigitalLinkController : ControllerBase
 
     [HttpGet]
     [Route("{blob_id}/01/{gtin}")]
-    public async Task<IActionResult> GetTradeitemLinks(string blob_id, string gtin, [FromQuery] string linkType)
+    public Task<IActionResult> GetTradeitemLinks(string blob_id, string gtin, [FromQuery] string linkType)
     {
         try
         {
@@ -123,7 +123,7 @@ public class DigitalLinkController : ControllerBase
                 });
             }
 
-            return Ok(links);
+            return Task.FromResult<IActionResult>(Ok(links));
         }
         catch (Exception ex)
         {
@@ -134,7 +134,7 @@ public class DigitalLinkController : ControllerBase
 
     [HttpGet]
     [Route("{blob_id}/00/{sscc}")]
-    public async Task<IActionResult> GetSSCCLinks(string blob_id, string sscc, [FromQuery] string linkType)
+    public Task<IActionResult> GetSSCCLinks(string blob_id, string sscc, [FromQuery] string linkType)
     {
         try
         {
@@ -152,7 +152,7 @@ public class DigitalLinkController : ControllerBase
                 });
             }
 
-            return Ok(links);
+            return Task.FromResult<IActionResult>(Ok(links));
         }
         catch (Exception ex)
         {
@@ -163,7 +163,7 @@ public class DigitalLinkController : ControllerBase
 
     [HttpGet]
     [Route("{blob_id}/01/{gtin}/10/{lot}")]
-    public async Task<IActionResult> GetEPCClassLinks(string blob_id, string gtin, string lot, [FromQuery] string linkType)
+    public Task<IActionResult> GetEPCClassLinks(string blob_id, string gtin, string lot, [FromQuery] string linkType)
     {
         try
         {
@@ -191,7 +191,7 @@ public class DigitalLinkController : ControllerBase
                 });
             }
 
-            return Ok(links);
+            return Task.FromResult<IActionResult>(Ok(links));
         }
         catch (Exception ex)
         {
@@ -202,7 +202,7 @@ public class DigitalLinkController : ControllerBase
 
     [HttpGet]
     [Route("{blob_id}/01/{gtin}/21/{serial}")]
-    public async Task<IActionResult> GetEPCInstanceLinks(string blob_id, string gtin, string serial, [FromQuery] string linkType)
+    public Task<IActionResult> GetEPCInstanceLinks(string blob_id, string gtin, string serial, [FromQuery] string linkType)
     {
         try
         {
@@ -230,7 +230,7 @@ public class DigitalLinkController : ControllerBase
                 });
             }
 
-            return Ok(links);
+            return Task.FromResult<IActionResult>(Ok(links));
         }
         catch (Exception ex)
         {
@@ -239,4 +239,3 @@ public class DigitalLinkController : ControllerBase
         }
     }
 }
-

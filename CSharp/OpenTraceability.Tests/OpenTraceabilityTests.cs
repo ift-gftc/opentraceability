@@ -34,7 +34,7 @@ namespace OpenTraceability.Tests
             XMLCompare(x1, x2);
         }
 
-        private static void XMLCompare(XElement primary, XElement secondary, bool noAssertions=false)
+        private static void XMLCompare(XElement primary, XElement secondary, bool noAssertions = false)
         {
             if (primary.Name != secondary.Name)
             {
@@ -85,12 +85,14 @@ namespace OpenTraceability.Tests
 
                     // we will try and find the matching node...
                     XElement? xchild2 = FindMatchingNode(child1, secondary, i);
-                    if (xchild2  == null)
+                    if (xchild2 == null)
                     {
                         Assert.Fail($"Failed to find matching node for comparison in the secondary xml.\nchild1={child1}\nprimary xml:\n{primary.ToString()}\n\nsecondary xml:\n{secondary.ToString()}");
                     }
-
-                    XMLCompare(child1, xchild2);
+                    else
+                    {
+                        XMLCompare(child1, xchild2);
+                    }
                 }
             }
             else if (primary.Value.ToLower() != secondary.Value.ToLower())
@@ -129,7 +131,7 @@ namespace OpenTraceability.Tests
                         }
                     }
                 }
-                
+
                 string id = xchild1.Attribute("id")?.Value ?? string.Empty;
                 if (!string.IsNullOrEmpty(id))
                 {
@@ -162,7 +164,7 @@ namespace OpenTraceability.Tests
 
         private static bool TryAdvancedValueCompare(string? str1, string? str2)
         {
-            return (TryCompareDouble(str1, str2) 
+            return (TryCompareDouble(str1, str2)
                 || TryCompareXMLDateTime(str1, str2));
         }
 
@@ -191,7 +193,6 @@ namespace OpenTraceability.Tests
             }
             return false;
         }
-
 
         internal static void CompareJSON(string json, string jsonAfter)
         {
@@ -222,37 +223,41 @@ namespace OpenTraceability.Tests
                 JArray? jarr1 = j1[prop.Name] as JArray;
                 if (jarr1 != null)
                 {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                    JArray jarr2 = (JArray)j2[prop.Name];
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+                    JArray? jarr2 = j2[prop.Name] as JArray;
 
-                    if (jarr1.Count() != jarr2.Count())
+                    if (jarr2 == null)
+                    {
+                        Assert.Fail($"j1 property {prop.Name} is JArray, but not on j2.");
+                    }
+                    else if (jarr1.Count != jarr2.Count)
                     {
                         Assert.Fail($"j1 property value type for {prop.Name} is an array with {jarr1.Count()} items, but the same property on j2 has only {jarr2.Count()} items.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
                     }
-
-                    for(int i = 0; i < jarr1.Count(); i++)
+                    else
                     {
-                        JToken jt1 = jarr1[i];
-                        JToken jt2 = jarr2[i];
-                        if (jt1.GetType() != jt2.GetType())
+                        for (int i = 0; i < jarr1.Count(); i++)
                         {
-                            Assert.Fail($"j1 property array {prop.Name} has item[{i}] with type {jt1.GetType()}, but on j2 it is {jt2.GetType()}.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
-                        }
-
-                        if (jt1 is JObject && jt2 is JObject)
-                        {
-                            JSONCompare((JObject)jt1, (JObject)jt2);
-                        }
-                        else
-                        {
-                            string? str1 = jt1.ToString();
-                            string? str2 = jt2.ToString();
-                            if (!TryAdvancedValueCompare(str1, str2))
+                            JToken jt1 = jarr1[i];
+                            JToken jt2 = jarr2[i];
+                            if (jt1.GetType() != jt2.GetType())
                             {
-                                if (str1?.ToLower() != str2?.ToLower())
+                                Assert.Fail($"j1 property array {prop.Name} has item[{i}] with type {jt1.GetType()}, but on j2 it is {jt2.GetType()}.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
+                            }
+
+                            if (jt1 is JObject && jt2 is JObject)
+                            {
+                                JSONCompare((JObject)jt1, (JObject)jt2);
+                            }
+                            else
+                            {
+                                string? str1 = jt1.ToString();
+                                string? str2 = jt2.ToString();
+                                if (!TryAdvancedValueCompare(str1, str2))
                                 {
-                                    Assert.Fail($"j1 property array {prop.Name} has item[{i}] with value {str1}, but on j2 it the value is {str2}.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
+                                    if (str1?.ToLower() != str2?.ToLower())
+                                    {
+                                        Assert.Fail($"j1 property array {prop.Name} has item[{i}] with value {str1}, but on j2 it the value is {str2}.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");
+                                    }
                                 }
                             }
                         }
@@ -284,7 +289,6 @@ namespace OpenTraceability.Tests
             }
         }
 
-
         internal static string ReadTestData(string v)
         {
             EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
@@ -294,7 +298,7 @@ namespace OpenTraceability.Tests
 
         public static IConfiguration GetConfiguration(string appsettingsName)
         {
-            // first we are going to remove any of the appsettings.json from our directory so that it 
+            // first we are going to remove any of the appsettings.json from our directory so that it
             // does not interfere with anything...
             // this is because by referencing the web service / web application projects, it copies these files into
             // there because they are included in copy always / content

@@ -73,13 +73,19 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             // read the GLN from the id
             string id = xLocation.Attribute("id")?.Value ?? string.Empty;
             Type t = Setup.MasterDataTypes[type];
-            Location loc = (Location)Activator.CreateInstance(t);
-            loc.GLN = new Models.Identifiers.GLN(id);
-            loc.EPCISType = type;
+            if (Activator.CreateInstance(t) is not Location loc)
+            {
+                throw new Exception($"Failed to create instance of Location from type {t}");
+            }
+            else
+            {
+                loc.GLN = new Models.Identifiers.GLN(id);
+                loc.EPCISType = type;
 
-            // read the object
-            ReadMasterDataObject(loc, xLocation);
-            doc.MasterData.Add(loc);
+                // read the object
+                ReadMasterDataObject(loc, xLocation);
+                doc.MasterData.Add(loc);
+            }
         }
 
         private static void ReadTradingParty(EPCISBaseDocument doc, XElement xTradingParty, string type)
@@ -108,7 +114,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             doc.MasterData.Add(ele);
         }
 
-        private static void ReadMasterDataObject(IVocabularyElement md, XElement xMasterData, bool readKDEs=true)
+        private static void ReadMasterDataObject(IVocabularyElement md, XElement xMasterData, bool readKDEs = true)
         {
             var mappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(md.GetType());
 
@@ -145,7 +151,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
 
             // go through each standard attribute...
-            foreach (XElement xeAtt in xMasterData.Elements("attribute")) 
+            foreach (XElement xeAtt in xMasterData.Elements("attribute"))
             {
                 string id = xeAtt.Attribute("id")?.Value ?? string.Empty;
 
