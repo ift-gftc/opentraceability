@@ -25,6 +25,6 @@ jobs:
     - name: Build
       run: dotnet build -c Release
     - name: Pack nugets
-      run: dotnet pack -c Release --no-build --version-suffix beta --output .
+      run: dotnet pack -c Release --no-build --version-suffix beta${{ github.run_number }} --output .
     - name: Push to NuGet
       run: dotnet nuget push "*.nupkg" --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json
