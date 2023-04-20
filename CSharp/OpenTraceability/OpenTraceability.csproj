@@ -18,21 +18,21 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <DefineConstants>$(DefineConstants)TRACE;STANDALONE_WASM</DefineConstants>
-	  <WarningLevel>4</WarningLevel>
+		<DefineConstants>$(DefineConstants)TRACE;STANDALONE_WASM</DefineConstants>
+		<WarningLevel>4</WarningLevel>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <DefineConstants>$(DefineConstants)TRACE;STANDALONE_WASM</DefineConstants>
+		<DefineConstants>$(DefineConstants)TRACE;STANDALONE_WASM</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Mappers\EPCIS\EPCISMappingKDE.cs" />
-	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlEventReader.cs" />
-	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlEventWriter.cs" />
-	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlHeaderReader.cs" />
-	  <Compile Remove="Mappers\EPCIS\XML\EPCISXmlHeaderWriter.cs" />
-	  <Compile Remove="Utility\UnitSystems.cs" />
+		<Compile Remove="Mappers\EPCIS\EPCISMappingKDE.cs" />
+		<Compile Remove="Mappers\EPCIS\XML\EPCISXmlEventReader.cs" />
+		<Compile Remove="Mappers\EPCIS\XML\EPCISXmlEventWriter.cs" />
+		<Compile Remove="Mappers\EPCIS\XML\EPCISXmlHeaderReader.cs" />
+		<Compile Remove="Mappers\EPCIS\XML\EPCISXmlHeaderWriter.cs" />
+		<Compile Remove="Utility\UnitSystems.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -57,20 +57,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Mappers\MasterData\" />
+		<Folder Include="Mappers\MasterData\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="..\..\..\..\TSC\GDSTTools\README.md">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="README.md">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		<None Update="README.md">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 </Project>

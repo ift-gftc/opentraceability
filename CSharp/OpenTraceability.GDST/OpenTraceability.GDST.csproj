@@ -14,8 +14,11 @@
 		<PackageTags>epcis;open;traceability;ift;gdst</PackageTags>
 	</PropertyGroup>
 
+
+
 	<ItemGroup>
-		<None Include="..\..\..\..\TSC\GDSTTools\README.md">
+		<None Update="README.md">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
