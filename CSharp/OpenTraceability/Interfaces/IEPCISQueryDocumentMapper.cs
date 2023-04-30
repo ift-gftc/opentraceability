@@ -17,7 +17,7 @@ namespace OpenTraceability.Interfaces
         /// </summary>
         /// <param name="strValue">The string value representing the EPCIS Query document.</param>
         /// <returns>An EPCIS document.</returns>
-        public EPCISQueryDocument Map(string strValue);
+        public EPCISQueryDocument Map(string strValue, bool checkSchema = true);
 
         /// <summary>
         /// Maps an EPCIS document into a string value.

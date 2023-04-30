@@ -9,10 +9,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 {
     public static class EPCISDocumentBaseJsonMapper
     {
-        public static T ReadJSON<T>(string strValue, out JObject json) where T : EPCISBaseDocument, new()
+        public static T ReadJSON<T>(string strValue, out JObject json, bool checkSchema = true) where T : EPCISBaseDocument, new()
         {
             // validate the JSON...
-            CheckSchema(JObject.Parse(strValue));
+            if (checkSchema)
+            {
+                CheckSchema(JObject.Parse(strValue));
+            }
 
             // normalize the json-ld
             strValue = NormalizeEPCISJsonLD(strValue);

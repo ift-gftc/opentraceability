@@ -50,7 +50,7 @@ namespace OpenTraceability.Queries
                 var link = JsonConvert.DeserializeObject<List<DigitalLink>>(json)?.FirstOrDefault();
                 if (link != null)
                 {
-                    return new Uri(link.link);
+                    return new Uri(link.link.TrimEnd('/') + '/');
                 }
             }
 
@@ -85,7 +85,7 @@ namespace OpenTraceability.Queries
                 var link = JsonConvert.DeserializeObject<List<DigitalLink>>(json)?.FirstOrDefault();
                 if (link != null)
                 {
-                    return new Uri(link.link);
+                    return new Uri(link.link.TrimEnd('/') + '/');
                 }
             }
 

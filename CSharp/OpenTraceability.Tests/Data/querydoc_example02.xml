@@ -1,0 +1,179 @@
+﻿<?xml version="1.0"?>
+<epcisq:EPCISQueryDocument xmlns:sh="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" xmlns:tr="http://schema.traceregister.com" xmlns:gdst="https://traceability-dialogue.org/epcis" xmlns:cbvmda="urn:epcglobal:cbv:mda" schemaVersion="0" creationDate="0001-01-01T00:00:00" xmlns:epcisq="urn:epcglobal:epcis-query:xsd:1">
+	<EPCISHeader>
+		<sh:StandardBusinessDocumentHeader>
+			<sh:HeaderVersion>1.2.2</sh:HeaderVersion>
+			<sh:Sender>
+				<sh:Identifier Authority="GS1">urn:gdst:traceregister.com:party:tr35867.0</sh:Identifier>
+			</sh:Sender>
+			<sh:Receiver>
+				<sh:Identifier Authority="GS1">urn:gdst:traceregister.com:party:tr35867.ptp-2103498418</sh:Identifier>
+			</sh:Receiver>
+			<sh:DocumentIdentification>
+				<sh:Standard>EPCIS 1.2.2</sh:Standard>
+				<sh:TypeVersion>1.2</sh:TypeVersion>
+				<sh:InstanceIdentifier>68396d93-dc52-4be6-be3c-9b75988ccbb8</sh:InstanceIdentifier>
+				<sh:Type>EPCIS Document</sh:Type>
+				<sh:CreationDateAndTime>2023-04-30T16:20:36.5968997Z</sh:CreationDateAndTime>
+			</sh:DocumentIdentification>
+		</sh:StandardBusinessDocumentHeader>
+		<extension>
+			<EPCISMasterData>
+				<VocabularyList>
+					<Vocabulary type="urn:epcglobal:epcis:vtype:EPCClass">
+						<VocabularyElementList>
+							<VocabularyElement id="urn:gdst:production.traceregister.com:product:class:tr32768.12825-i">
+								<attribute id="urn:epcglobal:cbv:owning_party">urn:gdst:traceregister.com:party:tr32768.0</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#informationProvider">urn:gdst:traceregister.com:party:tr32768.0</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#descriptionShort">Salmon Portion Skin On Bone Out 190g</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#grossWeight">0 KGM</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#tradeItemConditionCode">Portions (skin-on, boneless)</attribute>
+								<children />
+							</VocabularyElement>
+							<VocabularyElement id="urn:gdst:production.traceregister.com:product:class:tr32768.094178230028251">
+								<attribute id="urn:epcglobal:cbv:owning_party">urn:gdst:traceregister.com:party:tr32768.0</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#informationProvider">urn:gdst:traceregister.com:party:tr32768.0</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#descriptionShort">Salmon Portion Skin On Bone Out 190g</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#grossWeight">0 KGM</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#tradeItemConditionCode">Portions (skin-on, boneless)</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName">Oncorhynchus tshawytscha</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode">CHI</attribute>
+								<children />
+							</VocabularyElement>
+						</VocabularyElementList>
+					</Vocabulary>
+					<Vocabulary type="urn:epcglobal:epcis:vtype:Location">
+						<VocabularyElementList>
+							<VocabularyElement id="urn:gdst:production.traceregister.com:location:loc:tr32768.glb270994315">
+								<attribute id="urn:epcglobal:cbv:mda:owning_party">urn:gdst:traceregister.com:party:tr32768.0</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#informationProvider">urn:gdst:traceregister.com:party:tr32768.0</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#name">Mt. Cook Alpine Salmon Ltd</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#streetAddressOne">80 Sheffield St</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#city">Timaru</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#county">Timaru</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#state">Canterbury</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#postalCode">7910</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#countryCode">NZ</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#latitude">-44.3556913</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#longitude">171.2510245</attribute>
+								<children />
+							</VocabularyElement>
+						</VocabularyElementList>
+					</Vocabulary>
+					<Vocabulary type="urn:epcglobal:epcis:vtype:Party">
+						<VocabularyElementList>
+							<VocabularyElement id="urn:gdst:traceregister.com:party:tr32768.0">
+								<attribute id="urn:epcglobal:cbv:mda#name">Mt. Cook Alpine Salmon Ltd.</attribute>
+								<children />
+							</VocabularyElement>
+						</VocabularyElementList>
+					</Vocabulary>
+				</VocabularyList>
+			</EPCISMasterData>
+		</extension>
+	</EPCISHeader>
+	<EPCISBody>
+		<epcisq:QueryResults>
+			<queryName>SimpleEventQuery</queryName>
+			<resultsBody>
+				<EventList>
+					<extension>
+						<TransformationEvent>
+							<eventTime>2020-03-12T19:17:00Z</eventTime>
+							<recordTime>2020-06-27T03:18:41Z</recordTime>
+							<eventTimeZoneOffset>+13:00</eventTimeZoneOffset>
+							<baseExtension>
+								<eventID>urn:uuid:ff72a653-0f00-41d8-bac0-bb464701f6b7</eventID>
+							</baseExtension>
+							<inputQuantityList>
+								<quantityElement>
+									<epcClass>urn:gdst:production.traceregister.com:product:lot:class:tr32768.094178230028251.2011-0130</epcClass>
+									<quantity>15</quantity>
+									<uom>KGM</uom>
+									<tr:count>0</tr:count>
+								</quantityElement>
+							</inputQuantityList>
+							<outputQuantityList>
+								<quantityElement>
+									<epcClass>urn:gdst:production.traceregister.com:product:lot:class:tr32768.12825-i.2011-0130</epcClass>
+									<quantity>15</quantity>
+									<uom>KGM</uom>
+									<tr:count>0</tr:count>
+								</quantityElement>
+							</outputQuantityList>
+							<bizStep>urn:epcglobal:cbv:bizstep:packing</bizStep>
+							<disposition>urn:epcglobal:cbv:disp:active</disposition>
+							<readPoint>
+								<id>geo:0,0</id>
+							</readPoint>
+							<bizLocation>
+								<id>urn:gdst:production.traceregister.com:location:loc:tr32768.glb270994315</id>
+							</bizLocation>
+							<ilmd>
+								<cbvmda:lotNumber>2011-0130</cbvmda:lotNumber>
+								<cbvmda:productionDate>2020-03-13T21:36:00Z</cbvmda:productionDate>
+								<tr:transformationType>Packaging</tr:transformationType>
+								<cbvmda:itemExpirationDate>2022-03-13T21:36:00Z</cbvmda:itemExpirationDate>
+								<tr:sellByDate>2020-03-20T14:36:00</tr:sellByDate>
+								<tr:gldi>urn:gdst:production.traceregister.com:product:lotid:tr32768.12825-i.2011-0130</tr:gldi>
+								<tr:recorded>2020-06-26T20:18:41</tr:recorded>
+								<tr:packagingDate>2020-03-13T08:17:00</tr:packagingDate>
+							</ilmd>
+							<gdst:productOwner>urn:gdst:traceregister.com:party:tr32768.0</gdst:productOwner>
+							<cbvmda:informationProvider>urn:gdst:traceregister.com:party:tr32768.0</cbvmda:informationProvider>
+							<tr:eventGlobalID>CTE_urn:gdst:traceregister.com:party:tr32768.0_NK-5074399780272531510_IK8702EE351809175C64D08D29C016477A37E81F7AD9CEE48BE1158469AFBB46A8</tr:eventGlobalID>
+						</TransformationEvent>
+					</extension>
+					<extension>
+						<TransformationEvent>
+							<eventTime>2020-06-26T20:24:52Z</eventTime>
+							<recordTime>2020-06-27T03:25:46Z</recordTime>
+							<eventTimeZoneOffset>+12:00</eventTimeZoneOffset>
+							<baseExtension>
+								<eventID>urn:uuid:4d1c1d52-a07d-4481-be5a-abdc1a031f6a</eventID>
+							</baseExtension>
+							<inputQuantityList>
+								<quantityElement>
+									<epcClass>urn:gdst:production.traceregister.com:product:lot:class:tr32768.12825-i.2011-0130</epcClass>
+									<quantity>15</quantity>
+									<uom>KGM</uom>
+									<tr:count>0</tr:count>
+								</quantityElement>
+							</inputQuantityList>
+							<outputQuantityList>
+								<quantityElement>
+									<epcClass>urn:gdst:production.traceregister.com:product:lot:class:tr32768.12825-i.2011-hyv</epcClass>
+									<quantity>15</quantity>
+									<uom>KGM</uom>
+									<tr:count>0</tr:count>
+								</quantityElement>
+							</outputQuantityList>
+							<bizStep>urn:epcglobal:cbv:bizstep:commissioning</bizStep>
+							<disposition>urn:epcglobal:cbv:disp:active</disposition>
+							<readPoint>
+								<id>geo:0,0</id>
+							</readPoint>
+							<bizLocation>
+								<id>urn:gdst:production.traceregister.com:location:loc:tr32768.glb270994315</id>
+							</bizLocation>
+							<ilmd>
+								<cbvmda:lotNumber>2011-HYV</cbvmda:lotNumber>
+								<cbvmda:productionDate>2020-03-13T21:36:00Z</cbvmda:productionDate>
+								<tr:transformationType>Master Lotting</tr:transformationType>
+								<cbvmda:itemExpirationDate>2022-03-13T21:36:00Z</cbvmda:itemExpirationDate>
+								<tr:sellByDate>2020-03-20T14:36:00</tr:sellByDate>
+								<tr:gldi>urn:gdst:production.traceregister.com:product:lotid:tr32768.12825-i.2011-hyv</tr:gldi>
+								<tr:recorded>2020-06-26T20:25:46</tr:recorded>
+								<tr:packagingDate>2020-06-27T08:24:52</tr:packagingDate>
+							</ilmd>
+							<gdst:productOwner>urn:gdst:traceregister.com:party:tr32768.0</gdst:productOwner>
+							<cbvmda:informationProvider>urn:gdst:traceregister.com:party:tr32768.0</cbvmda:informationProvider>
+							<tr:isMasterLottingEvent>true</tr:isMasterLottingEvent>
+							<tr:eventGlobalID>CTE_urn:gdst:traceregister.com:party:tr32768.0_NK-8346827717350342738_IK3994A19EF21D0C640BA65B234F98467D130B2E60EE21F5061E152C2058F28082</tr:eventGlobalID>
+						</TransformationEvent>
+					</extension>
+				</EventList>
+			</resultsBody>
+		</epcisq:QueryResults>
+	</EPCISBody>
+</epcisq:EPCISQueryDocument>

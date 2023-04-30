@@ -13,7 +13,7 @@ namespace GS1.Mappers.EPCIS
 {
     public class EPCISQueryDocumentXMLMapper : IEPCISQueryDocumentMapper
     {
-        public EPCISQueryDocument Map(string strValue)
+        public EPCISQueryDocument Map(string strValue, bool checkSchema = true)
         {
             try
             {
@@ -29,7 +29,10 @@ namespace GS1.Mappers.EPCIS
                     throw new Exception("doc.EPCISVersion is NULL. This must be set to a version.");
                 }
 
-                EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.EPCISVersion.Value);
+                if (checkSchema)
+                {
+                    EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.EPCISVersion.Value);
+                }
 
                 XNamespace epcisQueryXName = (document.EPCISVersion == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
 
@@ -86,10 +89,10 @@ namespace GS1.Mappers.EPCIS
             XNamespace epcisQueryXName = (doc.EPCISVersion == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
 
             // write the query name
-            xDoc.Root.Add(new XElement("EPCISBody", 
-                              new XElement(epcisQueryXName + "QueryResults", 
-                                  new XElement("queryName"), 
-                                  new XElement("resultsBody", 
+            xDoc.Root.Add(new XElement("EPCISBody",
+                              new XElement(epcisQueryXName + "QueryResults",
+                                  new XElement("queryName"),
+                                  new XElement("resultsBody",
                                       new XElement("EventList")))));
 
             XElement? xQueryName = xDoc.Root?.Element("EPCISBody")?.Element(epcisQueryXName + "QueryResults")?.Element("queryName");
