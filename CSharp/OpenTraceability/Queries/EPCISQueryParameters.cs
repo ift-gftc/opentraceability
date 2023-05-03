@@ -231,13 +231,54 @@ namespace OpenTraceability.Queries
         public DateTimeOffset? LE_recordTime { get; set; }
         public DateTimeOffset? GE_eventTime { get; set; }
         public DateTimeOffset? LE_eventTime { get; set; }
-        public List<string>? eventTypes { get; set; }
-        public List<string>? MATCH_epc { get; set; }
-        public List<string>? MATCH_epcClass { get; set; }
-        public List<string>? MATCH_anyEPC { get; set; }
-        public List<string>? MATCH_anyEPCClass { get; set; }
-        public List<string>? EQ_bizStep { get; set; }
-        public List<Uri>? EQ_bizLocation { get; set; }
+        public List<string> eventTypes { get; set; } = new List<string>();
+        public List<string> MATCH_epc { get; set; } = new List<string>();
+        public List<string> MATCH_epcClass { get; set; } = new List<string>();
+        public List<string> MATCH_anyEPC { get; set; } = new List<string>();
+        public List<string> MATCH_anyEPCClass { get; set; } = new List<string>();
+        public List<string> EQ_bizStep { get; set; } = new List<string>();
+        public List<Uri> EQ_bizLocation { get; set; } = new List<Uri>();
+        public List<string> EQ_action { get; set; } = new List<string>();
+
+        public bool ShouldSerializeeventTypes()
+        {
+            return eventTypes?.Count > 0;
+        }
+
+        public bool ShouldSerializeMATCH_epc()
+        {
+            return MATCH_epc?.Count > 0;
+        }
+
+        public bool ShouldSerializeMATCH_epcClass()
+        {
+            return MATCH_epcClass?.Count > 0;
+        }
+
+        public bool ShouldSerializeMATCH_anyEPC()
+        {
+            return MATCH_anyEPC?.Count > 0;
+        }
+
+        public bool ShouldSerializeMATCH_anyEPCClass()
+        {
+            return MATCH_anyEPCClass?.Count > 0;
+        }
+
+        public bool ShouldSerializeEQ_bizStep()
+        {
+            return EQ_bizStep?.Count > 0;
+        }
+
+        public bool ShouldSerializeEQ_bizLocation()
+        {
+            return EQ_bizLocation?.Count > 0;
+        }
+
+        public bool ShouldSerializeEQ_action()
+        {
+            return EQ_action?.Count > 0;
+        }
     }
 }
 
