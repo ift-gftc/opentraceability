@@ -3,7 +3,7 @@ name: Prerelease to Nuget
 on:
   push:
     branches: [ prerelease ]
-  pull_request:
+  pull_request_target:
     branches: [ prerelease ]
     
 jobs:
