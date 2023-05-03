@@ -8,11 +8,11 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 {
     public class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper
     {
-        public EPCISQueryDocument Map(string strValue)
+        public EPCISQueryDocument Map(string strValue, bool checkSchema = true)
         {
             try
             {
-                EPCISQueryDocument doc = EPCISDocumentBaseJsonMapper.ReadJSON<EPCISQueryDocument>(strValue, out JObject json);
+                EPCISQueryDocument doc = EPCISDocumentBaseJsonMapper.ReadJSON<EPCISQueryDocument>(strValue, out JObject json, checkSchema);
 
                 if (doc.EPCISVersion != EPCISVersion.V2)
                 {

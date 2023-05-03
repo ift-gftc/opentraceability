@@ -30,13 +30,13 @@ namespace OpenTraceability.Models.Events
         [OpenTraceability("@type")]
         public Uri? Type { get; set; }
 
-        public EventDestinationType ParsedType
+        public EventSourceType ParsedType
         {
             get
             {
-                EventDestinationType type = EventDestinationType.Unknown;
+                EventSourceType type = EventSourceType.Unknown;
 
-                foreach (var e in Enum.GetValues<EventDestinationType>())
+                foreach (var e in Enum.GetValues<EventSourceType>())
                 {
                     if (EnumUtil.GetEnumAttributes<CBVAttribute>(e).Exists(e => e.Value.ToLower() == Type?.ToString().ToLower()))
                     {

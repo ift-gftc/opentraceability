@@ -34,6 +34,17 @@ namespace OpenTraceability.Tests.Events
         }
 
         [Test]
+        [TestCase("querydoc_example02.xml")]
+        public void Read_Crazy_XML(string file)
+        {
+            // read object events from test data specified in the file argument
+            string xmlObjectEvents = OpenTraceabilityTests.ReadTestData(file);
+
+            // deserialize object events into C# models
+            EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(xmlObjectEvents, false);
+        }
+
+        [Test]
         [TestCase("gdst_extensions_01.xml")]
         public void XML_1_2__to__JSON_LD(string file)
         {
@@ -62,7 +73,7 @@ namespace OpenTraceability.Tests.Events
             xmlAfter = xmlAfter.Replace("https://ref.gs1.org/cbv/SDT-", "urn:epcglobal:cbv:sdt:");
 
             // compare the <EPCISBody> element
-            XElement x1 = XElement.Parse(stringXmlEvents).Element("EPCISBody") ?? throw new Exception("failed to grab EPCISBody element from the XML for stringXmlEvents=" +stringXmlEvents);
+            XElement x1 = XElement.Parse(stringXmlEvents).Element("EPCISBody") ?? throw new Exception("failed to grab EPCISBody element from the XML for stringXmlEvents=" + stringXmlEvents);
             XElement x2 = XElement.Parse(xmlAfter).Element("EPCISBody") ?? throw new Exception("failed to grab EPCISBody element from the XML for xmlAfter=" + xmlAfter);
 
             OpenTraceabilityTests.CompareXML(x1.ToString(), x2.ToString());
