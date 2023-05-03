@@ -14,5 +14,21 @@ namespace OpenTraceability.GDST.Events
         [OpenTraceability(Constants.GDST_NAMESPACE, "humanWelfarePolicy")]
         [OpenTraceabilityJson("gdst:humanWelfarePolicy")]
         public string? HumanWelfarePolicy { get; set; }
+
+        [OpenTraceability(Constants.GDST_NAMESPACE, "transportType")]
+        [OpenTraceabilityJson("gdst:transportType")]
+        public string? TransportType { get; set; }
+
+        [OpenTraceability(Constants.GDST_NAMESPACE, "transportVehicleID")]
+        [OpenTraceabilityJson("gdst:transportVehicleID")]
+        public string? TransportVehicleID { get; set; }
+
+        [OpenTraceability(Constants.GDST_NAMESPACE, "transportNumber")]
+        [OpenTraceabilityJson("gdst:transportNumber")]
+        public string? TransportNumber { get; set; }
+
+        [OpenTraceability(Constants.GDST_NAMESPACE, "transportProviderID")]
+        [OpenTraceabilityJson("gdst:transportProviderID")]
+        public string? TransportProviderID { get; set; }
     }
 }
