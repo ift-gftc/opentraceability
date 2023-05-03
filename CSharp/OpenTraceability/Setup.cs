@@ -21,32 +21,43 @@ namespace OpenTraceability
     /// </summary>
     public static class Setup
     {
-        internal static ConcurrentBag<OpenTraceabilityEventProfile> Profiles = new ConcurrentBag<OpenTraceabilityEventProfile>();
+        internal static List<OpenTraceabilityEventProfile> Profiles = new List<OpenTraceabilityEventProfile>();
         internal static ConcurrentDictionary<string, Type> MasterDataTypes = new ConcurrentDictionary<string, Type>();
         internal static ConcurrentDictionary<Type, Type> MasterDataTypeDefault = new ConcurrentDictionary<Type, Type>();
 
+        private static object _locker = new object();
+        private static bool _isInitialized = false;
+
         public static void Initialize()
         {
-            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(ObjectEvent<EventILMD>), EventType.ObjectEvent));
-            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransactionEvent), EventType.TransactionEvent));
-            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransformationEvent<EventILMD>), EventType.TransformationEvent));
-            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(AggregationEvent<EventILMD>), EventType.AggregationEvent));
-            RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(AssociationEvent), EventType.AssociationEvent));
-
-            RegisterMasterDataType<Tradeitem>();
-            RegisterMasterDataType<Location>();
-            RegisterMasterDataType<TradingParty>();
-
-            JsonConvert.DefaultSettings = () =>
+            lock (_locker)
             {
-                JsonSerializerSettings settings = new JsonSerializerSettings();
-                settings.Converters.Add(new EPCConverter());
-                settings.Converters.Add(new GTINConverter());
-                settings.Converters.Add(new GLNConverter());
-                settings.Converters.Add(new PGLNConverter());
+                if (!_isInitialized)
+                {
+                    RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(ObjectEvent<EventILMD>), EventType.ObjectEvent));
+                    RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransactionEvent), EventType.TransactionEvent));
+                    RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(TransformationEvent<EventILMD>), EventType.TransformationEvent));
+                    RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(AggregationEvent<EventILMD>), EventType.AggregationEvent));
+                    RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(AssociationEvent), EventType.AssociationEvent));
 
-                return settings;
-            };
+                    RegisterMasterDataType<Tradeitem>();
+                    RegisterMasterDataType<Location>();
+                    RegisterMasterDataType<TradingParty>();
+
+                    JsonConvert.DefaultSettings = () =>
+                    {
+                        JsonSerializerSettings settings = new JsonSerializerSettings();
+                        settings.Converters.Add(new EPCConverter());
+                        settings.Converters.Add(new GTINConverter());
+                        settings.Converters.Add(new GLNConverter());
+                        settings.Converters.Add(new PGLNConverter());
+
+                        return settings;
+                    };
+
+                    _isInitialized = true;
+                }
+            }
         }
 
         /// <summary>
@@ -54,7 +65,16 @@ namespace OpenTraceability
         /// </summary>
         public static void RegisterEventProfile(OpenTraceabilityEventProfile profile)
         {
-            Profiles.Add(profile);
+            lock (_locker)
+            {
+                // if we find another profile with the same hash, then remove that one first...
+                foreach (var to_remove in Profiles.Where(p => p.ToString() == profile.ToString()).ToList())
+                {
+                    Profiles.Remove(profile);
+                }
+
+                Profiles.Add(profile);
+            }
         }
 
         /// <summary>

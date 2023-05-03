@@ -21,5 +21,10 @@ namespace OpenTraceability
         public string XPath_V1 { get; set; }
         public string XPath_V2 { get; set; }
         public string JPath { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}:{1}:{2}", XPath_V1, XPath_V2, JPath);
+        }
     }
 }

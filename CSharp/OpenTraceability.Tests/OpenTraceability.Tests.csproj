@@ -1,69 +1,69 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>1.0.1</Version>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<ItemGroup>
+		<None Remove="Data\aggregation_event_all_possible_fields.xml" />
+		<None Remove="Data\association_event_all_possible_fields.xml" />
+		<None Remove="Data\EPCISDocument_objectevents_complete.jsonld" />
+		<None Remove="Data\epc_tests.json" />
+		<None Remove="Data\gdst_data_withmasterdata.jsonld" />
+		<None Remove="Data\gdst_extensions_01.xml" />
+		<None Remove="Data\gs1-vocab-locations01.json" />
+		<None Remove="Data\gs1-vocab-products01.json" />
+		<None Remove="Data\gs1-vocab-tradingparties01.json" />
+		<None Remove="Data\object_event_all_possible_fields.xml" />
+		<None Remove="Data\querydoc_example01.xml" />
+		<None Remove="Data\querydoc_example02.xml" />
+		<None Remove="Data\querydoc_fail_schemacheck.xml" />
+		<None Remove="Data\SensorDataExample11.jsonld" />
+		<None Remove="Data\SensorDataExample8.jsonld" />
+		<None Remove="Data\testserver_advancedfilters.jsonld" />
+		<None Remove="Data\traceback_tests.jsonld" />
+		<None Remove="Data\transformation_event_all_possible_fields.xml" />
+		<None Remove="Queries\" />
+		<None Remove="Configurations\" />
+		<None Remove="Configurations\appsettings.json" />
+		<None Remove="Configurations\appsettings.TestServer.json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Data\aggregation_event_all_possible_fields.xml" />
-    <None Remove="Data\association_event_all_possible_fields.xml" />
-    <None Remove="Data\EPCISDocument_objectevents_complete.jsonld" />
-    <None Remove="Data\epc_tests.json" />
-    <None Remove="Data\gdst_data_withmasterdata.jsonld" />
-    <None Remove="Data\gdst_extensions_01.xml" />
-    <None Remove="Data\gs1-vocab-locations01.json" />
-    <None Remove="Data\gs1-vocab-products01.json" />
-    <None Remove="Data\gs1-vocab-tradingparties01.json" />
-    <None Remove="Data\object_event_all_possible_fields.xml" />
-    <None Remove="Data\querydoc_example01.xml" />
-    <None Remove="Data\querydoc_example02.xml" />
-    <None Remove="Data\querydoc_fail_schemacheck.xml" />
-    <None Remove="Data\SensorDataExample11.jsonld" />
-    <None Remove="Data\SensorDataExample8.jsonld" />
-    <None Remove="Data\testserver_advancedfilters.jsonld" />
-    <None Remove="Data\traceback_tests.jsonld" />
-    <None Remove="Data\transformation_event_all_possible_fields.xml" />
-    <None Remove="Queries\" />
-    <None Remove="Configurations\" />
-    <None Remove="Configurations\appsettings.json" />
-    <None Remove="Configurations\appsettings.TestServer.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Data\*" />
+		<EmbeddedResource Include="Configurations\appsettings.TestServer.json" Condition="'$(ExcludeConfigFilesFromBuildOutput)'!='true'">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Data\*" />
-    <EmbeddedResource Include="Configurations\appsettings.TestServer.json" Condition="'$(ExcludeConfigFilesFromBuildOutput)'!='true'">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Remove="Data\SensorDataExample11.jsonld" />
+		<EmbeddedResource Remove="Data\SensorDataExample8.jsonld" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Remove="Data\SensorDataExample11.jsonld" />
-    <EmbeddedResource Remove="Data\SensorDataExample8.jsonld" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+		<PackageReference Include="NUnit" Version="3.13.3" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+		<PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
+		<PackageReference Include="coverlet.collector" Version="3.1.2" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.4" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
-    <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
-    <PackageReference Include="coverlet.collector" Version="3.1.2" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.4" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\OpenTraceability.GDST\OpenTraceability.GDST.csproj" />
+		<ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
+		<ProjectReference Include="..\OpenTraceability.TestServer\OpenTraceability.TestServer.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OpenTraceability.GDST\OpenTraceability.GDST.csproj" />
-    <ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
-    <ProjectReference Include="..\OpenTraceability.TestServer\OpenTraceability.TestServer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Queries\" />
-    <Folder Include="Configurations\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Queries\" />
+		<Folder Include="Configurations\" />
+	</ItemGroup>
 </Project>

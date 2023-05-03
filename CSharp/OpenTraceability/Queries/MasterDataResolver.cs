@@ -38,7 +38,7 @@ namespace OpenTraceability.Queries
 
                 foreach (var source in evt.SourceList)
                 {
-                    if (source.ParsedType == EventDestinationType.Owner)
+                    if (source.ParsedType == EventSourceType.Owner)
                     {
                         var pgln = new PGLN(source.Value ?? throw new Exception("source in event source list has NULL value."));
                         if (pgln != null)

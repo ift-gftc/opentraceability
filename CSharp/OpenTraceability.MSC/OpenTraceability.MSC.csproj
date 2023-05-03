@@ -4,27 +4,28 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Title>Open Traceability - GDST Extension</Title>
-		<Description>Open source libraries for working with EPCIS in C# with extensions for GDST.</Description>
+		<Title>Open Traceability - MSC Extension</Title>
+		<Description>Open source libraries for working with EPCIS in C# with extensions for MSC based on the GDST extensions.</Description>
 		<Copyright>MIT</Copyright>
 		<PackageProjectUrl>https://github.com/ift-gftc/opentraceability</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/ift-gftc/opentraceability</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>epcis;open;traceability;ift;gdst</PackageTags>
+		<PackageTags>epcis;open;traceability;ift;msc</PackageTags>
 		<Version>1.0.1</Version>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
-		<None Update="README.md">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
+		<ProjectReference Include="..\OpenTraceability.GDST\OpenTraceability.GDST.csproj" />
+		<ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
+	  <None Update="README.md">
+	    <PackagePath>\</PackagePath>
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <Pack>True</Pack>
+	  </None>
 	</ItemGroup>
 
 </Project>
