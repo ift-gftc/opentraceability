@@ -226,7 +226,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 
         internal static void CheckSchema(JObject json)
         {
-            if (!JsonSchemaChecker.IsValid(json, "https://ref.gs1.org/standards/epcis/epcis-json-schema.json", out List<string> errors))
+            if (!JsonSchemaChecker.IsValid(json.ToString(), "https://ref.gs1.org/standards/epcis/epcis-json-schema.json", out List<string> errors))
             {
                 throw new OpenTraceabilitySchemaException("Failed to validate JSON schema with errors:\n" + string.Join('\n', errors) + "\n\n and json " + json.ToString(Formatting.Indented));
             }
