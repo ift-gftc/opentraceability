@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <Title>Open Traceability - Test Server</Title>
+	  <Description>A packaged version of a test server that can be deployed and used prop up a dummy EPCIS/Digital Link resolver..</Description>
+	  <Copyright>MIT</Copyright>
+	  <PackageProjectUrl>https://github.com/ift-gftc/opentraceability</PackageProjectUrl>
+	  <PackageReadmeFile>README_TESTSERVER.md</PackageReadmeFile>
+	  <RepositoryUrl>https://github.com/ift-gftc/opentraceability</RepositoryUrl>
+	  <RepositoryType>git</RepositoryType>
+	  <PackageTags>epcis;open;traceability;ift;msc</PackageTags>
+	  <VersionPrefix>1.1.0</VersionPrefix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenTraceability.TestServer\OpenTraceability.TestServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README_TESTSERVER.md">
+      <PackagePath>\</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>
+
+</Project>
