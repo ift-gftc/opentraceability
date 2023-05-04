@@ -8,15 +8,15 @@
 		<Description>Open source libraries for working with EPCIS in C# with extensions for GDST.</Description>
 		<Copyright>MIT</Copyright>
 		<PackageProjectUrl>https://github.com/ift-gftc/opentraceability</PackageProjectUrl>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReadmeFile>GDST_README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/ift-gftc/opentraceability</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>epcis;open;traceability;ift;gdst</PackageTags>
-		<VersionPrefix>1.0.6</VersionPrefix>
+		<VersionPrefix>1.0.8</VersionPrefix>
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<None Update="README.md">
+		<None Update="GDST_README.md">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>

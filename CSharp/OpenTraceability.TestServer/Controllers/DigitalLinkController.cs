@@ -17,6 +17,7 @@ public class DigitalLinkController : ControllerBase
 {
     [HttpGet]
     [Route("{blob_id}/417/{pgln}")]
+    [Route("{blob_id}/pgln/{pgln}")]
     public Task<IActionResult> GetPartyLinks(string blob_id, string pgln, [FromQuery] string linkType)
     {
         try
@@ -56,6 +57,7 @@ public class DigitalLinkController : ControllerBase
 
     [HttpGet]
     [Route("{blob_id}/414/{gln}")]
+    [Route("{blob_id}/gln/{gln}")]
     public Task<IActionResult> GetLocationLinks(string blob_id, string gln, [FromQuery] string linkType)
     {
         try
@@ -95,6 +97,7 @@ public class DigitalLinkController : ControllerBase
 
     [HttpGet]
     [Route("{blob_id}/01/{gtin}")]
+    [Route("{blob_id}/gtin/{gtin}")]
     public Task<IActionResult> GetTradeitemLinks(string blob_id, string gtin, [FromQuery] string linkType)
     {
         try
@@ -134,6 +137,7 @@ public class DigitalLinkController : ControllerBase
 
     [HttpGet]
     [Route("{blob_id}/00/{sscc}")]
+    [Route("{blob_id}/sscc/{sscc}")]
     public Task<IActionResult> GetSSCCLinks(string blob_id, string sscc, [FromQuery] string linkType)
     {
         try
@@ -163,6 +167,7 @@ public class DigitalLinkController : ControllerBase
 
     [HttpGet]
     [Route("{blob_id}/01/{gtin}/10/{lot}")]
+    [Route("{blob_id}/gtin/{gtin}/lot/{lot}")]
     public Task<IActionResult> GetEPCClassLinks(string blob_id, string gtin, string lot, [FromQuery] string linkType)
     {
         try
@@ -202,6 +207,7 @@ public class DigitalLinkController : ControllerBase
 
     [HttpGet]
     [Route("{blob_id}/01/{gtin}/21/{serial}")]
+    [Route("{blob_id}/gtin/{gtin}/serial/{serial}")]
     public Task<IActionResult> GetEPCInstanceLinks(string blob_id, string gtin, string serial, [FromQuery] string linkType)
     {
         try

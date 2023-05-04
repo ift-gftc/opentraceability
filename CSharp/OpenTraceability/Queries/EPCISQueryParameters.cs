@@ -68,30 +68,33 @@ namespace OpenTraceability.Queries
         public EPCISQueryParameters(Uri uri)
         {
             // split into each query parameter
-            foreach (var qp in uri.Query.Substring(1).Split('&'))
+            if (uri.Query != null && uri.Query.Length > 1)
             {
-                string key = qp.Split('=').First();
-                string value = HttpUtility.UrlDecode(qp.Split('=').Last());
-
-                if (_prop_mapping.ContainsKey(key))
+                foreach (var qp in uri.Query.Substring(1).Split('&'))
                 {
-                    PropertyInfo prop = _prop_mapping[key];
-                    if (prop != null)
+                    string key = qp.Split('=').First();
+                    string value = HttpUtility.UrlDecode(qp.Split('=').Last());
+
+                    if (_prop_mapping.ContainsKey(key))
                     {
-                        if (prop.PropertyType == typeof(DateTimeOffset?))
+                        PropertyInfo prop = _prop_mapping[key];
+                        if (prop != null)
                         {
-                            DateTimeOffset dt = DateTimeOffset.Parse(value);
-                            prop.SetValue(query, dt);
-                        }
-                        else if (prop.PropertyType == typeof(List<string>))
-                        {
-                            List<string> values = value.Split('|').ToList();
-                            prop.SetValue(query, values);
-                        }
-                        else if (prop.PropertyType == typeof(List<Uri>))
-                        {
-                            List<Uri> values = value.Split('|').Select(u => new Uri(u)).ToList();
-                            prop.SetValue(query, values);
+                            if (prop.PropertyType == typeof(DateTimeOffset?))
+                            {
+                                DateTimeOffset dt = DateTimeOffset.Parse(value);
+                                prop.SetValue(query, dt);
+                            }
+                            else if (prop.PropertyType == typeof(List<string>))
+                            {
+                                List<string> values = value.Split('|').ToList();
+                                prop.SetValue(query, values);
+                            }
+                            else if (prop.PropertyType == typeof(List<Uri>))
+                            {
+                                List<Uri> values = value.Split('|').Select(u => new Uri(u)).ToList();
+                                prop.SetValue(query, values);
+                            }
                         }
                     }
                 }
@@ -231,13 +234,54 @@ namespace OpenTraceability.Queries
         public DateTimeOffset? LE_recordTime { get; set; }
         public DateTimeOffset? GE_eventTime { get; set; }
         public DateTimeOffset? LE_eventTime { get; set; }
-        public List<string>? eventTypes { get; set; }
-        public List<string>? MATCH_epc { get; set; }
-        public List<string>? MATCH_epcClass { get; set; }
-        public List<string>? MATCH_anyEPC { get; set; }
-        public List<string>? MATCH_anyEPCClass { get; set; }
-        public List<string>? EQ_bizStep { get; set; }
-        public List<Uri>? EQ_bizLocation { get; set; }
+        public List<string> eventTypes { get; set; } = new List<string>();
+        public List<string> MATCH_epc { get; set; } = new List<string>();
+        public List<string> MATCH_epcClass { get; set; } = new List<string>();
+        public List<string> MATCH_anyEPC { get; set; } = new List<string>();
+        public List<string> MATCH_anyEPCClass { get; set; } = new List<string>();
+        public List<string> EQ_bizStep { get; set; } = new List<string>();
+        public List<Uri> EQ_bizLocation { get; set; } = new List<Uri>();
+        public List<string> EQ_action { get; set; } = new List<string>();
+
+        public bool ShouldSerializeeventTypes()
+        {
+            return eventTypes?.Count > 0;
+        }
+
+        public bool ShouldSerializeMATCH_epc()
+        {
+            return MATCH_epc?.Count > 0;
+        }
+
+        public bool ShouldSerializeMATCH_epcClass()
+        {
+            return MATCH_epcClass?.Count > 0;
+        }
+
+        public bool ShouldSerializeMATCH_anyEPC()
+        {
+            return MATCH_anyEPC?.Count > 0;
+        }
+
+        public bool ShouldSerializeMATCH_anyEPCClass()
+        {
+            return MATCH_anyEPCClass?.Count > 0;
+        }
+
+        public bool ShouldSerializeEQ_bizStep()
+        {
+            return EQ_bizStep?.Count > 0;
+        }
+
+        public bool ShouldSerializeEQ_bizLocation()
+        {
+            return EQ_bizLocation?.Count > 0;
+        }
+
+        public bool ShouldSerializeEQ_action()
+        {
+            return EQ_action?.Count > 0;
+        }
     }
 }
 
