@@ -241,7 +241,7 @@ namespace OpenTraceability.Queries
 
             // build the HTTP request
             HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri(options.URL + "/events" + parameters.ToQueryParameters());
+            request.RequestUri = new Uri(options.URL.TrimEnd('/') + "/events" + parameters.ToQueryParameters());
             request.Method = HttpMethod.Get;
 
             if (options.Version == EPCISVersion.V1)

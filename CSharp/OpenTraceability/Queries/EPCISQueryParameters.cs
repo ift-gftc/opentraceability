@@ -68,30 +68,33 @@ namespace OpenTraceability.Queries
         public EPCISQueryParameters(Uri uri)
         {
             // split into each query parameter
-            foreach (var qp in uri.Query.Substring(1).Split('&'))
+            if (uri.Query != null && uri.Query.Length > 1)
             {
-                string key = qp.Split('=').First();
-                string value = HttpUtility.UrlDecode(qp.Split('=').Last());
-
-                if (_prop_mapping.ContainsKey(key))
+                foreach (var qp in uri.Query.Substring(1).Split('&'))
                 {
-                    PropertyInfo prop = _prop_mapping[key];
-                    if (prop != null)
+                    string key = qp.Split('=').First();
+                    string value = HttpUtility.UrlDecode(qp.Split('=').Last());
+
+                    if (_prop_mapping.ContainsKey(key))
                     {
-                        if (prop.PropertyType == typeof(DateTimeOffset?))
+                        PropertyInfo prop = _prop_mapping[key];
+                        if (prop != null)
                         {
-                            DateTimeOffset dt = DateTimeOffset.Parse(value);
-                            prop.SetValue(query, dt);
-                        }
-                        else if (prop.PropertyType == typeof(List<string>))
-                        {
-                            List<string> values = value.Split('|').ToList();
-                            prop.SetValue(query, values);
-                        }
-                        else if (prop.PropertyType == typeof(List<Uri>))
-                        {
-                            List<Uri> values = value.Split('|').Select(u => new Uri(u)).ToList();
-                            prop.SetValue(query, values);
+                            if (prop.PropertyType == typeof(DateTimeOffset?))
+                            {
+                                DateTimeOffset dt = DateTimeOffset.Parse(value);
+                                prop.SetValue(query, dt);
+                            }
+                            else if (prop.PropertyType == typeof(List<string>))
+                            {
+                                List<string> values = value.Split('|').ToList();
+                                prop.SetValue(query, values);
+                            }
+                            else if (prop.PropertyType == typeof(List<Uri>))
+                            {
+                                List<Uri> values = value.Split('|').Select(u => new Uri(u)).ToList();
+                                prop.SetValue(query, values);
+                            }
                         }
                     }
                 }
