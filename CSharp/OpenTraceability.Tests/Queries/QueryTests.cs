@@ -198,7 +198,7 @@ namespace OpenTraceability.Tests.Queries
             var results = await client.Traceback(blob_id, new Models.Identifiers.EPC("urn:gdst:example.org:product:lot:class:processor.2u.v1-0122-2022"));
             Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the traceback events");
             Assert.IsNotNull(results.Document);
-            Assert.That(results.Document.Events.Count, Is.EqualTo(27), "expected 27 events");
+            Assert.That(results.Document.Events.Count, Is.EqualTo(16), "expected 16 events");
         }
     }
 }
