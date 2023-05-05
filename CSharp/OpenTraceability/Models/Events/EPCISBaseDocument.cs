@@ -93,6 +93,7 @@ namespace OpenTraceability.Models.Events
                             this.Events.Remove(e);
                             this.Events.Add(e2);
                         }
+                        found = true;
                     }
                 }
                 if (!found)
