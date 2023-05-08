@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -15,6 +15,7 @@
 		<None Remove="Data\epc_tests.json" />
 		<None Remove="Data\gdst_data_withmasterdata.jsonld" />
 		<None Remove="Data\gdst_extensions_01.xml" />
+		<None Remove="Data\gdst_extensions_02.xml" />
 		<None Remove="Data\gs1-vocab-locations01.json" />
 		<None Remove="Data\gs1-vocab-products01.json" />
 		<None Remove="Data\gs1-vocab-tradingparties01.json" />

@@ -28,7 +28,7 @@ namespace OpenTraceability.Mappers
         {
             if (!_XmlTypeInfos.ContainsKey(t))
             {
-                lock(_locker)
+                lock (_locker)
                 {
                     if (!_XmlTypeInfos.ContainsKey(t))
                     {
@@ -94,7 +94,7 @@ namespace OpenTraceability.Mappers
         public PropertyInfo? ExtensionKDEs { get; set; }
         public PropertyInfo? ExtensionAttributes { get; set; }
 
-        public OTMappingTypeInformation(Type type, EPCISDataFormat format, bool isMasterDataMapping=false)
+        public OTMappingTypeInformation(Type type, EPCISDataFormat format, bool isMasterDataMapping = false)
         {
             Type = type;
 
@@ -127,23 +127,32 @@ namespace OpenTraceability.Mappers
                         foreach (var att in atts)
                         {
                             OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(p, att, format);
-                            this.Properties.Add(property);
-                            _dic.Add(property.Name, property);
+                            if (!_dic.ContainsKey(property.Name))
+                            {
+                                this.Properties.Add(property);
+                                _dic.Add(property.Name, property);
+                            }
                         }
                     }
                     else if (jsonAtt != null && format == EPCISDataFormat.JSON)
                     {
                         OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(p, jsonAtt, format);
-                        this.Properties.Add(property);
-                        _dic.Add(property.Name, property);
+                        if (!_dic.ContainsKey(property.Name))
+                        {
+                            this.Properties.Add(property);
+                            _dic.Add(property.Name, property);
+                        }
                     }
                     else if (productAtts.Count() > 0)
                     {
                         foreach (var att in productAtts)
                         {
                             OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(p, att, format);
-                            this.Properties.Add(property);
-                            _dic.Add(property.Name, property);
+                            if (!_dic.ContainsKey(property.Name))
+                            {
+                                this.Properties.Add(property);
+                                _dic.Add(property.Name, property);
+                            }
                         }
                     }
                     else if (p.GetCustomAttribute<OpenTraceabilityExtensionElementsAttribute>() != null)

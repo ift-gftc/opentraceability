@@ -18,6 +18,7 @@ namespace OpenTraceability.Tests.Events
         /// </summary>
         [Test]
         [TestCase("querydoc_example01.xml")]
+        [TestCase("gdst_extensions_02.xml")]
         public void XML(string file)
         {
             // read object events from test data specified in the file argument
