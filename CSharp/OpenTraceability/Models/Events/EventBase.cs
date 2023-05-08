@@ -50,6 +50,11 @@ namespace OpenTraceability.Models.Events
         public const string Packaging = "urn:gdst:bizstep:packaging";
         public const string Transshipment = "urn:gdst:bizstep:transshipment";
         public const string FarmHarvest = "urn:gdst:bizstep:farmharvest";
+
+        public const string ReceivingURI = "https://ref.gs1.org/cbv/BizStep-receiving";
+        public const string ShippingURI = "https://ref.gs1.org/cbv/BizStep-shipping";
+        public const string StorageURI = "https://ref.gs1.org/cbv/BizStep-storing";
+        public const string CommissioningURI = "https://ref.gs1.org/cbv/BizStep-commissioning";
     }
 
     public class EventBase
