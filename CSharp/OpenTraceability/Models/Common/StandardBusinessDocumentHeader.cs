@@ -47,10 +47,10 @@ namespace OpenTraceability.Models.Common
                 {
                     CreationDateAndTime = DateTime.UtcNow,
                     InstanceIdentifier = "x",
-                    MultipleType = "x",
+                    MultipleType = "false",
                     Standard = "x",
                     Type = "x",
-                    TypeVersion = "x"
+                    TypeVersion = "3.0"
                 };
                 return dh;
             }
