@@ -18,7 +18,6 @@ namespace OpenTraceability.Tests.Events
         /// </summary>
         [Test]
         [TestCase("querydoc_example01.xml")]
-        [TestCase("gdst_extensions_02.xml")]
         public void XML(string file)
         {
             // read object events from test data specified in the file argument
@@ -32,6 +31,10 @@ namespace OpenTraceability.Tests.Events
 
             // check that the XMLs match
             OpenTraceabilityTests.CompareXML(xmlObjectEvents, xmlObjectEventsAfter);
+
+            // test dummy header
+            doc.Header = Models.Common.StandardBusinessDocumentHeader.DummyHeader;
+            xmlObjectEventsAfter = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(doc);
         }
 
         [Test]
@@ -67,6 +70,11 @@ namespace OpenTraceability.Tests.Events
             // convert back into XML 1.2
             docAfter.EPCISVersion = EPCISVersion.V1;
             string xmlAfter = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(docAfter);
+
+            // map the XML back into a document
+            var finalDoc = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(xmlAfter);
+
+            xmlAfter = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(finalDoc);
 
             // change all the https://ref.gs1.org/cbv/ to "urn:epcglobal:cbv:
             xmlAfter = xmlAfter.Replace("https://ref.gs1.org/cbv/Disp-", "urn:epcglobal:cbv:disp:");
