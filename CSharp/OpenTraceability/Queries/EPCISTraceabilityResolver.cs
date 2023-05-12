@@ -232,11 +232,6 @@ namespace OpenTraceability.Queries
             if (options.Format == EPCISDataFormat.XML)
             {
                 mapper = OpenTraceabilityMappers.EPCISQueryDocument.XML;
-
-                if (options.Version != EPCISVersion.V1)
-                {
-                    throw new Exception("The data format is set to XML, but the EPCIS version is not set to 1.2");
-                }
             }
 
             // build the HTTP request
@@ -244,7 +239,7 @@ namespace OpenTraceability.Queries
             request.RequestUri = new Uri(options.URL?.ToString().TrimEnd('/') + "/events" + parameters.ToQueryParameters());
             request.Method = HttpMethod.Get;
 
-            if (options.Version == EPCISVersion.V1)
+            if (options.Version == EPCISVersion.V1) 
             {
                 request.Headers.Add("Accept", "application/xml");
                 request.Headers.Add("GS1-EPCIS-Version", "1.2");

@@ -31,7 +31,7 @@ namespace OpenTraceability.Utility
 
             var jDoc = JsonDocument.Parse(jsonStr);
             var mySchema = JsonSchema.FromText(schemaStr);
-            var results = mySchema.Evaluate(jDoc);
+            var results = mySchema.Evaluate(jDoc, new EvaluationOptions() { OutputFormat = OutputFormat.List });
             if (results.IsValid)
             {
                 errors = new List<string>();
