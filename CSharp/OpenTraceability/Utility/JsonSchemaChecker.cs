@@ -39,8 +39,8 @@ namespace OpenTraceability.Utility
             }
             else
             {
-                var errors_list = results.Errors?.Select(e => string.Format("{0} :: {1}", e.Key, e.Value)).ToList();
-                errors = errors_list ?? new List<string>();
+                errors = results.Errors?.Select(e => string.Format("{0} :: {1}", e.Key, e.Value)).ToList() ?? new List<string>();
+                errors.AddRange(results.Details?.SelectMany(e => e.Errors ?? new Dictionary<string,string>()).Select(e => string.Format("{0} :: {1}", e.Key, e.Value)).ToList() ?? new List<string>());
                 return false;
             }
         }
