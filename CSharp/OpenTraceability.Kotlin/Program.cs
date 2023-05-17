@@ -14,7 +14,8 @@ List<string> namespaces = new List<string>()
     "OpenTraceability"
 };
 
-string rootKotlinPath = @"C:\GitHub\DuckScapePhilip\opentraceability\Java\OpenTraceability\src\main\";
+//string rootKotlinPath = @"C:\GitHub\DuckScapePhilip\opentraceability\Java\OpenTraceability\src\main\";
+string rootKotlinPath = @"C:\Projects\Philip\opentraceability\Java\OpenTraceability\src\main\";
 
 foreach (var ns in namespaces)
 {

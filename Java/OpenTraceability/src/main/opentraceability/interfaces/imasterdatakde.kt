@@ -1,11 +1,12 @@
+import java.lang.reflect.Type
 interface IMasterDataKDE {
     fun get_Namespace(): String
-    fun set_Namespace(String value): Void
+    fun set_Namespace(value: String): Void
     fun get_Name(): String
-    fun set_Name(String value): Void
+    fun set_Name(value: String): Void
     fun get_ValueType(): Type
-    fun SetFromGS1WebVocabJson(JToken json): Void
+    fun SetFromGS1WebVocabJson(json: JToken): Void
     fun GetGS1WebVocabJson(): JToken
-    fun SetFromEPCISXml(XElement xml): Void
+    fun SetFromEPCISXml(xml: XElement): Void
     fun GetEPCISXml(): XElement
 }

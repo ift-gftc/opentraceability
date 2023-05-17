@@ -1,4 +1,4 @@
 interface IEPCISDocumentMapper {
-    fun Map(String strValue): EPCISDocument
-    fun Map(EPCISDocument doc): String
+    fun Map(strValue: String): EPCISDocument
+    fun Map(doc: EPCISDocument): String
 }

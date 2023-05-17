@@ -1,4 +1,4 @@
 interface IEPCISQueryDocumentMapper {
-    fun Map(String strValue, Boolean checkSchema): EPCISQueryDocument
-    fun Map(EPCISQueryDocument doc): String
+    fun Map(strValue: String, checkSchema: Boolean): EPCISQueryDocument
+    fun Map(doc: EPCISQueryDocument): String
 }

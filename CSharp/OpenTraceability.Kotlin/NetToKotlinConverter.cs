@@ -18,7 +18,7 @@ namespace OpenTraceability.Kotlin
                 kotlinClass.AppendLine($"class {csharpType.Name} {{");
 
                 object? target = null;
-                if (csharpType.IsSealed && csharpType.IsAbstract)
+                if (csharpType.IsClass && csharpType.IsSealed && csharpType.IsAbstract)
                 {
                     try
                     {
@@ -82,6 +82,9 @@ namespace OpenTraceability.Kotlin
 
                 kotlinClass.AppendLine("}");
 
+
+                WriteImports(kotlinClass);
+
                 return kotlinClass.ToString();
             }
             catch (Exception ex)
@@ -106,6 +109,8 @@ namespace OpenTraceability.Kotlin
             }
 
             kotlinInterface.AppendLine("}");
+
+            WriteImports(kotlinInterface);
 
             return kotlinInterface.ToString();
         }
@@ -152,6 +157,10 @@ namespace OpenTraceability.Kotlin
             {
                 return "OffsetDateTime";
             }
+            else if (type == typeof(TimeSpan))
+            {
+                return "TimeSpan"; //TODO: Check this
+            }
             else if (type == typeof(Uri))
             {
                 return "URI";
@@ -174,7 +183,9 @@ namespace OpenTraceability.Kotlin
             foreach (var parameter in parameters)
             {
                 string convertedType = ConvertType(parameter.ParameterType);
-                convertedParameters.Add($"{convertedType} {parameter.Name}");
+
+
+                convertedParameters.Add($"{parameter.Name}: {convertedType}");
             }
             return string.Join(", ", convertedParameters);
         }
@@ -183,7 +194,9 @@ namespace OpenTraceability.Kotlin
         {
             try
             {
-                string line = $"{spacing}var {field.Name}: {ConvertType(field.FieldType)}";
+                string constLabel = (field.IsLiteral && !field.IsInitOnly) ? "const val" : "var";
+
+                string line = $"{spacing}{constLabel} {field.Name}: {ConvertType(field.FieldType)}";
 
                 if (field.FieldType.ContainsGenericParameters == false)
                 {
@@ -193,7 +206,15 @@ namespace OpenTraceability.Kotlin
                         object? v = field.GetValue(target);
                         if (v != null)
                         {
-                            line += $" = \"{v.ToString()}\"";
+                            if (v is string || v is XNamespace)
+                            {
+                                line += $" = \"{v.ToString()}\"";
+                            }
+                            else
+                            {
+                                line += $" = {v.ToString()}()";
+                            }
+
                         }
                     }
                 }
@@ -282,5 +303,28 @@ namespace OpenTraceability.Kotlin
                 return sb.ToString();
             }
         }
+
+
+        private static void WriteImports(StringBuilder sb)
+        {
+            string fileText = sb.ToString();
+
+            if (fileText.Contains("OffsetDateTime"))
+            {
+                sb.Insert(0, "import java.time.OffsetDateTime" + Environment.NewLine);
+            }
+
+            if (fileText.Contains("URI"))
+            {
+                sb.Insert(0, "import java.net.URI" + Environment.NewLine);
+            }
+
+            if (fileText.Contains("Type"))
+            {
+                sb.Insert(0, "import java.lang.reflect.Type" + Environment.NewLine);
+            }
+        }
+
+
     }
 }
