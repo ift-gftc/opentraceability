@@ -1,0 +1,4 @@
+class Location {
+    companion object{
+    }
+}

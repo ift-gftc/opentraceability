@@ -1,0 +1,4 @@
+class EventReadPoint {
+    companion object{
+    }
+}

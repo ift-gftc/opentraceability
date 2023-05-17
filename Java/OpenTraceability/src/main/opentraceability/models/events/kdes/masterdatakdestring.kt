@@ -1,0 +1,4 @@
+class MasterDataKDEString {
+    companion object{
+    }
+}

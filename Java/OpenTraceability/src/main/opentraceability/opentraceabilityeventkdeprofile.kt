@@ -1,0 +1,4 @@
+class OpenTraceabilityEventKDEProfile {
+    companion object{
+    }
+}

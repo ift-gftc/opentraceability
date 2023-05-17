@@ -1,0 +1,4 @@
+class EventSource {
+    companion object{
+    }
+}

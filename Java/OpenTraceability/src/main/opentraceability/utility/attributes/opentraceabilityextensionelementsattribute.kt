@@ -1,0 +1,4 @@
+class OpenTraceabilityExtensionElementsAttribute {
+    companion object{
+    }
+}

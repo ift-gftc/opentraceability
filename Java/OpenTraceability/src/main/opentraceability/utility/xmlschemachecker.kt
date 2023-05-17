@@ -1,0 +1,4 @@
+class XmlSchemaChecker {
+    companion object{
+    }
+}

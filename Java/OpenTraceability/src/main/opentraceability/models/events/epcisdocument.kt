@@ -1,0 +1,4 @@
+class EPCISDocument {
+    companion object{
+    }
+}

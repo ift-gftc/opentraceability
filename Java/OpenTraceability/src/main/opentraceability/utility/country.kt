@@ -1,0 +1,4 @@
+class Country {
+    companion object{
+    }
+}

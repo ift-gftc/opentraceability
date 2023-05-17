@@ -1,0 +1,4 @@
+class CBVAttribute {
+    companion object{
+    }
+}

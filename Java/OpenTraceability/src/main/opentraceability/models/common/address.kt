@@ -1,0 +1,4 @@
+class Address {
+    companion object{
+    }
+}

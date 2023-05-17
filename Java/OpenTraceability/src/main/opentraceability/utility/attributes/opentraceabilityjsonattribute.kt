@@ -1,0 +1,4 @@
+class OpenTraceabilityJsonAttribute {
+    companion object{
+    }
+}

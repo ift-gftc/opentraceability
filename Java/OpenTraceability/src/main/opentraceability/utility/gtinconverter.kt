@@ -1,0 +1,4 @@
+class GTINConverter {
+    companion object{
+    }
+}

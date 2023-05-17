@@ -1,0 +1,4 @@
+class GLNConverter {
+    companion object{
+    }
+}

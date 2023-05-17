@@ -1,0 +1,4 @@
+class TransactionEvent {
+    companion object{
+    }
+}

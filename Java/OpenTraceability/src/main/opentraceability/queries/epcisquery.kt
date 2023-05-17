@@ -1,0 +1,4 @@
+class EPCISQuery {
+    companion object{
+    }
+}

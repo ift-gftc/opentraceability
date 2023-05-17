@@ -1,0 +1,4 @@
+class EPCISTestServerClient {
+    companion object{
+    }
+}

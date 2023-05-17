@@ -1,0 +1,4 @@
+class MasterDataKDEBase {
+    companion object{
+    }
+}

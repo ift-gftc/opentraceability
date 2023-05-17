@@ -1,0 +1,4 @@
+class EventProduct {
+    companion object{
+    }
+}

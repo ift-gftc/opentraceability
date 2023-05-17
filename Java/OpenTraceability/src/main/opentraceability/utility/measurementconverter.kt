@@ -1,0 +1,4 @@
+class MeasurementConverter {
+    companion object{
+    }
+}

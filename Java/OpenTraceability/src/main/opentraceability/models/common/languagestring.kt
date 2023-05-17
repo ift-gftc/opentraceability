@@ -1,0 +1,4 @@
+class LanguageString {
+    companion object{
+    }
+}

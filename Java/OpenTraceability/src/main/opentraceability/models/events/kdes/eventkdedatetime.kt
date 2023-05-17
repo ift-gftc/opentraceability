@@ -1,0 +1,4 @@
+class EventKDEDateTime {
+    companion object{
+    }
+}

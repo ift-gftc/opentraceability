@@ -70,7 +70,7 @@ namespace OpenTraceability
                 // if we find another profile with the same hash, then remove that one first...
                 foreach (var to_remove in Profiles.Where(p => p.ToString() == profile.ToString()).ToList())
                 {
-                    Profiles.Remove(profile);
+                    Profiles.Remove(to_remove);
                 }
 
                 Profiles.Add(profile);

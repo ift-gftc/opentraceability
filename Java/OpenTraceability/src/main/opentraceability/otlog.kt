@@ -1,0 +1,4 @@
+class OTLog {
+    companion object{
+    }
+}

@@ -1,0 +1,4 @@
+class DigitalLink {
+    companion object{
+    }
+}

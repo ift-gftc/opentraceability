@@ -1,0 +1,4 @@
+class SBDHDocumentIdentification {
+    companion object{
+    }
+}

@@ -1,0 +1,4 @@
+class OpenTraceabilityRepeatingAttribute {
+    companion object{
+    }
+}

@@ -1,0 +1,4 @@
+class TradingParty {
+    companion object{
+    }
+}

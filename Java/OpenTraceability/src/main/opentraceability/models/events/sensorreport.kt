@@ -1,0 +1,4 @@
+class SensorReport {
+    companion object{
+    }
+}

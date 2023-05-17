@@ -1,0 +1,4 @@
+class SBDHOrganization {
+    companion object{
+    }
+}

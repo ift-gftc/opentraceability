@@ -1,0 +1,4 @@
+class EventLocation {
+    companion object{
+    }
+}

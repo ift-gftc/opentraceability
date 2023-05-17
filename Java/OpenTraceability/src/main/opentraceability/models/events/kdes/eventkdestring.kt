@@ -1,0 +1,4 @@
+class EventKDEString {
+    companion object{
+    }
+}

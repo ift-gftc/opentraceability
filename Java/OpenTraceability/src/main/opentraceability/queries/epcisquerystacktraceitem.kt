@@ -1,0 +1,4 @@
+class EPCISQueryStackTraceItem {
+    companion object{
+    }
+}

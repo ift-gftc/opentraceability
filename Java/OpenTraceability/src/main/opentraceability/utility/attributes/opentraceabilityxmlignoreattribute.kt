@@ -1,0 +1,4 @@
+class OpenTraceabilityXmlIgnoreAttribute {
+    companion object{
+    }
+}

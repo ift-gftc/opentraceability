@@ -1,0 +1,4 @@
+class EPCISQueryDocumentJsonMapper {
+    companion object{
+    }
+}

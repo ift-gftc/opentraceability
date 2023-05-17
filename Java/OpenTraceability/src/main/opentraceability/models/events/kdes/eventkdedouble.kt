@@ -1,0 +1,4 @@
+class EventKDEDouble {
+    companion object{
+    }
+}

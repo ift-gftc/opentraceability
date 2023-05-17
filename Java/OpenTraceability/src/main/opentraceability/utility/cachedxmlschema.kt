@@ -1,0 +1,4 @@
+class CachedXmlSchema {
+    companion object{
+    }
+}

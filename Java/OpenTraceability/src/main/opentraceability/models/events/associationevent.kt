@@ -1,0 +1,4 @@
+class AssociationEvent {
+    companion object{
+    }
+}

@@ -1,0 +1,4 @@
+class EPCISQueryInterfaceOptions {
+    companion object{
+    }
+}

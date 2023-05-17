@@ -1,0 +1,4 @@
+class CertificationList {
+    companion object{
+    }
+}

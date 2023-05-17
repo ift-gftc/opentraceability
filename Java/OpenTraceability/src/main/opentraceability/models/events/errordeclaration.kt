@@ -1,0 +1,4 @@
+class ErrorDeclaration {
+    companion object{
+    }
+}

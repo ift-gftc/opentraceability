@@ -1,0 +1,4 @@
+class EventKDEObject {
+    companion object{
+    }
+}

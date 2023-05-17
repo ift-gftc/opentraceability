@@ -1,0 +1,4 @@
+class EventKDECountry {
+    companion object{
+    }
+}

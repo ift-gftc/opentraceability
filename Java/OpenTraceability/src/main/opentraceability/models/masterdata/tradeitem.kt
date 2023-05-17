@@ -1,0 +1,4 @@
+class Tradeitem {
+    companion object{
+    }
+}

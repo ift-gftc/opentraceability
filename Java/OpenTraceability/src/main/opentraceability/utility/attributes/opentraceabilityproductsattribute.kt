@@ -1,0 +1,4 @@
+class OpenTraceabilityProductsAttribute {
+    companion object{
+    }
+}

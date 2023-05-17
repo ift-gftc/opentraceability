@@ -1,0 +1,4 @@
+class EPCISQueryDocumentMappers {
+    companion object{
+    }
+}

@@ -1,0 +1,4 @@
+class EPCISQueryError {
+    companion object{
+    }
+}

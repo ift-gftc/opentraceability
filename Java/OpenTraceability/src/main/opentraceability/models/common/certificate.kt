@@ -1,0 +1,4 @@
+class Certificate {
+    companion object{
+    }
+}

@@ -1,0 +1,4 @@
+class OTMappingTypeInformationProperty {
+    companion object{
+    }
+}
