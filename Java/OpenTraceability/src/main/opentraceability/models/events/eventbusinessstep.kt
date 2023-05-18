@@ -1,3 +1,4 @@
+package models.events
 import java.net.URI
 class EventBusinessStep {
     companion object{

@@ -1,15 +1,19 @@
+package interfaces
+import models.events.kdes.CertificationList
+import models.events.*
+import java.time.Duration
 import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
-interface IEvent {
+interface IEvent<T> {
     fun get_EventID(): URI
     fun set_EventID(value: URI): Void
     fun get_CertificationInfo(): String
     fun set_CertificationInfo(value: String): Void
     fun get_EventTime(): OffsetDateTime?
     fun set_EventTime(value: OffsetDateTime?): Void
-    fun get_EventTimeZoneOffset(): TimeSpan?
-    fun set_EventTimeZoneOffset(value: TimeSpan?): Void
+    fun get_EventTimeZoneOffset(): Duration?
+    fun set_EventTimeZoneOffset(value: Duration?): Void
     fun get_RecordTime(): OffsetDateTime?
     fun set_RecordTime(value: OffsetDateTime?): Void
     fun get_EventType(): EventType
@@ -36,9 +40,9 @@ interface IEvent {
     fun get_KDEs(): List<IEventKDE>
     fun get_SensorElementList(): List<SensorElement>
     fun set_SensorElementList(value: List<SensorElement>): Void
-    fun get_Products(): ReadOnlyCollection`1
-    fun GetKDE(ns: String, name: String): T
-    fun GetKDE(): T
+    fun get_Products(): List<EventProduct>
+    fun<T> GetKDE(ns: String, name: String): T
+    fun<T> GetKDE(): T
     fun AddProduct(product: EventProduct): Void
     fun get_CertificationList(): CertificationList
     fun set_CertificationList(value: CertificationList): Void

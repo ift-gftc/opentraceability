@@ -1,6 +1,11 @@
-﻿using System.Reflection;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.Utility;
+using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Nodes;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Kotlin
@@ -11,7 +16,6 @@ namespace OpenTraceability.Kotlin
         {
             try
             {
-
                 StringBuilder kotlinClass = new StringBuilder();
 
                 // Class name
@@ -84,8 +88,18 @@ namespace OpenTraceability.Kotlin
 
 
                 WriteImports(kotlinClass);
+                WriteNamespace(csharpType, kotlinClass);
+                RemoveWords(kotlinClass);
 
-                return kotlinClass.ToString();
+
+                var output = kotlinClass.ToString();
+                if (output.Contains("<T>"))
+                {
+                    output = output.Replace($"class {csharpType.Name} ", $"class {csharpType.Name}<T> ");
+                }
+
+
+                return output;
             }
             catch (Exception ex)
             {
@@ -105,14 +119,34 @@ namespace OpenTraceability.Kotlin
             foreach (var method in methods)
             {
                 // Method signature
-                kotlinInterface.AppendLine($"    fun {method.Name}({ConvertParameters(method.GetParameters())}): {ConvertType(method.ReturnType)}");
+
+                string returnType = ConvertType(method.ReturnType);
+                if (returnType == "T")
+                {
+                    kotlinInterface.AppendLine($"    fun<{returnType}> {method.Name}({ConvertParameters(method.GetParameters())}): {returnType}");
+                }
+                else
+                {
+                    kotlinInterface.AppendLine($"    fun {method.Name}({ConvertParameters(method.GetParameters())}): {returnType}");
+                }
             }
 
             kotlinInterface.AppendLine("}");
 
             WriteImports(kotlinInterface);
+            WriteNamespace(csharpInterface, kotlinInterface);
+            RemoveWords(kotlinInterface);
 
-            return kotlinInterface.ToString();
+
+
+            var output = kotlinInterface.ToString();
+            if (output.Contains("<T>"))
+            {
+                output = output.Replace($"interface {csharpInterface.Name} ", $"interface {csharpInterface.Name}<T> ");
+            }
+
+
+            return output;
         }
 
         public static string ConvertToKotlinEnum(Type csharpEnum)
@@ -131,50 +165,95 @@ namespace OpenTraceability.Kotlin
 
             kotlinEnum.AppendLine("}");
 
+            WriteNamespace(csharpEnum, kotlinEnum);
+
             return kotlinEnum.ToString();
         }
 
         private static string ConvertType(Type type)
         {
+            var isGenricType = type.Name.Contains("`1");
+            var isDictionaty = type.Name.Contains("`2");
+
+            string returnData = string.Empty;
+
             Type? nullableType = Nullable.GetUnderlyingType(type);
             if (nullableType != null)
             {
-                return ConvertType(nullableType) + "?";
+                returnData = ConvertType(nullableType) + "?";
             }
             else if (type == typeof(int))
             {
-                return "Int";
+                returnData = "Int";
             }
             else if (type == typeof(bool))
             {
-                return "Boolean";
+                returnData = "Boolean";
             }
             else if (type == typeof(string) || type == typeof(XNamespace))
             {
-                return "String";
+                returnData = "String";
             }
             else if (type == typeof(DateTimeOffset))
             {
-                return "OffsetDateTime";
+                returnData = "OffsetDateTime";
             }
             else if (type == typeof(TimeSpan))
             {
-                return "TimeSpan"; //TODO: Check this
+                returnData = "Duration";
             }
             else if (type == typeof(Uri))
             {
-                return "URI";
+                returnData = "URI";
             }
-            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            else if (type == typeof(Int16))
+            {
+                returnData = "Short";
+            }
+            else if (type == typeof(Int64))
+            {
+                returnData = "Long";
+            }
+            else if (type == typeof(XElement))
+            {
+                returnData = "XmlElement";
+            }
+            else if (type == typeof(XDocument))
+            {
+                returnData = "XmlDocument";
+            }
+            else if (type == typeof(JToken))
+            {
+                returnData = "JsonToken";
+            }
+            else if (type == typeof(JObject))
+            {
+                returnData = "JsonObject";
+            }
+            else if (type.Name.Contains("XDocument&"))
+            {
+                returnData = "XmlDocument?";
+            }
+            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>) && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) || isGenricType)
             {
                 Type listItemType = type.GetGenericArguments()[0];
-                return $"List<{ConvertType(listItemType)}>";
+                returnData = $"List<{ConvertType(listItemType)}>";
+            }
+            else if (isDictionaty)
+            {
+                Type listItemType1 = type.GetGenericArguments()[0];
+                Type listItemType2 = type.GetGenericArguments()[1];
+                returnData = $"Dictionary<{ConvertType(listItemType1)}, {ConvertType(listItemType2)}>";
             }
             else
             {
                 // Handle other types as needed
-                return type.Name;
+                returnData = type.Name;
             }
+
+            returnData = returnData.Replace("&", string.Empty);
+
+            return returnData;
         }
 
         private static string ConvertParameters(ParameterInfo[] parameters)
@@ -183,7 +262,6 @@ namespace OpenTraceability.Kotlin
             foreach (var parameter in parameters)
             {
                 string convertedType = ConvertType(parameter.ParameterType);
-
 
                 convertedParameters.Add($"{parameter.Name}: {convertedType}");
             }
@@ -241,7 +319,31 @@ namespace OpenTraceability.Kotlin
                         object? v = property.GetValue(target);
                         if (v != null)
                         {
-                            line += $" = \"{v.ToString()}\"";
+                            if (v.ToString().Contains("List") && v.ToString().Contains("Country"))
+                            {
+                                line += $" = ArrayList<Country>()";
+                            }
+                            else if (v.ToString().Contains("List") && v.ToString().Contains("UOM"))
+                            {
+                                line += $" = ArrayList<UOM>()";
+                            }
+                            else if (v.ToString().Contains("List") && v.ToString().Contains("String"))
+                            {
+                                line += $" = ArrayList<String>()";
+                            }
+                            else if (v.ToString().Contains("StandardBusinessDocumentHeader"))
+                            {
+                                line += $" = StandardBusinessDocumentHeader()";
+                            }
+                            else if (v.ToString().Contains("EPCISConstants"))
+                            {
+                                line += $" = EPCISConstants()";
+                            }
+                            else
+                            {
+                                line += $" = \"{v.ToString()}\"";
+                            }
+
                         }
                     }
                 }
@@ -270,8 +372,102 @@ namespace OpenTraceability.Kotlin
             kotlinClass.AppendLine($"{spacing}// [OT_AutoGenerated_FROM]: " + method.Name);
             kotlinClass.AppendLine($"{spacing}// [OT_AutoGenerated_FROM]: " + method.Name);
             kotlinClass.AppendLine($"{spacing}// [OT_AutoGenerated_HASH]: " + GenerateHashFromMethodInfoBody(method));
-            kotlinClass.AppendLine($"{spacing}fun {method.Name}({ConvertParameters(method.GetParameters())}): {ConvertType(method.ReturnType)} {{");
+
+
+            string returnType = ConvertType(method.ReturnType);
+
+            if (!string.IsNullOrEmpty(returnType) && returnType == "Void")
+            {
+                returnType = string.Empty;
+            }
+            var returnTypeString = (!string.IsNullOrEmpty(returnType) ? $": {returnType}" : string.Empty);
+
+            if (returnType == "T")
+            {
+                kotlinClass.AppendLine($"{spacing}fun<{returnType}> {method.Name}({ConvertParameters(method.GetParameters())}){returnTypeString} {{");
+            }
+            else if (method.ReturnType.Name.Contains("`2"))
+            {
+                Type listItemType1 = method.ReturnType.GetGenericArguments()[0];
+                Type listItemType2 = method.ReturnType.GetGenericArguments()[1];
+
+                kotlinClass.AppendLine($"{spacing}fun<{listItemType1},{listItemType2}> {method.Name}({ConvertParameters(method.GetParameters())}){returnTypeString} {{");
+            }
+            else
+            {
+                kotlinClass.AppendLine($"{spacing}fun {method.Name}({ConvertParameters(method.GetParameters())}){returnTypeString} {{");
+            }
+
+
+
+
             kotlinClass.AppendLine($"{spacing}    // Method body goes here");
+
+            if (!string.IsNullOrEmpty(returnType) && returnType != "Void")
+            {
+                if (returnType == "Boolean" || returnType == "Boolean?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return 1==1");
+                }
+                else if (returnType == "Double" || returnType == "Double?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return 0.0");
+                }
+                else if (returnType == "Char" || returnType == "Char?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return ' '");
+                }
+                else if (returnType == "Short" || returnType == "Short?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return 0");
+                }
+                else if (returnType == "Long" || returnType == "Long?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return 0");
+                }
+                else if (returnType == "Int" || returnType == "Int?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return 0");
+                }
+                else if (returnType == "URI" || returnType == "URI?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return URI(\"\")");
+                }
+                else if (returnType == "OffsetDateTime" || returnType == "OffsetDateTime?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return OffsetDateTime.now()");
+                }
+                else if (returnType == "List<HttpClient>" || returnType == "List<HttpClient>?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return listOf(HttpClient.newHttpClient())");
+                }
+                else if (returnType == "HttpClient" || returnType == "HttpClient?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return HttpClient.newHttpClient()");
+                }
+                else if (returnType == "List<T>" || returnType == "List<T>?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return ArrayList<T>()");
+                }
+                else if (returnType == "List<String>" || returnType == "List<String>?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return ArrayList<String>()");
+                }
+                else if (returnType == "List<URI>" || returnType == "List<URI>?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return listOf(URI(\"\"))");
+                }
+                else if (returnType == "List<EPCISQueryResults>" || returnType == "List<EPCISQueryResults>?")
+                {
+                    kotlinClass.AppendLine($"{spacing}    return ArrayList<EPCISQueryResults>()");
+                }
+                else
+                {
+                    kotlinClass.AppendLine($"{spacing}    return {returnType}()");
+                }
+            }
+
+
             kotlinClass.AppendLine($"{spacing}}}");
         }
 
@@ -323,8 +519,87 @@ namespace OpenTraceability.Kotlin
             {
                 sb.Insert(0, "import java.lang.reflect.Type" + Environment.NewLine);
             }
+
+            if (fileText.Contains("Duration"))
+            {
+                sb.Insert(0, "import java.time.Duration" + Environment.NewLine);
+            }
+
+            if (fileText.Contains("EPCISDocument") || fileText.Contains("EPCISQueryDocument") || fileText.Contains("SensorElement")
+                 || fileText.Contains("EPCISBaseDocument") || fileText.Contains("EPCISVersion"))
+            {
+                if (!sb.ToString().Contains("import models.events.*"))
+                {
+                    sb.Insert(0, "import models.events.*" + Environment.NewLine);
+                }
+            }
+
+            if (fileText.Contains("CertificationList"))
+            {
+                sb.Insert(0, "import models.events.kdes.CertificationList" + Environment.NewLine);
+            }
+
+            if (fileText.Contains("EPC") || fileText.Contains("PGLN"))
+            {
+                sb.Insert(0, "import models.identifiers.*" + Environment.NewLine);
+            }
+
+
+            if (fileText.Contains("HttpClient"))
+            {
+                sb.Insert(0, "import java.net.http.HttpClient" + Environment.NewLine);
+            }
+
+            if (fileText.Contains("Dictionary<"))
+            {
+                sb.Insert(0, "import java.util.*" + Environment.NewLine);
+            }
+
+
+            if (fileText.Contains("XmlElement"))
+            {
+                sb.Insert(0, "import javax.xml.bind.annotation.*" + Environment.NewLine);
+            }
+
+
+            if (fileText.Contains("XmlDocument"))
+            {
+                sb.Insert(0, "import com.intellij.psi.xml.XmlDocument" + Environment.NewLine);
+            }
+
+            if (fileText.Contains("JsonToken"))
+            {
+                sb.Insert(0, "import com.fasterxml.jackson.core.JsonToken" + Environment.NewLine);
+            }
+
+            if (fileText.Contains("JsonObject"))
+            {
+                sb.Insert(0, "import com.intellij.json.psi.JsonObject" + Environment.NewLine);
+            }
+
+
         }
 
+        private static void WriteNamespace(Type type, StringBuilder sb)
+        {
+            var arr = type.Namespace.Split('.');
 
+            if (arr.Length > 1)
+            {
+                string convertedNamespace = string.Join(".", arr).ToLowerInvariant();
+                convertedNamespace = convertedNamespace.Replace("opentraceability.", string.Empty);
+
+                sb.Insert(0, "package " + convertedNamespace + Environment.NewLine);
+            }
+        }
+
+        private static void RemoveWords(StringBuilder sb)
+        {
+            sb.Replace("System.String,System.String", "String");
+            sb.Replace("OpenTraceability.", string.Empty);
+            sb.Replace("Mappers.", string.Empty);
+
+
+        }
     }
 }

@@ -1,3 +1,4 @@
+import models.identifiers.*
 class Constants {
     companion object{
         var SBDH_XNAMESPACE: String = "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
@@ -9,7 +10,7 @@ class Constants {
         var CBVMDA_XNAMESPACE: String = "urn:epcglobal:cbv:mda"
         var GDST_XNAMESPACE: String = "https://traceability-dialogue.org/epcis"
         var XMLNS_XNAMESPACE: String = "http://www.w3.org/2000/xmlns/"
-        var EPCIS: EPCISConstants = OpenTraceability.EPCISConstants()
+        var EPCIS: EPCISConstants = EPCISConstants()
         const val SBDH_NAMESPACE: String = "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
         const val EPCIS_2_NAMESPACE: String = "urn:epcglobal:epcis:xsd:2"
         const val EPCIS_1_NAMESPACE: String = "urn:epcglobal:epcis:xsd:1"

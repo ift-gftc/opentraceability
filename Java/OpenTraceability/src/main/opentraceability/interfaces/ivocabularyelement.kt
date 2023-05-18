@@ -1,3 +1,6 @@
+package interfaces
+import com.fasterxml.jackson.core.JsonToken
+import models.identifiers.*
 import java.lang.reflect.Type
 interface IVocabularyElement {
     fun get_ID(): String
@@ -5,8 +8,8 @@ interface IVocabularyElement {
     fun set_EPCISType(value: String): Void
     fun get_JsonLDType(): String
     fun set_JsonLDType(value: String): Void
-    fun get_Context(): JToken
-    fun set_Context(value: JToken): Void
+    fun get_Context(): JsonToken
+    fun set_Context(value: JsonToken): Void
     fun get_VocabularyType(): VocabularyType
     fun get_KDEs(): List<IMasterDataKDE>
     fun set_KDEs(value: List<IMasterDataKDE>): Void

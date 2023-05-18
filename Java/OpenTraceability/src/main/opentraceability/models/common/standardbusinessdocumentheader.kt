@@ -1,5 +1,6 @@
+package models.common
 class StandardBusinessDocumentHeader {
     companion object{
-        var DummyHeader: StandardBusinessDocumentHeader = "OpenTraceability.Models.Common.StandardBusinessDocumentHeader"
+        var DummyHeader: StandardBusinessDocumentHeader = StandardBusinessDocumentHeader()
     }
 }

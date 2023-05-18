@@ -1,3 +1,4 @@
+package models.events
 enum class EventType {
     ObjectEvent,
     TransformationEvent,

@@ -1,3 +1,4 @@
+package models.identifiers
 enum class EPCType {
     Class,
     Instance,

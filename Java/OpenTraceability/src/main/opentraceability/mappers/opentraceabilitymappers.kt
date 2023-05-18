@@ -1,7 +1,10 @@
+package mappers
+import models.identifiers.*
+import models.events.*
 class OpenTraceabilityMappers {
     companion object{
-        var EPCISDocument: EPCISDocumentMappers = OpenTraceability.Mappers.EPCISDocumentMappers()
-        var EPCISQueryDocument: EPCISQueryDocumentMappers = OpenTraceability.Mappers.EPCISQueryDocumentMappers()
-        var MasterData: MasterDataMappers = OpenTraceability.Mappers.MasterDataMappers()
+        var EPCISDocument: EPCISDocumentMappers = EPCISDocumentMappers()
+        var EPCISQueryDocument: EPCISQueryDocumentMappers = EPCISQueryDocumentMappers()
+        var MasterData: MasterDataMappers = MasterDataMappers()
     }
 }

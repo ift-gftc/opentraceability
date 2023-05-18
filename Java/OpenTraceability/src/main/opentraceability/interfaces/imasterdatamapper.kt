@@ -1,3 +1,4 @@
+package interfaces
 import java.lang.reflect.Type
 interface IMasterDataMapper {
     fun Map(vocab: IVocabularyElement): String
