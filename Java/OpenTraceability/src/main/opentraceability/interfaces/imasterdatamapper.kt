@@ -1,7 +1,9 @@
 package interfaces
+
 import java.lang.reflect.Type
+
 interface IMasterDataMapper {
     fun Map(vocab: IVocabularyElement): String
-    fun Map(T: Type, value: String): IVocabularyElement
-    fun Map(value: String): IVocabularyElement
+    fun <T> Map(Type: T, value: String): IVocabularyElement
+    fun <T> Map(value: String): IVocabularyElement
 }

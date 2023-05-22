@@ -1,6 +1,4 @@
 package models.events
-import interfaces.IEvent
-import models.common.StandardBusinessDocumentHeader
 import java.util.*
 import models.identifiers.*
 import models.events.*
