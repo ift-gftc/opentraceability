@@ -1,5 +1,16 @@
 package utility
 class UOM {
+    var Key: String = String()
+    var Name: String = String()
+    var Abbreviation: String = String()
+    var UnitDimension: String = String()
+    var SubGroup: String = String()
+    var UNCode: String = String()
+    var A: Double = Double()
+    var B: Double = Double()
+    var C: Double = Double()
+    var D: Double = Double()
+    var Offset: Double = Double()
     companion object{
     }
 

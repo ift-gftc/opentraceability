@@ -1,5 +1,7 @@
 package utility
 class Measurement {
+    var Value: Double = Double()
+    var UoM: UOM = UOM()
     companion object{
     }
 

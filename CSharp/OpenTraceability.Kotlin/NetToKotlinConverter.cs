@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Json.Schema;
+using Newtonsoft.Json.Linq;
 using OpenTraceability.Utility;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -16,13 +18,22 @@ namespace OpenTraceability.Kotlin
         {
             try
             {
+                string name = csharpType.Name;
+
                 StringBuilder kotlinClass = new StringBuilder();
 
                 // Class name
-                kotlinClass.AppendLine($"class {csharpType.Name} {{");
+                if (csharpType.IsGenericType)
+                {
+                    kotlinClass.AppendLine($"class {csharpType.Name.Split('`').First()}<T> {{");
+                }
+                else
+                {
+                    kotlinClass.AppendLine($"class {csharpType.Name} {{");
+                }
 
                 object? target = null;
-                if (csharpType.IsClass && csharpType.IsSealed && csharpType.IsAbstract)
+                if (!(csharpType.IsClass && csharpType.IsSealed && csharpType.IsAbstract))
                 {
                     try
                     {
@@ -43,9 +54,10 @@ namespace OpenTraceability.Kotlin
                 }
 
                 // Properties
-                PropertyInfo[] properties = csharpType.GetProperties(BindingFlags.Instance);
+                PropertyInfo[] properties = csharpType.GetProperties();
                 foreach (var property in properties)
                 {
+                    string propName = property.Name;
                     string line = WriteProperty(property, "    ", target);
                     kotlinClass.AppendLine(line);
                 }
@@ -72,6 +84,7 @@ namespace OpenTraceability.Kotlin
                 PropertyInfo[] static_properties = csharpType.GetProperties(BindingFlags.Public | BindingFlags.Static);
                 foreach (var property in static_properties)
                 {
+                    string propName = property.Name;
                     string line = WriteProperty(property, "        ");
                     kotlinClass.AppendLine(line);
                 }
@@ -172,83 +185,93 @@ namespace OpenTraceability.Kotlin
 
         private static string ConvertType(Type type)
         {
-            var isGenricType = type.Name.Contains("`1");
-            var isDictionaty = type.Name.Contains("`2");
-
             string returnData = string.Empty;
+
+            string suffix = "";
 
             Type? nullableType = Nullable.GetUnderlyingType(type);
             if (nullableType != null)
             {
                 returnData = ConvertType(nullableType) + "?";
             }
-            else if (type == typeof(int))
+            else if (type.IsGenericType == true)
             {
-                returnData = "Int";
-            }
-            else if (type == typeof(bool))
-            {
-                returnData = "Boolean";
-            }
-            else if (type == typeof(string) || type == typeof(XNamespace))
-            {
-                returnData = "String";
-            }
-            else if (type == typeof(DateTimeOffset))
-            {
-                returnData = "OffsetDateTime";
-            }
-            else if (type == typeof(TimeSpan))
-            {
-                returnData = "Duration";
-            }
-            else if (type == typeof(Uri))
-            {
-                returnData = "URI";
-            }
-            else if (type == typeof(Int16))
-            {
-                returnData = "Short";
-            }
-            else if (type == typeof(Int64))
-            {
-                returnData = "Long";
-            }
-            else if (type == typeof(XElement))
-            {
-                returnData = "XmlElement";
-            }
-            else if (type == typeof(XDocument))
-            {
-                returnData = "XmlDocument";
-            }
-            else if (type == typeof(JToken))
-            {
-                returnData = "JsonToken";
-            }
-            else if (type == typeof(JObject))
-            {
-                returnData = "JsonObject";
-            }
-            else if (type.Name.Contains("XDocument&"))
-            {
-                returnData = "XmlDocument?";
-            }
-            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>) && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) || isGenricType)
-            {
-                Type listItemType = type.GetGenericArguments()[0];
-                returnData = $"List<{ConvertType(listItemType)}>";
-            }
-            else if (isDictionaty)
-            {
-                Type listItemType1 = type.GetGenericArguments()[0];
-                Type listItemType2 = type.GetGenericArguments()[1];
-                returnData = $"Dictionary<{ConvertType(listItemType1)}, {ConvertType(listItemType2)}>";
+                string genArgs = string.Join(",", type.GetGenericArguments().Select(a => ConvertType(a)));
+                if (type.GetGenericTypeDefinition() == typeof(List<>) || type.GetGenericTypeDefinition() == typeof(ReadOnlyCollection<>))
+                {
+                    return $"List<{genArgs}>" ?? throw new Exception("Failed to build List Convert Type.");
+                }
+                else
+                {
+                    return $"{type.FullName?.Split('`').FirstOrDefault()}<{genArgs}>" ?? throw new Exception("Failed to build List Convert Type.");
+                }
             }
             else
             {
-                // Handle other types as needed
-                returnData = type.Name;
+                //if (type.GetCustomAttributes().Any(a => a.GetType().FullName == "System.Runtime.CompilerServices.NullableAttribute"))
+                //{
+                //    suffix = "?";
+                //}
+
+                if (type == typeof(int))
+                {
+                    returnData = "Int";
+                }
+                else if (type == typeof(bool))
+                {
+                    returnData = "Boolean";
+                }
+                else if (type == typeof(string) || type == typeof(XNamespace))
+                {
+                    returnData = "String";
+                }
+                else if (type == typeof(DateTimeOffset))
+                {
+                    returnData = "OffsetDateTime";
+                }
+                else if (type == typeof(TimeSpan))
+                {
+                    returnData = "Duration";
+                }
+                else if (type == typeof(Uri))
+                {
+                    returnData = "URI?";
+                }
+                else if (type == typeof(Int16))
+                {
+                    returnData = "Short";
+                }
+                else if (type == typeof(Int64))
+                {
+                    returnData = "Long";
+                }
+                else if (type == typeof(XElement))
+                {
+                    returnData = "XmlElement";
+                }
+                else if (type == typeof(XDocument))
+                {
+                    returnData = "XmlDocument";
+                }
+                else if (type == typeof(JToken))
+                {
+                    returnData = "JsonToken";
+                }
+                else if (type == typeof(JObject))
+                {
+                    returnData = "JsonObject";
+                }
+                else if (type.Name.Contains("XDocument&"))
+                {
+                    returnData = "XmlDocument?";
+                }
+                else
+                {
+                    // Handle other types as needed
+                    returnData = type.Name;
+                }
+
+                returnData += suffix;
             }
 
             returnData = returnData.Replace("&", string.Empty);
@@ -310,43 +333,43 @@ namespace OpenTraceability.Kotlin
         {
             try
             {
+                bool addedInitializer = false;
                 string line = $"{spacing}var {property.Name}: {ConvertType(property.PropertyType)}";
-                if (property.PropertyType.ContainsGenericParameters == false)
-                {
-                    // if this is STATIC or our TARGET is not null...
-                    if (property.GetAccessors(true).Any(a => a.IsStatic) || target != null)
-                    {
-                        object? v = property.GetValue(target);
-                        if (v != null)
-                        {
-                            if (v.ToString().Contains("List") && v.ToString().Contains("Country"))
-                            {
-                                line += $" = ArrayList<Country>()";
-                            }
-                            else if (v.ToString().Contains("List") && v.ToString().Contains("UOM"))
-                            {
-                                line += $" = ArrayList<UOM>()";
-                            }
-                            else if (v.ToString().Contains("List") && v.ToString().Contains("String"))
-                            {
-                                line += $" = ArrayList<String>()";
-                            }
-                            else if (v.ToString().Contains("StandardBusinessDocumentHeader"))
-                            {
-                                line += $" = StandardBusinessDocumentHeader()";
-                            }
-                            else if (v.ToString().Contains("EPCISConstants"))
-                            {
-                                line += $" = EPCISConstants()";
-                            }
-                            else
-                            {
-                                line += $" = \"{v.ToString()}\"";
-                            }
 
+                // if this is STATIC or our TARGET is not null...
+                if (property.GetAccessors(true).Any(a => a.IsStatic) || target != null)
+                {
+                    object? v = property.GetValue(target);
+                    if (v != null)
+                    {
+                        if (property.PropertyType == typeof(string) || property.PropertyType == typeof(XNamespace))
+                        {
+                            addedInitializer = true;
+                            line += $" = \"{v.ToString()}\"";
                         }
                     }
                 }
+
+                if (!addedInitializer)
+                {
+                    if (Nullable.GetUnderlyingType(property.PropertyType) != null)
+                    {
+                        line += " = null";
+                    }
+                    else
+                    {
+                        if (property.PropertyType.IsGenericType && (property.PropertyType.GetGenericTypeDefinition() == typeof(List<>) || property.PropertyType.GetGenericTypeDefinition() == typeof(ReadOnlyCollection<>)))
+                        {
+                            string genArgs = string.Join(",", property.PropertyType.GetGenericArguments().Select(a => ConvertType(a)));
+                            line += $" = ArrayList<{genArgs}>()";
+                        }
+                        else
+                        {
+                            line += $" = {ConvertType(property.PropertyType)}()";
+                        }
+                    }
+                }
+
                 return line;
             }
             catch (Exception ex)
@@ -397,9 +420,6 @@ namespace OpenTraceability.Kotlin
             {
                 kotlinClass.AppendLine($"{spacing}fun {method.Name}({ConvertParameters(method.GetParameters())}){returnTypeString} {{");
             }
-
-
-
 
             kotlinClass.AppendLine($"{spacing}    // Method body goes here");
 
@@ -550,8 +570,8 @@ namespace OpenTraceability.Kotlin
                 sb.Insert(0, "import java.net.http.HttpClient" + Environment.NewLine);
             }
 
-            if (fileText.Contains("Dictionary<"))
-            {
+            if (fileText.Contains("Dictionary<") || fileText.Contains("ArrayList"))
+            { 
                 sb.Insert(0, "import java.util.*" + Environment.NewLine);
             }
 
@@ -576,8 +596,6 @@ namespace OpenTraceability.Kotlin
             {
                 sb.Insert(0, "import com.intellij.json.psi.JsonObject" + Environment.NewLine);
             }
-
-
         }
 
         private static void WriteNamespace(Type type, StringBuilder sb)

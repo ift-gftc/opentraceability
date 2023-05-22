@@ -6,8 +6,8 @@ import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
 interface IEvent<T> {
-    fun get_EventID(): URI
-    fun set_EventID(value: URI): Void
+    fun get_EventID(): URI?
+    fun set_EventID(value: URI?): Void
     fun get_CertificationInfo(): String
     fun set_CertificationInfo(value: String): Void
     fun get_EventTime(): OffsetDateTime?
@@ -19,10 +19,10 @@ interface IEvent<T> {
     fun get_EventType(): EventType
     fun get_Action(): EventAction?
     fun set_Action(value: EventAction?): Void
-    fun get_BusinessStep(): URI
-    fun set_BusinessStep(value: URI): Void
-    fun get_Disposition(): URI
-    fun set_Disposition(value: URI): Void
+    fun get_BusinessStep(): URI?
+    fun set_BusinessStep(value: URI?): Void
+    fun get_Disposition(): URI?
+    fun set_Disposition(value: URI?): Void
     fun get_PersistentDisposition(): PersistentDisposition
     fun set_PersistentDisposition(value: PersistentDisposition): Void
     fun get_ErrorDeclaration(): ErrorDeclaration

@@ -1,5 +1,6 @@
 package utility
-class LimitedPool`1 {
+class LimitedPool<T> {
+    var IdleCount: Int = Int()
     companion object{
     }
 }

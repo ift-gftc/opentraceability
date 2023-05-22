@@ -1,5 +1,7 @@
 package utility
+import java.util.*
 class Countries {
+    var CountryList: List<Country> = ArrayList<Country>()
     companion object{
         var CountryList: List<Country> = ArrayList<Country>()
     }

@@ -1,5 +1,7 @@
 package utility
+import java.util.*
 class UOMS {
+    var List: List<UOM> = ArrayList<UOM>()
     companion object{
         var List: List<UOM> = ArrayList<UOM>()
     }

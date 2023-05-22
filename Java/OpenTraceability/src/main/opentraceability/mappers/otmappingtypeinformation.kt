@@ -1,6 +1,12 @@
 package mappers
+import java.util.*
 import java.lang.reflect.Type
 class OTMappingTypeInformation {
+    var Type: Type = Type()
+    var Properties: List<OTMappingTypeInformationProperty> = ArrayList<OTMappingTypeInformationProperty>()
+    var ExtensionKDEs: PropertyInfo = PropertyInfo()
+    var ExtensionAttributes: PropertyInfo = PropertyInfo()
+    var Item: OTMappingTypeInformationProperty = OTMappingTypeInformationProperty()
     companion object{
     }
 

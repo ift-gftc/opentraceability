@@ -1,5 +1,6 @@
 package utility
-class LimitedPoolItem`1 {
+class LimitedPoolItem<T> {
+    var Value: T = T()
     companion object{
     }
 }
