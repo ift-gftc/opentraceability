@@ -21,9 +21,9 @@ namespace OpenTraceability
     /// </summary>
     public static class Setup
     {
-        internal static List<OpenTraceabilityEventProfile> Profiles = new List<OpenTraceabilityEventProfile>();
-        internal static ConcurrentDictionary<string, Type> MasterDataTypes = new ConcurrentDictionary<string, Type>();
-        internal static ConcurrentDictionary<Type, Type> MasterDataTypeDefault = new ConcurrentDictionary<Type, Type>();
+        public static List<OpenTraceabilityEventProfile> Profiles = new List<OpenTraceabilityEventProfile>();
+        public static ConcurrentDictionary<string, Type> MasterDataTypes = new ConcurrentDictionary<string, Type>();
+        public static ConcurrentDictionary<Type, Type> MasterDataTypeDefault = new ConcurrentDictionary<Type, Type>();
 
         private static object _locker = new object();
         private static bool _isInitialized = false;
@@ -70,7 +70,7 @@ namespace OpenTraceability
                 // if we find another profile with the same hash, then remove that one first...
                 foreach (var to_remove in Profiles.Where(p => p.ToString() == profile.ToString()).ToList())
                 {
-                    Profiles.Remove(profile);
+                    Profiles.Remove(to_remove);
                 }
 
                 Profiles.Add(profile);
