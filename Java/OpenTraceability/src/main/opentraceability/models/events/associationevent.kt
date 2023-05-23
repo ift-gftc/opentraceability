@@ -1,4 +1,6 @@
 package models.events
+
+import interfaces.IEvent
 import interfaces.IEventKDE
 import java.util.*
 import models.identifiers.*
@@ -8,8 +10,15 @@ import java.time.Duration
 import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
-class AssociationEvent {
-    var ParentID: EPC = EPC()
+
+class AssociationEvent : EventBase, IEvent {
+
+    //TODO: Review this file
+
+    //[OpenTraceability("parentID", 7)]
+    var ParentID: EPC? = null
+
+
     var Children: List<EventProduct> = ArrayList<EventProduct>()
     var Action: EventAction? = null
     var BusinessStep: URI? = null
@@ -33,6 +42,6 @@ class AssociationEvent {
     var CertificationList: CertificationList = CertificationList()
     var InformationProvider: PGLN = PGLN()
     var KDEs: List<IEventKDE> = ArrayList<IEventKDE>()
-    companion object{
-    }
+
+
 }

@@ -4,6 +4,7 @@ import interfaces.IEPCISQueryDocumentMapper
 import models.events.*
 
 class EPCISQueryDocumentXMLMapper : IEPCISQueryDocumentMapper {
+
     override fun Map(strValue: String, checkSchema: Boolean): EPCISQueryDocument {
         TODO("Not yet implemented")
     }

@@ -10,7 +10,7 @@ class XElementExtensions {
     }
 
 
-    fun<String> GetDocumentNamespaces(x: XmlDocument): Map<String, String> {
+    fun<String> GetDocumentNamespaces(x: XmlDocument): MutableMap<String, String> {
         TODO("Not yet implemented")
     }
 

@@ -1,6 +1,6 @@
 package models.events
-enum class EventErrorType {
-    Unknown,
-    IncorrectData,
-    DidNotOccur,
+enum class EventErrorType(val value: Int) {
+    Unknown(0),
+    IncorrectData(1),
+    DidNotOccur(0),
 }

@@ -1,7 +1,7 @@
 package interfaces
 import models.identifiers.*
 
-interface IAggregationEvent {
+interface IAggregationEvent : IEvent {
 
     var ParentID: EPC?
 }

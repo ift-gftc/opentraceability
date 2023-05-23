@@ -1,5 +1,5 @@
 package interfaces
 
-interface IILMDEvent<T> {
+interface IILMDEvent<T> : IEvent {
     var ILMD: T?
 }

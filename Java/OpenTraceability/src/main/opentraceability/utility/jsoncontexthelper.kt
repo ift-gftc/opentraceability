@@ -12,7 +12,7 @@ class JsonContextHelper {
     }
 
 
-    fun<String> ScrapeNamespaces(jContext: JsonObject): Map<String, String> {
+    fun<String> ScrapeNamespaces(jContext: JsonObject): MutableMap<String, String> {
         TODO("Not yet implemented")
     }
 
@@ -21,12 +21,12 @@ class JsonContextHelper {
     }
 
 
-    fun ExpandVocab(json: JsonToken, jcontext: JsonObject, namespaces: Map<String, String>, jvocabcontext: JsonObject): JsonToken {
+    fun ExpandVocab(json: JsonToken, jcontext: JsonObject, namespaces: MutableMap<String, String>, jvocabcontext: JsonObject): JsonToken {
         TODO("Not yet implemented")
     }
 
 
-    fun CompressVocab(json: JsonToken, jcontext: JsonObject, namespaces: Map<String, String>, jvocabcontext: JsonObject): JsonToken {
+    fun CompressVocab(json: JsonToken, jcontext: JsonObject, namespaces: MutableMap<String, String>, jvocabcontext: JsonObject): JsonToken {
         TODO("Not yet implemented")
     }
 }

@@ -1,18 +1,31 @@
 package models.common
 
-import java.lang.reflect.Type
 import java.time.OffsetDateTime
 
 class Certificate {
-    companion object {
-    }
 
-    var CertificateType: String = String()
-    var Agency: String = String()
-    var Standard: String = String()
-    var Value: String = String()
-    var Identification: String = String()
+    //TODO: check this attributes
+
+    //[OpenTraceabilityJson("gdst:certificationType")]
+    //[OpenTraceability(Constants.GDST_NAMESPACE, "certificationType")]
+    var CertificateType: String? = null
+
+    //[OpenTraceability("certificationAgency")]
+    var Agency: String? = null
+
+    //[OpenTraceability("certificationStandard")]
+    var Standard: String? = null
+
+    //[OpenTraceability("certificationValue")]
+    var Value: String? = null
+
+    //[OpenTraceability("certificationIdentification")]
+    var Identification: String? = null
+
+    //[OpenTraceability("certificationStartDate")]
     var StartDate: OffsetDateTime? = null
+
+    //[OpenTraceability("certificationEndDate")]
     var EndDate: OffsetDateTime? = null
 
 }

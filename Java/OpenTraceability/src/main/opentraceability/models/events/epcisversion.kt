@@ -1,5 +1,6 @@
 package models.events
-enum class EPCISVersion {
-    V1,
-    V2,
+
+enum class EPCISVersion(val value: Int) {
+    V1(1),
+    V2(2),
 }

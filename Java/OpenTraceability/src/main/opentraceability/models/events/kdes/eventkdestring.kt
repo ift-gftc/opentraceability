@@ -1,16 +1,47 @@
 package models.events.kdes
 
+import com.fasterxml.jackson.core.JsonToken
+import interfaces.IEventKDE
 import java.lang.reflect.Type
+import javax.xml.bind.annotation.XmlElement
 
-class EventKDEString {
+class EventKDEString: EventKDEBase, IEventKDE {
 
-    companion object {
+    override var ValueType: Type = String::class.java
+
+    var Value: String? = null
+
+    constructor() {
+
     }
 
-    var ValueType: Type = Type()
-    var Value: String = String()
-    var Type: String = String()
-    var Namespace: String = String()
-    var Name: String = String()
+    constructor(ns: String, name: String) {
+        this.Namespace = ns;
+        this.Name = name;
+    }
 
+
+    override fun GetJson(): JsonToken? {
+        TODO("Not yet implemented")
+    }
+
+    override fun GetXml(): XmlElement? {
+        TODO("Not yet implemented")
+    }
+
+    override fun SetFromJson(json: JsonToken): Void {
+        TODO("Not yet implemented")
+    }
+
+    override fun SetFromXml(xml: XmlElement): Void {
+        TODO("Not yet implemented")
+    }
+
+    override fun toString(): String {
+        if (Value != null) {
+            return Value.toString()
+        } else {
+            return ""
+        }
+    }
 }

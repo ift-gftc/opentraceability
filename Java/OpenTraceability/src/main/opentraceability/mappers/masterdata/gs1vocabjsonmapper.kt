@@ -7,11 +7,8 @@ import java.lang.reflect.Type
 import java.util.*
 
 class GS1VocabJsonMapper : IMasterDataMapper {
-    override fun Map(vocab: IVocabularyElement): String {
-        TODO("Not yet implemented")
-    }
 
-    override fun <T> Map(Type: T, value: String): IVocabularyElement {
+    override fun Map(vocab: IVocabularyElement): String {
         TODO("Not yet implemented")
     }
 
@@ -19,7 +16,12 @@ class GS1VocabJsonMapper : IMasterDataMapper {
         TODO("Not yet implemented")
     }
 
-    internal fun GetNamespaces(jContext: JsonToken) : Map<String, String> {
+    override fun Map(t: Type, value: String): IVocabularyElement {
+        TODO("Not yet implemented")
+    }
+
+
+    internal fun GetNamespaces(jContext: JsonToken) : MutableMap<String, String> {
         TODO("Not yet implemented")
     }
 

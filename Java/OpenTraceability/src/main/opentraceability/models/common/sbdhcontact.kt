@@ -1,10 +1,12 @@
 package models.common
 
 class SBDHContact {
-    companion object {
-    }
 
+    //TODO: check this attributes
+
+    //[OpenTraceability(Constants.SBDH_NAMESPACE, "Contact")]
     var ContactName: String = ""
-    var EmailAddress: String = ""
 
+    //[OpenTraceability(Constants.SBDH_NAMESPACE, "EmailAddress")]
+    var EmailAddress: String = ""
 }

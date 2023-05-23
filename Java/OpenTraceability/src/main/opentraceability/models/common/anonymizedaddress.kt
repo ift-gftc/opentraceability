@@ -2,11 +2,8 @@ package models.common
 
 import utility.Country
 
-class AnonymizedAddress {
-    companion object {
-    }
-
-    var ZipCode: String = String()
-    var Country: Country = Country()
+open class AnonymizedAddress {
+    var ZipCode: String? = null
+    var Country: Country? = null
 
 }

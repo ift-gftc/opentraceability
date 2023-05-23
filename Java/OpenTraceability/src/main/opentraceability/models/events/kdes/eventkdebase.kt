@@ -1,10 +1,6 @@
 package models.events.kdes
 
-class EventKDEBase {
-    companion object {
-    }
-
+open class EventKDEBase {
     var Namespace: String = ""
     var Name: String = ""
-
 }

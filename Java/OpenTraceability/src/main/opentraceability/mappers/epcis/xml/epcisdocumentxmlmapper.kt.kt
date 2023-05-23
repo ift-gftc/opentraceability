@@ -4,8 +4,7 @@ import interfaces.IEPCISDocumentMapper
 import models.events.*
 
 class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
-    companion object {
-    }
+
     override fun Map(strValue: String): EPCISDocument {
         TODO("Not yet implemented")
     }

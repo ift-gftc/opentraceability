@@ -1,6 +1,6 @@
-enum class LogLevel {
-    Info,
-    Warning,
-    Error,
-    Debug,
+enum class LogLevel(val value: Int) {
+    Info(0),
+    Warning(1),
+    Error(2),
+    Debug(3),
 }

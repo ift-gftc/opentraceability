@@ -5,9 +5,12 @@ import java.util.*
 import models.events.kdes.CertificationList
 
 class CertificationList {
-    companion object {
-    }
 
+    //TODO: review this file
+
+    //[OpenTraceabilityArray]
+    //[OpenTraceabilityObject]
+    //[OpenTraceability("certification")]
     var Certificates: List<Certificate> = ArrayList<Certificate>()
 
 }

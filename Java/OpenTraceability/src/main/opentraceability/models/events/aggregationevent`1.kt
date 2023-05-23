@@ -1,6 +1,8 @@
 package models.events
 
+import interfaces.IAggregationEvent
 import interfaces.IEventKDE
+import interfaces.IILMDEvent
 import java.util.*
 import models.identifiers.*
 import models.events.kdes.CertificationList
@@ -10,10 +12,9 @@ import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
 
-class AggregationEvent<T> {
+class AggregationEvent<T>: EventBase, IAggregationEvent, IILMDEvent<T> (
 
-    companion object {
-    }
+    //TODO: Review this file
 
     var ParentID: EPC = EPC()
     var Children: List<EventProduct> = ArrayList<EventProduct>()
@@ -39,4 +40,6 @@ class AggregationEvent<T> {
     var CertificationList: CertificationList = CertificationList()
     var InformationProvider: PGLN = PGLN()
     var KDEs: List<IEventKDE> = ArrayList<IEventKDE>()
-}
+
+
+)

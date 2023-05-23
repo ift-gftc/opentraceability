@@ -1,4 +1,5 @@
 package interfaces
+
 import com.fasterxml.jackson.core.JsonToken
 import javax.xml.bind.annotation.*
 import java.lang.reflect.Type
@@ -9,8 +10,8 @@ interface IMasterDataKDE {
     var Name: String
     var ValueType: Type
 
-    fun SetFromGS1WebVocabJson(json: JsonToken): Void
+    fun SetFromGS1WebVocabJson(json: JsonToken)
     fun GetGS1WebVocabJson(): JsonToken?
-    fun SetFromEPCISXml(xml: XmlElement): Void
+    fun SetFromEPCISXml(xml: XmlElement)
     fun GetEPCISXml(): XmlElement?
 }

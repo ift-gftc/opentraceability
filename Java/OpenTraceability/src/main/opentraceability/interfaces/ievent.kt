@@ -31,6 +31,6 @@ interface IEvent {
 
     fun <T> GetKDE(ns: String, name: String): T
     fun <T> GetKDE(): T
-    fun AddProduct(product: EventProduct): Void
+    fun AddProduct(product: EventProduct)
     fun GetILMD(): EventILMD?
 }
