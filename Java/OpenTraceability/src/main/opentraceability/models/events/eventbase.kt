@@ -1,4 +1,5 @@
 package models.events
+import interfaces.IEventKDE
 import java.util.*
 import models.identifiers.*
 import models.events.kdes.CertificationList
@@ -9,7 +10,7 @@ class EventBase {
     var EventTime: OffsetDateTime? = null
     var RecordTime: OffsetDateTime? = null
     var EventTimeZoneOffset: Duration? = null
-    var EventID: URI? = URI?()
+    var EventID: URI? = null
     var ErrorDeclaration: ErrorDeclaration = ErrorDeclaration()
     var CertificationInfo: String = String()
     var CertificationList: CertificationList = CertificationList()

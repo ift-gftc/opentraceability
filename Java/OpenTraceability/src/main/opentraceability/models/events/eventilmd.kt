@@ -1,6 +1,8 @@
 package models.events
+import interfaces.IEventKDE
 import java.util.*
 import models.events.kdes.CertificationList
+import utility.Country
 import java.time.OffsetDateTime
 class EventILMD {
     var ProductionMethodForFishAndSeafoodCode: String = String()

@@ -1,5 +1,8 @@
 package models.masterdata
 import com.fasterxml.jackson.core.JsonToken
+import interfaces.IMasterDataKDE
+import interfaces.VocabularyType
+import models.common.LanguageString
 import java.util.*
 import models.identifiers.*
 import java.lang.reflect.Type

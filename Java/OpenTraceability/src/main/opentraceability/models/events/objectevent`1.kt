@@ -1,4 +1,5 @@
 package models.events
+import interfaces.IEventKDE
 import java.util.*
 import models.identifiers.*
 import models.events.kdes.CertificationList
@@ -11,8 +12,8 @@ class ObjectEvent<T> {
     var EventType: EventType = EventType()
     var ReferenceProducts: List<EventProduct> = ArrayList<EventProduct>()
     var Action: EventAction? = null
-    var BusinessStep: URI? = URI?()
-    var Disposition: URI? = URI?()
+    var BusinessStep: URI? = null
+    var Disposition: URI? = null
     var ReadPoint: EventReadPoint = EventReadPoint()
     var Location: EventLocation = EventLocation()
     var BizTransactionList: List<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
@@ -25,7 +26,7 @@ class ObjectEvent<T> {
     var EventTime: OffsetDateTime? = null
     var RecordTime: OffsetDateTime? = null
     var EventTimeZoneOffset: Duration? = null
-    var EventID: URI? = URI?()
+    var EventID: URI? = null
     var ErrorDeclaration: ErrorDeclaration = ErrorDeclaration()
     var CertificationInfo: String = String()
     var CertificationList: CertificationList = CertificationList()

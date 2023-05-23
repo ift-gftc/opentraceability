@@ -1,12 +1,13 @@
 package queries
+import mappers.EPCISDataFormat
 import models.identifiers.*
 import models.events.*
 import java.net.URI
 class DigitalLinkQueryOptions {
-    var URL: URI? = URI?()
+    var URL: URI? = null
     var Version: EPCISVersion = EPCISVersion()
     var Format: EPCISDataFormat = EPCISDataFormat()
-    var EnableStackTrace: Boolean = Boolean()
+    var EnableStackTrace: Boolean = false
     companion object{
     }
 }

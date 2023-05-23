@@ -1,4 +1,7 @@
 package utility
+
+import org.freedesktop.dbus.messages.MethodBase
+
 class OpenTraceabilitySchemaException {
     var TargetSite: MethodBase = MethodBase()
     var Message: String = String()

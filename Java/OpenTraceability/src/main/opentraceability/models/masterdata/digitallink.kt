@@ -1,5 +1,7 @@
 package models.masterdata
+
 import java.lang.reflect.Type
+
 class DigitalLink {
     var link: String = ""
     var title: String = ""
@@ -7,14 +9,15 @@ class DigitalLink {
     var ianaLanguage: String = ""
     var context: String = ""
     var mimeType: String = ""
-    var active: Boolean = Boolean()
-    var fwqs: Boolean = Boolean()
-    var defaultLinkType: Boolean = Boolean()
-    var defaultIanaLanguage: Boolean = Boolean()
-    var defaultContext: Boolean = Boolean()
-    var defaultMimeType: Boolean = Boolean()
+    var active: Boolean = false
+    var fwqs: Boolean = false
+    var defaultLinkType: Boolean = false
+    var defaultIanaLanguage: Boolean = false
+    var defaultContext: Boolean = false
+    var defaultMimeType: Boolean = false
     var identifier: String = ""
-    var authRequired: Boolean = Boolean()
-    companion object{
+    var authRequired: Boolean = false
+
+    companion object {
     }
 }

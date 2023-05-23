@@ -1,7 +1,12 @@
 package models.common
+
 import java.lang.reflect.Type
 import java.time.OffsetDateTime
+
 class Certificate {
+    companion object {
+    }
+
     var CertificateType: String = String()
     var Agency: String = String()
     var Standard: String = String()
@@ -9,6 +14,5 @@ class Certificate {
     var Identification: String = String()
     var StartDate: OffsetDateTime? = null
     var EndDate: OffsetDateTime? = null
-    companion object{
-    }
+
 }

@@ -1,9 +1,13 @@
 package models.masterdata
+
 import com.fasterxml.jackson.core.JsonToken
+import interfaces.IMasterDataKDE
+import interfaces.VocabularyType
+import models.common.LanguageString
 import java.util.*
 import models.identifiers.*
 import models.events.kdes.CertificationList
-import java.lang.reflect.Type
+
 class Location {
     var ID: String = String()
     var EPCISType: String = "urn:epcglobal:epcis:vtype:Location"
@@ -18,6 +22,7 @@ class Location {
     var Address: Address = Address()
     var UnloadingPort: String = String()
     var KDEs: List<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
-    companion object{
+
+    companion object {
     }
 }

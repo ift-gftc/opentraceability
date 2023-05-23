@@ -1,4 +1,7 @@
 package models.events
+import interfaces.IEvent
+import interfaces.IVocabularyElement
+import models.common.StandardBusinessDocumentHeader
 import java.util.*
 import models.identifiers.*
 import models.events.*
@@ -11,9 +14,9 @@ class EPCISQueryDocument {
     var Header: StandardBusinessDocumentHeader = StandardBusinessDocumentHeader()
     var Events: List<IEvent> = ArrayList<IEvent>()
     var MasterData: List<IVocabularyElement> = ArrayList<IVocabularyElement>()
-    var Namespaces: System.Collections.Generic.Dictionary<String,String> = System.Collections.Generic.Dictionary<String,String>()
+    var Namespaces: Map<String, String> = mapOf<String, String>()
     var Contexts: List<String> = ArrayList<String>()
-    var Attributes: System.Collections.Generic.Dictionary<String,String> = System.Collections.Generic.Dictionary<String,String>()
+    var Attributes: Map<String, String> = mapOf<String, String>()
     companion object{
     }
 }

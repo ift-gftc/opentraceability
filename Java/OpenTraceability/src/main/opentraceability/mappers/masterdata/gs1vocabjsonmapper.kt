@@ -19,7 +19,7 @@ class GS1VocabJsonMapper : IMasterDataMapper {
         TODO("Not yet implemented")
     }
 
-    internal fun GetNamespaces(jContext: JsonToken) : Dictionary<String, String> {
+    internal fun GetNamespaces(jContext: JsonToken) : Map<String, String> {
         TODO("Not yet implemented")
     }
 

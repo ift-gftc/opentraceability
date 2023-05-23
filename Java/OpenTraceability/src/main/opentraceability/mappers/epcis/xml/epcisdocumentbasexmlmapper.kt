@@ -1,15 +1,17 @@
 package mappers.epcis.xml
 
 import com.intellij.psi.xml.XmlDocument
+import interfaces.IEPCISDocumentMapper
 import interfaces.IEvent
 import models.events.*
 import kotlin.reflect.KType
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.typeOf
 
-class EPCISDocumentBaseXMLMapper {
+class EPCISDocumentBaseXMLMapper  {
     companion object {
     }
+
 
     inline fun <reified T : Any> ReadXml(strValue: String, xDoc: XmlDocument?): T? {
         TODO("Not yet implemented")
@@ -39,4 +41,5 @@ class EPCISDocumentBaseXMLMapper {
     fun ValidateEPCISQueryDocumentSchema(xdoc: XmlDocument, version: EPCISVersion) {
         TODO("Not yet implemented")
     }
+
 }

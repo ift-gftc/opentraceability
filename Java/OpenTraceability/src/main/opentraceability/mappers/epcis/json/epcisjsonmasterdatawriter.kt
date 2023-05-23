@@ -1,16 +1,16 @@
 package mappers.epcis.json
 
+import com.intellij.json.psi.JsonObject
 import interfaces.IVocabularyElement
 import models.events.*
 import org.json.simple.JSONArray
-import org.json.simple.JSONObject
 import kotlin.reflect.KClass
 
 class EPCISJsonMasterDataWriter {
     companion object {
     }
 
-    fun WriteMasterData(jDoc: JSONObject, doc: EPCISBaseDocument) {
+    fun WriteMasterData(jDoc: JsonObject, doc: EPCISBaseDocument) {
         TODO("Not yet implemented")
     }
 
@@ -18,13 +18,11 @@ class EPCISJsonMasterDataWriter {
         TODO("Not yet implemented")
     }
 
-    internal fun WriteMasterDataObject(md: IVocabularyElement): JSONObject {
+    internal fun WriteMasterDataObject(md: IVocabularyElement): JsonObject {
         TODO("Not yet implemented")
-        return JSONObject()
     }
 
-    internal fun WriteObject(t: KClass<*>, o: Any): JSONObject {
+    internal fun WriteObject(t: KClass<*>, o: Any): JsonObject {
         TODO("Not yet implemented")
-        return JSONObject()
     }
 }

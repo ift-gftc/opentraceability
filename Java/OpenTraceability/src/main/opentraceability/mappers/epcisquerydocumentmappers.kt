@@ -1,9 +1,8 @@
 package mappers
 
-import interfaces.IEPCISDocumentMapper
 import interfaces.IEPCISQueryDocumentMapper
-import models.identifiers.*
-import models.events.*
+import mappers.epcis.json.EPCISQueryDocumentJsonMapper
+import mappers.epcis.xml.EPCISQueryDocumentXMLMapper
 
 class EPCISQueryDocumentMappers {
     var XML: IEPCISQueryDocumentMapper = EPCISQueryDocumentXMLMapper()

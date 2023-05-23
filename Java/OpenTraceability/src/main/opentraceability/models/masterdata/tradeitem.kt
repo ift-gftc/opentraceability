@@ -1,8 +1,13 @@
 package models.masterdata
+
 import com.fasterxml.jackson.core.JsonToken
+import interfaces.IMasterDataKDE
+import interfaces.VocabularyType
+import models.common.LanguageString
 import java.util.*
 import models.identifiers.*
 import java.lang.reflect.Type
+
 class Tradeitem {
     var ID: String = String()
     var EPCISType: String = "urn:epcglobal:epcis:vtype:EPCClass"
@@ -17,6 +22,7 @@ class Tradeitem {
     var FisherySpeciesScientificName: List<String> = ArrayList<String>()
     var FisherySpeciesCode: List<String> = ArrayList<String>()
     var KDEs: List<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
-    companion object{
+
+    companion object {
     }
 }

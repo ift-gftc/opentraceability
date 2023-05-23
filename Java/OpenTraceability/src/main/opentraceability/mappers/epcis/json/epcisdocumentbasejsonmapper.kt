@@ -1,10 +1,9 @@
 package mappers.epcis.json
 
 import com.fasterxml.jackson.core.JsonToken
+import com.intellij.json.psi.JsonObject
 import interfaces.IEvent
 import models.events.*
-import org.json.simple.JSONObject
-import java.lang.reflect.Type
 import java.util.*
 import kotlin.reflect.KType
 import kotlin.reflect.full.primaryConstructor
@@ -14,27 +13,20 @@ class EPCISDocumentBaseJsonMapper {
     companion object {
     }
 
-    inline fun <reified T : Any> ReadJSON(strValue: String, json: JSONObject, checkSchema: Boolean = true): T? {
-
+    inline fun <reified T : Any> ReadJSON(strValue: String, json: JsonObject, checkSchema: Boolean = true): T? {
         TODO("Not yet implemented")
-        return T::class.primaryConstructor!!.call()
     }
 
-    fun WriteJson(doc: EPCISBaseDocument, epcisNS: String, docType: String): JSONObject {
-
+    fun WriteJson(doc: EPCISBaseDocument, epcisNS: String, docType: String): JsonObject {
         TODO("Not yet implemented")
-        return JSONObject()
     }
 
 
-    internal fun GetEventTypeFromProfile(jEvent: JSONObject): KType {
-
-
+    internal fun GetEventTypeFromProfile(jEvent: JsonObject): KType {
         TODO("Not yet implemented")
-        return typeOf<String>()
     }
 
-    internal fun CheckSchema(json: JSONObject) {
+    internal fun CheckSchema(json: JsonObject) {
         TODO("Not yet implemented")
 
     }
@@ -55,20 +47,16 @@ class EPCISDocumentBaseJsonMapper {
         }
     }
 
-    internal fun ConformEPCISJsonLD(json: JSONObject, namespaces: Dictionary<String, String>) {
-
+    internal fun ConformEPCISJsonLD(json: JsonObject, namespaces: Map<String, String>) {
         TODO("Not yet implemented")
-        //CompressVocab(json)
     }
 
     internal fun CompressVocab(json: JsonToken): JsonToken {
         TODO("Not yet implemented")
-        return json;
     }
 
     internal fun NormalizeEPCISJsonLD(jEPCISStr: String): String {
         TODO("Not yet implemented")
-        return "";
     }
 
 }

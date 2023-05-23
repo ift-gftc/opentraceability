@@ -1,3 +1,5 @@
+import models.events.EventAction
+import models.events.EventType
 import java.util.*
 import java.lang.reflect.Type
 class OpenTraceabilityEventProfile {

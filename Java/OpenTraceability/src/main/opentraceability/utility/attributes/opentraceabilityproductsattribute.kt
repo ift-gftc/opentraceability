@@ -8,7 +8,7 @@ class OpenTraceabilityProductsAttribute {
     var ProductType: EventProductType = EventProductType()
     var SequenceOrder: Int? = null
     var ListType: OpenTraceabilityProductsListType = OpenTraceabilityProductsListType()
-    var Required: Boolean = Boolean()
+    var Required: Boolean = false
     var TypeId: Object = Object()
     companion object{
     }

@@ -1,7 +1,7 @@
 package utility
 class MeasurementConverter {
-    var CanRead: Boolean = Boolean()
-    var CanWrite: Boolean = Boolean()
+    var CanRead: Boolean = false
+    var CanWrite: Boolean = false
     companion object{
     }
 }

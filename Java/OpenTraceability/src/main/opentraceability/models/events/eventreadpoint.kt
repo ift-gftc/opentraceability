@@ -1,7 +1,7 @@
 package models.events
 import java.net.URI
 class EventReadPoint {
-    var ID: URI? = URI?()
+    var ID: URI? = null
     companion object{
     }
 }

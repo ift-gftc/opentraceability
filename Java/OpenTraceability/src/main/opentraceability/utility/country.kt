@@ -5,7 +5,7 @@ class Country {
     var AlternativeName: String = ""
     var Abbreviation: String = ""
     var Alpha3: String = ""
-    var ISO: Int = Int()
+    var ISO: Int = 0
     companion object{
     }
 }
