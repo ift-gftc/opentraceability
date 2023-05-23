@@ -143,6 +143,10 @@ namespace OpenTraceability.Queries
                 if (epcs_to_query.Count > 0)
                 {
                     var p = new EPCISQueryParameters(epcs_to_query.ToArray());
+                    if (additionalParameters != null)
+                    {
+                        p.Merge(additionalParameters);
+                    }
                     var r = await QueryEvents(options, p, client);
 
                     results.Merge(r);
@@ -204,7 +208,10 @@ namespace OpenTraceability.Queries
                         // query for events that occurred to the parent ID
                         var p = new EPCISQueryParameters(parent_id);
                         p.query.LE_eventTime = next_evt_time;
-
+                        if (additionalParameters != null)
+                        {
+                            p.Merge(additionalParameters);
+                        }
                         var r = await QueryEvents(options, p, client);
                         results.Merge(r);
                         queried_epcs.Add(parent_id);
@@ -232,11 +239,6 @@ namespace OpenTraceability.Queries
             if (options.Format == EPCISDataFormat.XML)
             {
                 mapper = OpenTraceabilityMappers.EPCISQueryDocument.XML;
-
-                if (options.Version != EPCISVersion.V1)
-                {
-                    throw new Exception("The data format is set to XML, but the EPCIS version is not set to 1.2");
-                }
             }
 
             // build the HTTP request
@@ -244,7 +246,7 @@ namespace OpenTraceability.Queries
             request.RequestUri = new Uri(options.URL?.ToString().TrimEnd('/') + "/events" + parameters.ToQueryParameters());
             request.Method = HttpMethod.Get;
 
-            if (options.Version == EPCISVersion.V1)
+            if (options.Version == EPCISVersion.V1) 
             {
                 request.Headers.Add("Accept", "application/xml");
                 request.Headers.Add("GS1-EPCIS-Version", "1.2");

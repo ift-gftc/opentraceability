@@ -1,4 +1,4 @@
-﻿<epcisq:EPCISQueryDocument xmlns:cbvmda="urn:epcglobal:cbv:mda" xmlns:gdst="https://traceability-dialogue.org/epcis" xmlns:sbdh="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" xmlns:epcis="urn:epcglobal:epcis:xsd:1" xmlns:epcisq="urn:epcglobal:epcis-query:xsd:1" schemaVersion="1.2" creationDate="2022-09-05T19:04:37.545Z">
+﻿<epcisq:EPCISQueryDocument xmlns:cbvmda="urn:epcglobal:cbv:mda" xmlns:gdst="https://traceability-dialogue.org/epcis" xmlns:sbdh="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" xmlns:epcisq="urn:epcglobal:epcis-query:xsd:1" schemaVersion="1.2" creationDate="2022-09-05T19:04:37.545Z">
 	<EPCISHeader>
 		<sbdh:StandardBusinessDocumentHeader>
 			<sbdh:HeaderVersion>1.0</sbdh:HeaderVersion>

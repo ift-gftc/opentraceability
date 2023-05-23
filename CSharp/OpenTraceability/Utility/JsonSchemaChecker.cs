@@ -31,7 +31,7 @@ namespace OpenTraceability.Utility
 
             var jDoc = JsonDocument.Parse(jsonStr);
             var mySchema = JsonSchema.FromText(schemaStr);
-            var results = mySchema.Evaluate(jDoc);
+            var results = mySchema.Evaluate(jDoc, new EvaluationOptions() { OutputFormat = OutputFormat.List });
             if (results.IsValid)
             {
                 errors = new List<string>();
@@ -39,8 +39,8 @@ namespace OpenTraceability.Utility
             }
             else
             {
-                var errors_list = results.Errors?.Select(e => string.Format("{0} :: {1}", e.Key, e.Value)).ToList();
-                errors = errors_list ?? new List<string>();
+                errors = results.Errors?.Select(e => string.Format("{0} :: {1}", e.Key, e.Value)).ToList() ?? new List<string>();
+                errors.AddRange(results.Details?.SelectMany(e => e.Errors ?? new Dictionary<string,string>()).Select(e => string.Format("{0} :: {1}", e.Key, e.Value)).ToList() ?? new List<string>());
                 return false;
             }
         }

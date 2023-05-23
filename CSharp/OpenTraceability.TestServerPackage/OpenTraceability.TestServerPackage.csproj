@@ -12,11 +12,17 @@
 	  <RepositoryUrl>https://github.com/ift-gftc/opentraceability</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageTags>epcis;open;traceability;ift;msc</PackageTags>
-	  <VersionPrefix>1.1.6</VersionPrefix>
+	  <VersionPrefix>1.2.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OpenTraceability.TestServer\OpenTraceability.TestServer.csproj" />
+    <ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ComplianceTool.TestSolutionProvider">
+      <HintPath>..\..\GDSTTools.TestSolutionProvider\bin\Debug\net7.0\ComplianceTool.TestSolutionProvider.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

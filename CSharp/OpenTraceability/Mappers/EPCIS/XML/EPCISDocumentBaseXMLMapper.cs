@@ -105,7 +105,18 @@ namespace OpenTraceability.Mappers.EPCIS.XML
 
             foreach (var ns in doc.Namespaces)
             {
-                xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + ns.Key, ns.Value));
+                if (ns.Value == Constants.CBVMDA_NAMESPACE
+                 || ns.Value == Constants.EPCISQUERY_1_NAMESPACE
+                 || ns.Value == Constants.EPCISQUERY_2_NAMESPACE
+                 || ns.Value == Constants.EPCIS_1_NAMESPACE
+                 || ns.Value == Constants.EPCIS_2_NAMESPACE)
+                {
+                    continue;
+                }
+                else
+                {
+                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + ns.Key, ns.Value));
+                }
             }
 
             // set the creation date
@@ -117,10 +128,30 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             if (doc.EPCISVersion == EPCISVersion.V2)
             {
                 xDoc.Root.Add(new XAttribute("schemaVersion", "2.0"));
+                if (doc is EPCISQueryDocument)
+                {
+                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + "epcisq", Constants.EPCISQUERY_2_NAMESPACE));
+                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + "cbvmda", Constants.CBVMDA_NAMESPACE));
+                }
+                else
+                {
+                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + "epcis", Constants.EPCIS_2_NAMESPACE));
+                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + "cbvmda", Constants.CBVMDA_NAMESPACE));
+                }
             }
             else if (doc.EPCISVersion == EPCISVersion.V1)
             {
                 xDoc.Root.Add(new XAttribute("schemaVersion", "1.2"));
+                if (doc is EPCISQueryDocument)
+                {
+                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + "epcisq", Constants.EPCISQUERY_1_NAMESPACE));
+                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + "cbvmda", Constants.CBVMDA_NAMESPACE));
+                }
+                else
+                {
+                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + "epcis", Constants.EPCIS_1_NAMESPACE));
+                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + "cbvmda", Constants.CBVMDA_NAMESPACE));
+                }
             }
 
             // write the standard business document header
