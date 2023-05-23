@@ -3,7 +3,7 @@ using OpenTraceability.Models.Identifiers;
 using OpenTraceability.MSC.Events;
 using OpenTraceability.Utility.Attributes;
 
-namespace OpenTraceability.GDST.Events
+namespace OpenTraceability.MSC.Events
 {
     public class MSCReceiveEvent : ObjectEvent<MSCILMD>, IMSCILMDEvent
     {

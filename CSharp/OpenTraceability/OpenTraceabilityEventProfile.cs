@@ -126,7 +126,7 @@ namespace OpenTraceability
 
         public override string ToString()
         {
-            return string.Format("{0}:{1}:{2}:{3}", EventType, Action, BusinessStep, string.Join(":", KDEProfiles ?? new List<OpenTraceabilityEventKDEProfile>()));
+            return string.Format("{0}:{1}:{2}:{3}", EventType, Action, BusinessStep, string.Join(":", KDEProfiles ?? new List<OpenTraceabilityEventKDEProfile>())).ToLower();
         }
     }
 }
