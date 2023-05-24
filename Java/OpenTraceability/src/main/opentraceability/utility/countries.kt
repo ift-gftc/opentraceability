@@ -1,37 +1,36 @@
 package utility
+
+import java.lang.reflect.Type
 import java.util.*
+
 class Countries {
-    var CountryList: List<Country> = ArrayList<Country>()
-    companion object{
+
+    companion object {
+        internal var _dirCountries: MutableMap<String, Country>  = mutableMapOf()
+        internal var _dirAlpha3Countries: MutableMap<String, Country>  = mutableMapOf()
+        internal var _dirNameCountries: MutableMap<String, Country>  = mutableMapOf()
+
+
         var CountryList: List<Country> = ArrayList<Country>()
-    }
 
-    fun FromAbbreviation(code: String): Country {
-        // Method body goes here
-        return Country()
-    }
+        fun FromAbbreviation(code: String): Country {
+            TODO("Not yet implemented")
+        }
 
+        fun FromAlpha3(code: String): Country {
+            TODO("Not yet implemented")
+        }
 
-    fun FromAlpha3(code: String): Country {
-        // Method body goes here
-        return Country()
-    }
+        fun FromCountryName(name: String): Country {
+            TODO("Not yet implemented")
+        }
 
+        fun FromCountryIso(iso: Int): Country {
+            TODO("Not yet implemented")
+        }
 
-    fun FromCountryName(name: String): Country {
-        // Method body goes here
-        return Country()
-    }
-
-
-    fun FromCountryIso(iso: Int): Country {
-        // Method body goes here
-        return Country()
-    }
-
-
-    fun Parse(strValue: String): Country {
-        // Method body goes here
-        return Country()
+        fun Parse(strValue: String): Country {
+            TODO("Not yet implemented")
+        }
     }
 }

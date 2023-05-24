@@ -4,11 +4,19 @@ import interfaces.IEventKDE
 import java.util.*
 import models.events.*
 
-class SensorElement {
-    var MetaData: SensorMetaData = SensorMetaData()
-    var Reports: List<SensorReport> = ArrayList<SensorReport>()
-    var ExtensionKDEs: List<IEventKDE> = ArrayList<IEventKDE>()
+//TODO: review this
 
-    companion object {
-    }
+class SensorElement {
+
+    //[OpenTraceabilityObject]
+    //[OpenTraceability("sensorMetadata", 0)]
+    var MetaData: SensorMetaData? = null
+
+    //[OpenTraceabilityArray]
+    //[OpenTraceabilityObject]
+    //[OpenTraceability("sensorReport", 1)]
+    var Reports: List<SensorReport> = ArrayList<SensorReport>()
+
+    //[OpenTraceabilityExtensionElements]
+    var ExtensionKDEs: List<IEventKDE> = ArrayList<IEventKDE>()
 }

@@ -5,17 +5,42 @@ import java.util.*
 import java.net.URI
 import java.time.OffsetDateTime
 
-class SensorMetaData {
-    var TimeStamp: OffsetDateTime? = null
-    var DeviceID: URI? = null
-    var DeviceMetaData: URI? = null
-    var RawData: URI? = null
-    var StartTime: OffsetDateTime? = null
-    var BizRules: URI? = null
-    var DataProcessingMethod: URI? = null
-    var EndTime: OffsetDateTime? = null
-    var ExtensionAttributes: List<IEventKDE> = ArrayList<IEventKDE>()
+//TODO: review this
 
-    companion object {
-    }
+class SensorMetaData {
+
+    //[OpenTraceabilityJson("time")]
+    //[OpenTraceability("@time")]
+    var TimeStamp: OffsetDateTime? = null
+
+    //[OpenTraceabilityJson("deviceID")]
+    //[OpenTraceability("@deviceID")]
+    var DeviceID: URI? = null
+
+    //[OpenTraceabilityJson("deviceMetadata")]
+    //[OpenTraceability("@deviceMetadata")]
+    var DeviceMetaData: URI? = null
+
+    //[OpenTraceabilityJson("rawData")]
+    //[OpenTraceability("@rawData")]
+    var RawData: URI? = null
+
+    //[OpenTraceabilityJson("startTime")]
+    //[OpenTraceability("@startTime")]
+    var StartTime: OffsetDateTime? = null
+
+    //[OpenTraceabilityJson("bizRules")]
+    //[OpenTraceability("@bizRules")]
+    var BizRules: URI? = null
+
+    //[OpenTraceabilityJson("dataProcessingMethod")]
+    //[OpenTraceability("@dataProcessingMethod")]
+    var DataProcessingMethod: URI? = null
+
+    //[OpenTraceabilityJson("endTime")]
+    //[OpenTraceability("@endTime")]
+    var EndTime: OffsetDateTime? = null
+
+    //[OpenTraceabilityExtensionAttributes]
+    var ExtensionAttributes: List<IEventKDE> = ArrayList<IEventKDE>()
 }

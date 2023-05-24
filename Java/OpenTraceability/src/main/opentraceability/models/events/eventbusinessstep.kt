@@ -1,7 +1,7 @@
 package models.events
-import java.net.URI
+
 class EventBusinessStep {
-    companion object{
+    companion object {
         const val Receiving: String = "urn:epcglobal:cbv:bizstep:receiving"
         const val Shipping: String = "urn:epcglobal:cbv:bizstep:shipping"
         const val Storage: String = "urn:epcglobal:cbv:bizstep:storing"
@@ -17,6 +17,7 @@ class EventBusinessStep {
         const val Packaging: String = "urn:gdst:bizstep:packaging"
         const val Transshipment: String = "urn:gdst:bizstep:transshipment"
         const val FarmHarvest: String = "urn:gdst:bizstep:farmharvest"
+
         const val ReceivingURI: String = "https://ref.gs1.org/cbv/BizStep-receiving"
         const val ShippingURI: String = "https://ref.gs1.org/cbv/BizStep-shipping"
         const val StorageURI: String = "https://ref.gs1.org/cbv/BizStep-storing"

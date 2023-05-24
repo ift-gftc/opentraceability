@@ -6,13 +6,28 @@ import java.util.*
 import java.lang.reflect.Type
 
 class Address {
-    var Type: String = "gs1:PostalAddress"
-    var Address1: List<LanguageString> = ArrayList<LanguageString>()
-    var Address2: List<LanguageString> = ArrayList<LanguageString>()
-    var City: List<LanguageString> = ArrayList<LanguageString>()
-    var State: List<LanguageString> = ArrayList<LanguageString>()
-    var Country: Country = Country()
 
-    companion object {
-    }
+    //TODO: review this file
+
+    //[OpenTraceabilityJson("@type")]
+    var Type: String? = "gs1:PostalAddress"
+
+    //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#streetAddressOne")]
+    //[OpenTraceabilityJson("streetAddress")]
+    var Address1: List<LanguageString>? = null
+
+    //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#streetAddressTwo")]
+    var Address2: List<LanguageString>? = null
+
+    //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#city")]
+    //[OpenTraceabilityJson("addressLocality")]
+    var City: List<LanguageString>? = null
+
+    //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#state")]
+    //[OpenTraceabilityJson("addressRegion")]
+    var State: List<LanguageString>? = null
+
+    //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#countryCode")]
+    //[OpenTraceabilityJson("countyCode")]
+    var Country: Country? = null
 }

@@ -3,9 +3,15 @@ import models.identifiers.*
 import utility.Measurement
 import java.lang.reflect.Type
 class EventProduct {
+    //TODO: review this
+
+
     var EPC: EPC = EPC()
-    var Quantity: Measurement = Measurement()
+    var Quantity: Measurement? = null
     var Type: EventProductType = EventProductType()
-    companion object{
+
+    constructor(epc: EPC) {
+        this.EPC = epc;
     }
+
 }

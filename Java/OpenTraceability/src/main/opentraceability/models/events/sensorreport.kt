@@ -7,32 +7,102 @@ import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
 
-class SensorReport {
-    var TimeStamp: OffsetDateTime? = null
-    var Type: URI? = null
-    var Value: Double? = null
-    var StringValue: String = String()
-    var BooleanValue: Boolean? = null
-    var HexBinaryValue: String = String()
-    var URIValue: URI? = null
-    var UOM: UOM = UOM()
-    var Component: URI? = null
-    var MinValue: Double? = null
-    var MaxValue: Double? = null
-    var SDev: Double? = null
-    var ChemicalSubstance: URI? = null
-    var MicroOrganism: URI? = null
-    var DeviceID: URI? = null
-    var RawData: URI? = null
-    var MeanValue: Double? = null
-    var PercentageRank: Double? = null
-    var DataProcessingMethod: URI? = null
-    var CoordinateReferenceSystem: URI? = null
-    var Exception: URI? = null
-    var PercentageValue: Double? = null
-    var DeviceMetadata: URI? = null
-    var ExtensionAttributes: List<IEventKDE> = ArrayList<IEventKDE>()
+//TODO: review this
 
-    companion object {
-    }
+class SensorReport {
+
+    //[OpenTraceabilityJson("time")]
+    //[OpenTraceability("@time")]
+    var TimeStamp: OffsetDateTime? = null
+
+    //[OpenTraceabilityJson("type")]
+    //[OpenTraceability("@type")]
+    var Type: URI? = null
+
+    //[OpenTraceabilityJson("value")]
+    //[OpenTraceability("@value")]
+    var Value: Double? = null
+
+    //[OpenTraceabilityJson("stringValue")]
+    //[OpenTraceability("@stringValue")]
+    var StringValue: String? = null
+
+    //[OpenTraceabilityJson("booleanValue")]
+    //[OpenTraceability("@booleanValue")]
+    var BooleanValue: Boolean? = null
+
+    //[OpenTraceabilityJson("hexBinaryValue")]
+    //[OpenTraceability("@hexBinaryValue")]
+    var HexBinaryValue: String? = null
+
+    //[OpenTraceabilityJson("uriValue")]
+    //[OpenTraceability("@uriValue")]
+    var URIValue: URI? = null
+
+    //[OpenTraceabilityJson("uom")]
+    //[OpenTraceability("@uom")]
+    var UOM: UOM = UOM()
+
+    //[OpenTraceabilityJson("component")]
+    //[OpenTraceability("@component")]
+    var Component: URI? = null
+
+    //[OpenTraceabilityJson("minValue")]
+    //[OpenTraceability("@minValue")]
+    var MinValue: Double? = null
+
+    //[OpenTraceabilityJson("maxValue")]
+    //[OpenTraceability("@maxValue")]
+    var MaxValue: Double? = null
+
+    //[OpenTraceabilityJson("sDev")]
+    //[OpenTraceability("@sDev")]
+    var SDev: Double? = null
+
+    //[OpenTraceabilityJson("chemicalSubstance")]
+    //[OpenTraceability("@chemicalSubstance")]
+    var ChemicalSubstance: URI? = null
+
+    //[OpenTraceabilityJson("microorganism")]
+    //[OpenTraceability("@microorganism")]
+    var MicroOrganism: URI? = null
+
+    //[OpenTraceabilityJson("deviceID")]
+    //[OpenTraceability("@deviceID")]
+    var DeviceID: URI? = null
+
+    //[OpenTraceabilityJson("rawData")]
+    //[OpenTraceability("@rawData")]
+    var RawData: URI? = null
+
+    //[OpenTraceabilityJson("meanValue")]
+    //[OpenTraceability("@meanValue")]
+    var MeanValue: Double? = null
+
+    //[OpenTraceabilityJson("percRank")]
+    //[OpenTraceability("@percRank")]
+    var PercentageRank: Double? = null
+
+    //[OpenTraceabilityJson("dataProcessingMethod")]
+    //[OpenTraceability("@dataProcessingMethod")]
+    var DataProcessingMethod: URI? = null
+
+    //[OpenTraceabilityJson("coordinateReferenceSystem")]
+    //[OpenTraceability("@coordinateReferenceSystem")]
+    var CoordinateReferenceSystem: URI? = null
+
+    //[OpenTraceabilityJson("exception")]
+    //[OpenTraceability("@exception")]
+    var Exception: URI? = null
+
+    //[OpenTraceabilityJson("percValue")]
+    //[OpenTraceability("@percValue")]
+    var PercentageValue: Double? = null
+
+    //[OpenTraceabilityJson("deviceMetadata")]
+    //[OpenTraceability("@deviceMetadata")]
+    var DeviceMetadata: URI? = null
+
+    //[OpenTraceabilityExtensionAttributes]
+    var ExtensionAttributes: List<IEventKDE> = ArrayList<IEventKDE>()
 }

@@ -1,8 +1,18 @@
 package utility.attributes
+
 import java.lang.reflect.Type
+
 class OpenTraceabilityMasterDataAttribute {
     var Name: String = ""
-    var TypeId: Object = Object()
-    companion object{
+
+    constructor() {
+        Name = ""
+    }
+    constructor(name: String) {
+        Name = name
+    }
+    constructor(ns: String, name: String) {
+        //Name = (((XNamespace)ns) + name).ToString();
+        Name = name
     }
 }

@@ -6,19 +6,57 @@ import models.common.LanguageString
 import java.util.*
 import models.identifiers.*
 import java.lang.reflect.Type
-class TradingParty {
-    var ID: String = String()
-    var EPCISType: String = "urn:epcglobal:epcis:vtype:Party"
-    var JsonLDType: String = "gs1:Organization"
-    var VocabularyType: VocabularyType = VocabularyType()
-    var Context: JsonToken = JsonToken()
-    var PGLN: PGLN = PGLN()
-    var OwningParty: PGLN = PGLN()
-    var InformationProvider: PGLN = PGLN()
-    var Name: List<LanguageString> = ArrayList<LanguageString>()
-    var Address: Address = Address()
-    var IFTP: String = String()
+
+
+//TODO: review this file
+
+
+class TradingParty/*: IVocabularyElement*/ {
+
+    var ID: String? = null
+
+    var EPCISType: String? = "urn:epcglobal:epcis:vtype:Party"
+
+
+    //[OpenTraceabilityJson("@type")]
+    var JsonLDType: String? = "gs1:Organization"
+
+    var VocabularyType: VocabularyType? = null
+
+    var Context: JsonToken? = null
+
+
+
+    //[OpenTraceabilityJson("globalLocationNumber")]
+    var PGLN: PGLN? = null
+
+    //[OpenTraceabilityJson("cbvmda:owning_party")]
+    //[OpenTraceabilityMasterData("urn:epcglobal:cbv:owning_Party")]
+    var OwningParty: PGLN? = null
+
+
+    //[OpenTraceabilityJson("cbvmda:informationProvider")]
+    //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#informationProvider")]
+    var InformationProvider: PGLN? = null
+
+
+
+    //[OpenTraceabilityJson("organizationName")]
+    //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#name")]
+    var Name: List<LanguageString>? = null
+
+    //[OpenTraceabilityObject]
+    //[OpenTraceabilityJson("address")]
+    var Address: Address? = null
+
+
+    //[OpenTraceabilityJson("gdst:iftp")]
+    //[OpenTraceabilityMasterData("urn:gdst:kde#iftp")]
+    var IFTP: String? = null
+
+
+
+
     var KDEs: List<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
-    companion object{
-    }
 }
+

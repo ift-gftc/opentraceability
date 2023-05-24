@@ -1,15 +1,29 @@
 package utility.attributes
+
 import models.identifiers.*
 import models.events.*
 import java.lang.reflect.Type
+
 class OpenTraceabilityProductsAttribute {
-    var Name: String = String()
+    var Name: String = ""
     var Version: EPCISVersion? = null
-    var ProductType: EventProductType = EventProductType()
+    lateinit var ProductType: EventProductType
     var SequenceOrder: Int? = null
-    var ListType: OpenTraceabilityProductsListType = OpenTraceabilityProductsListType()
+    lateinit var ListType: OpenTraceabilityProductsListType
     var Required: Boolean = false
-    var TypeId: Object = Object()
-    companion object{
+
+    constructor(name: String, version: EPCISVersion, productType: EventProductType, SequenceOrder: Int, listType: OpenTraceabilityProductsListType) {
+        this.Name = name
+        this.Version = version
+        this.ProductType = productType
+        this.SequenceOrder = SequenceOrder
+        this.ListType = listType
+    }
+
+    constructor(name: String,  productType: EventProductType, SequenceOrder: Int, listType: OpenTraceabilityProductsListType) {
+        this.Name = name
+        this.ProductType = productType
+        this.SequenceOrder = SequenceOrder
+        this.ListType = listType
     }
 }

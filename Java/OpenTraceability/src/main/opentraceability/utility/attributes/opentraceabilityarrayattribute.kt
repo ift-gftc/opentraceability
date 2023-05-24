@@ -1,8 +1,10 @@
 package utility.attributes
-import java.lang.reflect.Type
+
 class OpenTraceabilityArrayAttribute {
-    var ItemName: String = String()
-    var TypeId: Object = Object()
-    companion object{
+
+    var ItemName: String? = null
+
+    constructor(listXName: String) {
+        ItemName = listXName
     }
 }

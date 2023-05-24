@@ -6,43 +6,35 @@ import models.events.kdes.EventKDEBase
 import java.lang.reflect.Type
 import javax.xml.bind.annotation.XmlElement
 
-class MasterDataKDEObject: EventKDEBase, IEventKDE {
+class MasterDataKDEObject /*: MasterDataKDEBase, IMasterDataKDE*/ {
 
-    override var ValueType: Type = Boolean::class.java
+    var ValueType: Type = Object::class.java
 
-    var Value: Boolean? = null
+    var Value: Object? = null
 
     constructor() {
 
     }
 
     constructor(ns: String, name: String) {
-        this.Namespace = ns;
-        this.Name = name;
+        //this.Namespace = ns;
+        //this.Name = name;
     }
 
-
-    override fun GetJson(): JsonToken? {
+    fun SetFromGS1WebVocabJson(json: JsonToken) {
         TODO("Not yet implemented")
     }
 
-    override fun GetXml(): XmlElement? {
+    fun GetGS1WebVocabJson(): JsonToken? {
         TODO("Not yet implemented")
     }
 
-    override fun SetFromJson(json: JsonToken): Void {
+    fun SetFromEPCISXml(xml: XmlElement) {
         TODO("Not yet implemented")
     }
 
-    override fun SetFromXml(xml: XmlElement): Void {
-        TODO("Not yet implemented")
-    }
 
-    override fun toString(): String {
-        if (Value != null) {
-            return Value.toString()
-        } else {
-            return ""
-        }
+    fun GetEPCISXml(): XmlElement? {
+        TODO("Not yet implemented")
     }
 }

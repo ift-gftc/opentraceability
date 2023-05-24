@@ -1,5 +1,5 @@
 package queries
-enum class EPCISQueryType {
-    Unknown,
-    events,
+enum class EPCISQueryType(val value: Int) {
+    Unknown(0),
+    events(1),
 }

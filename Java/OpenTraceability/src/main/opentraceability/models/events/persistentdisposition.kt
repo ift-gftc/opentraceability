@@ -1,9 +1,16 @@
 package models.events
 import java.util.*
 import java.net.URI
+
+//TODO: review this
+
 class PersistentDisposition {
-    var Unset: List<URI?> = ArrayList<URI?>()
-    var Set: List<URI?> = ArrayList<URI?>()
-    companion object{
-    }
+
+    //[OpenTraceability("unset", 1)]
+    //[OpenTraceabilityArray]
+    var Unset: List<URI>? = null
+
+    //[OpenTraceability("set", 2)]
+    //[OpenTraceabilityArray]
+    var Set: List<URI>? = null
 }

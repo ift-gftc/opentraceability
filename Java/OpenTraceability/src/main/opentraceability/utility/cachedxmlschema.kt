@@ -1,11 +1,10 @@
 package utility
 
-import com.google.type.DateTime
+import java.time.LocalDateTime
+import javax.xml.bind.annotation.XmlSchema
 
 class CachedXmlSchema {
-    var LastUpdated: DateTime = DateTime()
+    var LastUpdated: LocalDateTime = LocalDateTime.now()
     var URL: String = String()
-    var SchemaSet: XmlSchemaSet = XmlSchemaSet()
-    companion object{
-    }
+    var SchemaSet: XmlSchema? = null
 }

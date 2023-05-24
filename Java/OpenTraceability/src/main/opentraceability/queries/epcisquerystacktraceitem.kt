@@ -1,18 +1,20 @@
 package queries
-import com.google.type.DateTime
+
 import com.intellij.javaee.web.model.xml.HttpStatusCode
 import java.util.*
 import models.identifiers.*
 import java.net.URI
+import java.time.LocalDateTime
+
 class EPCISQueryStackTraceItem {
-    var ID: String = "5c2d2f57-47c2-4cd4-a835-6d52749f8507"
-    var Created: DateTime = DateTime()
+
+    var ID: String = UUID.randomUUID().toString()
+    var Created: LocalDateTime = LocalDateTime.now()
     var ResponseStatusCode: HttpStatusCode? = null
     var RelativeURL: URI? = null
-    var RequestHeaders: List<System.Collections.Generic.KeyValuePair<String,System.Collections.Generic.IEnumerable<String>>> = ArrayList<System.Collections.Generic.KeyValuePair<String,System.Collections.Generic.IEnumerable<String>>>()
-    var ResponseHeaders: List<System.Collections.Generic.KeyValuePair<String,System.Collections.Generic.IEnumerable<String>>> = ArrayList<System.Collections.Generic.KeyValuePair<String,System.Collections.Generic.IEnumerable<String>>>()
-    var RequestBody: String = String()
-    var ResponseBody: String = String()
-    companion object{
-    }
+    var RequestHeaders: ArrayList<MutableMap<String, ArrayList<String>>>? = null
+    var ResponseHeaders: ArrayList<MutableMap<String, ArrayList<String>>>? = null
+    var RequestBody: String? = null
+    var ResponseBody: String? = null
+
 }

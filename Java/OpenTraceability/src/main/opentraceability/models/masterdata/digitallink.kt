@@ -1,6 +1,5 @@
 package models.masterdata
 
-import java.lang.reflect.Type
 
 class DigitalLink {
     var link: String = ""
@@ -18,6 +17,4 @@ class DigitalLink {
     var identifier: String = ""
     var authRequired: Boolean = false
 
-    companion object {
-    }
 }

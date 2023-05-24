@@ -1,8 +1,8 @@
 
 class OpenTraceabilityEventKDEProfile {
-    var XPath_V1: String = String()
-    var XPath_V2: String = String()
-    var JPath: String = String()
+    var XPath_V1: String = ""
+    var XPath_V2: String = ""
+    var JPath: String = ""
 
     constructor(xPath_V1: String,xPath_V2: String,jPath: String) {
         XPath_V1 = xPath_V1
