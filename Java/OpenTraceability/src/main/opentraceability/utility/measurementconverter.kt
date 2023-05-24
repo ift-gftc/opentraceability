@@ -1,5 +1,6 @@
 package utility
 
+import java.lang.reflect.Type
 
 class MeasurementConverter /*: JsonConverter<Measurement>*/ {
 

@@ -1,6 +1,7 @@
 package utility
 
 import models.identifiers.*
+import java.lang.reflect.Type
 
 class EPCConverter  /*: JsonConverter<EPC>*/ {
 

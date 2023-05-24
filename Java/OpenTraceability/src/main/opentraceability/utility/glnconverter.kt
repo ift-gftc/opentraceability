@@ -1,6 +1,7 @@
 package utility
 
 import models.identifiers.GLN
+import java.lang.reflect.Type
 
 class GLNConverter /*: JsonConverter<GLN>*/ {
 

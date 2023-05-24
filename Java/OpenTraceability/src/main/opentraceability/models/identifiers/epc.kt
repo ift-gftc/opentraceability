@@ -8,7 +8,7 @@ class EPC {
 
     internal var _epcStr: String = ""
 
-    var Type: EPCType = EPCType()
+    lateinit var Type: EPCType
     var GTIN: GTIN? = null
     var SerialLotNumber: String? = null
 

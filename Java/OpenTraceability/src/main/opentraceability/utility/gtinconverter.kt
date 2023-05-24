@@ -1,6 +1,7 @@
 package utility
 
 import models.identifiers.GTIN
+import java.lang.reflect.Type
 
 class GTINConverter /*: JsonConverter<GTIN>*/ {
 

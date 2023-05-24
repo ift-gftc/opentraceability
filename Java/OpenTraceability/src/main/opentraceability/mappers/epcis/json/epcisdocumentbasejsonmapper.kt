@@ -27,6 +27,8 @@ class EPCISDocumentBaseJsonMapper {
         }
 
         internal fun GetEventType(e: IEvent): String {
+
+
             if (e.EventType == EventType.ObjectEvent) {
                 return "ObjectEvent";
             } else if (e.EventType == EventType.TransformationEvent) {

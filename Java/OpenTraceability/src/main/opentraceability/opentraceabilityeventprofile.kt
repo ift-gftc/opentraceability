@@ -66,8 +66,8 @@ class OpenTraceabilityEventProfile {
 
         var eventTypes = "";
 
-        if (KDEProfiles != null && KDEProfiles.count() > 0){
-            eventTypes = KDEProfiles.joinToString (separator = ":") { p -> "\'${p}\'" }
+        if (KDEProfiles != null && KDEProfiles!!.count() > 0){
+            eventTypes = KDEProfiles!!.joinToString (separator = ":") { p -> "\'${p}\'" }
         }
 
         return "$EventType:$Action:$BusinessStep:$eventTypes"

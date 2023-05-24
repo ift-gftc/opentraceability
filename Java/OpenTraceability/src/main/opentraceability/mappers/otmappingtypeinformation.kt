@@ -27,7 +27,7 @@ class OTMappingTypeInformation {
         }
     }
 
-    var Type: Type = Type()
+    lateinit var Type: Type
     var Properties: List<OTMappingTypeInformationProperty> = ArrayList<OTMappingTypeInformationProperty>()
     var ExtensionKDEs: PropertyInfo? = PropertyInfo()
     var ExtensionAttributes: PropertyInfo? = PropertyInfo()
