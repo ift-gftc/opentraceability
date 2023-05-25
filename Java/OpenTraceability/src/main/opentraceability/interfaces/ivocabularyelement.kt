@@ -8,5 +8,5 @@ interface IVocabularyElement {
     var JsonLDType: String?
     var Context: JsonToken?
     var VocabularyType: VocabularyType
-    var KDEs: List<IMasterDataKDE>
+    var KDEs: ArrayList<IMasterDataKDE>
 }

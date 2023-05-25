@@ -11,7 +11,7 @@ import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
 
-class AssociationEvent : EventBase, IEvent {
+class AssociationEvent /*: EventBase, IEvent*/ {
 
     //TODO: Review this file
 
@@ -19,20 +19,20 @@ class AssociationEvent : EventBase, IEvent {
     var ParentID: EPC? = null
 
 
-    var Children: List<EventProduct> = ArrayList<EventProduct>()
+    var Children: ArrayList<EventProduct> = ArrayList<EventProduct>()
     var Action: EventAction? = null
     var BusinessStep: URI? = null
     var Disposition: URI? = null
     var ReadPoint: EventReadPoint = EventReadPoint()
-    var Location: EventLocation = EventLocation()
-    var BizTransactionList: List<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
-    var SourceList: List<EventSource> = ArrayList<EventSource>()
-    var DestinationList: List<EventDestination> = ArrayList<EventDestination>()
-    var SensorElementList: List<SensorElement> = ArrayList<SensorElement>()
+    lateinit var Location: EventLocation
+    var BizTransactionList: ArrayList<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
+    var SourceList: ArrayList<EventSource> = ArrayList<EventSource>()
+    var DestinationList: ArrayList<EventDestination> = ArrayList<EventDestination>()
+    var SensorElementList: ArrayList<SensorElement> = ArrayList<SensorElement>()
     var PersistentDisposition: PersistentDisposition = PersistentDisposition()
     var ILMD: EventILMD = EventILMD()
-    var EventType: EventType = EventType()
-    var Products: List<EventProduct> = ArrayList<EventProduct>()
+    lateinit var EventType: EventType
+    var Products: ArrayList<EventProduct> = ArrayList<EventProduct>()
     var EventTime: OffsetDateTime? = null
     var RecordTime: OffsetDateTime? = null
     var EventTimeZoneOffset: Duration? = null
@@ -41,7 +41,7 @@ class AssociationEvent : EventBase, IEvent {
     var CertificationInfo: String = String()
     var CertificationList: CertificationList = CertificationList()
     var InformationProvider: PGLN = PGLN()
-    var KDEs: List<IEventKDE> = ArrayList<IEventKDE>()
+    var KDEs: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
 
 
 }

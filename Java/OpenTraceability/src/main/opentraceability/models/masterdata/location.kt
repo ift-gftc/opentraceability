@@ -46,7 +46,7 @@ class Location /*: IVocabularyElement*/ {
 
     //[OpenTraceabilityJson("name")]
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#name")]
-    var Name: List<LanguageString>? = null
+    var Name: ArrayList<LanguageString>? = null
 
 
     //[OpenTraceabilityObject]
@@ -58,7 +58,7 @@ class Location /*: IVocabularyElement*/ {
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#unloadingPort")]
     var UnloadingPort: String? = null
 
-    var KDEs: List<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
+    var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
 
 
 }

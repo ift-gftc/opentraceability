@@ -11,6 +11,6 @@ class CertificationList {
     //[OpenTraceabilityArray]
     //[OpenTraceabilityObject]
     //[OpenTraceability("certification")]
-    var Certificates: List<Certificate> = ArrayList<Certificate>()
+    var Certificates: ArrayList<Certificate> = ArrayList<Certificate>()
 
 }

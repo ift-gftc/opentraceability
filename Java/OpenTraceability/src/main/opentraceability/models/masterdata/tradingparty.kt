@@ -43,7 +43,7 @@ class TradingParty/*: IVocabularyElement*/ {
 
     //[OpenTraceabilityJson("organizationName")]
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#name")]
-    var Name: List<LanguageString>? = null
+    var Name: ArrayList<LanguageString>? = null
 
     //[OpenTraceabilityObject]
     //[OpenTraceabilityJson("address")]
@@ -57,6 +57,6 @@ class TradingParty/*: IVocabularyElement*/ {
 
 
 
-    var KDEs: List<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
+    var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
 }
 

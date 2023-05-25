@@ -25,7 +25,7 @@ class EventILMD {
     //[OpenTraceabilityRepeatingAttribute]
     //[OpenTraceability(Constants.CBVMDA_NAMESPACE, "countryOfOrigin")]
     //[OpenTraceabilityJson("cbvmda:countryOfOrigin")]
-    var CountryOfOrigin: List<Country> = ArrayList<Country>()
+    var CountryOfOrigin: ArrayList<Country> = ArrayList<Country>()
 
     //[OpenTraceability(Constants.CBVMDA_NAMESPACE, "lotNumber")]
     //[OpenTraceabilityJson("cbvmda:lotNumber")]
@@ -37,5 +37,5 @@ class EventILMD {
     var CertificationList: CertificationList? = null
 
     //[OpenTraceabilityExtensionElements]
-    var ExtensionKDEs: List<IEventKDE> = ArrayList<IEventKDE>()
+    var ExtensionKDEs: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
 }

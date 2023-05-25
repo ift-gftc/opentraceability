@@ -16,9 +16,9 @@ class ErrorDeclaration {
 
     //[OpenTraceabilityArray("correctiveEventID")]
     //[OpenTraceability("correctiveEventIDs")]
-    var CorrectingEventIDs: List<String>? = null
+    var CorrectingEventIDs: ArrayList<String>? = null
 
     //[OpenTraceabilityExtensionElements]
-    var ExtensionKDEs: List<IEventKDE> = ArrayList<IEventKDE>()
+    var ExtensionKDEs: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
 
 }

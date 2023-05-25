@@ -29,7 +29,7 @@ class UOMS {
             TODO("Not yet implemented")
         }
 
-        var List: List<UOM> = ArrayList<UOM>()
+        var List: ArrayList<UOM> = ArrayList<UOM>()
     }
 
     constructor(){

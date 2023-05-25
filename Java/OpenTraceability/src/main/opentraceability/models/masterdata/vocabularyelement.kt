@@ -33,6 +33,6 @@ class VocabularyElement /*: IVocabularyElement*/ {
      */
 
 
-    var KDEs: List<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
+    var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
 
 }

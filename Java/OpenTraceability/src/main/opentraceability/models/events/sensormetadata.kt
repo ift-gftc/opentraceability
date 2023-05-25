@@ -42,5 +42,5 @@ class SensorMetaData {
     var EndTime: OffsetDateTime? = null
 
     //[OpenTraceabilityExtensionAttributes]
-    var ExtensionAttributes: List<IEventKDE> = ArrayList<IEventKDE>()
+    var ExtensionAttributes: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
 }

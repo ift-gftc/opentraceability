@@ -12,13 +12,13 @@ import java.time.OffsetDateTime
 
 //TODO: review this
 
-class TransformationEvent<T>: EventBase, ITransformationEvent, {
+class TransformationEvent<T> /*: EventBase, ITransformationEvent*/ {
 
     //[OpenTraceabilityProducts("inputQuantityList", EventProductType.Input, 8, OpenTraceabilityProductsListType.QuantityList)]
     //[OpenTraceabilityProducts("inputEPCList", EventProductType.Input, 7, OpenTraceabilityProductsListType.EPCList)]
-    var Inputs: List<EventProduct> = ArrayList<EventProduct>()
+    var Inputs: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
-    var Outputs: List<EventProduct> = ArrayList<EventProduct>()
+    var Outputs: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
     var Action: EventAction? = null
 
@@ -33,31 +33,31 @@ class TransformationEvent<T>: EventBase, ITransformationEvent, {
     var Location: EventLocation? = null
 
 
-    var BizTransactionList: List<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
+    var BizTransactionList: ArrayList<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
 
-    var SourceList: List<EventSource> = ArrayList<EventSource>()
+    var SourceList: ArrayList<EventSource> = ArrayList<EventSource>()
 
-    var DestinationList: List<EventDestination> = ArrayList<EventDestination>()
+    var DestinationList: ArrayList<EventDestination> = ArrayList<EventDestination>()
 
-    var SensorElementList: List<SensorElement> = ArrayList<SensorElement>()
+    var SensorElementList: ArrayList<SensorElement> = ArrayList<SensorElement>()
 
     var PersistentDisposition: PersistentDisposition? = null
 
     var ILMD: T? = null
 
-    var EventType: EventType = EventType()
+    lateinit var EventType: EventType
 
     //public EventILMD? GetILMD() => ILMD;
 
 
 
-    var Products: List<EventProduct> = ArrayList<EventProduct>()
+    var Products: ArrayList<EventProduct> = ArrayList<EventProduct>()
     /*
     public ReadOnlyCollection<EventProduct> Products
     {
         get
         {
-            List<EventProduct> products = new List<EventProduct>();
+            ArrayList<EventProduct> products = new ArrayList<EventProduct>();
             products.AddRange(Inputs);
             products.AddRange(Outputs);
             return new ReadOnlyCollection<EventProduct>(products);

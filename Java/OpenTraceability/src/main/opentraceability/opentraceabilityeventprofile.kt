@@ -9,7 +9,7 @@ class OpenTraceabilityEventProfile {
     var Action: EventAction? = null
     var BusinessStep: String = ""
     lateinit var EventClassType: Type
-    var KDEProfiles: List<OpenTraceabilityEventKDEProfile>? = ArrayList<OpenTraceabilityEventKDEProfile>()
+    var KDEProfiles: ArrayList<OpenTraceabilityEventKDEProfile>? = ArrayList<OpenTraceabilityEventKDEProfile>()
 
     constructor(eventClassType: Type, eventType: EventType) {
         EventType = eventType;
@@ -35,26 +35,26 @@ class OpenTraceabilityEventProfile {
         BusinessStep = businessStep;
     }
 
-    constructor(eventClassType: Type, eventType: EventType, kdeProfiles: List<OpenTraceabilityEventKDEProfile>) {
+    constructor(eventClassType: Type, eventType: EventType, kdeProfiles: ArrayList<OpenTraceabilityEventKDEProfile>) {
         KDEProfiles = kdeProfiles;
         EventType = eventType;
         EventClassType = eventClassType;
     }
 
-    constructor(eventClassType: Type, eventType: EventType, businessStep: String, kdeProfiles: List<OpenTraceabilityEventKDEProfile>) {
+    constructor(eventClassType: Type, eventType: EventType, businessStep: String, kdeProfiles: ArrayList<OpenTraceabilityEventKDEProfile>) {
         KDEProfiles = kdeProfiles;
         EventType = eventType;
         EventClassType = eventClassType;
         BusinessStep = businessStep;
     }
 
-    constructor(eventClassType: Type, eventType: EventType, action: EventAction, kdeProfiles: List<OpenTraceabilityEventKDEProfile>) {
+    constructor(eventClassType: Type, eventType: EventType, action: EventAction, kdeProfiles: ArrayList<OpenTraceabilityEventKDEProfile>) {
         KDEProfiles = kdeProfiles;
         EventType = eventType;
         EventClassType = eventClassType;
         Action = action;
     }
-    constructor(eventClassType: Type, eventType: EventType, businessStep: String,  action: EventAction, kdeProfiles: List<OpenTraceabilityEventKDEProfile>) {
+    constructor(eventClassType: Type, eventType: EventType, businessStep: String,  action: EventAction, kdeProfiles: ArrayList<OpenTraceabilityEventKDEProfile>) {
         KDEProfiles = kdeProfiles;
         EventType = eventType;
         EventClassType = eventClassType;

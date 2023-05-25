@@ -11,14 +11,14 @@ class EPCISQuery {
     var LE_recordTime: OffsetDateTime? = null
     var GE_eventTime: OffsetDateTime? = null
     var LE_eventTime: OffsetDateTime? = null
-    var eventTypes: List<String> = ArrayList<String>()
-    var MATCH_epc: List<String> = ArrayList<String>()
-    var MATCH_epcClass: List<String> = ArrayList<String>()
-    var MATCH_anyEPC: List<String> = ArrayList<String>()
-    var MATCH_anyEPCClass: List<String> = ArrayList<String>()
-    var EQ_bizStep: List<String> = ArrayList<String>()
-    var EQ_bizLocation: List<URI> = ArrayList<URI>()
-    var EQ_action: List<String> = ArrayList<String>()
+    var eventTypes: ArrayList<String> = ArrayList<String>()
+    var MATCH_epc: ArrayList<String> = ArrayList<String>()
+    var MATCH_epcClass: ArrayList<String> = ArrayList<String>()
+    var MATCH_anyEPC: ArrayList<String> = ArrayList<String>()
+    var MATCH_anyEPCClass: ArrayList<String> = ArrayList<String>()
+    var EQ_bizStep: ArrayList<String> = ArrayList<String>()
+    var EQ_bizLocation: ArrayList<URI> = ArrayList<URI>()
+    var EQ_action: ArrayList<String> = ArrayList<String>()
 
     fun ShouldSerializeeventTypes(): Boolean{
         TODO("Not yet implemented")

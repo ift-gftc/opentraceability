@@ -14,10 +14,10 @@ open class EPCISBaseDocument {
     var EPCISVersion: EPCISVersion? = null
     var CreationDate: OffsetDateTime? = null
     var Header: StandardBusinessDocumentHeader? = null
-    var Events: List<IEvent> = ArrayList<IEvent>()
-    var MasterData: List<IVocabularyElement> = ArrayList<IVocabularyElement>()
+    var Events: ArrayList<IEvent> = ArrayList<IEvent>()
+    var MasterData: ArrayList<IVocabularyElement> = ArrayList<IVocabularyElement>()
     var Namespaces: MutableMap<String, String> = mutableMapOf<String, String>()
-    var Contexts: List<String> = ArrayList<String>()
+    var Contexts: ArrayList<String> = ArrayList<String>()
     var Attributes: MutableMap<String, String> = mutableMapOf<String, String>()
 
     fun<T> GetMasterData(id: String?): T{
@@ -28,15 +28,15 @@ open class EPCISBaseDocument {
         TODO("Not yet implemented")
     }
 
-    fun FilterEvents(parameters: EPCISQueryParameters): List<IEvent> {
+    fun FilterEvents(parameters: EPCISQueryParameters): ArrayList<IEvent> {
         TODO("Not yet implemented")
     }
 
-    fun HasMatch(evt: IEvent, epcs: List<String>, allowedTypes: List<EventProductType>): Boolean {
+    fun HasMatch(evt: IEvent, epcs: ArrayList<String>, allowedTypes: ArrayList<EventProductType>): Boolean {
         TODO("Not yet implemented")
     }
 
-    fun HasUriMatch(uri: URL?, filter: List<String>, prefix: String, replacePrefix: String): Boolean {
+    fun HasUriMatch(uri: URL?, filter: ArrayList<String>, prefix: String, replacePrefix: String): Boolean {
         TODO("Not yet implemented")
     }
 }

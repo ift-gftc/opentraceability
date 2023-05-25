@@ -1,7 +1,9 @@
 package mappers
 
+import java.beans.BeanInfo
 import java.util.*
 import java.lang.reflect.Type
+import kotlin.reflect.KProperty
 
 class OTMappingTypeInformation {
     companion object {
@@ -28,9 +30,9 @@ class OTMappingTypeInformation {
     }
 
     lateinit var Type: Type
-    var Properties: List<OTMappingTypeInformationProperty> = ArrayList<OTMappingTypeInformationProperty>()
-    var ExtensionKDEs: PropertyInfo? = PropertyInfo()
-    var ExtensionAttributes: PropertyInfo? = PropertyInfo()
+    var Properties: ArrayList<OTMappingTypeInformationProperty> = ArrayList<OTMappingTypeInformationProperty>()
+    var ExtensionKDEs: BeanInfo? = null
+    var ExtensionAttributes: BeanInfo? = null
 
     //TODO: missing property
     /*

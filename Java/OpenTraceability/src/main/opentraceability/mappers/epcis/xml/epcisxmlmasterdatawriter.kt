@@ -12,7 +12,7 @@ class EPCISXmlMasterDataWriter {
             TODO("Not yet implemented")
         }
 
-        internal fun WriteMasterDataList(data: List<IVocabularyElement>, xVocabList: XmlElement, type: String) {
+        internal fun WriteMasterDataList(data: ArrayList<IVocabularyElement>, xVocabList: XmlElement, type: String) {
             TODO("Not yet implemented")
         }
         internal fun WriteMasterDataObject(md: IVocabularyElement) : XmlElement {

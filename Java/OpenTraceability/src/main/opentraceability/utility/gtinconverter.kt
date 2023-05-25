@@ -1,11 +1,14 @@
 package utility
 
+import com.google.gson.JsonSerializer
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
 import models.identifiers.GTIN
 import java.lang.reflect.Type
 
 class GTINConverter /*: JsonConverter<GTIN>*/ {
 
-    fun WriteJson(writer: JsonWriter, value: GTIN?, serializer: JsonSerializer) {
+    fun WriteJson(writer: JsonWriter, value: GTIN?, serializer: JsonSerializer<Any>) {
         TODO("Not yet implemented")
     }
 
@@ -14,7 +17,7 @@ class GTINConverter /*: JsonConverter<GTIN>*/ {
         objectType: Type,
         existingValue: GTIN?,
         hasExistingValue: Boolean,
-        serializer: JsonSerializer
+        serializer: JsonSerializer<Any>
     ): GTIN? {
         TODO("Not yet implemented")
     }

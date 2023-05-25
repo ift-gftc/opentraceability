@@ -11,7 +11,7 @@ class Countries {
         internal var _dirNameCountries: MutableMap<String, Country>  = mutableMapOf()
 
 
-        var CountryList: List<Country> = ArrayList<Country>()
+        var CountryList: ArrayList<Country> = ArrayList<Country>()
 
         fun FromAbbreviation(code: String): Country {
             TODO("Not yet implemented")

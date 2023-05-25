@@ -12,7 +12,7 @@ class EPCISJsonMasterDataWriter {
             TODO("Not yet implemented")
         }
 
-        internal fun WriteMasterDataList(data: List<IVocabularyElement>, xVocabList: JSONArray, type: String) {
+        internal fun WriteMasterDataList(data: ArrayList<IVocabularyElement>, xVocabList: JSONArray, type: String) {
             TODO("Not yet implemented")
         }
 

@@ -2,7 +2,7 @@ import java.lang.reflect.Type
 class Setup {
     companion object{
 
-        internal var Profiles : List<OpenTraceabilityEventProfile> = ArrayList<OpenTraceabilityEventProfile>()
+        internal var Profiles : ArrayList<OpenTraceabilityEventProfile> = ArrayList<OpenTraceabilityEventProfile>()
         internal var MasterDataTypes : MutableMap<String, Type> = mutableMapOf<String, Type>()
         internal var MasterDataTypeDefault : MutableMap<Type, Type> = mutableMapOf<Type, Type>()
 

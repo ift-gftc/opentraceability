@@ -28,6 +28,7 @@ class EPCISDocumentBaseJsonMapper {
 
         internal fun GetEventType(e: IEvent): String {
 
+            TODO("Is this error due to the parameter being an interface?")
 
             if (e.EventType == EventType.ObjectEvent) {
                 return "ObjectEvent";
@@ -42,6 +43,7 @@ class EPCISDocumentBaseJsonMapper {
             } else {
                 throw Exception("Failed to determine the event type. Event C# type is " + e::class.simpleName);
             }
+
         }
 
         internal fun ConformEPCISJsonLD(json: JsonObject, namespaces: MutableMap<String, String>) {

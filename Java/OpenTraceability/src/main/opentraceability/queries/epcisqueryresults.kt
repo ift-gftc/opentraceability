@@ -8,9 +8,9 @@ class EPCISQueryResults {
 
     var Document: EPCISQueryDocument? = null
 
-    var StackTrace: List<EPCISQueryStackTraceItem> = ArrayList<EPCISQueryStackTraceItem>()
+    var StackTrace: ArrayList<EPCISQueryStackTraceItem> = ArrayList<EPCISQueryStackTraceItem>()
 
-    var Errors: List<EPCISQueryError> = ArrayList<EPCISQueryError>()
+    var Errors: ArrayList<EPCISQueryError> = ArrayList<EPCISQueryError>()
 
     fun Merge(results: EPCISQueryResults) {
         TODO("Not yet implemented")

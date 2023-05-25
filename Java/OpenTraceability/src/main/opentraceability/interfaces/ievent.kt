@@ -13,7 +13,7 @@ interface IEvent {
     var EventTime: OffsetDateTime?
     var EventTimeZoneOffset: Duration?
     var RecordTime: OffsetDateTime?
-    var EventType: EventType?
+    var EventType: EventType
     var Action: EventAction?
     var BusinessStep: URI?
     var Disposition: URI?
@@ -21,12 +21,12 @@ interface IEvent {
     var ErrorDeclaration: ErrorDeclaration?
     var Location: EventLocation
     var ReadPoint: EventReadPoint
-    var BizTransactionList: List<EventBusinessTransaction>
-    var SourceList: List<EventSource>
-    var DestinationList: List<EventDestination>
-    var KDEs: List<IEventKDE>
-    var SensorElementList: List<SensorElement>
-    var Products: List<EventProduct>
+    var BizTransactionList: ArrayList<EventBusinessTransaction>
+    var SourceList: ArrayList<EventSource>
+    var DestinationList: ArrayList<EventDestination>
+    var KDEs: ArrayList<IEventKDE>
+    var SensorElementList: ArrayList<SensorElement>
+    var Products: ArrayList<EventProduct>
     var CertificationList: CertificationList?
 
     fun <T> GetKDE(ns: String, name: String): T

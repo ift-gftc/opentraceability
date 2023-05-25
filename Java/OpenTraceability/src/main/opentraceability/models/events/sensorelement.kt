@@ -15,8 +15,8 @@ class SensorElement {
     //[OpenTraceabilityArray]
     //[OpenTraceabilityObject]
     //[OpenTraceability("sensorReport", 1)]
-    var Reports: List<SensorReport> = ArrayList<SensorReport>()
+    var Reports: ArrayList<SensorReport> = ArrayList<SensorReport>()
 
     //[OpenTraceabilityExtensionElements]
-    var ExtensionKDEs: List<IEventKDE> = ArrayList<IEventKDE>()
+    var ExtensionKDEs: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
 }

@@ -13,7 +13,7 @@ import java.time.OffsetDateTime
 
 //TODO: review this
 
-class TransactionEvent: EventBase(), IEvent {
+class TransactionEvent /*: EventBase(), IEvent*/ {
 
     //[OpenTraceability("parentID", 8)]
     var ParentID: EPC? = null
@@ -21,7 +21,7 @@ class TransactionEvent: EventBase(), IEvent {
     //[OpenTraceabilityProducts("extension/quantityList", EPCISVersion.V1, EventProductType.Reference, 20, OpenTraceabilityProductsListType.QuantityList)]
     //[OpenTraceabilityProducts("quantityList", EPCISVersion.V2, EventProductType.Reference, 15, OpenTraceabilityProductsListType.QuantityList)]
     //[OpenTraceabilityProducts("epcList", EventProductType.Reference, 9, OpenTraceabilityProductsListType.EPCList)]
-    var ReferenceProducts: List<EventProduct> = ArrayList<EventProduct>()
+    var ReferenceProducts: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
     //[OpenTraceability("action", 10)]
     var Action: EventAction? = null
@@ -38,30 +38,30 @@ class TransactionEvent: EventBase(), IEvent {
 
     //[OpenTraceabilityObject]
     //[OpenTraceability("bizLocation", 14)]
-    var Location: EventLocation = EventLocation()
+    lateinit var Location: EventLocation
 
     //[OpenTraceabilityObject]
     //[OpenTraceabilityArray("bizTransaction")]
     //[OpenTraceability("bizTransactionList", 7)]
-    var BizTransactionList: List<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
+    var BizTransactionList: ArrayList<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
 
     //[OpenTraceabilityObject]
     //[OpenTraceabilityArray("source")]
     //[OpenTraceability("sourceList", 16, EPCISVersion.V2)]
     //[OpenTraceability("extension/sourceList", 21, EPCISVersion.V1)]
-    var SourceList: List<EventSource> = ArrayList<EventSource>()
+    var SourceList: ArrayList<EventSource> = ArrayList<EventSource>()
 
     //[OpenTraceabilityObject]
     //[OpenTraceabilityArray("destination")]
     //[OpenTraceability("destinationList", 17, EPCISVersion.V2)]
     //[OpenTraceability("extension/destinationList", 22, EPCISVersion.V1)]
-    var DestinationList: List<EventDestination> = ArrayList<EventDestination>()
+    var DestinationList: ArrayList<EventDestination> = ArrayList<EventDestination>()
 
     //[OpenTraceabilityObject]
     //[OpenTraceabilityArray("sensorElement")]
     //[OpenTraceability("sensorElementList", 18, EPCISVersion.V2)]
     //[OpenTraceability("extension/sensorElementList", EPCISVersion.V1)]
-    var SensorElementList: List<SensorElement> = ArrayList<SensorElement>()
+    var SensorElementList: ArrayList<SensorElement> = ArrayList<SensorElement>()
 
     //[OpenTraceabilityObject]
     //[OpenTraceability("persistentDisposition", 19, EPCISVersion.V2)]
@@ -73,9 +73,9 @@ class TransactionEvent: EventBase(), IEvent {
 
     //[OpenTraceabilityXmlIgnore]
     //[OpenTraceability("type", 0)]
-    var EventType: EventType = EventType()
+    lateinit var EventType: EventType
 
-    var Products: List<EventProduct> = ArrayList<EventProduct>()
+    var Products: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
     fun AddProduct(product: EventProduct){
         if (product.Type == EventProductType.Parent)
@@ -88,7 +88,7 @@ class TransactionEvent: EventBase(), IEvent {
         }
         else if (product.Type == EventProductType.Reference)
         {
-            this.ReferenceProducts.Add(product);
+            this.ReferenceProducts.add(product);
         }
         else
         {

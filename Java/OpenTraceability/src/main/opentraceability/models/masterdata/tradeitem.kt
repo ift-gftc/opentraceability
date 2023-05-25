@@ -30,7 +30,7 @@ class Tradeitem /*: IVocabularyElement*/ {
 
     //[OpenTraceabilityJson("productName")]
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#descriptionShort")]
-    var ShortDescription: List<LanguageString>? = null
+    var ShortDescription: ArrayList<LanguageString>? = null
 
     //[OpenTraceabilityJson("cbvmda:tradeItemConditionCode")]
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#tradeItemConditionCode")]
@@ -49,14 +49,14 @@ class Tradeitem /*: IVocabularyElement*/ {
     //[OpenTraceabilityArray]
     //[OpenTraceabilityJson("cbvmda:speciesForFisheryStatisticsPurposesName")]
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName")]
-    var FisherySpeciesScientificName: List<String>? = null
+    var FisherySpeciesScientificName: ArrayList<String>? = null
 
 
     //[OpenTraceabilityArray]
     //[OpenTraceabilityJson("cbvmda:speciesForFisheryStatisticsPurposesCode")]
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode")]
-    var FisherySpeciesCode: List<String>? = null
+    var FisherySpeciesCode: ArrayList<String>? = null
 
 
-    var KDEs: List<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
+    var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
 }

@@ -12,11 +12,11 @@ class EnumUtil {
             TODO("Not yet implemented")
         }
 
-        fun <T> GetEnumAttributes(value: Object): List<T> {
+        fun <T> GetEnumAttributes(value: Object): ArrayList<T> {
             TODO("Not yet implemented")
         }
 
-        fun <T> GetValues(): List<T> {
+        fun <T> GetValues(): ArrayList<T> {
             TODO("Not yet implemented")
         }
 

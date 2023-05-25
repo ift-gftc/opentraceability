@@ -20,7 +20,7 @@ class StringExtensions {
             TODO("Not yet implemented")
         }
 
-        fun SplitXPath(str: String): List<String> {
+        fun SplitXPath(str: String): ArrayList<String> {
             TODO("Not yet implemented")
         }
     }

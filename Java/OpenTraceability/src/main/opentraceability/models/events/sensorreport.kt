@@ -104,5 +104,5 @@ class SensorReport {
     var DeviceMetadata: URI? = null
 
     //[OpenTraceabilityExtensionAttributes]
-    var ExtensionAttributes: List<IEventKDE> = ArrayList<IEventKDE>()
+    var ExtensionAttributes: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
 }

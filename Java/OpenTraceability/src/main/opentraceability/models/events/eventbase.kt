@@ -43,7 +43,7 @@ open class EventBase {
     var InformationProvider: PGLN = PGLN()
 
     //[OpenTraceabilityExtensionElements]
-    var KDEs: List<IEventKDE> = ArrayList<IEventKDE>()
+    var KDEs: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
 
 
 

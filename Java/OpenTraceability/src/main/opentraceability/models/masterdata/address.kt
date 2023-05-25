@@ -14,18 +14,18 @@ class Address {
 
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#streetAddressOne")]
     //[OpenTraceabilityJson("streetAddress")]
-    var Address1: List<LanguageString>? = null
+    var Address1: ArrayList<LanguageString>? = null
 
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#streetAddressTwo")]
-    var Address2: List<LanguageString>? = null
+    var Address2: ArrayList<LanguageString>? = null
 
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#city")]
     //[OpenTraceabilityJson("addressLocality")]
-    var City: List<LanguageString>? = null
+    var City: ArrayList<LanguageString>? = null
 
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#state")]
     //[OpenTraceabilityJson("addressRegion")]
-    var State: List<LanguageString>? = null
+    var State: ArrayList<LanguageString>? = null
 
     //[OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#countryCode")]
     //[OpenTraceabilityJson("countyCode")]

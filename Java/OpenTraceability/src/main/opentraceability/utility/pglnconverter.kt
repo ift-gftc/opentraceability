@@ -1,11 +1,14 @@
 package utility
 
+import com.google.gson.JsonSerializer
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
 import models.identifiers.*
 import java.lang.reflect.Type
 
 class PGLNConverter  /*: JsonConverter<PGLN>*/ {
 
-    fun WriteJson(writer: JsonWriter, value: PGLN?, serializer: JsonSerializer) {
+    fun WriteJson(writer: JsonWriter, value: PGLN?, serializer: JsonSerializer<Any>) {
         TODO("Not yet implemented")
     }
 
@@ -14,7 +17,7 @@ class PGLNConverter  /*: JsonConverter<PGLN>*/ {
         objectType: Type,
         existingValue: PGLN?,
         hasExistingValue: Boolean,
-        serializer: JsonSerializer
+        serializer: JsonSerializer<Any>
     ): PGLN? {
         TODO("Not yet implemented")
     }
