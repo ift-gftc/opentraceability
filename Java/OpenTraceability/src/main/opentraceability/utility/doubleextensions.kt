@@ -3,11 +3,22 @@ package utility
 class DoubleExtensions {
     companion object {
         fun Round(number: Double): Double {
-            TODO("Not yet implemented")
+            var roundedValue: Double = number
+            var strVal: String = String.format("e12", number)
+            roundedValue = strVal.toDouble()
+            return roundedValue
         }
 
         fun Round(number: Double?): Double? {
-            TODO("Not yet implemented")
+
+            if (number == null){
+                return number
+            }
+
+            var roundedValue: Double? = number
+            var strVal: String = String.format("e12", number)
+            roundedValue = strVal.toDouble()
+            return roundedValue
         }
     }
 }

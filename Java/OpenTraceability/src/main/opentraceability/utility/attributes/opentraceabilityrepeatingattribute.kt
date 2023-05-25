@@ -1,5 +1,5 @@
 package utility.attributes
 
-class OpenTraceabilityRepeatingAttribute {
+class OpenTraceabilityRepeatingAttribute /*: Attribute*/ {
 
 }

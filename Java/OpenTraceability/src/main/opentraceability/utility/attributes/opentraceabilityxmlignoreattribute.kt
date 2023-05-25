@@ -1,5 +1,5 @@
 package utility.attributes
 
-class OpenTraceabilityXmlIgnoreAttribute {
+class OpenTraceabilityXmlIgnoreAttribute /*: Attribute*/ {
 
 }

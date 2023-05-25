@@ -4,7 +4,7 @@ import models.identifiers.*
 import models.events.*
 import java.lang.reflect.Type
 
-class OpenTraceabilityProductsAttribute {
+class OpenTraceabilityProductsAttribute /*: Attribute*/ {
     var Name: String = ""
     var Version: EPCISVersion? = null
     lateinit var ProductType: EventProductType

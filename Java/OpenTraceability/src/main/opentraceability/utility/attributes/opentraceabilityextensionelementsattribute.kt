@@ -1,5 +1,5 @@
 package utility.attributes
 
-class OpenTraceabilityExtensionElementsAttribute {
+class OpenTraceabilityExtensionElementsAttribute /*: Attribute*/ {
 
 }

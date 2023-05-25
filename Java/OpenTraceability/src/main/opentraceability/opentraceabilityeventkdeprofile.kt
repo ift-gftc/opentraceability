@@ -11,7 +11,6 @@ class OpenTraceabilityEventKDEProfile {
     }
 
     override fun toString(): String {
-
         return "$XPath_V1:$XPath_V2:$JPath"
     }
 }

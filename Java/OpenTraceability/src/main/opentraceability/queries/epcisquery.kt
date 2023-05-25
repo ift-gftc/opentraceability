@@ -21,28 +21,28 @@ class EPCISQuery {
     var EQ_action: ArrayList<String> = ArrayList<String>()
 
     fun ShouldSerializeeventTypes(): Boolean{
-        TODO("Not yet implemented")
+        return eventTypes.count() > 0;
     }
     fun ShouldSerializeMATCH_epc(): Boolean{
-        TODO("Not yet implemented")
+        return MATCH_epc.count() > 0;
     }
     fun ShouldSerializeMATCH_epcClass(): Boolean{
-        TODO("Not yet implemented")
+        return MATCH_epcClass.count() > 0;
     }
     fun ShouldSerializeMATCH_anyEPC(): Boolean{
-        TODO("Not yet implemented")
+        return MATCH_anyEPC.count() > 0;
     }
     fun ShouldSerializeMATCH_anyEPCClass(): Boolean{
-        TODO("Not yet implemented")
+        return MATCH_anyEPCClass.count() > 0;
     }
     fun ShouldSerializeEQ_bizStep(): Boolean{
-        TODO("Not yet implemented")
+        return EQ_bizStep.count() > 0;
     }
     fun ShouldSerializeEQ_bizLocation(): Boolean{
-        TODO("Not yet implemented")
+        return EQ_bizLocation.count() > 0;
     }
     fun ShouldSerializeEQ_action(): Boolean{
-        TODO("Not yet implemented")
+        return EQ_action.count() > 0;
     }
 
 }

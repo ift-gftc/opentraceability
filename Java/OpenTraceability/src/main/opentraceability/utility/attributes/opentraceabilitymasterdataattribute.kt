@@ -2,7 +2,7 @@ package utility.attributes
 
 import java.lang.reflect.Type
 
-class OpenTraceabilityMasterDataAttribute {
+class OpenTraceabilityMasterDataAttribute /*: Attribute*/ {
     var Name: String = ""
 
     constructor() {

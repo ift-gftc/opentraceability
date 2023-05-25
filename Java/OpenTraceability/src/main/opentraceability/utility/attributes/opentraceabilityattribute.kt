@@ -4,7 +4,8 @@ import models.identifiers.*
 import models.events.*
 import java.lang.reflect.Type
 
-class OpenTraceabilityAttribute {
+//[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+class OpenTraceabilityAttribute /*:Attribute*/ {
 
     var Name: String = ""
     var SequenceOrder: Int? = null

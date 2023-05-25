@@ -5,47 +5,46 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1137e723-d626-4e84-b8c7-a5d16601c2b4" name="Changes" comment="&#10;Working on converting to kotlin">
+      <change afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/data/Countries.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/data/uoms.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/interfaces/ievent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/interfaces/ievent.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/interfaces/ivocabularyelement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/interfaces/ivocabularyelement.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/mappers/epcis/json/epcisjsonmasterdatawriter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/mappers/epcis/json/epcisjsonmasterdatawriter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/mappers/epcis/xml/epcisxmlmasterdatawriter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/mappers/epcis/xml/epcisxmlmasterdatawriter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/mappers/otmappingtypeinformation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/mappers/otmappingtypeinformation.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/mappers/otmappingtypeinformationproperty.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/mappers/otmappingtypeinformationproperty.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/aggregationevent`1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/aggregationevent`1.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/associationevent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/associationevent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/epcisurnconstants.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/epcisurnconstants.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/common/address.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/common/address.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/common/anonymizedaddress.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/common/anonymizedaddress.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/common/standardbusinessdocumentheader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/common/standardbusinessdocumentheader.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/epcisbasedocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/epcisbasedocument.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/errordeclaration.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/errordeclaration.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/epcisdocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/epcisdocument.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/epcisquerydocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/epcisquerydocument.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/eventbase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/eventbase.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/eventilmd.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/eventilmd.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/kdes/certificationlist.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/kdes/certificationlist.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/objectevent`1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/objectevent`1.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/persistentdisposition.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/persistentdisposition.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/sensorelement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/sensorelement.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/sensormetadata.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/sensormetadata.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/sensorreport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/sensorreport.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/transactionevent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/transactionevent.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/events/transformationevent`1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/events/transformationevent`1.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/masterdata/address.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/masterdata/address.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/masterdata/location.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/masterdata/location.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/masterdata/tradeitem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/masterdata/tradeitem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/masterdata/tradingparty.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/masterdata/tradingparty.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/models/masterdata/vocabularyelement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/models/masterdata/vocabularyelement.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/opentraceabilityeventkdeprofile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/opentraceabilityeventkdeprofile.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/opentraceability/opentraceabilityeventprofile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/opentraceabilityeventprofile.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/otlogger.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/otlogger.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/opentraceability/queries/epcisquery.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/queries/epcisquery.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/queries/epcisqueryerror.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/queries/epcisqueryerror.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/queries/epcisqueryinterfaceoptions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/queries/epcisqueryinterfaceoptions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/queries/epcisqueryparameters.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/queries/epcisqueryparameters.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/opentraceability/queries/epcisqueryresults.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/queries/epcisqueryresults.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/queries/epcistestserverclient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/queries/epcistestserverclient.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/opentraceability/setup.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/setup.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityattribute.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityattribute.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityextensionattributesattribute.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityextensionattributesattribute.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityextensionelementsattribute.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityextensionelementsattribute.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityjsonattribute.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityjsonattribute.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilitymasterdataattribute.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilitymasterdataattribute.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityobjectattribute.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityobjectattribute.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityproductsattribute.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityproductsattribute.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityrepeatingattribute.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityrepeatingattribute.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityxmlignoreattribute.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/attributes/opentraceabilityxmlignoreattribute.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/cbvattribute.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/cbvattribute.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/countries.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/countries.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/enumutil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/enumutil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/epcconverter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/epcconverter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/glnconverter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/glnconverter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/gtinconverter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/gtinconverter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/jsonschemachecker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/jsonschemachecker.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/limitedpoolitem`1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/limitedpoolitem`1.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/measurementconverter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/measurementconverter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/pglnconverter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/pglnconverter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/country.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/country.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/dictionaryextensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/dictionaryextensions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/doubleextensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/doubleextensions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/embeddedresourceloader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/embeddedresourceloader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/opentraceabilityschemaexception.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/opentraceabilityschemaexception.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/staticdata.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/staticdata.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/stringextensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/stringextensions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/uom.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/uom.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/uoms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/uoms.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -68,7 +67,7 @@
     <setting file="file://$PROJECT_DIR$/src/main/opentraceability/interfaces/iepcisquerydocumentmapper.kt" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2PvL58vKthfS5acJyv64E3TvIHd" />
   <component name="ProjectViewState">
@@ -114,7 +113,7 @@
       <workItem from="1684825562638" duration="1754000" />
       <workItem from="1684827336661" duration="24765000" />
       <workItem from="1684911926175" duration="29125000" />
-      <workItem from="1684998105896" duration="3220000" />
+      <workItem from="1684998105896" duration="25526000" />
     </task>
     <task id="LOCAL-00001" summary="&#10;Working on converting to kotlin">
       <created>1684772773191</created>
@@ -158,7 +157,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684952073940</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="&#10;Working on converting to kotlin">
+      <created>1685001408756</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1685001408756</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

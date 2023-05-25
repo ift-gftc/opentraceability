@@ -1,4 +1,4 @@
 package utility.attributes
-class OpenTraceabilityObjectAttribute {
+class OpenTraceabilityObjectAttribute /*: Attribute*/ {
 
 }

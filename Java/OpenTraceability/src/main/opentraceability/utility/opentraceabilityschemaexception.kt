@@ -1,6 +1,6 @@
 package utility
 
-class OpenTraceabilitySchemaException {
+class OpenTraceabilitySchemaException: Exception {
     constructor(message: String?) {
     }
 }

@@ -47,11 +47,34 @@ open class EventBase {
 
 
 
-    fun <T> GetKDE(ns: String, name: String) : T?{
+    inline fun <reified T> GetKDE(ns: String, name: String) : T?{
+        var kde: IEventKDE? = KDEs.filter { x -> x.Namespace == ns && x.Name == name }.single()
+
+        if (kde != null){
+            if (kde is T)
+            {
+                return kde as T;
+            }
+        }
+
         TODO("Not yet implemented")
+        //return default;
     }
 
     fun <T> GetKDE() : T?{
         TODO("Not yet implemented")
+
+        /*
+        var kde: IEventKDE? = KDEs.filter { x -> x.ValueType is T }.single()
+
+        if (kde != null){
+            if (kde is T)
+            {
+                return kde as T;
+            }
+        }
+
+        //return default;
+        */
     }
 }

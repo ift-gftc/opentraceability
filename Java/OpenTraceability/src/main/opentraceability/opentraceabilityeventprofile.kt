@@ -4,12 +4,27 @@ import java.util.*
 import java.lang.reflect.Type
 
 class OpenTraceabilityEventProfile {
+
     var SpecificityScore: Int = 0
+        get() {
+            var score: Int = 1
+            if (Action != null){
+                score ++
+            }
+            if (BusinessStep != null){
+                score ++
+            }
+            if (KDEProfiles != null){
+                score += KDEProfiles!!.count()
+            }
+            return field
+        }
+
     lateinit var EventType: EventType
     var Action: EventAction? = null
     var BusinessStep: String = ""
     lateinit var EventClassType: Type
-    var KDEProfiles: ArrayList<OpenTraceabilityEventKDEProfile>? = ArrayList<OpenTraceabilityEventKDEProfile>()
+    var KDEProfiles: ArrayList<OpenTraceabilityEventKDEProfile>? = null
 
     constructor(eventClassType: Type, eventType: EventType) {
         EventType = eventType;
@@ -54,6 +69,7 @@ class OpenTraceabilityEventProfile {
         EventClassType = eventClassType;
         Action = action;
     }
+
     constructor(eventClassType: Type, eventType: EventType, businessStep: String,  action: EventAction, kdeProfiles: ArrayList<OpenTraceabilityEventKDEProfile>) {
         KDEProfiles = kdeProfiles;
         EventType = eventType;

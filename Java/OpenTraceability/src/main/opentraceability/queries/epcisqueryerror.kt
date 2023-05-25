@@ -4,7 +4,7 @@ import models.identifiers.*
 import java.lang.reflect.Type
 
 class EPCISQueryError {
-    var Type: EPCISQueryErrorType = EPCISQueryErrorType.HTTP
+    lateinit var Type: EPCISQueryErrorType
     var Details: String = ""
     var StackTraceItemID: String = ""
 }

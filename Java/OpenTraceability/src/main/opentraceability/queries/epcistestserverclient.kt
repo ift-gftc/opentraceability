@@ -13,7 +13,9 @@ class EPCISTestServerClient {
     lateinit var _version: EPCISVersion
 
     constructor(baseURL: String, format: EPCISDataFormat, version: EPCISVersion) {
-        TODO("Not yet implemented")
+        _baseURL = baseURL;
+        _version = version;
+        _format = format;
     }
 
     fun Post(doc: EPCISDocument, blob_id: String? = null): String {

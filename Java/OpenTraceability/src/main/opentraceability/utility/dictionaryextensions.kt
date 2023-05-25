@@ -2,15 +2,16 @@ package utility
 
 class DictionaryExtensions {
     companion object {
+        fun<TValue, TKey> Reverse(source: MutableMap<TKey, TValue>): MutableMap<TValue, TKey>{
+            var dictionary: MutableMap<TValue, TKey> = mutableMapOf()
 
-        /*
-        fun <TValue, TKey> Reverse(source: <TKey, TValue>): <TValue,TKey>
-        {
-            TODO("Not yet implemented")
+            source.forEach { entry ->
+                if (!dictionary.containsKey(entry.value)){
+                    dictionary.put(entry.value, entry.key);
+                }
+            }
+
+            return dictionary
         }
-        */
-
     }
-
-
 }

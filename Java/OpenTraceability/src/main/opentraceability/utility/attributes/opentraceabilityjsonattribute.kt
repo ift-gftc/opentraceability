@@ -1,6 +1,6 @@
 package utility.attributes
 
-class OpenTraceabilityJsonAttribute {
+class OpenTraceabilityJsonAttribute /*: Attribute*/ {
     var Name: String = ""
 
     constructor(name: String) {

@@ -1,6 +1,10 @@
 package utility
 
-class Country {
+import javax.xml.bind.annotation.XmlElement
+
+//[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+//[DataContract]
+class Country /*: IEquatable<Country>, IComparable<Country>*/ {
     var CultureInfoCode: String = ""
     var Name: String = ""
     var AlternativeName: String = ""
@@ -17,12 +21,48 @@ class Country {
         this.CultureInfoCode = other.CultureInfoCode
     }
 
-    fun Clone(): Country{
+    constructor(xmlCountry: XmlElement) {
         TODO("Not yet implemented")
     }
 
+    fun clone(): Country {
+        try {
+            var c: Country = this
+            return c
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
+        }
+    }
 
-    fun ToString(): String{
-        TODO("Not yet implemented")
+
+    override fun toString(): String {
+        return this.Abbreviation.toString()
+    }
+
+    override fun equals(obj: Any?): Boolean {
+
+        if (!(obj is Country)){
+            return false
+        }
+
+        if (obj != null){
+            return false
+        }
+
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return this.ISO.hashCode()
+    }
+
+    fun equals(other: Country?): Boolean {
+        if (other == null) return false
+        return (ISO == other.ISO)
+    }
+    fun compareTo(other: Country?): Int {
+        if (other == null) return 1;
+        return (ISO.compareTo(other.ISO));
     }
 }

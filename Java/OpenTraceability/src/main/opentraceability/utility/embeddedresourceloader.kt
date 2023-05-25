@@ -11,6 +11,10 @@ class EmbeddedResourceLoader {
         m_assemblyMap = mutableMapOf()
     }
 
+    internal fun GetAssembly(assemblyName: String): String {
+        TODO("Not yet implemented")
+    }
+
 
     fun ReadBytes(assemblyName: String, resourceName: String): ArrayList<Byte> {
         TODO("Not yet implemented")
@@ -28,7 +32,5 @@ class EmbeddedResourceLoader {
         TODO("Not yet implemented")
     }
 
-    internal fun GetAssembly(assemblyName: String): String {
-        TODO("Not yet implemented")
-    }
+
 }
