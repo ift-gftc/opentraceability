@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<epcis:EPCISDocument
+    xmlns:epcis="urn:epcglobal:epcis:xsd:1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:sbdh="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+    xmlns:cbvmda="urn:epcglobal:cbv:mda"
+    xmlns:gdst="https://traceability-dialogue.org/epcis" schemaVersion="0" creationDate="2001-12-17T09:30:47Z" xsi:schemaLocation="urn:epcglobal:epcis:xsd:1  http://www.gs1si.org/BMS/epcis/1_2/EPCglobal-epcis-1_2.xsd">
+	<EPCISHeader>
+		<sbdh:StandardBusinessDocumentHeader>
+			<sbdh:HeaderVersion>1.0</sbdh:HeaderVersion>
+			<sbdh:Sender>
+				<sbdh:Identifier>test</sbdh:Identifier>
+				<sbdh:ContactInformation>
+					<sbdh:Contact>test</sbdh:Contact>
+					<sbdh:EmailAddress>test@test.com</sbdh:EmailAddress>
+				</sbdh:ContactInformation>
+			</sbdh:Sender>
+			<sbdh:Receiver>
+				<sbdh:Identifier>test</sbdh:Identifier>
+				<sbdh:ContactInformation>
+					<sbdh:Contact>test</sbdh:Contact>
+					<sbdh:EmailAddress>test@test.com</sbdh:EmailAddress>
+				</sbdh:ContactInformation>
+			</sbdh:Receiver>
+			<sbdh:DocumentIdentification>
+				<sbdh:Standard>GS1</sbdh:Standard>
+				<sbdh:TypeVersion>3.0</sbdh:TypeVersion>
+				<sbdh:InstanceIdentifier>9999</sbdh:InstanceIdentifier>
+				<sbdh:Type>Seafood Traceability</sbdh:Type>
+				<sbdh:MultipleType>false</sbdh:MultipleType>
+				<sbdh:CreationDateAndTime>2021-09-28T15:30:44.758-03:00</sbdh:CreationDateAndTime>
+			</sbdh:DocumentIdentification>
+		</sbdh:StandardBusinessDocumentHeader>
+		<extension>
+		</extension>
+	</EPCISHeader>
+	<EPCISBody>
+		<EventList>
+			{EVENT}
+		</EventList>
+	</EPCISBody>
+</epcis:EPCISDocument>

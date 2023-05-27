@@ -39,6 +39,46 @@ namespace OpenTraceability.Tests.Events
         }
 
         [Test]
+        [TestCase("gdst_extensions_03.xml")]
+        public void XML_1_2__to__JSON_LD(string file)
+        {
+            // read object events from test data specified in the file argument
+            string stringXmlEvents = OpenTraceabilityTests.ReadTestData(file);
+
+            // deserialize object events into C# models
+            EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.XML.Map(stringXmlEvents);
+            doc.Header = null;
+            doc.EPCISVersion = EPCISVersion.V2;
+
+            // convert them into JSON-LD
+            string jsonLD = OpenTraceabilityMappers.EPCISDocument.JSON.Map(doc);
+
+            // convert back into EPCIS Query Document
+            EPCISDocument docAfter = OpenTraceabilityMappers.EPCISDocument.JSON.Map(jsonLD);
+            docAfter.Header = null;
+
+            // convert back into XML 1.2
+            docAfter.EPCISVersion = EPCISVersion.V1;
+            string xmlAfter = OpenTraceabilityMappers.EPCISDocument.XML.Map(docAfter);
+
+            // map the XML back into a document
+            var finalDoc = OpenTraceabilityMappers.EPCISDocument.XML.Map(xmlAfter);
+
+            xmlAfter = OpenTraceabilityMappers.EPCISDocument.XML.Map(finalDoc);
+
+            // change all the https://ref.gs1.org/cbv/ to "urn:epcglobal:cbv:
+            xmlAfter = xmlAfter.Replace("https://ref.gs1.org/cbv/Disp-", "urn:epcglobal:cbv:disp:");
+            xmlAfter = xmlAfter.Replace("https://ref.gs1.org/cbv/BizStep-", "urn:epcglobal:cbv:bizstep:");
+            xmlAfter = xmlAfter.Replace("https://ref.gs1.org/cbv/SDT-", "urn:epcglobal:cbv:sdt:");
+
+            // compare the <EPCISBody> element
+            XElement x1 = XElement.Parse(stringXmlEvents).Element("EPCISBody") ?? throw new Exception("failed to grab EPCISBody element from the XML for stringXmlEvents=" + stringXmlEvents);
+            XElement x2 = XElement.Parse(xmlAfter).Element("EPCISBody") ?? throw new Exception("failed to grab EPCISBody element from the XML for xmlAfter=" + xmlAfter);
+
+            OpenTraceabilityTests.CompareXML(x1.ToString(), x2.ToString());
+        }
+
+        [Test]
         [TestCase("gdst_data_withmasterdata.jsonld")]
         [TestCase("aggregation_event_all_possible_fields.jsonld")]
         [TestCase("AssociationEvent-a.jsonld")]

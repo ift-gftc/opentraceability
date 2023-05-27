@@ -1,23 +1,14 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using OpenTraceability.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using OpenTraceability.Mappers;
-using OpenTraceability.Models.Events;
-using OpenTraceability.Models.Identifiers;
-using OpenTraceability.Models.MasterData;
-using OpenTraceability.Queries;
-using OpenTraceability.TestServer.Models;
 using OpenTraceability.TestServer.Services.Interfaces;
-using OpenTraceability.Utility;
 
 namespace OpenTraceability.TestServer.Controllers;
 
 [Route("masterdata")]
 public class MasterDataController : ControllerBase
 {
-    IEPCISBlobService _blobService;
-    IConfiguration _config;
+    private IEPCISBlobService _blobService;
+    private IConfiguration _config;
 
     public MasterDataController(IEPCISBlobService blobService, IConfiguration config)
     {
@@ -64,4 +55,3 @@ public class MasterDataController : ControllerBase
         }
     }
 }
-

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
+using Nito.AsyncEx;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -22,18 +23,18 @@ namespace OpenTraceability.Utility
     /// </summary>
     public static class JsonContextHelper
     {
-        static object _lock = new object();
+        static AsyncLock _lock = new AsyncLock();
         static ConcurrentDictionary<string, JObject> _contextCache = new ConcurrentDictionary<string, JObject>();
 
-        public static JObject GetJsonLDContext(string contextURL)
+        public static async Task<JObject> GetJsonLDContextAsync(string contextURL)
         {
             if (!_contextCache.TryGetValue(contextURL, out JObject? jContext))
             {
-                lock (_lock)
+                using (await _lock.LockAsync())
                 {
                     using (HttpClient client = new HttpClient())
                     {
-                        jContext = JObject.Parse(client.GetStringAsync(contextURL).Result);
+                        jContext = JObject.Parse(await client.GetStringAsync(contextURL));
                         _contextCache.TryAdd(contextURL, jContext);
                     }
                 }
