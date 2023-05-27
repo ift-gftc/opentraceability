@@ -109,163 +109,181 @@
     async Task InputChanged(string i)
     {
         error = "";
-
         OpenTraceability.GDST.Setup.Initialize();
 
-        // detect if it's a single event, an entire event list, an entire EPCIS Query Document, an entire EPCIS Document, or just the EPCIS Header with master data
-        EPCISDocument? doc = null;
-        XDocument? xml = null;
-        try
+        try 
         {
-            xml = XDocument.Parse(i);
-        }
-        catch (Exception ex)
-        {
-            if (ex.Message.Contains(" is an undeclared prefix"))
+            EPCISDocument? doc = TryParseFromMasterDataBit(i);
+            if (doc == null && !string.IsNullOrEmpty(error))
             {
-                if (i.Trim().StartsWith("<ObjectEvent>") || i.Trim().StartsWith("<TransformationEvent>") || i.Trim().StartsWith("<AggregationEvent>") || i.Trim().StartsWith("<TransactionEvent>"))
-                {
-                    EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                    string template = loader.ReadString("OpenTraceability.Tools", "OpenTraceability.Tools.Resources.EPCISEventTemplate.xml");
-                    string completeXml = template.Replace("{EVENT}", i);
-                    input = completeXml;
-                    try
-                    {
-                        i = FixEventIDs(i);
-                        doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
-                    }
-                    catch (Exception ex2)
-                    {
-                        Console.Write(ex2.ToString());
-                        error = "Failed to map input XML to EPCISDocument. " + ex2.Message;
-                    }
-                }
-                else if(i.Trim().StartsWith("<EPCISMasterData>"))
-                {
-                    EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                    string template = loader.ReadString("OpenTraceability.Tools", "OpenTraceability.Tools.Resources.EPCISMasterDataTemplate.xml");
-                    string completeXml = template.Replace("{MASTER_DATA}", i);
-                    input = completeXml;
-                    try
-                    {
-                        i = FixEventIDs(i);
-                        doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
-                    }
-                    catch (Exception ex2)
-                    {
-                        Console.Write(ex2.ToString());
-                        error = "Failed to map input XML to EPCISDocument. " + ex2.Message;
-                    }
-                }
+                return;
             }
-            else
+
+            doc = TryParseFromSingleElement(i);
+            if (doc == null && !string.IsNullOrEmpty(error))
+            {
+                return;
+            }
+
+            XDocument? xml = null;
+            try
+            {
+                xml = XDocument.Parse(i);
+            }
+            catch (Exception ex)
             {
                 Console.Write(ex.ToString());
                 error = "Failed to parse input XML. " + ex.Message;
             }
-        }
 
-        if (xml?.Root != null)
-        {
-            if (xml.Root.Name.LocalName == "EPCISQueryDocument")
+            if (xml?.Root != null)
             {
-                input = i;
-                try
+                doc = TryParseFromEPCISQueryDocument(xml, i);
+                if (doc == null && !string.IsNullOrEmpty(error))
                 {
-                    i = FixEventIDs(i);
-                    doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(i).ToEPCISDocument();
+                    return;
                 }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.ToString());
-                    error = "Failed to map input XML to EPCISQueryDocument. " + ex.Message;
-                }
-            }
-            else if (xml.Root.Name.LocalName == "EPCISDocument")
-            {
-                input = i;
-                try
-                {
-                    i = FixEventIDs(i);
-                    doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.ToString());
-                    error = "Failed to map input XML to EPCISDocument. " + ex.Message;
-                }
-            }
-            else if (xml.Root.Name.LocalName == "EPCISMasterData")
-            {
-                EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                string template = loader.ReadString("OpenTraceability.Tools", "OpenTraceability.Tools.Resources.EPCISMasterDataTemplate.xml");
-                string completeXml = template.Replace("{MASTER_DATA}", i);
-                try
-                {
-                    i = FixEventIDs(i);
-                    doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.ToString());
-                    error = "Failed to map input XML to EPCISDocument. " + ex.Message;
-                }
-            }
-            else if (xml.Root.Name.LocalName.EndsWith("Event"))
-            {
-                EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                string template = loader.ReadString("OpenTraceability.Tools", "OpenTraceability.Tools.Resources.EPCISEventTemplate.xml");
-                string completeXml = template.Replace("{EVENT}", i);
-                try
-                {
-                    i = FixEventIDs(i);
-                    doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.ToString());
-                    error = "Failed to map input XML to EPCISDocument. " + ex.Message;
-                }
-            }
-            else
-            {
-                error = "Failed to detect input XML type.";
-            }
 
-            if (doc != null)
-            {
-                try
+                doc = TryParseFromEPCISDocument(xml, i);
+                if (doc == null && !string.IsNullOrEmpty(error))
                 {
-                    doc.EPCISVersion = EPCISVersion.V2;
-                    outputEvents = await OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.JSON.MapAsync(doc);
+                    return;
+                }
 
-                    GS1VocabJsonMapper masterdataMapper = new GS1VocabJsonMapper();
-                    JArray jMasterData = new JArray();
-                    foreach (var md in doc.MasterData)
+                if (doc == null)
+                {
+                    error = "Failed to detect input XML type.";
+                    return;
+                }
+                else
+                {
+                    try
                     {
-                        jMasterData.Add(JObject.Parse(masterdataMapper.Map(md)));
+                        doc.EPCISVersion = EPCISVersion.V2;
+                        outputEvents = await OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.JSON.MapAsync(doc);
+
+                        GS1VocabJsonMapper masterdataMapper = new GS1VocabJsonMapper();
+                        JArray jMasterData = new JArray();
+                        foreach (var md in doc.MasterData)
+                        {
+                            jMasterData.Add(JObject.Parse(masterdataMapper.Map(md)));
+                        }
+                        outputMasterData = jMasterData.ToString(Newtonsoft.Json.Formatting.Indented);
                     }
-                    outputMasterData = jMasterData.ToString(Newtonsoft.Json.Formatting.Indented);
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.ToString());
-                    error = "Failed to convert to ouput JSON-LD. " + ex.Message;
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.ToString());
+                        error = "Failed to convert to ouput JSON-LD. " + ex.Message;
+                    }
                 }
             }
         }
-
-        StateHasChanged();
+        finally
+        {
+            StateHasChanged();
+        }
     }
 
-    string FixEventIDs(string i)
+    EPCISDocument? TryParseFromEPCISDocument(XDocument xml, string i)
+    {
+        EPCISDocument? doc = null;
+        if (xml.Root?.Name.LocalName == "EPCISDocument")
+        {
+            try
+            {
+                i = FixPotentiallyBadXML(i);
+                doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.ToString());
+                error = "Failed to map input XML to EPCISDocument. " + ex.Message;
+            }
+        }
+        return doc;
+    }
+
+    EPCISDocument? TryParseFromEPCISQueryDocument(XDocument xml, string i)
+    {
+        EPCISDocument? doc = null;
+        if (xml.Root?.Name.LocalName == "EPCISQueryDocument")
+        {
+            try
+            {
+                i = FixPotentiallyBadXML(i);
+                doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(i).ToEPCISDocument();
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.ToString());
+                error = "Failed to map input XML to EPCISQueryDocument. " + ex.Message;
+            }
+        }
+        return doc;
+    }
+
+    EPCISDocument? TryParseFromSingleElement(string i)
+    {
+        EPCISDocument? doc = null;
+        if (i.Trim().StartsWith("<ObjectEvent>") || i.Trim().StartsWith("<TransformationEvent>") || i.Trim().StartsWith("<AggregationEvent>") || i.Trim().StartsWith("<TransactionEvent>"))
+        {
+            EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+            string template = loader.ReadString("OpenTraceability.Tools", "OpenTraceability.Tools.Resources.EPCISEventTemplate.xml");
+            string completeXml = template.Replace("{EVENT}", i);
+            input = completeXml;
+            try
+            {
+                i = FixPotentiallyBadXML(i);
+                doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
+            }
+            catch (Exception ex2)
+            {
+                Console.Write(ex2.ToString());
+                error = "Failed to map input XML to EPCISDocument. " + ex2.Message;
+            }
+        }
+        return doc;
+    }
+
+    EPCISDocument? TryParseFromMasterDataBit(string i)
+    {
+        EPCISDocument? doc = null;
+        if (i.Trim().StartsWith("<EPCISMasterData>"))
+        {
+            EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+            string template = loader.ReadString("OpenTraceability.Tools", "OpenTraceability.Tools.Resources.EPCISMasterDataTemplate.xml");
+            string completeXml = template.Replace("{MASTER_DATA}", i);
+            input = completeXml;
+            try
+            {
+                i = FixPotentiallyBadXML(i);
+                doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
+            }
+            catch (Exception ex2)
+            {
+                Console.Write(ex2.ToString());
+                error = "Failed to map input XML to EPCISDocument. " + ex2.Message;
+            }
+        }
+        return doc;
+    }
+
+    string FixPotentiallyBadXML(string i)
     {
         XDocument xml = XDocument.Parse(i);
-        foreach (var e in xml.Descendants())
+        foreach (var e in xml.Descendants().ToList())
         {
             if (e.Name.LocalName == "eventID")
             {
                 e.Value = "urn:uuid:" + Guid.NewGuid().ToString();
+            }
+
+            if (e.Name.LocalName == "readPoint")
+            {
+                if (e.Element("id") == null || string.IsNullOrWhiteSpace(e.Element("id")?.Value))
+                {
+                    e.Remove();
+                }
             }
         }
         return xml.ToString();

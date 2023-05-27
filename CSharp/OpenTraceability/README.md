@@ -20,7 +20,14 @@ Then you just need to call the setup method for that library such as:
 And that will initialize everything you need.
 
 ## Models
-We have C# models that represent the various data objects in EPCIS including events, documents, and master data.
+We have C# models that represent the various data objects in EPCIS including events, documents, and master data. Feel free 
+to explore them.
+
+> This library was designed so that it could easily be extended to support many new CTEs/KDEs. It was also designed so that
+even without an extension library, the core library can still receive CTEs/KDEs from unknown extensions and namespaces and
+serialize/deserialize the data without losing any information.
+
+> More information on extensions can be found in the documentation later on. (coming soon)
 
 ### EPCIS Query Document / EPCIS Document
 These two objects inherit from the same base class `EPCISBaseDocument` and represent the two types of documents in EPCIS. They are 
@@ -93,15 +100,66 @@ We support querying traceability and master data using a very specific flavor of
 - We support querying for event data using the `GET - /events` endpoint on the EPCIS 2.0 Query Interface.
 - We support resolving master data from a GS1 Digital Link Resolver using the GS1 Web Vocab JSON-LD format.
 
-### Querying for Event Data
-You can query for event data by either passing in specifc parameters or by calling our trace-back method.
+### EPCIS Query Interface
+The first interface that can be queried is for events from an EPCIS 2.0 Query Interface at the `GET - /events` endpoint. 
+This is done using the `EPCISTraceabilityResolver` class.
+
+In order to use this, you need:
+- `EPCISQueryInterfaceOptions`
+	- URL
+	- Version
+	- Format
+
+- `EPCISQueryParameters`
+	- Here you can define one or more parameters for filtering the desired results.
 
 ```csharp
+using HttpClient = new HttpClient();
+
+EPCISQueryInterfaceOptions options = new EPCISQueryInterfaceOptions()
+{
+    URL = new Uri(url),
+    Format = _format,
+    Version = _version,
+    EnableStackTrace = true
+};
+
 EPC epc = new EPC("urn:epc:id:sgtin:0614141.107346.2019");
 EPCISQueryParameters parameters = new EPCISQueryParameters(epc);
-var results = await client.QueryEvents(blob_id, parameters);
+
+return await EPCISTraceabilityResolver.QueryEvents(options, parameters, client);
 ```
 
-```csharp
+You can also use the trace-back feature to automatically trace-back the EPC.
 
+```csharp
+using HttpClient = new HttpClient();
+
+EPCISQueryInterfaceOptions options = new EPCISQueryInterfaceOptions()
+{
+    URL = new Uri(url),
+    Format = _format,
+    Version = _version,
+    EnableStackTrace = true
+};
+
+EPC epc = new EPC("urn:epc:id:sgtin:0614141.107346.2019");
+
+return await EPCISTraceabilityResolver.Traceback(options, epc, client);
+```
+
+### GS1 Digital Link Resolver
+You can also resolve master data from a GS1 Digital Link resolver with the `MasterDataResolver` class. This class
+takes in a `DigitalLinkQueryOptions` object that contains the URL of the resolver and also an EPCISBaseDocument
+and will search the EPCISBaseDocument for any master data that is not in the document but referenced in the events,
+and try and resolve it and add it to the document.
+
+```csharp	
+DigitalLinkQueryOptions options = new DigitalLinkQueryOptions()
+{
+	URL = new Uri(url),
+	EnableStackTrace = true
+};
+
+await MasterDataResolver.ResolveMasterData(options, doc, client);
 ```
