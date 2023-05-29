@@ -1,9 +1,9 @@
-package opentraceability.utility.attributes
+package utility.attributes
 
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.*
-import opentraceability.models.events.EPCISVersion
-import opentraceability.models.events.EventProductType
+import models.identifiers.*
+import models.events.*
+import models.events.EPCISVersion
+import models.events.EventProductType
 import java.lang.reflect.Type
 
 annotation class OpenTraceabilityProductsAttribute(

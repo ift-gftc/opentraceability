@@ -1,4 +1,4 @@
-package opentraceability.queries
+package queries
 enum class EPCISQueryErrorType {
     HTTP,
     Schema,

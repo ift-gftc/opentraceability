@@ -1,13 +1,13 @@
-package opentraceability.models.events
+package models.events
 
-import opentraceability.interfaces.IEventKDE
-import opentraceability.models.events.kdes.CertificationList
-import opentraceability.Constants
-import opentraceability.models.identifiers.PGLN
-import opentraceability.utility.attributes.OpenTraceabilityAttribute
-import opentraceability.utility.attributes.OpenTraceabilityExtensionElementsAttribute
-import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute
-import opentraceability.utility.attributes.OpenTraceabilityObjectAttribute
+import interfaces.IEventKDE
+import models.events.kdes.CertificationList
+import Constants
+import models.identifiers.PGLN
+import utility.attributes.OpenTraceabilityAttribute
+import utility.attributes.OpenTraceabilityExtensionElementsAttribute
+import utility.attributes.OpenTraceabilityJsonAttribute
+import utility.attributes.OpenTraceabilityObjectAttribute
 import java.net.URI
 import java.time.Duration
 import java.time.OffsetDateTime

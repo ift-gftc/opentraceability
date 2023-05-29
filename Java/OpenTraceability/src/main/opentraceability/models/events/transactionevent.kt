@@ -1,15 +1,15 @@
-package opentraceability.models.events
+package models.events
 
-import opentraceability.interfaces.IEvent
-import opentraceability.interfaces.IEventKDE
+import interfaces.IEvent
+import interfaces.IEventKDE
 import java.util.*
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.kdes.CertificationList
-import opentraceability.models.events.*
-import opentraceability.models.identifiers.EPC
-import opentraceability.utility.attributes.OpenTraceabilityAttribute
-import opentraceability.utility.attributes.OpenTraceabilityObjectAttribute
-import opentraceability.utility.attributes.OpenTraceabilityXmlIgnoreAttribute
+import models.identifiers.*
+import models.events.kdes.CertificationList
+import models.events.*
+import models.identifiers.EPC
+import utility.attributes.OpenTraceabilityAttribute
+import utility.attributes.OpenTraceabilityObjectAttribute
+import utility.attributes.OpenTraceabilityXmlIgnoreAttribute
 import java.time.Duration
 import java.lang.reflect.Type
 import java.net.URI

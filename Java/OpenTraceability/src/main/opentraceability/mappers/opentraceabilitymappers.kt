@@ -1,7 +1,7 @@
-package opentraceability.mappers
+package mappers
 
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.*
+import models.identifiers.*
+import models.events.*
 
 class OpenTraceabilityMappers {
     companion object {

@@ -1,6 +1,6 @@
-package opentraceability.utility
+package utility
 
-import opentraceability.OTLogger
+import OTLogger
 import javax.xml.bind.annotation.XmlElement
 
 //[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)

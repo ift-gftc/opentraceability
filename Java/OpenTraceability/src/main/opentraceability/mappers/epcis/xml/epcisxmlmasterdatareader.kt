@@ -1,9 +1,9 @@
-package opentraceability.mappers.epcis.xml
+package mappers.epcis.xml
 
-import opentraceability.interfaces.IVocabularyElement
+import interfaces.IVocabularyElement
 import javax.xml.bind.annotation.*
-import opentraceability.models.events.*
-import opentraceability.models.events.EPCISBaseDocument
+import models.events.*
+import models.events.EPCISBaseDocument
 import java.lang.reflect.Type
 
 class EPCISXmlMasterDataReader {

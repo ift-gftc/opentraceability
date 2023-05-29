@@ -1,9 +1,9 @@
-package opentraceability.utility
+package utility
 
 import com.google.gson.JsonSerializer
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
-import opentraceability.models.identifiers.GTIN
+import models.identifiers.GTIN
 import java.lang.reflect.Type
 
 class GTINConverter /*: JsonConverter<GTIN>*/ {

@@ -1,4 +1,4 @@
-package opentraceability.utility
+package utility
 
 import java.net.http.HttpClient
 

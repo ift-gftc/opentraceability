@@ -1,4 +1,4 @@
-package opentraceability.queries
+package queries
 
 import com.intellij.javaee.web.model.xml.HttpStatusCode
 import java.util.*

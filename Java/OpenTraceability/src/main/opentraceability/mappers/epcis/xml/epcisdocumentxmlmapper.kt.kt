@@ -1,8 +1,8 @@
-package opentraceability.mappers.epcis.xml
+package mappers.epcis.xml
 
-import opentraceability.interfaces.IEPCISDocumentMapper
-import opentraceability.models.events.*
-import opentraceability.models.events.EPCISDocument
+import interfaces.IEPCISDocumentMapper
+import models.events.*
+import models.events.EPCISDocument
 
 class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
 

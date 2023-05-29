@@ -1,10 +1,10 @@
-package opentraceability.mappers
+package mappers
 
-import opentraceability.interfaces.IEventKDE
+import interfaces.IEventKDE
 import javax.xml.bind.annotation.*
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.*
-import opentraceability.models.events.EPCISVersion
+import models.identifiers.*
+import models.events.*
+import models.events.EPCISVersion
 import java.lang.reflect.Type
 
 class OpenTraceabilityXmlMapper {

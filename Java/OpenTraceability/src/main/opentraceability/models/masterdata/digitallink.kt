@@ -1,4 +1,4 @@
-package opentraceability.models.masterdata
+package models.masterdata
 
 
 class DigitalLink {

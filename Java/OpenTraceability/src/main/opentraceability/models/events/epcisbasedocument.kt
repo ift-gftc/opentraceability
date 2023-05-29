@@ -1,12 +1,12 @@
-package opentraceability.models.events
+package models.events
 
-import opentraceability.interfaces.IEvent
-import opentraceability.interfaces.IVocabularyElement
-import opentraceability.models.common.StandardBusinessDocumentHeader
+import interfaces.IEvent
+import interfaces.IVocabularyElement
+import models.common.StandardBusinessDocumentHeader
 import java.util.*
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.*
-import opentraceability.queries.EPCISQueryParameters
+import models.identifiers.*
+import models.events.*
+import queries.EPCISQueryParameters
 import java.net.URL
 import java.time.OffsetDateTime
 

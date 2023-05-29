@@ -1,12 +1,12 @@
-package opentraceability.models.events
+package models.events
 
-import opentraceability.interfaces.IEventKDE
+import interfaces.IEventKDE
 import java.util.*
-import opentraceability.models.events.*
-import opentraceability.utility.attributes.OpenTraceabilityArrayAttribute
-import opentraceability.utility.attributes.OpenTraceabilityAttribute
-import opentraceability.utility.attributes.OpenTraceabilityExtensionElementsAttribute
-import opentraceability.utility.attributes.OpenTraceabilityObjectAttribute
+import models.events.*
+import utility.attributes.OpenTraceabilityArrayAttribute
+import utility.attributes.OpenTraceabilityAttribute
+import utility.attributes.OpenTraceabilityExtensionElementsAttribute
+import utility.attributes.OpenTraceabilityObjectAttribute
 
 class SensorElement {
 

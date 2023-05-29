@@ -1,4 +1,4 @@
-package opentraceability.interfaces
+package interfaces
 
 import java.lang.reflect.Type
 

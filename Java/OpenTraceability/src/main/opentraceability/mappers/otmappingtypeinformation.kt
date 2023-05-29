@@ -1,4 +1,4 @@
-package opentraceability.mappers
+package mappers
 
 import java.beans.BeanInfo
 import java.util.*

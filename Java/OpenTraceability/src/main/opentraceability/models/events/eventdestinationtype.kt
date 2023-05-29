@@ -1,4 +1,4 @@
-package opentraceability.models.events
+package models.events
 enum class EventDestinationType(val value: Int) {
     //TODO: review this
 

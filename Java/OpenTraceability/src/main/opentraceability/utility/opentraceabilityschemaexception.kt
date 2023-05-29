@@ -1,4 +1,4 @@
-package opentraceability.utility
+package utility
 
 class OpenTraceabilitySchemaException: Exception {
     constructor(message: String?) {

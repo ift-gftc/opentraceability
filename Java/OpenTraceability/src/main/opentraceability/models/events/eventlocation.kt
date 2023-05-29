@@ -1,7 +1,7 @@
-package opentraceability.models.events
+package models.events
 
-import opentraceability.models.identifiers.GLN
-import opentraceability.utility.attributes.OpenTraceabilityAttribute
+import models.identifiers.GLN
+import utility.attributes.OpenTraceabilityAttribute
 
 class EventLocation {
 

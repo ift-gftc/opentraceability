@@ -1,3 +1,3 @@
-package opentraceability.models.events
+package models.events
 enum class EventBusinessTransactionType {
 }

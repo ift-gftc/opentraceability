@@ -1,4 +1,4 @@
-package opentraceability.models.events
+package models.events
 
 enum class EPCISVersion(val value: Int) {
     V1(1),

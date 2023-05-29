@@ -1,10 +1,10 @@
-package opentraceability.models.masterdata
+package models.masterdata
 
 import com.fasterxml.jackson.core.JsonToken
-import opentraceability.interfaces.IMasterDataKDE
-import opentraceability.interfaces.VocabularyType
+import interfaces.IMasterDataKDE
+import interfaces.VocabularyType
 import java.util.*
-import opentraceability.models.identifiers.*
+import models.identifiers.*
 import java.lang.reflect.Type
 
 class VocabularyElement /*: IVocabularyElement*/ {

@@ -1,4 +1,4 @@
-package opentraceability.utility
+package utility
 import com.fasterxml.jackson.core.JsonToken
 import com.intellij.psi.xml.XmlDocument
 import javax.xml.bind.annotation.*

@@ -1,7 +1,6 @@
-package opentraceability
 
-import opentraceability.models.events.EventAction
-import opentraceability.models.events.EventType
+import models.events.EventAction
+import models.events.EventType
 import java.util.*
 import java.lang.reflect.Type
 

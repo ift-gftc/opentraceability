@@ -1,4 +1,4 @@
-package opentraceability.utility
+package utility
 
 class DoubleExtensions {
     companion object {

@@ -1,10 +1,10 @@
-package opentraceability.models.masterdata.kdes
+package models.masterdata.kdes
 
 import com.fasterxml.jackson.core.JsonToken
-import opentraceability.interfaces.IEventKDE
-import opentraceability.interfaces.IMasterDataKDE
-import opentraceability.models.events.kdes.EventKDEBase
-import opentraceability.utility.Country
+import interfaces.IEventKDE
+import interfaces.IMasterDataKDE
+import models.events.kdes.EventKDEBase
+import utility.Country
 import java.lang.reflect.Type
 import javax.xml.bind.annotation.XmlElement
 

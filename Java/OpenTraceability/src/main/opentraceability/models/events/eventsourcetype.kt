@@ -1,4 +1,4 @@
-package opentraceability.models.events
+package models.events
 
 //TODO: review this
 

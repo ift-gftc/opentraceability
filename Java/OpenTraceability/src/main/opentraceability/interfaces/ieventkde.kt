@@ -1,4 +1,4 @@
-package opentraceability.interfaces
+package interfaces
 
 import com.fasterxml.jackson.core.JsonToken
 import org.json.simple.JSONObject

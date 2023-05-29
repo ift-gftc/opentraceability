@@ -1,8 +1,8 @@
-package opentraceability.queries
-import opentraceability.mappers.EPCISDataFormat
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.*
-import opentraceability.models.events.EPCISVersion
+package queries
+import mappers.EPCISDataFormat
+import models.identifiers.*
+import models.events.*
+import models.events.EPCISVersion
 import java.net.URI
 class EPCISQueryInterfaceOptions {
     var URL: URI? = null

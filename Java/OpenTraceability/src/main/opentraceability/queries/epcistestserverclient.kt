@@ -1,10 +1,10 @@
-package opentraceability.queries
+package queries
 
-import opentraceability.mappers.EPCISDataFormat
-import opentraceability.models.events.EPCISBaseDocument
-import opentraceability.models.events.EPCISDocument
-import opentraceability.models.events.EPCISVersion
-import opentraceability.models.identifiers.EPC
+import mappers.EPCISDataFormat
+import models.events.EPCISBaseDocument
+import models.events.EPCISDocument
+import models.events.EPCISVersion
+import models.identifiers.EPC
 
 class EPCISTestServerClient {
 

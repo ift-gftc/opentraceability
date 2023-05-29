@@ -1,4 +1,3 @@
-package opentraceability
 
 class OTLog {
     var Level: LogLevel = LogLevel.Debug

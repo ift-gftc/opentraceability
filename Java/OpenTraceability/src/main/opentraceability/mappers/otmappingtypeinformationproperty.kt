@@ -1,9 +1,9 @@
-package opentraceability.mappers
+package mappers
 
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.*
-import opentraceability.models.events.EPCISVersion
-import opentraceability.models.events.EventProductType
+import models.identifiers.*
+import models.events.*
+import models.events.EPCISVersion
+import models.events.EventProductType
 import java.beans.BeanInfo
 import kotlin.reflect.full.createInstance
 

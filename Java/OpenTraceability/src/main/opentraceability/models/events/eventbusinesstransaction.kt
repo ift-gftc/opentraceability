@@ -1,6 +1,6 @@
-package opentraceability.models.events
-import opentraceability.utility.attributes.OpenTraceabilityAttribute
-import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute
+package models.events
+import utility.attributes.OpenTraceabilityAttribute
+import utility.attributes.OpenTraceabilityJsonAttribute
 import java.lang.reflect.Type
 import java.net.URI
 class EventBusinessTransaction {

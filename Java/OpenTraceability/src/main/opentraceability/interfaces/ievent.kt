@@ -1,8 +1,8 @@
-package opentraceability.interfaces
+package interfaces
 
-import opentraceability.models.events.kdes.CertificationList
-import opentraceability.models.events.*
-import opentraceability.models.events.*
+import models.events.kdes.CertificationList
+import models.events.*
+import models.events.*
 import java.time.Duration
 import java.net.URI
 import java.time.OffsetDateTime

@@ -1,4 +1,4 @@
-package opentraceability.utility
+package utility
 class StaticData {
     companion object{
         fun ReadData(path: String): String {

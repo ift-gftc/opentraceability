@@ -1,4 +1,4 @@
-package opentraceability.utility
+package utility
 
 import com.google.gson.JsonSerializer
 import com.google.gson.stream.JsonReader

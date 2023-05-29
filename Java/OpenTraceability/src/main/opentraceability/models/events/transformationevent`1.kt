@@ -1,10 +1,10 @@
-package opentraceability.models.events
+package models.events
 
-import opentraceability.interfaces.IEventKDE
+import interfaces.IEventKDE
 import java.util.*
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.kdes.CertificationList
-import opentraceability.models.events.*
+import models.identifiers.*
+import models.events.kdes.CertificationList
+import models.events.*
 import java.time.Duration
 import java.lang.reflect.Type
 import java.net.URI

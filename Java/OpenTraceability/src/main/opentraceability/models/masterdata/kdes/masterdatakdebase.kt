@@ -1,4 +1,4 @@
-package opentraceability.models.masterdata.kdes
+package models.masterdata.kdes
 
 class MasterDataKDEBase {
     var Namespace: String = ""

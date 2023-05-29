@@ -1,4 +1,3 @@
-package opentraceability
 
 class OTLogger {
     companion object{

@@ -1,4 +1,4 @@
-package opentraceability.models.events.kdes
+package models.events.kdes
 
 open class EventKDEBase {
     var Namespace: String = ""

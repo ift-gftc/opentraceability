@@ -1,9 +1,9 @@
-package opentraceability.models.masterdata
+package models.masterdata
 
-import opentraceability.models.common.LanguageString
-import opentraceability.utility.Country
-import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute
-import opentraceability.utility.attributes.OpenTraceabilityMasterDataAttribute
+import models.common.LanguageString
+import utility.Country
+import utility.attributes.OpenTraceabilityJsonAttribute
+import utility.attributes.OpenTraceabilityMasterDataAttribute
 import java.util.*
 import java.lang.reflect.Type
 

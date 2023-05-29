@@ -1,17 +1,17 @@
-package opentraceability.models.masterdata
+package models.masterdata
 
 import com.fasterxml.jackson.core.JsonToken
-import opentraceability.interfaces.IMasterDataKDE
-import opentraceability.interfaces.VocabularyType
-import opentraceability.models.common.LanguageString
-import opentraceability.models.events.kdes.CertificationList
+import interfaces.IMasterDataKDE
+import interfaces.VocabularyType
+import models.common.LanguageString
+import models.events.kdes.CertificationList
 import java.util.*
-import opentraceability.models.identifiers.*
-import opentraceability.models.identifiers.GTIN
-import opentraceability.models.identifiers.PGLN
-import opentraceability.utility.attributes.OpenTraceabilityArrayAttribute
-import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute
-import opentraceability.utility.attributes.OpenTraceabilityMasterDataAttribute
+import models.identifiers.*
+import models.identifiers.GTIN
+import models.identifiers.PGLN
+import utility.attributes.OpenTraceabilityArrayAttribute
+import utility.attributes.OpenTraceabilityJsonAttribute
+import utility.attributes.OpenTraceabilityMasterDataAttribute
 import java.lang.reflect.Type
 
 //TODO: review this file

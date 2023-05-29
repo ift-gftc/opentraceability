@@ -1,20 +1,19 @@
-package opentraceability
 
 import com.google.gson.GsonBuilder
-import opentraceability.interfaces.IVocabularyElement
-import opentraceability.models.events.*
-import opentraceability.models.identifiers.EPC
-import opentraceability.models.identifiers.GLN
-import opentraceability.models.identifiers.GTIN
-import opentraceability.models.identifiers.PGLN
-import opentraceability.models.masterdata.Location
-import opentraceability.models.masterdata.Tradeitem
-import opentraceability.models.events.*
-import opentraceability.models.masterdata.TradingParty
-import opentraceability.utility.EPCConverter
-import opentraceability.utility.GLNConverter
-import opentraceability.utility.GTINConverter
-import opentraceability.utility.PGLNConverter
+import interfaces.IVocabularyElement
+import models.events.*
+import models.identifiers.EPC
+import models.identifiers.GLN
+import models.identifiers.GTIN
+import models.identifiers.PGLN
+import models.masterdata.Location
+import models.masterdata.Tradeitem
+import models.events.*
+import models.masterdata.TradingParty
+import utility.EPCConverter
+import utility.GLNConverter
+import utility.GTINConverter
+import utility.PGLNConverter
 import java.lang.reflect.Type
 
 class Setup {

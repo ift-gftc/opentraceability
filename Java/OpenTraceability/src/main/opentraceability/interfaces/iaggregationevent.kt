@@ -1,5 +1,5 @@
-package opentraceability.interfaces
-import opentraceability.models.identifiers.*
+package interfaces
+import models.identifiers.*
 
 interface IAggregationEvent : IEvent {
 

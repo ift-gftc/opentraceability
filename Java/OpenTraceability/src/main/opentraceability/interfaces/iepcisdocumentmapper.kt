@@ -1,6 +1,6 @@
-package opentraceability.interfaces
+package interfaces
 
-import opentraceability.models.events.*
+import models.events.*
 
 interface IEPCISDocumentMapper {
     fun Map(strValue: String): EPCISDocument

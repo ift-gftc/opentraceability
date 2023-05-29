@@ -1,9 +1,9 @@
-package opentraceability.queries
+package queries
 
 import java.util.*
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.*
-import opentraceability.models.events.EPCISQueryDocument
+import models.identifiers.*
+import models.events.*
+import models.events.EPCISQueryDocument
 import org.intellij.markdown.lexer.push
 
 class EPCISQueryResults {

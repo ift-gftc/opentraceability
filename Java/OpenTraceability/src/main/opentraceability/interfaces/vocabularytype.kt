@@ -1,4 +1,4 @@
-package opentraceability.interfaces
+package interfaces
 
 enum class VocabularyType(val value: Int) {
     Unknown(0),

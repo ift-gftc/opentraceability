@@ -1,7 +1,7 @@
-package opentraceability.models.events
+package models.events
 
-import opentraceability.utility.attributes.OpenTraceabilityArrayAttribute
-import opentraceability.utility.attributes.OpenTraceabilityAttribute
+import utility.attributes.OpenTraceabilityArrayAttribute
+import utility.attributes.OpenTraceabilityAttribute
 import java.net.URI
 
 class PersistentDisposition {

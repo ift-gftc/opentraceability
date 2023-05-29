@@ -1,10 +1,10 @@
-package opentraceability.utility
+package utility
 
 import com.google.gson.JsonSerializer
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
-import opentraceability.models.identifiers.*
-import opentraceability.models.identifiers.EPC
+import models.identifiers.*
+import models.identifiers.EPC
 import java.lang.reflect.Type
 
 

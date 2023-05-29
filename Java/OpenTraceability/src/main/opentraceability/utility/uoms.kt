@@ -1,6 +1,6 @@
-package opentraceability.utility
+package utility
 
-import opentraceability.OTLogger
+import OTLogger
 import org.intellij.markdown.lexer.push
 import java.util.*
 

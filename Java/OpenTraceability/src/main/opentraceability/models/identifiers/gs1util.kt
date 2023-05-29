@@ -1,4 +1,4 @@
-package opentraceability.models.identifiers
+package models.identifiers
 
 class GS1Util {
     companion object {

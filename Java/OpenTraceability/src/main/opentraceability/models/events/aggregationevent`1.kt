@@ -1,13 +1,13 @@
-package opentraceability.models.events
+package models.events
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import opentraceability.interfaces.IAggregationEvent
-import opentraceability.interfaces.IILMDEvent
-import opentraceability.models.identifiers.EPC
-import opentraceability.utility.attributes.*
-import opentraceability.utility.attributes.OpenTraceabilityXmlIgnoreAttribute
+import interfaces.IAggregationEvent
+import interfaces.IILMDEvent
+import models.identifiers.EPC
+import utility.attributes.*
+import utility.attributes.OpenTraceabilityXmlIgnoreAttribute
 import utility.attributes.*
 import java.net.URI
 import kotlin.collections.ArrayList

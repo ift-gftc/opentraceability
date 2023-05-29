@@ -1,7 +1,7 @@
-package opentraceability.models.common
+package models.common
 
-import opentraceability.Constants
-import opentraceability.utility.attributes.OpenTraceabilityAttribute
+import Constants
+import utility.attributes.OpenTraceabilityAttribute
 import java.lang.reflect.Type
 import java.time.OffsetDateTime
 

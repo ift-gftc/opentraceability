@@ -1,6 +1,6 @@
-package opentraceability.models.common
+package models.common
 
-import opentraceability.utility.Country
+import utility.Country
 
 open class AnonymizedAddress {
     open var ZipCode: String? = null

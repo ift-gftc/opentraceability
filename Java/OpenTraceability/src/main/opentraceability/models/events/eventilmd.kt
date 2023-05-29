@@ -1,10 +1,10 @@
-package opentraceability.models.events
-import opentraceability.interfaces.IEventKDE
+package models.events
+import interfaces.IEventKDE
 import java.util.*
-import opentraceability.models.events.kdes.CertificationList
-import opentraceability.Constants
-import opentraceability.utility.attributes.*
-import opentraceability.utility.Country
+import models.events.kdes.CertificationList
+import Constants
+import utility.attributes.*
+import utility.Country
 import utility.attributes.*
 import java.time.OffsetDateTime
 class EventILMD {

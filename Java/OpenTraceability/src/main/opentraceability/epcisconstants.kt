@@ -1,6 +1,4 @@
-package opentraceability
-
-import opentraceability.models.identifiers.*
+import models.identifiers.*
 
 class EPCISConstants {
     var URN: EPCISURNConstants = EPCISURNConstants()

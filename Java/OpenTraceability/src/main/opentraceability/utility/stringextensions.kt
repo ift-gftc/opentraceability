@@ -1,6 +1,6 @@
-package opentraceability.utility
+package utility
 
-import opentraceability.OTLogger
+import OTLogger
 import java.time.OffsetDateTime
 
 class StringExtensions {

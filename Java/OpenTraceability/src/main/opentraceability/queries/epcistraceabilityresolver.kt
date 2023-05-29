@@ -1,9 +1,9 @@
-package opentraceability.queries
+package queries
 
 import java.net.http.HttpClient
-import opentraceability.models.identifiers.*
-import opentraceability.models.identifiers.EPC
-import opentraceability.models.identifiers.PGLN
+import models.identifiers.*
+import models.identifiers.EPC
+import models.identifiers.PGLN
 import java.net.URI
 
 class EPCISTraceabilityResolver {

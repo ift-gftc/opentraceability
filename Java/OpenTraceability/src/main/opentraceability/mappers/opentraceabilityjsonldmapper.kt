@@ -1,7 +1,7 @@
-package opentraceability.mappers
+package mappers
 
 import com.fasterxml.jackson.core.JsonToken
-import opentraceability.interfaces.IEventKDE
+import interfaces.IEventKDE
 import java.util.*
 import java.lang.reflect.Type
 

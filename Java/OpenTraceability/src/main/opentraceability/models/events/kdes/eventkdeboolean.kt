@@ -1,7 +1,6 @@
-package opentraceability.models.events.kdes
+package models.events.kdes
 
-import opentraceability.interfaces.IEventKDE
-import opentraceability.Constants
+import interfaces.IEventKDE
 import org.json.simple.JSONObject
 import org.w3c.dom.Element
 import java.lang.reflect.Type

@@ -1,8 +1,8 @@
-package opentraceability.models.common
+package models.common
 
-import opentraceability.Constants
-import opentraceability.utility.attributes.OpenTraceabilityAttribute
-import opentraceability.utility.attributes.OpenTraceabilityObjectAttribute
+import Constants
+import utility.attributes.OpenTraceabilityAttribute
+import utility.attributes.OpenTraceabilityObjectAttribute
 
 class SBDHOrganization {
 

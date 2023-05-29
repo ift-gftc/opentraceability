@@ -1,4 +1,4 @@
-package opentraceability.models.common
+package models.common
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

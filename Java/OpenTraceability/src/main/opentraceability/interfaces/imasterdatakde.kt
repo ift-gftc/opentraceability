@@ -1,4 +1,4 @@
-package opentraceability.interfaces
+package interfaces
 
 import com.fasterxml.jackson.core.JsonToken
 import javax.xml.bind.annotation.*

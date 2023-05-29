@@ -1,4 +1,4 @@
-package opentraceability.utility.attributes
+package utility.attributes
 
 
 @Retention(AnnotationRetention.RUNTIME)

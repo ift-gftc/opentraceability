@@ -1,7 +1,7 @@
-package opentraceability.mappers.epcis.json
+package mappers.epcis.json
 
-import opentraceability.interfaces.IEPCISQueryDocumentMapper
-import opentraceability.models.events.EPCISQueryDocument
+import interfaces.IEPCISQueryDocumentMapper
+import models.events.EPCISQueryDocument
 
 class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
 

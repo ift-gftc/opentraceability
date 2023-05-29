@@ -1,8 +1,8 @@
-package opentraceability.mappers.masterdata
+package mappers.masterdata
 
 import com.fasterxml.jackson.core.JsonToken
-import opentraceability.interfaces.IMasterDataMapper
-import opentraceability.interfaces.IVocabularyElement
+import interfaces.IMasterDataMapper
+import interfaces.IVocabularyElement
 import java.lang.reflect.Type
 import java.util.*
 

@@ -1,8 +1,8 @@
-package opentraceability.queries
+package queries
 
-import opentraceability.models.identifiers.*
-import opentraceability.models.identifiers.EPC
-import opentraceability.models.identifiers.EPCType
+import models.identifiers.*
+import models.identifiers.EPC
+import models.identifiers.EPCType
 import org.intellij.markdown.lexer.push
 import java.lang.reflect.Type
 import java.net.URL

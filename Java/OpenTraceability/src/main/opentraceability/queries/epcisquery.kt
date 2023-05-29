@@ -1,4 +1,4 @@
-package opentraceability.queries
+package queries
 
 import java.util.*
 import models.identifiers.*

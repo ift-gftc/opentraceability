@@ -1,16 +1,16 @@
-package opentraceability.queries
+package queries
 
 import io.grpc.netty.shaded.io.netty.internal.tcnative.AsyncTask
 import java.net.http.HttpClient
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.*
-import opentraceability.models.masterdata.Location
-import opentraceability.models.masterdata.Tradeitem
-import opentraceability.models.events.EPCISBaseDocument
-import opentraceability.models.identifiers.GLN
-import opentraceability.models.identifiers.GTIN
-import opentraceability.models.identifiers.PGLN
-import opentraceability.models.masterdata.TradingParty
+import models.identifiers.*
+import models.events.*
+import models.masterdata.Location
+import models.masterdata.Tradeitem
+import models.events.EPCISBaseDocument
+import models.identifiers.GLN
+import models.identifiers.GTIN
+import models.identifiers.PGLN
+import models.masterdata.TradingParty
 import java.lang.reflect.Type
 
 class MasterDataResolver<T> {

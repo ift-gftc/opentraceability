@@ -1,11 +1,11 @@
-package opentraceability.mappers.epcis.json
+package mappers.epcis.json
 
 import com.fasterxml.jackson.core.JsonToken
 import com.intellij.json.psi.JsonObject
-import opentraceability.interfaces.IEvent
-import opentraceability.models.events.*
-import opentraceability.models.events.EPCISBaseDocument
-import opentraceability.models.events.EventType
+import interfaces.IEvent
+import models.events.*
+import models.events.EPCISBaseDocument
+import models.events.EventType
 import java.lang.reflect.Type
 
 class EPCISDocumentBaseJsonMapper {

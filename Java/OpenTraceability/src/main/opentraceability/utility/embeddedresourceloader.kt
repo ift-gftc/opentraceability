@@ -1,4 +1,4 @@
-package opentraceability.utility
+package utility
 
 import com.intellij.psi.xml.XmlDocument
 import java.util.stream.Stream

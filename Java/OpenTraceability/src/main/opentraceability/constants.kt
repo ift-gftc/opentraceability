@@ -1,6 +1,4 @@
-package opentraceability
 
-import opentraceability.models.identifiers.*
 
 class Constants {
     companion object {

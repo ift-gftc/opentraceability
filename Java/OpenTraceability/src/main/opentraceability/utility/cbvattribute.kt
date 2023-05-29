@@ -1,4 +1,4 @@
-package opentraceability.utility
+package utility
 
 //[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)
 class CBVAttribute /*:Attribute*/ {

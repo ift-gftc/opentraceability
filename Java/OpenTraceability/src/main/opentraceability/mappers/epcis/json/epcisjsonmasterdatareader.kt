@@ -1,10 +1,10 @@
-package opentraceability.mappers.epcis.json
+package mappers.epcis.json
 
 import com.fasterxml.jackson.core.JsonToken
 import com.intellij.json.psi.JsonObject
-import opentraceability.interfaces.IVocabularyElement
-import opentraceability.models.events.*
-import opentraceability.models.events.EPCISBaseDocument
+import interfaces.IVocabularyElement
+import models.events.*
+import models.events.EPCISBaseDocument
 import java.lang.reflect.Type
 
 class EPCISJsonMasterDataReader {

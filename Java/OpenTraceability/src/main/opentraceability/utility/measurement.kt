@@ -1,4 +1,4 @@
-package opentraceability.utility
+package utility
 import javax.xml.bind.annotation.XmlElement
 
 class Measurement {

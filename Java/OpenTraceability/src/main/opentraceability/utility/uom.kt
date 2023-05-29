@@ -1,7 +1,7 @@
-package opentraceability.utility
+package utility
 
 import com.intellij.json.psi.JsonObject
-import opentraceability.OTLogger
+import OTLogger
 
 //[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)
 //[DataContract]

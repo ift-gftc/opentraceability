@@ -1,6 +1,6 @@
-package opentraceability.queries
+package queries
 
-import opentraceability.models.identifiers.*
+import models.identifiers.*
 import java.lang.reflect.Type
 
 class EPCISQueryError {

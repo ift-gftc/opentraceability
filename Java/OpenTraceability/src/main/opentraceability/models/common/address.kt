@@ -1,7 +1,7 @@
-package opentraceability.models.common
+package models.common
 
 import org.intellij.markdown.lexer.push
-import opentraceability.utility.Country
+import utility.Country
 
 class Address : AnonymizedAddress() {
 

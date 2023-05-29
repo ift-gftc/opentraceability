@@ -1,11 +1,11 @@
-package opentraceability.models.events.kdes
+package models.events.kdes
 
-import opentraceability.models.common.Certificate
+import models.common.Certificate
 import java.util.*
-import opentraceability.models.events.kdes.CertificationList
-import opentraceability.utility.attributes.OpenTraceabilityArrayAttribute
-import opentraceability.utility.attributes.OpenTraceabilityAttribute
-import opentraceability.utility.attributes.OpenTraceabilityObjectAttribute
+import models.events.kdes.CertificationList
+import utility.attributes.OpenTraceabilityArrayAttribute
+import utility.attributes.OpenTraceabilityAttribute
+import utility.attributes.OpenTraceabilityObjectAttribute
 
 class CertificationList {
     @OpenTraceabilityArrayAttribute

@@ -1,9 +1,9 @@
-package opentraceability.models.events
+package models.events
 
-import opentraceability.interfaces.IEventKDE
-import opentraceability.utility.attributes.OpenTraceabilityAttribute
-import opentraceability.utility.attributes.OpenTraceabilityExtensionAttributesAttribute
-import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute
+import interfaces.IEventKDE
+import utility.attributes.OpenTraceabilityAttribute
+import utility.attributes.OpenTraceabilityExtensionAttributesAttribute
+import utility.attributes.OpenTraceabilityJsonAttribute
 import java.util.*
 import java.net.URI
 import java.time.OffsetDateTime

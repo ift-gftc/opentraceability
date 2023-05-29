@@ -1,12 +1,12 @@
-package opentraceability.mappers.epcis.xml
+package mappers.epcis.xml
 
 import com.intellij.psi.xml.XmlDocument
 import com.intellij.psi.xml.XmlElement
-import opentraceability.interfaces.IEvent
-import opentraceability.models.events.*
-import opentraceability.models.events.EPCISBaseDocument
-import opentraceability.models.events.EPCISVersion
-import opentraceability.utility.XmlSchemaChecker
+import interfaces.IEvent
+import models.events.*
+import models.events.EPCISBaseDocument
+import models.events.EPCISVersion
+import utility.XmlSchemaChecker
 import java.lang.reflect.Type
 
 class EPCISDocumentBaseXMLMapper {
