@@ -1,5 +1,7 @@
-import models.events.EventAction
-import models.events.EventType
+package opentraceability
+
+import opentraceability.models.events.EventAction
+import opentraceability.models.events.EventType
 import java.util.*
 import java.lang.reflect.Type
 
@@ -70,7 +72,7 @@ class OpenTraceabilityEventProfile {
         Action = action;
     }
 
-    constructor(eventClassType: Type, eventType: EventType, businessStep: String,  action: EventAction, kdeProfiles: ArrayList<OpenTraceabilityEventKDEProfile>) {
+    constructor(eventClassType: Type, eventType: EventType, businessStep: String, action: EventAction, kdeProfiles: ArrayList<OpenTraceabilityEventKDEProfile>) {
         KDEProfiles = kdeProfiles;
         EventType = eventType;
         EventClassType = eventClassType;

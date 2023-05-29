@@ -1,3 +1,5 @@
+package opentraceability
+
 enum class LogLevel(val value: Int) {
     Info(0),
     Warning(1),

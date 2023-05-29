@@ -1,8 +1,20 @@
-import interfaces.IVocabularyElement
-import models.events.*
-import models.masterdata.Location
-import models.masterdata.Tradeitem
-import models.masterdata.TradingParty
+package opentraceability
+
+import com.google.gson.GsonBuilder
+import opentraceability.interfaces.IVocabularyElement
+import opentraceability.models.events.*
+import opentraceability.models.identifiers.EPC
+import opentraceability.models.identifiers.GLN
+import opentraceability.models.identifiers.GTIN
+import opentraceability.models.identifiers.PGLN
+import opentraceability.models.masterdata.Location
+import opentraceability.models.masterdata.Tradeitem
+import opentraceability.models.events.*
+import opentraceability.models.masterdata.TradingParty
+import opentraceability.utility.EPCConverter
+import opentraceability.utility.GLNConverter
+import opentraceability.utility.GTINConverter
+import opentraceability.utility.PGLNConverter
 import java.lang.reflect.Type
 
 class Setup {
@@ -12,13 +24,12 @@ class Setup {
         var MasterDataTypes: MutableMap<String, Type> = mutableMapOf()
         var MasterDataTypeDefault: MutableMap<Type, Type> = mutableMapOf()
 
-        var _locker: Object = Object()
+        @Volatile
         var _isInitialized: Boolean = false
 
+        @Synchronized
         fun Initialize() {
-            //TODO: _locker not yet implemented
 
-            //lock (_locker){
             if (!_isInitialized) {
 
                 RegisterEventProfile(
@@ -56,29 +67,22 @@ class Setup {
                 RegisterMasterDataType<Location>();
                 RegisterMasterDataType<TradingParty>();
 
-                //TODO: JsonConvert not yet implemented
-                /*
-                JsonConvert.DefaultSettings = () =>
-                {
-                    JsonSerializerSettings settings = new JsonSerializerSettings();
-                    settings.Converters.Add(new EPCConverter());
-                    settings.Converters.Add(new GTINConverter());
-                    settings.Converters.Add(new GLNConverter());
-                    settings.Converters.Add(new PGLNConverter());
 
-                    return settings;
-                };
-                */
+                val gson = GsonBuilder()
+                    .registerTypeAdapter(EPC::class.java, EPCConverter())
+                    .registerTypeAdapter(GTIN::class.java, GTINConverter())
+                    .registerTypeAdapter(GLN::class.java, GLNConverter())
+                    .registerTypeAdapter(PGLN::class.java, PGLNConverter())
+                    .create()
+
 
                 _isInitialized = true
             }
-            //}
+
         }
 
+        @Synchronized
         fun RegisterEventProfile(profile: OpenTraceabilityEventProfile) {
-
-            //TODO: _locker not yet implemented
-            //lock (_locker){
 
             Profiles.forEach { element ->
                 if (element.toString() == profile.toString()) {
@@ -87,8 +91,6 @@ class Setup {
             }
 
             Profiles.add(profile)
-
-            //}
         }
 
         inline fun <reified T> RegisterMasterDataType(defaultFor: Type? = null) {

@@ -1,3 +1,5 @@
+package opentraceability
+
 import java.net.URI
 
 class EPCISURNConstants {
