@@ -68,7 +68,7 @@ class XmlSchemaChecker {
         return bFileOk
     }
 
-    private fun getSchema(url: String): XmlSchemaSet? {
+    fun getSchema(url: String): XmlSchemaSet? {
         if (!cache.containsKey(url) || (DateTime.UtcNow - cache[url]?.lastUpdated).totalHours > 1) {
             val sc = XmlSchemaSet()
             sc.xmlResolver = XmlUrlResolver()

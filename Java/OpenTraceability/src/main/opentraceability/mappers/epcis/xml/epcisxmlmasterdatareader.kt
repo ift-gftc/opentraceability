@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.*
 import models.events.*
 import models.events.EPCISBaseDocument
 import models.identifiers.PGLN
+import models.masterdata.Tradeitem
 import models.masterdata.TradingParty
 import models.masterdata.VocabularyElement
 import models.masterdata.kdes.MasterDataKDEObject
@@ -44,7 +45,7 @@ class EPCISXmlMasterDataReader {
         }
 
 
-        private fun ReadTradeitem(doc: EPCISBaseDocument, xTradeitem: XElement, type: String) {
+        fun ReadTradeitem(doc: EPCISBaseDocument, xTradeitem: XElement, type: String) {
             // read the GTIN from the id
             val id = xTradeitem.attribute("id")?.value ?: ""
             val tradeitem = Tradeitem()
@@ -57,7 +58,7 @@ class EPCISXmlMasterDataReader {
         }
 
 
-        private fun ReadLocation(doc: EPCISBaseDocument, xLocation: XElement, type: String) {
+        fun ReadLocation(doc: EPCISBaseDocument, xLocation: XElement, type: String) {
             // read the GLN from the id
             val id = xLocation.attribute("id")?.value ?: ""
             val t = Setup.MasterDataTypes[type]
@@ -74,7 +75,7 @@ class EPCISXmlMasterDataReader {
         }
 
 
-        private fun ReadTradingParty(doc: EPCISBaseDocument, xTradingParty: XElement, type: String) {
+        fun ReadTradingParty(doc: EPCISBaseDocument, xTradingParty: XElement, type: String) {
             // read the PGLN from the id
             val id = xTradingParty.attribute("id")?.value ?: ""
             val tp = TradingParty()
@@ -87,7 +88,7 @@ class EPCISXmlMasterDataReader {
         }
 
 
-        private fun ReadUnknown(doc: EPCISBaseDocument, xVocabElement: XElement, type: String) {
+        fun ReadUnknown(doc: EPCISBaseDocument, xVocabElement: XElement, type: String) {
             // read the PGLN from the id
             val id = xVocabElement.attribute("id")?.value ?: ""
             val ele = VocabularyElement()
@@ -101,7 +102,7 @@ class EPCISXmlMasterDataReader {
 
 
 
-        private fun ReadMasterDataObject(md: IVocabularyElement, xMasterData: XElement, readKDEs: Boolean = true) {
+        fun ReadMasterDataObject(md: IVocabularyElement, xMasterData: XElement, readKDEs: Boolean = true) {
             val mappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(md.javaClass)
 
             // work on expanded objects...
@@ -116,9 +117,9 @@ class EPCISXmlMasterDataReader {
                         val id = xeAtt.attribute("id")?.value ?: ""
                         val propMapping = subMappedProperties[id]
                         if (propMapping != null) {
-                            if (!TrySetValueType(xeAtt.value, propMapping.property, subObject)) {
-                                val value = ReadKDEObject(xeAtt, propMapping.property.type)
-                                propMapping.property.setValue(subObject, value)
+                            if (!TrySetValueType(xeAtt.value, propMapping.Property, subObject)) {
+                                val value = ReadKDEObject(xeAtt, propMapping.Property.type)
+                                propMapping.Property.setValue(subObject, value)
                             }
                             setAttribute = true
                             ignoreAttributes.add(id)
@@ -140,9 +141,9 @@ class EPCISXmlMasterDataReader {
 
                 val propMapping = mappedProperties[id]
                 if (propMapping != null) {
-                    if (!TrySetValueType(xeAtt.value, propMapping.property, md)) {
-                        val value = ReadKDEObject(xeAtt, propMapping.property.type)
-                        propMapping.property.setValue(md, value)
+                    if (!TrySetValueType(xeAtt.value, propMapping.Property, md)) {
+                        val value = ReadKDEObject(xeAtt, propMapping.Property.type)
+                        propMapping.Property.setValue(md, value)
                     }
                 } else if (readKDEs) {
                     if (xeAtt.hasElements) {
@@ -161,7 +162,7 @@ class EPCISXmlMasterDataReader {
         }
 
 
-        private fun ReadKDEObject(xeAtt: XElement, t: Type): Any {
+        fun ReadKDEObject(xeAtt: XElement, t: Type): Any {
             val value = t.createInstance() ?: throw Exception("Failed to create instance of ${t.fullName}")
 
             if (value is MutableList<*>) {
@@ -192,7 +193,7 @@ class EPCISXmlMasterDataReader {
         }
 
 
-        private fun TrySetValueType(`val`: String, p: PropertyInfo, o: Any): Boolean {
+        fun TrySetValueType(`val`: String, p: PropertyInfo, o: Any): Boolean {
             when {
                 p.propertyType == String::class.java -> {
                     p.setValue(o, `val`)

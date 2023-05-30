@@ -22,8 +22,8 @@ class MasterDataKDEObject : MasterDataKDEBase, IMasterDataKDE {
     }
 
     constructor(ns: String, name: String) {
-        namespace = ns
-        this.name = name
+        this.Namespace = ns
+        this.Name = name
     }
 
     override fun setFromGS1WebVocabJson(json: JToken) {

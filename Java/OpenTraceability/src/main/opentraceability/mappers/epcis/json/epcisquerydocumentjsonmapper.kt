@@ -1,6 +1,7 @@
 package mappers.epcis.json
 
 import interfaces.IEPCISQueryDocumentMapper
+import interfaces.IEvent
 import mappers.OpenTraceabilityJsonLDMapper
 import models.events.EPCISQueryDocument
 import models.events.EPCISVersion
@@ -17,7 +18,7 @@ class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
             val jEventsList = json["epcisBody"]?.get("queryResults")?.get("resultsBody")?.get("eventList") as JArray?
             if (jEventsList != null) {
                 for (jEvent in jEventsList) {
-                    val eventType = EPCISDocumentBaseJsonMapper.getEventTypeFromProfile(jEvent)
+                    val eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent)
                     val e = OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType, doc.Namespaces) as IEvent
                     doc.Events.add(e)
                 }
@@ -25,7 +26,7 @@ class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
             return doc
         } catch (ex: Exception) {
             val exception = Exception("Failed to parse the EPCIS document from the XML. xml=$strValue", ex)
-            OTLogger.Error(exception)
+            OTLogger.error(exception)
             throw exception
         }
     }
@@ -43,7 +44,7 @@ class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
                 jEventsList.add(jEvent)
             }
         }
-        val json = EPCISDocumentBaseJsonMapper.writeJson(doc, epcisNS, "EPCISQueryDocument")
+        val json = EPCISDocumentBaseJsonMapper.WriteJson(doc, epcisNS, "EPCISQueryDocument")
         val jEPCISBody = JObject()
         val jQueryResults = JObject()
         val jResultsBody = JObject()
@@ -53,8 +54,8 @@ class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
         jQueryResults["resultsBody"] = jResultsBody
         jEPCISBody["queryResults"] = jQueryResults
         json["epcisBody"] = jEPCISBody
-        EPCISDocumentBaseJsonMapper.conformEPCISJsonLD(json, doc.Namespaces)
-        EPCISDocumentBaseJsonMapper.checkSchema(json)
+        EPCISDocumentBaseJsonMapper.ConformEPCISJsonLD(json, doc.Namespaces)
+        EPCISDocumentBaseJsonMapper.CheckSchema(json)
         return json.toString()
     }
 }

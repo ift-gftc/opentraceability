@@ -13,13 +13,13 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
     constructor(glnStr: String) {
         try {
-            val error = GLN.DetectGLNIssue(glnStr)
+            val error = GLN.detectGLNIssue(glnStr)
             if (!error.isNullOrBlank()) {
                 throw Exception("The GLN $glnStr is invalid. $error")
             }
             this._glnStr = glnStr
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
 
@@ -137,7 +137,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
             return obj1.equals(obj2)
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -154,7 +154,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
             return !obj1.equals(obj2)
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -175,7 +175,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
             return isEquals(obj as GLN)
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -185,7 +185,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
             val hash = toString().hashCode()
             return hash
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -194,7 +194,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
         try {
             return _glnStr.toLowerCase()
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -211,7 +211,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
             return toString() == gln.toString()
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -224,7 +224,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
             return toString().toLowerCase() == gln.toString().toLowerCase()
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -244,7 +244,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
                 else -> 1
             }
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }

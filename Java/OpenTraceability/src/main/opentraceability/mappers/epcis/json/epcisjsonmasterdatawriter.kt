@@ -8,6 +8,7 @@ import models.events.*
 import models.events.EPCISBaseDocument
 import org.json.simple.JSONArray
 import utility.attributes.OpenTraceabilityArrayAttribute
+import utility.attributes.OpenTraceabilityAttribute
 import utility.attributes.OpenTraceabilityObjectAttribute
 import kotlin.reflect.KClass
 
@@ -35,7 +36,7 @@ object EPCISJsonMasterDataWriter {
         }
     }
 
-    private fun WriteMasterDataList(data: MutableList<IVocabularyElement>, xVocabList: JArray, type: String) {
+    fun WriteMasterDataList(data: MutableList<IVocabularyElement>, xVocabList: JArray, type: String) {
         if (data.isNotEmpty()) {
             val jVocab = JObject(JProperty("type", type), JProperty("vocabularyElementList", JArray()))
             val xVocabEleList = jVocab["vocabularyElementList"] as JArray?
@@ -50,7 +51,7 @@ object EPCISJsonMasterDataWriter {
         }
     }
 
-    private fun WriteMasterDataObject(md: IVocabularyElement): JObject {
+    fun WriteMasterDataObject(md: IVocabularyElement): JObject {
         val jVocabElement = JObject(JProperty("id", md.id ?: ""), JProperty("attributes", JArray()))
         val jAttributes = jVocabElement["attributes"] as JArray?
             ?: throw Exception("Failed to grab attributes array.")
@@ -126,7 +127,7 @@ object EPCISJsonMasterDataWriter {
         return jVocabElement
     }
 
-    private fun WriteObject(t: Class<*>, o: Any): JObject {
+    fun writeObject(t: Class<*>, o: Any): JObject {
         val j = JObject()
         for (property in t.declaredFields) {
             val value = property.get(o)

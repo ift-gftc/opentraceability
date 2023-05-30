@@ -39,15 +39,15 @@ class GS1VocabJsonMapper : IMasterDataMapper {
         return obj
     }
 
-    private fun GetNamespaces(jContext: Any): MutableMap<String, String> {
+    fun GetNamespaces(jContext: Any): MutableMap<String, String> {
         val namespaces = mutableMapOf<String, String>()
         when (jContext) {
             is JSONObject -> {
-                namespaces.putAll(JsonContextHelper.ScrapeNamespaces(jContext))
+                namespaces.putAll(JsonContextHelper.scrapeNamespaces(jContext))
             }
             is JSONArray -> {
                 for (j in jContext) {
-                    val ns = JsonContextHelper.ScrapeNamespaces(j as JSONObject)
+                    val ns = JsonContextHelper.scrapeNamespaces(j as JSONObject)
                     for ((k, v) in ns) {
                         if (!namespaces.containsKey(k)) {
                             namespaces[k] = v

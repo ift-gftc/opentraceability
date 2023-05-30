@@ -14,7 +14,7 @@ import java.net.URI
 import java.time.OffsetDateTime
 
 
-class TransformationEvent<T> : EventBase, ITransformationEvent {
+class TransformationEvent<T> : EventBase(), ITransformationEvent {
 
     @OpenTraceabilityProductsAttribute("inputQuantityList", EventProductType.Input, 8, OpenTraceabilityProductsListType.QuantityList)
     @OpenTraceabilityProductsAttribute("inputEPCList", EventProductType.Input, 7, OpenTraceabilityProductsListType.EPCList)

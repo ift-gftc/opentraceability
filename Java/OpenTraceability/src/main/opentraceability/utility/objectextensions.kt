@@ -41,7 +41,7 @@ object ObjectExtensions {
         return hashCode
     }
 
-    private fun bytesToLong(bytes: ByteArray, offset: Int): Long {
+    fun bytesToLong(bytes: ByteArray, offset: Int): Long {
         var result: Long = 0
         for (i in 0 until 8) {
             result = result shl 8

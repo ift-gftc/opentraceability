@@ -27,7 +27,7 @@ class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
             jEventList?.let { array ->
                 for (i in 0 until array.length()) {
                     val jEvent = array.getJSONObject(i)
-                    val eventType = EPCISDocumentBaseJsonMapper.getEventTypeFromProfile(jEvent)
+                    val eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent)
                     val e = OpenTraceabilityJsonLDMapper.FromJson<IEvent>(jEvent, eventType, doc.namespaces)
                     doc.events.add(e)
                 }
@@ -36,7 +36,7 @@ class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
             return doc
         } catch (ex: Exception) {
             val exception = Exception("Failed to parse the EPCIS Document from the JSON-LD. json-ld=$strValue", ex)
-            OTLogger.Error(exception)
+            OTLogger.error(exception)
             throw exception
         }
 
@@ -59,7 +59,7 @@ class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
             jEvent?.let { jEventList.put(it) }
         }
 
-        var json = EPCISDocumentBaseJsonMapper.writeJson(doc, epcisNS, "EPCISDocument")
+        var json = EPCISDocumentBaseJsonMapper.WriteJson(doc, epcisNS, "EPCISDocument")
 
 // write the header
         if (!doc.Header?.Sender?.Identifier.isNullOrEmpty()) {
@@ -79,10 +79,10 @@ class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
         json.put("epcisBody", jEventBody)
 
 // conform the JSON-LD to the compacted version with CURIE's that EPCIS 2.0 likes
-        EPCISDocumentBaseJsonMapper.conformEPCISJsonLD(json.toString(), doc.Namespaces)
+        EPCISDocumentBaseJsonMapper.ConformEPCISJsonLD(json.toString(), doc.Namespaces)
 
 // validate the JSON-LD schema
-        EPCISDocumentBaseJsonMapper.checkSchema(json)
+        EPCISDocumentBaseJsonMapper.CheckSchema(json)
 
         return json.toString(4) // 4 is the standard number of spaces for indent
 

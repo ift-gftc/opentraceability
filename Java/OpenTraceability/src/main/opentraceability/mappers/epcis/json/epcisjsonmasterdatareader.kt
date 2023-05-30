@@ -13,6 +13,7 @@ import models.masterdata.Tradeitem
 import models.masterdata.TradingParty
 import models.masterdata.VocabularyElement
 import models.masterdata.kdes.MasterDataKDEObject
+import models.masterdata.kdes.MasterDataKDEString
 import org.json.simple.JSONObject
 import utility.Countries
 import utility.Country
@@ -35,9 +36,9 @@ class EPCISJsonMasterDataReader {
                             for (j in 0 until jVocabElementaryList.length()) {
                                 val jVocabEle = jVocabElementaryList.getJSONObject(j)
                                 when (type) {
-                                    "urn:epcglobal:epcis:vtype:epcclass" -> ReadTradeItem(doc, jVocabEle, type)
-                                    "urn:epcglobal:epcis:vtype:location" -> ReadLocation(doc, jVocabEle, type)
-                                    "urn:epcglobal:epcis:vtype:party" -> ReadTradingParty(doc, jVocabEle, type)
+                                    "urn:epcglobal:epcis:vtype:epcclass" -> readTradeItem(doc, jVocabEle, type)
+                                    "urn:epcglobal:epcis:vtype:location" -> readLocation(doc, jVocabEle, type)
+                                    "urn:epcglobal:epcis:vtype:party" -> readTradingParty(doc, jVocabEle, type)
                                     else -> ReadUnknown(doc, jVocabEle, type)
                                 }
                             }
@@ -48,11 +49,9 @@ class EPCISJsonMasterDataReader {
         }
 
 
-        internal fun ReadTradeitem(doc: EPCISBaseDocument, xTradeitem: JsonObject, type: String) {
-            TODO("Not yet implemented")
-        }
 
-        private fun readTradeItem(doc: EPCISBaseDocument, xTradeitem: JSONObject, type: String) {
+
+        fun readTradeItem(doc: EPCISBaseDocument, xTradeitem: JSONObject, type: String) {
             // read the GTIN from the id
             val id = xTradeitem.optString("id", "")
             val tradeitem = Tradeitem()
@@ -65,11 +64,8 @@ class EPCISJsonMasterDataReader {
         }
 
 
-        internal fun ReadLocation(doc: EPCISBaseDocument, xLocation: JsonObject, type: String) {
-            TODO("Not yet implemented")
-        }
 
-        private fun ReadLocation(doc: EPCISBaseDocument, xLocation: JSONObject, type: String) {
+         fun readLocation(doc: EPCISBaseDocument, xLocation: JSONObject, type: String) {
             // read the GLN from the id
             val id = xLocation.optString("id", "")
             val t = Setup.MasterDataTypes[type]
@@ -88,7 +84,7 @@ class EPCISJsonMasterDataReader {
 
 
 
-        private fun readTradingParty(doc: EPCISBaseDocument, xTradingParty: JSONObject, type: String) {
+        fun readTradingParty(doc: EPCISBaseDocument, xTradingParty: JSONObject, type: String) {
             // read the PGLN from the id
             val id = xTradingParty.optString("id", "")
             val tp = TradingParty()
@@ -101,7 +97,7 @@ class EPCISJsonMasterDataReader {
         }
 
 
-        private fun ReadUnknown(doc: EPCISBaseDocument, xVocabElement: JSONObject, type: String) {
+        fun ReadUnknown(doc: EPCISBaseDocument, xVocabElement: JSONObject, type: String) {
             // read the ID from the id
             val id = xVocabElement.optString("id", "")
             val ele = VocabularyElement()
@@ -113,7 +109,7 @@ class EPCISJsonMasterDataReader {
             doc.MasterData.add(ele)
         }
 
-        private fun ReadMasterDataObject(md: IVocabularyElement, jMasterData: JSONObject, readKDEs: Boolean = true) {
+        fun ReadMasterDataObject(md: IVocabularyElement, jMasterData: JSONObject, readKDEs: Boolean = true) {
             val mappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(md.javaClass)
 
             // work on expanded objects...
@@ -131,9 +127,9 @@ class EPCISJsonMasterDataReader {
                             val id = jAtt.optString("id", "")
                             val propMapping = subMappedProperties[id]
                             if (propMapping != null) {
-                                if (!TrySetValueType(jAtt.optString("attribute", ""), propMapping.property, subObject)) {
-                                    val value = ReadKDEObject(jAtt, propMapping.property.type)
-                                    propMapping.property.set(subObject, value)
+                                if (!trySetValueType(jAtt.optString("attribute", ""), propMapping.Property, subObject)) {
+                                    val value = readKDEObject(jAtt, propMapping.Property.type)
+                                    propMapping.Property.set(subObject, value)
                                 }
                                 setAttribute = true
                                 ignoreAttributes.add(id)
@@ -159,9 +155,9 @@ class EPCISJsonMasterDataReader {
 
                     val propMapping = mappedProperties[id]
                     if (propMapping != null) {
-                        if (!TrySetValueType(jAtt.optString("attribute", ""), propMapping.property, md)) {
-                            val value = ReadKDEObject(jAtt, propMapping.property.type)
-                            propMapping.property.set(md, value)
+                        if (!trySetValueType(jAtt.optString("attribute", ""), propMapping.Property, md)) {
+                            val value = readKDEObject(jAtt, propMapping.Property.type)
+                            propMapping.Property.set(md, value)
                         }
                     } else if (readKDEs) {
                         val jAttValue = jAtt.opt("attribute")
@@ -184,14 +180,14 @@ class EPCISJsonMasterDataReader {
         }
 
 
-        private fun ReadKDEObject(j: JToken, t: Type): Any {
+        fun readKDEObject(j: JToken, t: Type): Any {
             val value = t.getDeclaredConstructor().newInstance() ?: throw Exception("Failed to create instance of ${t.name}")
 
             if (value is List<*>) {
                 val list = value as List<Any>
                 if (j is JArray) {
                     for (xchild in j) {
-                        val child = ReadKDEObject(xchild, t.genericTypeArguments[0])
+                        val child = readKDEObject(xchild, t.genericTypeArguments[0])
                         list.add(child)
                     }
                 }
@@ -204,8 +200,8 @@ class EPCISJsonMasterDataReader {
                         if (x != null) {
                             val objAtt = p.getAnnotation(OpenTraceabilityObjectAttribute::class.java)
                             if (objAtt != null) {
-                                val o = ReadKDEObject(x, p.type)
-                            } else if (!TrySetValueType(x.toString(), p, value)) {
+                                val o = readKDEObject(x, p.type)
+                            } else if (!trySetValueType(x.toString(), p, value)) {
                                 throw Exception("Failed to set value type while reading KDE object. property = ${p.name}, type = ${t.Name}, json = ${x.toString()}")
                             }
                         }
@@ -218,7 +214,7 @@ class EPCISJsonMasterDataReader {
 
 
 
-        private fun trySetValueType(value: String, property: KProperty<*>, obj: Any): Boolean {
+        fun trySetValueType(value: String, property: KProperty<*>, obj: Any): Boolean {
             when (property.returnType.classifier) {
                 String::class -> {
                     property.setter.call(obj, value)

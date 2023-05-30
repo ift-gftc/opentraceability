@@ -55,7 +55,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
             return document
         } catch (ex: Exception) {
             val exception = Exception("Failed to parse the EPCIS document from the XML. xml=$strValue", ex)
-            OTLogger.Error(exception)
+            OTLogger.error(exception)
             throw exception
         }
     }

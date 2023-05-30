@@ -5,11 +5,12 @@ import interfaces.IMasterDataKDE
 import interfaces.VocabularyType
 import java.util.*
 import models.identifiers.*
+import utility.EnumUtil
 import java.lang.reflect.Type
 
 class VocabularyElement : IVocabularyElement {
     var ID: String? = null
-    var EPCISType: String? = null
+    var epcisType: String? = null
     var JsonLDType: String? = null
     var Context: JsonToken? = null
 

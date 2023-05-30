@@ -22,7 +22,7 @@ class EventDestination {
 
             for (e in EventDestinationType.values()) {
                 val annotation = e::class.java.getAnnotation(CBVAttribute::class.java)
-                if (annotation != null && annotation.Value.equals(type.toString(), ignoreCase = true)) {
+                if (annotation != null && annotation.value.equals(type.toString(), ignoreCase = true)) {
                     return e
                 }
             }
@@ -31,8 +31,8 @@ class EventDestination {
         }
         set(value) {
             val annotation = value::class.java.getAnnotation(CBVAttribute::class.java)
-            if (annotation != null && annotation.Value.isNotBlank() && annotation.Value.startsWith("urn")) {
-                this.Type = URI.create(annotation.Value)
+            if (annotation != null && annotation.value.isNotBlank() && annotation.value.startsWith("urn")) {
+                this.Type = URI.create(annotation.value)
             }
         }
 

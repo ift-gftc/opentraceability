@@ -121,7 +121,7 @@ class EPCISDocumentBaseXMLMapper {
 
             if (doc.Header != null) {
                 val xname = (Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader").toString()
-                val xHeader = OpenTraceabilityXmlMapper.ToXml(xname, doc.Header, doc.EpcisVersion!!)
+                val xHeader = OpenTraceabilityXmlMapper.toXml(xname, doc.Header, doc.EpcisVersion!!)
                 if (xHeader != null) {
                     xDoc.root.add(XElement("EPCISHeader", xHeader))
                 }
@@ -145,8 +145,8 @@ class EPCISDocumentBaseXMLMapper {
 
             val profiles = Setup.Profiles.filter {
                 it.EventType.toString() == eventType &&
-                        (it.Action == null || it.action == action) &&
-                        (it.BusinessStep == null || it.businessStep.lowercase() == bizStep?.lowercase())
+                        (it.Action == null || it.Action == action) &&
+                        (it.BusinessStep == null || it.BusinessStep.lowercase() == bizStep?.lowercase())
             }.sortedByDescending { it.specificityScore }
 
             if (profiles.isEmpty()) {

@@ -20,12 +20,9 @@ open class EPCISBaseDocument {
     var Contexts: ArrayList<String> = ArrayList<String>()
     var Attributes: MutableMap<String, String> = mutableMapOf()
 
-
     fun <T : IVocabularyElement> GetMasterData(): List<T> {
         return this.MasterData.filterIsInstance<T>()
     }
-
-
 
     open fun Merge(data: EPCISBaseDocument) {
         data.Events.forEach { e ->
@@ -141,7 +138,7 @@ open class EPCISBaseDocument {
 
 
 
-    private fun HasMatch(evt: IEvent, epcs: List<String>, vararg allowedTypes: EventProductType): Boolean {
+    fun HasMatch(evt: IEvent, epcs: List<String>, vararg allowedTypes: EventProductType): Boolean {
         for (epcMatchStr in epcs) {
             val epcMatch = EPC(epcMatchStr)
             for (product in evt.Products) {
@@ -155,7 +152,7 @@ open class EPCISBaseDocument {
         return false
     }
 
-    private fun HasUriMatch(uri: Uri?, filter: MutableList<String>, prefix: String, replacePrefix: String): Boolean {
+    fun HasUriMatch(uri: Uri?, filter: MutableList<String>, prefix: String, replacePrefix: String): Boolean {
         // make sure all of the EQ_bizStep are converted into URI format before comparing
         for (i in filter.indices) {
             val bizStep = filter[i]

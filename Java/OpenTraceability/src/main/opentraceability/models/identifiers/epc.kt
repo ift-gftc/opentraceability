@@ -104,7 +104,7 @@ class EPC {
             }
         } catch (ex: Exception) {
             val exception = Exception("The EPC is not in a valid format and could not be parsed. EPC=$epcStr", ex)
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw exception
         }
 
@@ -237,7 +237,7 @@ class EPC {
                     return "This EPC does not fit any of the allowed formats."
                 }
             } catch (ex: Exception) {
-                OTLogger.Error(ex)
+                OTLogger.error(ex)
                 throw ex
             }
         }
@@ -253,7 +253,7 @@ class EPC {
                     return false
                 }
             } catch (ex: Exception) {
-                OTLogger.Error(ex)
+                OTLogger.error(ex)
                 throw ex
             }
         }
@@ -289,7 +289,7 @@ class EPC {
 
             return obj1.equals(obj2)
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -306,7 +306,7 @@ class EPC {
 
             return !obj1.equals(obj2)
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -315,7 +315,7 @@ class EPC {
         try {
             return toString().hashCode()
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -324,7 +324,7 @@ class EPC {
         try {
             return _epcStr.lowercase()
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -345,7 +345,7 @@ class EPC {
 
             return isEquals(other as EPC)
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -358,7 +358,7 @@ class EPC {
 
             return this.toString().lowercase() == epc.toString().lowercase()
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -377,7 +377,7 @@ class EPC {
 
             return 1
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }

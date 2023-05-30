@@ -7,6 +7,7 @@ import org.w3c.dom.Element
 import utility.Countries
 import utility.Country
 import java.lang.reflect.Type
+import javax.xml.parsers.DocumentBuilderFactory
 
 class EventKDECountry: EventKDEBase, IEventKDE {
 
@@ -30,7 +31,7 @@ class EventKDECountry: EventKDEBase, IEventKDE {
         // you would typically use a XML parser here
         val document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
         val element = document.createElement(this.Name)
-        element.TextContent = value.ISO
+        element.textContent = value.ISO.toString()
         return element
     }
 

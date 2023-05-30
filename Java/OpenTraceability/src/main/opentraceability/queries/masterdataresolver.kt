@@ -14,6 +14,8 @@ import models.masterdata.TradingParty
 import java.lang.reflect.Type
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import mappers.OpenTraceabilityMappers
+import models.masterdata.DigitalLink
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -29,14 +31,14 @@ class MasterDataResolver {
         ) {
             for (evt in doc.Events) {
                 for (p in evt.Products) {
-                    if (p.epc.type == EPCType.Class || p.epc.type == EPCType.Instance) {
-                        resolveTradeitem(options, p.epc.gtin, doc, client)
+                    if (p.EPC.Type == EPCType.Class || p.EPC.Type == EPCType.Instance) {
+                        resolveTradeitem(options, p.EPC.GTIN, doc, client)
                     }
                 }
 
-                resolveLocation(options, evt.location?.gln, doc, client)
+                resolveLocation(options, evt.Location?.GLN, doc, client)
 
-                for (source in evt.sourceList) {
+                for (source in evt.SourceList) {
                     if (source.parsedType == EventSourceType.Owner) {
                         val pgln = PGLN(source.value ?: throw Exception("source in event source list has NULL value."))
                         if (pgln != null) {
@@ -45,7 +47,7 @@ class MasterDataResolver {
                     }
                 }
 
-                for (dest in evt.destinationList) {
+                for (dest in evt.DestinationList) {
                     if (dest.parsedType == EventDestinationType.Owner) {
                         val pgln = PGLN(dest.value ?: throw Exception("source in event source list has NULL value."))
                         if (pgln != null) {
@@ -101,7 +103,7 @@ class MasterDataResolver {
                     val t = Setup.getMasterDataTypeDefault(Tradeitem::class.java) ?: Tradeitem::class.java
                     val ti = resolveMasterDataItem<Tradeitem>(t, options, "/01/$gtin?linkType=gs1:masterData", client)
                     if (ti != null) {
-                        doc.masterData.add(ti)
+                        doc.MasterData.add(ti)
                     }
                 }
             }
@@ -118,7 +120,7 @@ class MasterDataResolver {
                     val t = Setup.getMasterDataTypeDefault(Location::class.java) ?: Location::class.java
                     val l = resolveMasterDataItem<Location>(t, options, "/414/$gln?linkType=gs1:masterData", client)
                     if (l != null) {
-                        doc.masterData.add(l)
+                        doc.MasterData.add(l)
                     }
                 }
             }
@@ -135,7 +137,7 @@ class MasterDataResolver {
                     val t = Setup.getMasterDataTypeDefault(TradingParty::class.java) ?: TradingParty::class.java
                     val tp = resolveMasterDataItem<TradingParty>(t, options, "/417/$pgln?linkType=gs1:masterData", client)
                     if (tp != null) {
-                        doc.masterData.add(tp)
+                        doc.MasterData.add(tp)
                     }
                 }
             }
@@ -151,7 +153,7 @@ class MasterDataResolver {
                 if (doc.getMasterData<Tradeitem>(gtin.toString()) == null) {
                     val ti = ResolverMasterDataItem<T>(options, "/01/$gtin?linkType=gs1:masterData", client)
                     if (ti != null) {
-                        doc.masterData.add(ti)
+                        doc.MasterData.add(ti)
                     }
                 }
             }
@@ -167,7 +169,7 @@ class MasterDataResolver {
                 if (doc.getMasterData<Location>(gln.toString()) == null) {
                     val l = ResolverMasterDataItem<T>(options, "/414/$gln?linkType=gs1:masterData", client)
                     if (l != null) {
-                        doc.masterData.add(l)
+                        doc.MasterData.add(l)
                     }
                 }
             }
@@ -183,7 +185,7 @@ class MasterDataResolver {
                 if (doc.getMasterData<TradingParty>(pgln.toString()) == null) {
                     val tp = ResolverMasterDataItem<T>(options, "/417/$pgln?linkType=gs1:masterData", client)
                     if (tp != null) {
-                        doc.masterData.add(tp)
+                        doc.MasterData.add(tp)
                     }
                 }
             }
@@ -204,12 +206,12 @@ class MasterDataResolver {
             relativeURL: String,
             client: HttpClient
         ): Any? = withContext(Dispatchers.IO) {
-            if (options.url == null) {
+            if (options.URL == null) {
                 throw Exception("options.Uri is null on the DigitalLinkQueryOptions")
             }
 
             val request = HttpRequest.newBuilder()
-                .uri(URI(options.url.toString().trimEnd('/') + "/" + relativeURL.trimStart('/')))
+                .uri(URI(options.URL.toString().trimEnd('/') + "/" + relativeURL.trimStart('/')))
                 .GET()
                 .build()
 
@@ -237,7 +239,7 @@ class MasterDataResolver {
                             if (itemResponse.statusCode() == 200) {
                                 val item = OpenTraceabilityMappers.MasterData.GS1WebVocab.Map(type, itemResponse.body())
                                 if (item != null) {
-                                    if (item.id == null) {
+                                    if (item.ID == null) {
                                         throw Exception("While resolve a $type through the GS1 Digital Link Resolver, the $type returned " +
                                                 "had an empty or invalid Identifier. The link that was resolved was $link and the results was ${itemResponse.body()}")
                                     } else {

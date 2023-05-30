@@ -67,7 +67,7 @@ object JsonContextHelper {
         return modifyVocab(json, jContext, namespaces, namespaces.asReversed(), JsonLDVocabTransformationType.COMPRESS, jVocabContext)
     }
 
-    private fun modifyVocab(json: Any, jContext: JSONObject, namespaces: Map<String, String>, namespacesReverse: Map<String, String>, transformType: JsonLDVocabTransformationType, jVocabContext: JSONObject? = null): Any? {
+    fun modifyVocab(json: Any, jContext: JSONObject, namespaces: Map<String, String>, namespacesReverse: Map<String, String>, transformType: JsonLDVocabTransformationType, jVocabContext: JSONObject? = null): Any? {
         return when (json) {
             is JSONObject -> {
                 val jObj: JSONObject = json

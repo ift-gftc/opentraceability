@@ -29,7 +29,7 @@ object JsonSchemaChecker {
     }
 
     @Throws(ProcessingMessageException::class)
-    private fun extractErrors(processingReport: ProcessingReport): List<String> {
+    fun extractErrors(processingReport: ProcessingReport): List<String> {
         val errorMessages: MutableList<String> = mutableListOf()
         val iterator: ProcessingReportIterator = toIterable(processingReport).iterator()
         while (iterator.hasNext()) {
@@ -45,7 +45,7 @@ object JsonSchemaChecker {
     }
 
     @Throws(IOException::class, ProcessingException::class)
-    private fun loadSchema(schemaURL: String): JsonSchema {
+    fun loadSchema(schemaURL: String): JsonSchema {
         val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
         return schemaFactory.getJsonSchema(URI(schemaURL))
     }

@@ -14,7 +14,6 @@ import utility.attributes.OpenTraceabilityJsonAttribute
 import utility.attributes.OpenTraceabilityMasterDataAttribute
 import java.lang.reflect.Type
 
-
 class Tradeitem : IVocabularyElement {
 
     var ID: String? = null

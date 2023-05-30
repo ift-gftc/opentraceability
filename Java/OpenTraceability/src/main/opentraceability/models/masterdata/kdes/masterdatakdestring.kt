@@ -21,8 +21,8 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
     }
 
     constructor(ns: String, name: String) {
-        namespace = ns
-        this.name = name
+        this.Namespace = ns
+        this.Name = name
     }
 
     fun getJson(): JToken? {
@@ -37,7 +37,7 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
         return if (value.isNullOrBlank()) {
             null
         } else {
-            val xname = (XNamespace)namespace + name
+            val xname = (XNamespace)namespace + this.Name
             val x = XElement(xname, value)
 
             // set the xsi type...
@@ -85,7 +85,7 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
     override fun getEPCISXml(): XElement? {
         return if (value != null) {
             val x = XElement("attribute")
-            x.add(XAttribute("id", name))
+            x.add(XAttribute("id", this.Name))
             x.value = value
             x
         } else {

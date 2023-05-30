@@ -11,7 +11,7 @@ class PGLN {
     }
 
     constructor(pglnStr: String?) {
-        val error = DetectPGLNIssue(pglnStr)
+        val error = detectPGLNIssue(pglnStr)
         if (!error.isNullOrBlank()) {
             throw Exception("The PGLN $pglnStr is not valid. $error")
         }
@@ -126,11 +126,7 @@ class PGLN {
         return pgln
     }
 
-    fun equals(obj: Any?): Boolean {
-        if (this === obj) return true
-        if (obj !is PGLN) return false
-        return this.equals(obj)
-    }
+
 
     fun notEquals(obj: Any?): Boolean {
         return !(this == obj)
@@ -160,7 +156,7 @@ class PGLN {
         return isEquals(pgln)
     }
 
-    private fun isEquals(pgln: PGLN?): Boolean {
+    fun isEquals(pgln: PGLN?): Boolean {
         if (pgln == null) return false
         return toString().equals(pgln.toString(), ignoreCase = true)
     }

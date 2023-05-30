@@ -1,11 +1,11 @@
 package models.identifiers
 
 object GS1Util {
-    private fun isEven(i: Int): Boolean {
+    fun isEven(i: Int): Boolean {
         return i % 2 == 0
     }
 
-    private fun charToInt32(charInt: Char): Int {
+    fun charToInt32(charInt: Char): Int {
         return when (charInt) {
             '0' -> 0
             '1' -> 1
@@ -21,7 +21,7 @@ object GS1Util {
         }
     }
 
-    private fun int32ToChar(charInt: Int): Char {
+    fun int32ToChar(charInt: Int): Char {
         return when (charInt) {
             0 -> '0'
             1 -> '1'
@@ -37,7 +37,7 @@ object GS1Util {
         }
     }
 
-    private fun breakIntoDigits(strInt: String): IntArray {
+    fun breakIntoDigits(strInt: String): IntArray {
         val rtnInts = mutableListOf<Int>()
 
         for (i in 0 until strInt.length) {

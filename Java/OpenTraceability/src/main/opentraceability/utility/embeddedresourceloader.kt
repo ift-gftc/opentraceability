@@ -11,7 +11,7 @@ import java.util.*
 class EmbeddedResourceLoader {
     private val assemblyMap: MutableMap<String, Assembly> = HashMap()
 
-    private fun getAssembly(assemblyName: String): Assembly {
+    fun getAssembly(assemblyName: String): Assembly {
         return assemblyMap.getOrPut(assemblyName) {
             Assembly.Load(assemblyName)
         }
@@ -30,7 +30,7 @@ class EmbeddedResourceLoader {
             }
             return output.toByteArray()
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -43,7 +43,7 @@ class EmbeddedResourceLoader {
             val reader = InputStreamReader(stream, StandardCharsets.UTF_8)
             return reader.readText()
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -58,7 +58,7 @@ class EmbeddedResourceLoader {
             val assembly = getAssembly(assemblyName)
             return assembly.GetManifestResourceStream(resourceName)
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }

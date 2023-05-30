@@ -23,13 +23,13 @@ class Country : IEquatable<Country>, IComparable<Country> {
     }
 
     constructor(xmlCountry: XmlElement) {
-        this.name = xmlCountry.attribute("Name")?.value ?: ""
-        this.alternativeName = xmlCountry.attribute("AlternativeName")?.value ?: ""
-        this.abbreviation = xmlCountry.attribute("Abbreviation")?.value ?: ""
-        this.alpha3 = xmlCountry.attribute("Alpha3")?.value ?: ""
+        this.Name = xmlCountry.attribute("Name")?.value ?: ""
+        this.AlternativeName = xmlCountry.attribute("AlternativeName")?.value ?: ""
+        this.Abbreviation = xmlCountry.attribute("Abbreviation")?.value ?: ""
+        this.Alpha3 = xmlCountry.attribute("Alpha3")?.value ?: ""
         val isoValue = xmlCountry.attribute("ISO")?.value
-        this.iso = isoValue?.toIntOrNull() ?: 0
-        this.cultureInfoCode = xmlCountry.attribute("CultureInfoCode")?.value ?: ""
+        this.ISO = isoValue?.toIntOrNull() ?: 0
+        this.CultureInfoCode = xmlCountry.attribute("CultureInfoCode")?.value ?: ""
 
     }
 
@@ -38,7 +38,7 @@ class Country : IEquatable<Country>, IComparable<Country> {
             var c: Country = this
             return c
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }

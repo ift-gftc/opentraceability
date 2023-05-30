@@ -24,7 +24,7 @@ class MasterDataKDECountry : MasterDataKDEBase, IMasterDataKDE {
     }
 
     override fun getGS1WebVocabJson(): JToken? {
-        throw NotImplementedException()
+        TODO("Not Implemented Exception")
     }
 
     fun getXml(): XElement? {
@@ -38,7 +38,7 @@ class MasterDataKDECountry : MasterDataKDEBase, IMasterDataKDE {
     }
 
     override fun setFromGS1WebVocabJson(json: JToken) {
-        throw NotImplementedException()
+        TODO("Not Implemented Exception")
     }
 
     override fun toString(): String {

@@ -1,4 +1,5 @@
 package models.masterdata
+
 import com.fasterxml.jackson.core.JsonToken
 import interfaces.IMasterDataKDE
 import interfaces.VocabularyType
@@ -10,8 +11,6 @@ import utility.attributes.OpenTraceabilityJsonAttribute
 import utility.attributes.OpenTraceabilityMasterDataAttribute
 import utility.attributes.OpenTraceabilityObjectAttribute
 import java.lang.reflect.Type
-
-
 
 
 class TradingParty : IVocabularyElement {
@@ -29,7 +28,6 @@ class TradingParty : IVocabularyElement {
     var Context: JsonToken? = null
 
 
-
     @OpenTraceabilityJsonAttribute("globalLocationNumber")
     var PGLN: PGLN? = null
 
@@ -41,7 +39,6 @@ class TradingParty : IVocabularyElement {
     @OpenTraceabilityJsonAttribute("cbvmda:informationProvider")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#informationProvider")
     var InformationProvider: PGLN? = null
-
 
 
     @OpenTraceabilityJsonAttribute("organizationName")
@@ -56,8 +53,6 @@ class TradingParty : IVocabularyElement {
     @OpenTraceabilityJsonAttribute("gdst:iftp")
     @OpenTraceabilityMasterDataAttribute("urn:gdst:kde#iftp")
     var IFTP: String? = null
-
-
 
 
     var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()

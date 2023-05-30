@@ -17,6 +17,7 @@ import utility.Measurement
 import utility.UOM
 import java.util.*
 import java.lang.reflect.Type
+import java.net.URI
 import java.time.OffsetDateTime
 import kotlin.reflect.KClass
 
@@ -161,7 +162,7 @@ class OpenTraceabilityJsonLDMapper {
                 return null
             } catch (ex: Exception) {
                 val e = Exception("Failed to parse json. value=$value", ex)
-                OTLogger.Error(e)
+                OTLogger.error(e)
                 throw e
             }
         }
@@ -229,7 +230,7 @@ class OpenTraceabilityJsonLDMapper {
                 typeInfo.ExtensionAttributes?.setValue(value, extensionAttributes)
                 typeInfo.ExtensionKDEs?.setValue(value, extensionKDEs)
             } catch (ex: Exception) {
-                OTLogger.Error(ex)
+                OTLogger.error(ex)
                 throw ex
             }
 
@@ -237,7 +238,7 @@ class OpenTraceabilityJsonLDMapper {
         }
 
 
-        private fun WriteObjectToJToken(obj: Any?): JToken? {
+        fun WriteObjectToJToken(obj: Any?): JToken? {
             return when(obj) {
                 null -> null
                 is List<LanguageString> -> {
@@ -260,13 +261,13 @@ class OpenTraceabilityJsonLDMapper {
                     if (obj.ticks < 0)
                         "-${obj.negate().totalHours.toString("#00")}:${obj.minutes.toString("00")}"
                     else
-                        "+${obj.totalHours.toString("#00")}:${obj.minutes.toString("00")}"
+                        "+${obj.TotalHours.toString("#00")}:${obj.minutes.toString("00")}"
                 }
                 else -> obj.toString() ?: ""
             }
         }
 
-        private fun ReadPropertyMapping(mappingProp: OTMappingTypeInformationProperty, json: JToken, value: Any, namespaces: Map<String, String>) {
+        fun ReadPropertyMapping(mappingProp: OTMappingTypeInformationProperty, json: JToken, value: Any, namespaces: Map<String, String>) {
             when {
                 mappingProp.IsQuantityList -> {
                     val e = value as IEvent
@@ -345,7 +346,7 @@ class OpenTraceabilityJsonLDMapper {
 
 
 
-        private fun ReadObjectFromString(value: String, t: KClass<*>): Any {
+        fun ReadObjectFromString(value: String, t: KClass<*>): Any {
             return try {
                 when(t) {
                     OffsetDateTime::class -> {
@@ -364,8 +365,8 @@ class OpenTraceabilityJsonLDMapper {
                         val v = value.toDouble()
                         v
                     }
-                    Uri::class -> {
-                        val v = Uri(value)
+                    URI::class -> {
+                        val v = URI(value)
                         v
                     }
                     TimeSpan::class -> {
@@ -400,12 +401,12 @@ class OpenTraceabilityJsonLDMapper {
                 }
             } catch (ex: Exception) {
                 val e = Exception("Failed to convert string into object. value=$value and t=$t", ex)
-                OTLogger.Error(e)
+                OTLogger.error(e)
                 throw e
             }
         }
 
-        private fun ReadKDE(name: String, json: JToken, namespaces: Map<String, String>): IEventKDE {
+        fun ReadKDE(name: String, json: JToken, namespaces: Map<String, String>): IEventKDE {
             var kde: IEventKDE? = null
             var ns = ""
             var realName = name

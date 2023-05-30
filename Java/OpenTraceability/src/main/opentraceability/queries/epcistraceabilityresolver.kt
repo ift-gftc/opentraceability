@@ -1,5 +1,6 @@
 package queries
 
+import interfaces.IAggregationEvent
 import java.net.http.HttpClient
 import models.identifiers.*
 import models.identifiers.EPC
@@ -7,6 +8,10 @@ import models.identifiers.PGLN
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import mappers.EPCISDataFormat
+import mappers.OpenTraceabilityMappers
+import models.events.EventProductType
+import utility.OpenTraceabilitySchemaException
 import java.net.URI
 
 object EPCISTraceabilityResolver {
@@ -183,10 +188,10 @@ object EPCISTraceabilityResolver {
 
                 if (response.statusCode().isSuccess) {
                     try {
-                        val doc = mapper.map(responseBody)
+                        val doc = mapper.Map(responseBody)
                         results.document = doc
                     } catch (schemaEx: OpenTraceabilitySchemaException) {
-                        results.errors.add(
+                        results.Errors.add(
                             EPCISQueryError(
                                 type = EPCISQueryErrorType.Schema,
                                 details = schemaEx.message
@@ -194,7 +199,7 @@ object EPCISTraceabilityResolver {
                         )
                     }
                 } else {
-                    results.errors.add(
+                    results.Errors.add(
                         EPCISQueryError(
                             type = EPCISQueryErrorType.HTTP,
                             details = "${response.statusCode()} - ${responseBody}"
@@ -202,7 +207,7 @@ object EPCISTraceabilityResolver {
                     )
                 }
             } catch (ex: Exception) {
-                results.errors.add(
+                results.Errors.add(
                     EPCISQueryError(
                         type = EPCISQueryErrorType.Exception,
                         details = ex.message
@@ -210,7 +215,7 @@ object EPCISTraceabilityResolver {
                 )
             }
 
-            if (options.enableStackTrace) {
+            if (options.EnableStackTrace) {
                 val stackTraceItem = EPCISQueryStackTraceItem(
                     relativeURL = request.uri(),
                     requestHeaders = request.headers().map { it.name() to it.value() },
@@ -219,9 +224,9 @@ object EPCISTraceabilityResolver {
                     responseHeaders = response?.headers()?.map { it.name() to it.value() }
                 )
 
-                results.stackTrace.add(stackTraceItem)
+                results.StackTrace.add(stackTraceItem)
 
-                results.errors.forEach { it.stackTraceItemID = stackTraceItem.ID }
+                results.Errors.forEach { it.stackTraceItemID = stackTraceItem.ID }
             }
 
             results

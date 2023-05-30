@@ -18,15 +18,15 @@ object EPCISDocumentBaseJsonMapper {
         }
 
         // normalize the json-ld
-        var strValue = normalizeEPCISJsonLD(strValue)
+        var strValue = NormalizeEPCISJsonLD(strValue)
 
         json = JSONObject(strValue)
 
         // read all of the attributes
         val document = T::class.java.getDeclaredConstructor().newInstance()
 
-        document.attributes["schemaVersion"] = json.optString("schemaVersion", "")
-        document.epcisVersion = EPCISVersion.V2
+        document.Attributes["schemaVersion"] = json.optString("schemaVersion", "")
+        document.EpcisVersion = EPCISVersion.V2
 
         // read the creation date
         val creationDateAttributeStr = json.optString("creationDate", null)
@@ -35,7 +35,7 @@ object EPCISDocumentBaseJsonMapper {
         }
 
         // read the content...
-        document.attributes = HashMap()
+        document.Attributes = HashMap()
 
         // we are going to break down the content into either namespaces, or links to contexts...
         val jContextArray = json.optJSONArray("@context")
@@ -47,8 +47,8 @@ object EPCISDocumentBaseJsonMapper {
                     val jobj = jt as JSONObject
                     val ns = JsonContextHelper.scrapeNamespaces(jobj)
                     for (n in ns) {
-                        if (!document.namespaces.containsKey(n.key)) {
-                            document.namespaces[n.key] = n.value
+                        if (!document.Namespaces.containsKey(n.key)) {
+                            document.Namespaces[n.key] = n.value
                         }
                     }
 
@@ -62,8 +62,8 @@ object EPCISDocumentBaseJsonMapper {
                         val jcontext = JsonContextHelper.getJsonLDContext(`val`)
                         val ns = JsonContextHelper.scrapeNamespaces(jcontext)
                         for (n in ns) {
-                            if (!document.namespaces.containsKey(n.key)) {
-                                document.namespaces[n.key] = n.value
+                            if (!document.Namespaces.containsKey(n.key)) {
+                                document.Namespaces[n.key] = n.value
                             }
                         }
 
@@ -74,20 +74,20 @@ object EPCISDocumentBaseJsonMapper {
         } else throw Exception("the @context on the root of the JSON-LD EPCIS file was not an array. we are currently expecting this to be an array.")
 
         if (json["id"] != null) {
-            document.attributes["id"] = json.optString("id", "")
+            document.Attributes["id"] = json.optString("id", "")
         }
 
         // read header information
-        document.header = Models.Common.StandardBusinessDocumentHeader()
+        document.Header = Models.Common.StandardBusinessDocumentHeader()
 
-        document.header.sender = Models.Common.SBDHOrganization()
-        document.header.sender.identifier = json.optString("sender", "")
+        document.Header.Sender = Models.Common.SBDHOrganization()
+        document.Header.Sender.Identifier = json.optString("sender", "")
 
-        document.header.receiver = Models.Common.SBDHOrganization()
-        document.header.receiver.identifier = json.optString("receiver", "")
+        document.Header.Receiver = Models.Common.SBDHOrganization()
+        document.Header.Receiver.Identifier = json.optString("receiver", "")
 
-        document.header.documentIdentification = Models.Common.SBDHDocumentIdentification()
-        document.header.documentIdentification.instanceIdentifier = json.optString("instanceIdentifier", "")
+        document.Header.DocumentIdentification = Models.Common.SBDHDocumentIdentification()
+        document.Header.DocumentIdentification.InstanceIdentifier = json.optString("instanceIdentifier", "")
 
         return document
     }

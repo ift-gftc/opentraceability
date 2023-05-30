@@ -11,7 +11,7 @@ object EnumUtil {
             val descriptionAnnotation = field.getAnnotation(DescriptionAttribute::class.java)
             return descriptionAnnotation?.description ?: ""
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -22,7 +22,7 @@ object EnumUtil {
             val displayAnnotation = field.getAnnotation(DisplayAttribute::class.java)
             return displayAnnotation?.name ?: value.name
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }
@@ -33,7 +33,7 @@ object EnumUtil {
             val annotation = field.getAnnotation(A::class.java)
             return if (annotation != null) listOf(annotation) else emptyList()
         } catch (ex: Exception) {
-            OTLogger.Error(ex)
+            OTLogger.error(ex)
             throw ex
         }
     }

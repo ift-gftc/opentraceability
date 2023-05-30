@@ -16,7 +16,7 @@ class GTIN /*: IEquatable<GTIN>, IComparable<GTIN>*/{
             if (!error.isNullOrEmpty()) {
                 throw Exception("The GTIN $gtinStr is invalid. $error")
             }
-            this._gtinStr = gtinStr
+            this._gtinStr = gtinStr!!
         } catch (ex: Exception) {
             OTLogger.error(ex)
             throw ex
@@ -160,7 +160,7 @@ class GTIN /*: IEquatable<GTIN>, IComparable<GTIN>*/{
         return isEquals(gtin)
     }
 
-    private fun isEquals(gtin: GTIN?): Boolean {
+    fun isEquals(gtin: GTIN?): Boolean {
         if (gtin == null) return false
         return toString().equals(gtin.toString(), ignoreCase = true)
     }

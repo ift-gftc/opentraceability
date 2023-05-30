@@ -10,7 +10,7 @@ import javax.xml.namespace.QName
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class OpenTraceabilityAttribute(
-    val ns: String,
+    val ns: String ,
     val name: String,
     val sequenceOrder: Int = -1,
     val version: EPCISVersion = EPCISVersion.V1

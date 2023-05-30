@@ -36,7 +36,7 @@ class EPCISXmlMasterDataWriter {
             }
         }
 
-        private fun WriteMasterDataList(data: MutableList<IVocabularyElement>, xVocabList: XElement, type: String) {
+        fun WriteMasterDataList(data: MutableList<IVocabularyElement>, xVocabList: XElement, type: String) {
             if (data.isNotEmpty()) {
                 val xVocab = XElement("Vocabulary", XAttribute("type", type), XElement("VocabularyElementList"))
                 val xVocabEleList = xVocab.element("VocabularyElementList") ?: throw Exception("Failed to grab the element VocabularyElementList")
@@ -50,7 +50,7 @@ class EPCISXmlMasterDataWriter {
             }
         }
 
-        private fun WriteMasterDataObject(md: IVocabularyElement): XElement {
+        fun WriteMasterDataObject(md: IVocabularyElement): XElement {
             val xVocabEle = XElement("VocabularyElement")
             xVocabEle.add(XAttribute("id", md.ID ?: ""))
 
@@ -133,7 +133,7 @@ class EPCISXmlMasterDataWriter {
             return xVocabEle
         }
 
-        private fun WriteObject(x: XElement, t: Class<*>, o: Any) {
+        fun WriteObject(x: XElement, t: Class<*>, o: Any) {
             for (property in t.declaredFields) {
                 val value = property.get(o)
                 if (value != null) {

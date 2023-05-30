@@ -3,10 +3,6 @@ package queries
 import models.identifiers.*
 import models.identifiers.EPC
 import models.identifiers.EPCType
-import org.intellij.markdown.lexer.push
-import java.lang.reflect.Type
-import java.net.URL
-
 import org.apache.http.client.utils.URIBuilder
 import java.net.URI
 import java.net.URLDecoder
@@ -31,7 +27,7 @@ class EPCISQueryParameters {
 
     constructor(vararg epcs: EPC) {
         for (epc in epcs) {
-            if (epc.type == EPCType.Class) {
+            if (epc.Type == EPCType.Class) {
                 query.MATCH_anyEPCClass?.add(epc.toString())
                     ?: run { query.MATCH_anyEPCClass = mutableListOf(epc.toString()) }
             } else {

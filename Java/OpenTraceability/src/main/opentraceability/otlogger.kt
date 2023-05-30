@@ -29,7 +29,7 @@ object OTLogger {
         notifyListeners(log)
     }
 
-    private fun notifyListeners(log: OTLog) {
+    fun notifyListeners(log: OTLog) {
         listeners.forEach { listener ->
             listener(log)
         }

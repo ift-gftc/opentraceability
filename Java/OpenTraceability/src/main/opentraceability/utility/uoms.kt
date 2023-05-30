@@ -14,7 +14,7 @@ object UOMS {
         load()
     }
 
-    private fun load() {
+    fun load() {
         try {
             val loader = EmbeddedResourceLoader()
             val jarr = JSONArray(loader.readString("OpenTraceability", "OpenTraceability.Utility.Data.uoms.json"))
@@ -42,7 +42,7 @@ object UOMS {
         return getBase(uom.unitDimension)
     }
 
-    private fun getBase(dimension: String): UOM {
+    fun getBase(dimension: String): UOM {
         for (entry in uomsAbbrevDict) {
             if (entry.value.unitDimension == dimension && entry.value.isBase()) {
                 return entry.value

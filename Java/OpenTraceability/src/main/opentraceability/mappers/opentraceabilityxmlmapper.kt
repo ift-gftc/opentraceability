@@ -19,13 +19,14 @@ import org.jdom2.Attribute
 import utility.Country
 import utility.Measurement
 import utility.UOM
+import java.net.URI
 
 
 class OpenTraceabilityXmlMapper {
     companion object {
 
 
-        fun ToXml(xname: String, value: Any?, version: EPCISVersion, required: Boolean = false): Element? {
+        fun toXml(xname: String, value: Any?, version: EPCISVersion, required: Boolean = false): Element? {
             return if (value != null) {
                 var x: Element? = DocumentHelper.createElement(xname)
                 var xvalue = x
@@ -101,13 +102,6 @@ class OpenTraceabilityXmlMapper {
         fun <T> fromXml(x: Element, version: EPCISVersion): T {
             return fromXml(x, T::class.java, version) as T
         }
-
-        import org.jdom2.Element
-        import org.jdom2.Attribute
-        import org.jdom2.xpath.XPathFactory
-        import java.lang.reflect.Type
-        import kotlin.reflect.full.createInstance
-        import kotlin.reflect.jvm.jvmErasure
 
         @Throws(Exception::class)
         fun fromXml(x: Element, type: Type, version: EPCISVersion): Any? {
@@ -202,7 +196,7 @@ class OpenTraceabilityXmlMapper {
                     }
                 }
             } catch (ex: Exception) {
-                OTLogger.Error(ex)
+                OTLogger.error(ex)
                 throw ex
             }
 
@@ -210,7 +204,7 @@ class OpenTraceabilityXmlMapper {
         }
 
 
-        private fun WriteObjectToString(obj: Any?): String? {
+        fun WriteObjectToString(obj: Any?): String? {
             return when (obj) {
                 null -> null
                 is List<LanguageString> -> {
@@ -238,7 +232,7 @@ class OpenTraceabilityXmlMapper {
             }
         }
 
-        private fun ReadPropertyMapping(mappingProp: OTMappingTypeInformationProperty, xchild: Element, value: Any, version: EPCISVersion) {
+        fun ReadPropertyMapping(mappingProp: OTMappingTypeInformationProperty, xchild: Element, value: Any, version: EPCISVersion) {
             when {
                 mappingProp.IsQuantityList -> {
                     val e = value as IEvent
@@ -298,7 +292,7 @@ class OpenTraceabilityXmlMapper {
         }
 
 
-        private fun ReadObjectFromString(value: String, t: KType): Any {
+        fun ReadObjectFromString(value: String, t: KType): Any {
             return when (t.jvmErasure) {
                 OffsetDateTime::class -> {
                     value.tryConvertToDateTimeOffset() ?: throw Exception("Failed to convert string to datetimeoffset where value = $value")
@@ -346,7 +340,7 @@ class OpenTraceabilityXmlMapper {
             }
         }
 
-        private fun ReadKDE(x: Element): IEventKDE {
+        fun ReadKDE(x: Element): IEventKDE {
             var kde: IEventKDE? = IEventKDE.InitializeKDE(x.namespaceURI, x.name)
 
             if (kde == null) {
@@ -367,7 +361,7 @@ class OpenTraceabilityXmlMapper {
             return kde
         }
 
-        private fun ReadKDE(x: Attribute): IEventKDE {
+        fun ReadKDE(x: Attribute): IEventKDE {
             var kde: IEventKDE? = IEventKDE.InitializeKDE(x.namespaceURI, x.name)
             kde = kde ?: EventKDEString(x.namespaceURI, x.name)
 

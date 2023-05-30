@@ -13,7 +13,7 @@ class OTMappingTypeInformation {
         var _masterDataXmlTypeInfos: MutableMap<Type, OTMappingTypeInformation> = mutableMapOf()
         var _masterDataJsonTypeInfos: MutableMap<Type, OTMappingTypeInformation> = mutableMapOf()
 
-        private fun GetXmlTypeInfo(t: KClass<*>): OTMappingTypeInformation {
+        fun GetXmlTypeInfo(t: KClass<*>): OTMappingTypeInformation {
             if (!_XmlTypeInfos.containsKey(t)) {
                 synchronized(_locker) {
                     if (!_XmlTypeInfos.containsKey(t)) {
@@ -25,7 +25,7 @@ class OTMappingTypeInformation {
             return _XmlTypeInfos[t]!!
         }
 
-        private fun GetJsonTypeInfo(t: KClass<*>): OTMappingTypeInformation {
+        fun GetJsonTypeInfo(t: KClass<*>): OTMappingTypeInformation {
             if (!_JsonTypeInfos.containsKey(t)) {
                 synchronized(_locker) {
                     if (!_JsonTypeInfos.containsKey(t)) {
@@ -37,7 +37,7 @@ class OTMappingTypeInformation {
             return _JsonTypeInfos[t]!!
         }
 
-        private fun GetMasterDataXmlTypeInfo(t: KClass<*>): OTMappingTypeInformation {
+        fun GetMasterDataXmlTypeInfo(t: KClass<*>): OTMappingTypeInformation {
             if (!_masterDataXmlTypeInfos.containsKey(t)) {
                 synchronized(_locker) {
                     if (!_masterDataXmlTypeInfos.containsKey(t)) {
@@ -49,7 +49,7 @@ class OTMappingTypeInformation {
             return _masterDataXmlTypeInfos[t]!!
         }
 
-        private fun GetMasterDataJsonTypeInfo(t: KClass<*>): OTMappingTypeInformation {
+        fun GetMasterDataJsonTypeInfo(t: KClass<*>): OTMappingTypeInformation {
             if (!_masterDataJsonTypeInfos.containsKey(t)) {
                 synchronized(_locker) {
                     if (!_masterDataJsonTypeInfos.containsKey(t)) {

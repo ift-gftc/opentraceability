@@ -57,12 +57,12 @@ import kotlin.concurrent.withLock
                     uom.Offset
                 )
             } catch (ex: Exception) {
-                OTLogger.Error(ex)
+                OTLogger.error(ex)
                 throw ex
             }
         }
 
-        private fun getUOMList(): List<UOM> {
+        fun getUOMList(): List<UOM> {
             if (uomList == null) {
                 // Initialize the list if it's null
                 uomList = loadUOMList()
@@ -70,7 +70,7 @@ import kotlin.concurrent.withLock
             return uomList!!
         }
 
-        private fun loadUOMList(): List<UOM> {
+        fun loadUOMList(): List<UOM> {
             // Perform the loading of UOMs from the appropriate source
             // and return the list of UOM objects
             // ...
