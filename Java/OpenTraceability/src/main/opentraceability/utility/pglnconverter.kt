@@ -7,20 +7,16 @@ import models.identifiers.*
 import models.identifiers.PGLN
 import java.lang.reflect.Type
 
-class PGLNConverter  /*: JsonConverter<PGLN>*/ {
+import com.google.gson.*
 
-    fun WriteJson(writer: JsonWriter, value: PGLN?, serializer: JsonSerializer<Any>) {
-        TODO("Not yet implemented")
+class PGLNConverter : JsonSerializer<PGLN>, JsonDeserializer<PGLN> {
+    override fun serialize(src: PGLN?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+        val strValue = src?.toString()
+        return JsonPrimitive(strValue)
     }
 
-    fun ReadJson(
-        reader: JsonReader,
-        objectType: Type,
-        existingValue: PGLN?,
-        hasExistingValue: Boolean,
-        serializer: JsonSerializer<Any>
-    ): PGLN? {
-        TODO("Not yet implemented")
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): PGLN? {
+        val strValue = json?.asString
+        return strValue?.let { PGLN(it) }
     }
-
 }

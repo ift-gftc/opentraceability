@@ -8,36 +8,40 @@ import utility.Country
 import java.lang.reflect.Type
 import javax.xml.bind.annotation.XmlElement
 
-class MasterDataKDECountry /*: MasterDataKDEBase, IMasterDataKDE*/ {
+class MasterDataKDECountry : MasterDataKDEBase, IMasterDataKDE {
+    var value: Country? = null
 
+    override val valueType: Class<*>
+        get() = Country::class.java
 
-    var Value: Country? = null
-
-    var ValueType: Type = Country::class.java
-
-    fun GetEPCISXml(): XmlElement? {
-        TODO("Not yet implemented")
-    }
-    fun GetGS1WebVocabJson(): JsonToken? {
-        TODO("Not yet implemented")
-    }
-    fun GetXml(): XmlElement? {
-        TODO("Not yet implemented")
+    fun getEPCISXml(): XElement? {
+        return value?.let { country ->
+            val x = XElement("attribute")
+            x.addAttribute(XAttribute("id", name))
+            x.value = country.alpha3
+            x
+        }
     }
 
-    fun SetFromEPCISXml(xml:XmlElement) {
-        TODO("Not yet implemented")
+    override fun getGS1WebVocabJson(): JToken? {
+        throw NotImplementedException()
     }
 
-    fun SetFromGS1WebVocabJson(json:JsonToken) {
-        TODO("Not yet implemented")
+    fun getXml(): XElement? {
+        return if (value == null) null else XElement((Namespace as XNamespace) + name, value.iso)
+    }
+
+    fun setFromEPCISXml(xml: XElement) {
+        val country = Countries.parse(xml.value)
+        value = country
+        name = xml.getAttributeValue("id") ?: ""
+    }
+
+    override fun setFromGS1WebVocabJson(json: JToken) {
+        throw NotImplementedException()
     }
 
     override fun toString(): String {
-        if (Value != null) {
-            return Value.toString()
-        } else {
-            return ""
-        }
+        return value?.name ?: ""
     }
 }

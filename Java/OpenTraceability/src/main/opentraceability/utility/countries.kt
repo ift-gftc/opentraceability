@@ -17,28 +17,20 @@ class Countries {
         internal var _dirNameCountries: MutableMap<String, Country> = mutableMapOf()
         var _locker: Object = Object()
 
-        fun Load() {
-
+        fun load() {
             var data: String? = null
-            data = StaticData.ReadData("Countries.xml")
-
-            //TODO: to complete with xml lib
-            /*
-            XDocument xmlCountries = XDocument.Parse(data);
-            foreach (XElement x in xmlCountries.Root.Elements())
-            {
-                Country country = new Country(x);
-                _dirCountries.TryAdd(country.Abbreviation.ToUpper(), country);
-                _dirNameCountries.TryAdd(country.Name.ToUpper(), country);
-                if (!string.IsNullOrEmpty(country.Alpha3))
-                {
-                    _dirAlpha3Countries.TryAdd(country.Alpha3.ToUpper(), country);
+            data = StaticData.readData("Countries.xml")
+            val xmlCountries = XDocument.parse(data)
+            for (x in xmlCountries.root.elements()) {
+                val country = Country(x)
+                _dirCountries[country.abbreviation.toUpperCase()] = country
+                _dirNameCountries[country.name.toUpperCase()] = country
+                if (!country.alpha3.isNullOrEmpty()) {
+                    _dirAlpha3Countries[country.alpha3.toUpperCase()] = country
                 }
             }
-            */
-
-
         }
+
 
         var CountryList: ArrayList<Country> = ArrayList<Country>()
             get() {
@@ -132,8 +124,6 @@ class Countries {
             } else {
                 return FromAbbreviation(strValue) ?: FromAlpha3(strValue) ?: FromCountryName(strValue)
             }
-
         }
     }
-
 }

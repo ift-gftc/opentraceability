@@ -12,10 +12,9 @@ import utility.attributes.OpenTraceabilityObjectAttribute
 import java.lang.reflect.Type
 
 
-//TODO: review this file
 
 
-class TradingParty/*: IVocabularyElement*/ {
+class TradingParty : IVocabularyElement {
 
     var ID: String? = null
 

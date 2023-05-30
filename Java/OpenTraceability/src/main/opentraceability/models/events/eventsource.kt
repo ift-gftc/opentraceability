@@ -1,10 +1,11 @@
 package models.events
+import utility.CBVAttribute
+import utility.EnumUtil
 import utility.attributes.OpenTraceabilityAttribute
 import utility.attributes.OpenTraceabilityJsonAttribute
 import java.lang.reflect.Type
 import java.net.URI
 class EventSource {
-    //TODO: review this
 
     @OpenTraceabilityJsonAttribute("type")
     @OpenTraceabilityAttribute("","@type")
@@ -15,32 +16,23 @@ class EventSource {
     @OpenTraceabilityAttribute("","text()")
     var Value: String? = null
 
-    /*
-    var ParsedType: EventSourceType = EventSourceType()
-    public EventSourceType ParsedType
-    {
-        get
-        {
-            EventSourceType type = EventSourceType.Unknown;
+    val parsedType: EventSourceType
+        get() {
+            var type = EventSourceType.Unknown
 
-            foreach (var e in Enum.GetValues<EventSourceType>())
-            {
-                if (EnumUtil.GetEnumAttributes<CBVAttribute>(e).Exists(e => e.Value.ToLower() == Type?.ToString().ToLower()))
-                {
-                    return e;
+            for (e in enumValues<EventSourceType>()) {
+                if (EnumUtil.GetEnumAttributes<CBVAttribute>(e).any { it.value.toLowerCase() == type?.toString()?.toLowerCase() }) {
+                    return e
                 }
             }
 
-            return type;
+            return type
         }
-        set
-        {
-            string? t = EnumUtil.GetEnumAttributes<CBVAttribute>(value).Where(e => e.Value.StartsWith("urn")).FirstOrDefault()?.Value;
-            if (!string.IsNullOrWhiteSpace(t))
-            {
-                this.Type = new Uri(t);
+        set(value) {
+            val t = EnumUtil.GetEnumAttributes<CBVAttribute>(value).firstOrNull { it.value.startsWith("urn") }?.value
+            if (!t.isNullOrBlank()) {
+                this.Type = URI(t)
             }
         }
-    }
-    */
+
 }

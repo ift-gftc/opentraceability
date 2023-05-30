@@ -3,46 +3,42 @@ package utility
 import OTLogger
 import java.time.OffsetDateTime
 
-class StringExtensions {
-    companion object {
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
-        var _digitsOnlyRegex: Regex = Regex("^[0-9]+\$")
-        var _isURICompatibleCharsRegex: Regex = Regex("(.*[^._\\-:0-9A-Za-z])")
+object StringExtensions {
+    private val digitsOnlyRegex = Regex("^[0-9]+$")
 
-        fun IsOnlyDigits(str: String): Boolean {
+    fun String.isOnlyDigits(): Boolean {
+        return digitsOnlyRegex.matches(this)
+    }
+
+    private val isURICompatibleCharsRegex = Regex("(.*[^._\\-:0-9A-Za-z])")
+
+    fun String.isURICompatibleChars(): Boolean {
+        return !isURICompatibleCharsRegex.matches(this)
+    }
+
+    fun String.tryConvertToDateTimeOffset(): OffsetDateTime? {
+        val formatters = listOf(
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSX")
+        )
+
+        for (formatter in formatters) {
             try {
-                return _digitsOnlyRegex.matches(str)
-            } catch (ex: Exception) {
-                OTLogger.Error(ex)
-                throw ex
+                return OffsetDateTime.parse(this, formatter)
+            } catch (e: Exception) {
+                // Ignore parse exceptions and try the next formatter
             }
         }
 
-        fun TryConvertToDateTimeOffset(str: String): OffsetDateTime? {
-            TODO("Not yet implemented")
-        }
+        return null
+    }
 
-        fun IsURICompatibleChars(str: String): Boolean {
-            try {
-                return !_isURICompatibleCharsRegex.matches(str)
-            } catch (ex: Exception) {
-                OTLogger.Error(ex)
-                throw ex
-            }
-        }
-
-        fun SplitXPath(str: String): ArrayList<String> {
-
-            var str2: String = str
-
-            var r: Regex  = Regex("(?=[^{}]*(?:{[^{}]*}[^{}]*)*$)\\/");
-
-            while (r.matches(str2))
-            {
-                str2 = r.replace(str2, "%SLASH%");
-            }
-
-            return ArrayList(str2.split("%SLASH%"))
-        }
+    fun String.splitXPath(): List<String> {
+        val regex = "(?=[^{}]*(?:{[^{}]*}[^{}]*)*\$)/"
+        var str = this.replace(regex, "%SLASH%")
+        return str.split("%SLASH%")
     }
 }

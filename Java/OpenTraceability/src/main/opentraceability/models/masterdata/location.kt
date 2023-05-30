@@ -14,9 +14,7 @@ import utility.attributes.OpenTraceabilityJsonAttribute
 import utility.attributes.OpenTraceabilityMasterDataAttribute
 import utility.attributes.OpenTraceabilityObjectAttribute
 
-//TODO: review this file
-
-class Location /*: IVocabularyElement*/ {
+class Location : IVocabularyElement {
 
     var ID: String? = null
 

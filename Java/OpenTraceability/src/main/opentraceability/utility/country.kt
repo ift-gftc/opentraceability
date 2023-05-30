@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElement
 
 //[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)
 //[DataContract]
-class Country /*: IEquatable<Country>, IComparable<Country>*/ {
+class Country : IEquatable<Country>, IComparable<Country> {
     var CultureInfoCode: String = ""
     var Name: String = ""
     var AlternativeName: String = ""
@@ -23,7 +23,14 @@ class Country /*: IEquatable<Country>, IComparable<Country>*/ {
     }
 
     constructor(xmlCountry: XmlElement) {
-        TODO("Not yet implemented")
+        this.name = xmlCountry.attribute("Name")?.value ?: ""
+        this.alternativeName = xmlCountry.attribute("AlternativeName")?.value ?: ""
+        this.abbreviation = xmlCountry.attribute("Abbreviation")?.value ?: ""
+        this.alpha3 = xmlCountry.attribute("Alpha3")?.value ?: ""
+        val isoValue = xmlCountry.attribute("ISO")?.value
+        this.iso = isoValue?.toIntOrNull() ?: 0
+        this.cultureInfoCode = xmlCountry.attribute("CultureInfoCode")?.value ?: ""
+
     }
 
     fun clone(): Country {

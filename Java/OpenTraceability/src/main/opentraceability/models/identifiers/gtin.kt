@@ -11,230 +11,173 @@ class GTIN /*: IEquatable<GTIN>, IComparable<GTIN>*/{
     }
 
     constructor(gtinStr: String?) {
-        TODO("Not yet implemented")
+        try {
+            val error = GTIN.detectGTINIssue(gtinStr)
+            if (!error.isNullOrEmpty()) {
+                throw Exception("The GTIN $gtinStr is invalid. $error")
+            }
+            this._gtinStr = gtinStr
+        } catch (ex: Exception) {
+            OTLogger.error(ex)
+            throw ex
+        }
+
     }
 
-    fun IsGS1GTIN(): Boolean {
-        TODO("Not yet implemented")
+    fun isGS1GTIN(): Boolean {
+        return _gtinStr.contains(":idpat:sgtin:")
     }
 
-    fun ToDigitalLinkURL(): String {
-        TODO("Not yet implemented")
+
+    fun toDigitalLinkURL(): String {
+        try {
+            if (_gtinStr.isNullOrEmpty()) {
+                return ""
+            } else if (isGS1GTIN()) {
+                val gtinParts = _gtinStr.split(":").last().split(".")
+                val gtin14 = "${gtinParts[1][0]}${gtinParts[0]}${gtinParts[1].substring(1)}" +
+                        GS1Util.calculateGTIN14CheckSum("${gtinParts[1][0]}${gtinParts[0]}${gtinParts[1].substring(1)}")
+                return "01/$gtin14"
+            } else {
+                return "01/$_gtinStr"
+            }
+        } catch (ex: Exception) {
+            OTLogger.error(ex)
+            throw ex
+        }
     }
+
 
     companion object {
-        fun DetectGTINIssue(gtinStr: String?): String? {
-            TODO("Not yet implemented")
+        fun detectGTINIssue(gtinStr: String?): String? {
+            try {
+                if (gtinStr.isNullOrEmpty()) {
+                    return "GTIN is NULL or EMPTY."
+                } else if (!gtinStr.isURICompatibleChars()) {
+                    return "The GTIN contains non-compatible characters for a URI."
+                } else if (gtinStr.contains(" ")) {
+                    return "GTIN cannot contain spaces."
+                } else if (gtinStr.length == 14 && gtinStr.isOnlyDigits()) {
+                    val checksum = GS1Util.calculateGTIN14CheckSum(gtinStr)
+                    if (checksum != gtinStr.last()) {
+                        return "The check sum did not calculate correctly. The expected check sum was $checksum. " +
+                                "Please make sure to validate that you typed the GTIN correctly. It's possible the check sum " +
+                                "was typed correctly but another number was entered wrong."
+                    }
+                    return null
+                } else if (gtinStr.startsWith("urn:") && gtinStr.contains(":product:class:")) {
+                    return null
+                } else if (gtinStr.startsWith("urn:") && gtinStr.contains(":idpat:sgtin:")) {
+                    val lastPiece = gtinStr.split(":").last().replace(".", "")
+                    if (!lastPiece.isOnlyDigits()) {
+                        return "This is supposed to be a GS1 GTIN based on the System Prefix and " +
+                                "Data Type Prefix. That means the Company Prefix and Serial Numbers " +
+                                "should only be digits. Found non-digit characters in the Company Prefix " +
+                                "or Serial Number."
+                    } else if (lastPiece.length != 13) {
+                        return "This is supposed to be a GS1 GTIN based on the System Prefix and Data Type " +
+                                "Prefix. That means the Company Prefix and Serial Numbers should contain a maximum " +
+                                "total of 13 digits between the two. The total number of digits when combined " +
+                                "is ${lastPiece.length}."
+                    }
+                    return null
+                } else {
+                    return "The GTIN is not in a valid EPCIS URI format or in GS1 GTIN-14 format."
+                }
+            } catch (ex: Exception) {
+                OTLogger.error(ex)
+                throw ex
+            }
         }
 
-        fun TryParse(gtinStr: String?, gtin: GTIN?, error: String?): Boolean {
-            TODO("Not yet implemented")
+
+        fun tryParse(gtinStr: String?, out gtin: GTIN?, out error: String?): Boolean {
+            try {
+                error = GTIN.detectGTINIssue(gtinStr)
+                if (error.isNullOrEmpty()) {
+                    gtin = GTIN(gtinStr)
+                    return true
+                } else {
+                    gtin = null
+                    return false
+                }
+            } catch (ex: Exception) {
+                OTLogger.error(ex)
+                throw ex
+            }
         }
 
-        fun IsGTIN(gtinStr: String): Boolean {
-            TODO("Not yet implemented")
+        fun isGTIN(gtinStr: String): Boolean {
+            try {
+                return detectGTINIssue(gtinStr) == null
+            } catch (ex: Exception) {
+                OTLogger.error(ex)
+                throw ex
+            }
         }
+
     }
 
 
-    fun Clone(): Object {
-        TODO("Not yet implemented")
+
+
+
+    fun clone(): Any {
+        return GTIN(toString())
     }
 
-/*
-        #region Overrides
 
-        public static bool operator ==(GTIN? obj1, GTIN? obj2)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return true;
-                }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is GTIN) return false
+        return this.isEquals(other)
+    }
 
-                if (!Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return false;
-                }
+    override fun hashCode(): Int {
+        return toString().hashCode()
+    }
 
-                if (Object.ReferenceEquals(null, obj1) && !Object.ReferenceEquals(null, obj2))
-                {
-                    return false;
-                }
+    override fun toString(): String {
+        return _gtinStr?.toLowerCase() ?: ""
+    }
 
-                return obj1?.Equals(obj2) ?? false;
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
+    fun equals(obj1: GTIN?, obj2: GTIN?): Boolean {
+        if (obj1 === obj2) return true
+        if (obj1 == null || obj2 == null) return false
+        return obj1.equals(obj2)
+    }
+
+    fun notEquals(obj1: GTIN?, obj2: GTIN?): Boolean {
+        return !equals(obj1, obj2)
+    }
+
+
+
+
+    fun equals(gtin: GTIN?): Boolean {
+        if (gtin == null) return false
+        if (this === gtin) return true
+        return isEquals(gtin)
+    }
+
+    private fun isEquals(gtin: GTIN?): Boolean {
+        if (gtin == null) return false
+        return toString().equals(gtin.toString(), ignoreCase = true)
+    }
+
+
+
+    fun compareTo(gtin: GTIN?): Int {
+        if (gtin == null) {
+            throw IllegalArgumentException("gtin")
         }
-
-        public static bool operator !=(GTIN? obj1, GTIN? obj2)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return false;
-                }
-
-                if (!Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return true;
-                }
-
-                if (Object.ReferenceEquals(null, obj1) && !Object.ReferenceEquals(null, obj2))
-                {
-                    return true;
-                }
-
-                return !obj1?.Equals(obj2) ?? false;
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
+        val myInt64Hash = toString().getInt64HashCode()
+        val otherInt64Hash = gtin.toString().getInt64HashCode()
+        return when {
+            myInt64Hash > otherInt64Hash -> -1
+            myInt64Hash == otherInt64Hash -> 0
+            else -> 1
         }
-
-        public override bool Equals(object? obj)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, obj))
-                {
-                    return false;
-                }
-
-                if (Object.ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                if (obj.GetType() != this.GetType())
-                {
-                    return false;
-                }
-
-                return this.IsEquals((GTIN)obj);
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        public override int GetHashCode()
-        {
-            try
-            {
-                int hash = this.ToString().GetInt32HashCode();
-                return hash;
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        public override string ToString()
-        {
-            try
-            {
-                return this._gtinStr?.ToLower() ?? string.Empty;
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        #endregion Overrides
-
-        #region IEquatable<GTIN>
-
-        public bool Equals(GTIN? gtin)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, gtin))
-                {
-                    return false;
-                }
-
-                if (Object.ReferenceEquals(this, gtin))
-                {
-                    return true;
-                }
-
-                return this.IsEquals(gtin);
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        private bool IsEquals(GTIN? gtin)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, gtin))
-                {
-                    return false;
-                }
-
-                if (this.ToString().ToLower() == gtin.ToString().ToLower())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        #endregion IEquatable<GTIN>
-
-        #region IComparable
-
-        public int CompareTo(GTIN? gtin)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, gtin))
-                {
-                    throw new ArgumentNullException(nameof(gtin));
-                }
-
-                long myInt64Hash = this.ToString().GetInt64HashCode();
-                long otherInt64Hash = gtin.ToString().GetInt64HashCode();
-
-                if (myInt64Hash > otherInt64Hash) return -1;
-                if (myInt64Hash == otherInt64Hash) return 0;
-                return 1;
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        #endregion IComparable
- */
+    }
 
 }

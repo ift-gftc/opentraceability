@@ -14,253 +14,373 @@ class EPC {
 
 
     constructor(epcStr: String?) {
-        TODO("Not yet implemented")
+        try {
+            val error = EPC.detectEPCIssue(epcStr)
+
+            if (!error.isNullOrBlank()) {
+                throw Exception("The EPC $epcStr is invalid. $error")
+            } else if (epcStr == null) {
+                throw ArgumentNullException("epcStr")
+            }
+
+            this._epcStr = epcStr
+
+            // if this is a GS1 class level epc (GS1 GTIN + Lot Number)
+            if (epcStr.startsWith("urn:epc:id:sscc:")) {
+                this.Type = EPCType.SSCC
+                this.SerialLotNumber = epcStr.split(":").lastOrNull()
+            } else if (epcStr.startsWith("urn:epc:class:lgtin:")) {
+                this.Type = EPCType.Class
+
+                val parts = epcStr.split(":").toMutableList()
+                val parts2 = parts.last().split('.').toMutableList()
+                parts.removeAt(parts.size - 1)
+
+                val gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
+                parts2[2]?.let { lotNumber ->
+                    this.SerialLotNumber = lotNumber
+                }
+                gtinStr.replace(":class:lgtin:", ":idpat:sgtin:")
+                this.GTIN = GTIN(gtinStr)
+            }
+            // else if this is a GS1 instance level epc (GS1 GTIN + Serial Number)
+            else if (epcStr.startsWith("urn:epc:id:sgtin:")) {
+                this.Type = EPCType.Instance
+
+                val parts = epcStr.split(":").toMutableList()
+                val parts2 = parts.last().split('.').toMutableList()
+                parts.removeAt(parts.size - 1)
+
+                val gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
+                parts2[2]?.let { lotNumber ->
+                    this.SerialLotNumber = lotNumber
+                }
+                gtinStr.replace(":id:sgtin:", ":idpat:sgtin:")
+                this.GTIN = GTIN(gtinStr)
+            }
+            // else if this is a GDST / IBM private class level identifier (GTIN + Lot Number)
+            else if (epcStr.startsWith("urn:") && epcStr.contains(":product:lot:class:")) {
+                this.Type = EPCType.Class
+
+                val parts = epcStr.split(":").toMutableList()
+                val parts2 = parts.last().split('.').toMutableList()
+                parts.removeAt(parts.size - 1)
+
+                val gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
+                parts2[2]?.let { lotNumber ->
+                    this.SerialLotNumber = lotNumber
+                }
+                gtinStr.replace(":product:lot:class:", ":product:class:")
+                models.identifiers.GTIN = GTIN(gtinStr)
+            }
+            // else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
+            else if (epcStr.startsWith("urn:") && epcStr.contains(":product:serial:obj:")) {
+                this.Type = EPCType.Instance
+
+                val parts = epcStr.split(":").toMutableList()
+                val parts2 = parts.last().split('.').toMutableList()
+                parts.removeAt(parts.size - 1)
+
+                val gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
+                parts2[2]?.let { lotNumber ->
+                    this.SerialLotNumber = lotNumber
+                }
+                gtinStr.replace(":product:serial:obj:", ":product:class:")
+                models.identifiers.GTIN = GTIN(gtinStr)
+            } else if (epcStr.startsWith("urn:sscc:")) {
+                this.Type = EPCType.SSCC
+            } else if (epcStr.startsWith("urn:") && epcStr.contains(":lpn:obj:")) {
+                this.Type = EPCType.SSCC
+            } else if (epcStr.startsWith("urn:epc:id:bic:")) {
+                this.Type = EPCType.SSCC
+            } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
+                this.Type = EPCType.Instance
+                this.SerialLotNumber = epcStr.split('/').lastOrNull()
+            } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
+                this.Type = EPCType.Class
+                this.SerialLotNumber = epcStr.split('/').lastOrNull()
+            } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute)) {
+                this.Type = EPCType.URI
+            }
+        } catch (ex: Exception) {
+            val exception = Exception("The EPC is not in a valid format and could not be parsed. EPC=$epcStr", ex)
+            OTLogger.Error(ex)
+            throw exception
+        }
+
     }
 
     constructor(type: EPCType, gtin: GTIN, lotOrSerial: String) {
-        TODO("Not yet implemented")
+        if (type == EPCType.Class) {
+            var epc = "${gtin.toString().lowercase()}.$lotOrSerial"
+            if (epc.contains(":product:class:")) {
+                epc = epc.replace(":product:class:", ":product:lot:class:")
+            } else if (epc.contains(":idpat:sgtin:")) {
+                epc = epc.replace(":idpat:sgtin:", ":class:lgtin:")
+            } else {
+                throw Exception("Unrecognized GTIN pattern. ${gtin.toString()}")
+            }
+            this.Type = type
+            this.GTIN = gtin
+            this.SerialLotNumber = lotOrSerial
+            this._epcStr = epc
+        } else if (type == EPCType.Instance) {
+            var epc = "${gtin.toString().lowercase()}.$lotOrSerial"
+            if (epc.contains(":product:class:")) {
+                epc = epc.replace(":product:class:", ":product:serial:obj:")
+            } else if (epc.contains(":idpat:sgtin:")) {
+                epc = epc.replace(":idpat:sgtin:", ":id:sgtin:")
+            } else {
+                throw Exception("Unrecognized GTIN pattern. ${gtin.toString()}")
+            }
+            this.Type = type
+            this.GTIN = gtin
+            this.SerialLotNumber = lotOrSerial
+            this._epcStr = epc
+        } else {
+            throw Exception("Cannot build EPC of type $type with a GTIN and Lot/Serial number.")
+        }
+
     }
 
     companion object {
-        fun DetectEPCIssue(epcStr: String?): String? {
-            TODO("Not yet implemented")
+        fun detectEPCIssue(epcStr: String?): String? {
+            try {
+                if (epcStr.isNullOrBlank()) {
+                    return "The EPC is a NULL or White Space string."
+                }
+
+                // if this is a GS1 class level epc (GS1 GTIN + Lot Number)
+                if (epcStr.startsWith("urn:epc:class:lgtin:")) {
+                    if (!epcStr.isURICompatibleChars()) {
+                        return "The EPC contains non-compatible characters for a URN format."
+                    }
+
+                    val parts = epcStr.split(":")
+                    val parts2 = parts.last().split('.')
+
+                    if (parts2.size < 3) {
+                        return "The EPC $epcStr is not in the right format. It doesn't contain a company prefix, item code, and lot number."
+                    } else {
+                        return null
+                    }
+                }
+                // else if this is a GS1 instance level epc (GS1 GTIN + Serial Number)
+                else if (epcStr.startsWith("urn:epc:id:sgtin:")) {
+                    if (!epcStr.isURICompatibleChars()) {
+                        return "The EPC contains non-compatible characters for a URN format."
+                    }
+
+                    val parts = epcStr.split(":")
+                    val parts2 = parts.last().split('.')
+
+                    if (parts2.size < 3) {
+                        return "The EPC $epcStr is not in the right format. It doesn't contain a company prefix, item code, and lot number."
+                    } else {
+                        return null
+                    }
+                }
+                // else if this is a GDST / IBM private class level identifier (GTIN + Lot Number)
+                else if (epcStr.startsWith("urn:") && epcStr.contains(":product:lot:class:")) {
+                    if (!epcStr.isURICompatibleChars()) {
+                        return "The EPC contains non-compatible characters for a URN format."
+                    }
+
+                    val parts = epcStr.split(":")
+                    val parts2 = parts.last().split('.')
+
+                    if (parts2.size < 3) {
+                        return "The EPC $epcStr is not in the right format. It doesn't contain a company prefix, item code, and serial number."
+                    } else {
+                        return null
+                    }
+                }
+                // else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
+                else if (epcStr.startsWith("urn:") && epcStr.contains(":product:serial:obj:")) {
+                    if (!epcStr.isURICompatibleChars()) {
+                        return "The EPC contains non-compatible characters for a URN format."
+                    }
+
+                    val parts = epcStr.split(":")
+                    val parts2 = parts.last().split('.')
+
+                    if (parts2.size < 3) {
+                        return "The EPC $epcStr is not in the right format. It doesn't contain a company prefix, item code, and a serial number."
+                    } else {
+                        return null
+                    }
+                } else if (epcStr.startsWith("urn:epc:id:sscc:")) {
+                    if (!epcStr.isURICompatibleChars()) {
+                        return "The EPC contains non-compatible characters for a URN format."
+                    }
+
+                    return null
+                } else if (epcStr.startsWith("urn:epc:id:bic:")) {
+                    if (!epcStr.isURICompatibleChars()) {
+                        return "The EPC contains non-compatible characters for a URN format."
+                    }
+
+                    return null
+                } else if (epcStr.startsWith("urn:") && epcStr.contains(":lpn:obj:")) {
+                    if (!epcStr.isURICompatibleChars()) {
+                        return "The EPC contains non-compatible characters for a URN format."
+                    }
+
+                    return null
+                } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
+                    return null
+                } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
+                    return null
+                } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute)) {
+                    return null
+                } else {
+                    return "This EPC does not fit any of the allowed formats."
+                }
+            } catch (ex: Exception) {
+                OTLogger.Error(ex)
+                throw ex
+            }
         }
 
-        fun TryParse(epcStr: String?, epc: EPC?, error: String?): Boolean {
-            TODO("Not yet implemented")
+        fun tryParse(epcStr: String?, outEPC: EPC?, outError: String?): Boolean {
+            try {
+                outError = detectEPCIssue(epcStr)
+                if (outError.isNullOrBlank()) {
+                    outEPC = EPC(epcStr)
+                    return true
+                } else {
+                    outEPC = null
+                    return false
+                }
+            } catch (ex: Exception) {
+                OTLogger.Error(ex)
+                throw ex
+            }
         }
     }
 
-
-    /*
-        /// <summary>
-        /// This method will perform a matching process with the EPC if both are either a Class/Instance type EPC.
-        /// If both EPCs are equal, it returns TRUE.
-        /// If the source contains a "*" for the serial/lot number, and the source and the target have matching GTINs, then it returns TRUE.
-        /// </summary>
-        public bool Matches(EPC targetEPC)
-        {
-            if (this.Equals(targetEPC))
-            {
-                return true;
-            }
-            else if (this.SerialLotNumber == "*" && this.GTIN == targetEPC.GTIN)
-            {
-                return true;
-            }
-            return false;
+    fun matches(targetEPC: EPC): Boolean {
+        if (this.equals(targetEPC)) {
+            return true
+        } else if (this.SerialLotNumber == "*" && this.GTIN == targetEPC.GTIN) {
+            return true
         }
+        return false
+    }
 
-        public object Clone()
-        {
-            EPC epc = new EPC(this.ToString());
-            return epc;
+    fun clone(): Any {
+        val epc = EPC(this.toString())
+        return epc
+    }
+
+
+
+
+
+    fun equals(obj1: EPC?, obj2: EPC?): Boolean {
+        try {
+            if (obj1 === null && obj2 === null) {
+                return true
+            }
+
+            if (obj1 === null || obj2 === null) {
+                return false
+            }
+
+            return obj1.equals(obj2)
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        #region Overrides
-
-        public static bool operator ==(EPC? obj1, EPC? obj2)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return true;
-                }
-
-                if (!Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return false;
-                }
-
-                if (Object.ReferenceEquals(null, obj1) && !Object.ReferenceEquals(null, obj2))
-                {
-                    return false;
-                }
-
-                if (obj1 == null)
-                {
-                    return false;
-                }
-
-                return obj1.Equals(obj2);
+    fun notEquals(obj1: EPC?, obj2: EPC?): Boolean {
+        try {
+            if (obj1 === null && obj2 === null) {
+                return false
             }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
+
+            if (obj1 === null || obj2 === null) {
+                return true
             }
+
+            return !obj1.equals(obj2)
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        public static bool operator !=(EPC? obj1, EPC? obj2)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return false;
-                }
-
-                if (!Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return true;
-                }
-
-                if (Object.ReferenceEquals(null, obj1) && !Object.ReferenceEquals(null, obj2))
-                {
-                    return true;
-                }
-
-                if (obj1 == null)
-                {
-                    return true;
-                }
-
-                return !obj1.Equals(obj2);
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
+    override fun hashCode(): Int {
+        try {
+            return toString().hashCode()
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        public override bool Equals(object? obj)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, obj))
-                {
-                    return false;
-                }
-
-                if (Object.ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                if (obj.GetType() != this.GetType())
-                {
-                    return false;
-                }
-
-                return this.IsEquals((EPC)obj);
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
+    override fun toString(): String {
+        try {
+            return _epcStr.lowercase()
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        public override int GetHashCode()
-        {
-            try
-            {
-                int hash = this.ToString().GetInt32HashCode();
-                return hash;
+    override fun equals(other: Any?): Boolean {
+        try {
+            if (other === null) {
+                return false
             }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
+
+            if (other === this) {
+                return true
             }
+
+            if (other.javaClass != this.javaClass) {
+                return false
+            }
+
+            return isEquals(other as EPC)
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        public override string ToString()
-        {
-            try
-            {
-                return _epcStr.ToLower();
+    fun isEquals(epc: EPC?): Boolean {
+        try {
+            if (epc === null) {
+                return false
             }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
+
+            return this.toString().lowercase() == epc.toString().lowercase()
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        #endregion Overrides
-
-        #region IEquatable<EPC>
-
-        public bool Equals(EPC? epc)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, epc))
-                {
-                    return false;
-                }
-
-                if (Object.ReferenceEquals(this, epc))
-                {
-                    return true;
-                }
-
-                return this.IsEquals(epc);
+    fun compareTo(epc: EPC?): Int {
+        try {
+            if (epc == null) {
+                throw NullPointerException("epc")
             }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
+
+            val myInt64Hash = this.toString().getInt64HashCode()
+            val otherInt64Hash = epc.toString().getInt64HashCode()
+
+            if (myInt64Hash > otherInt64Hash) return -1
+            if (myInt64Hash == otherInt64Hash) return 0
+
+            return 1
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        private bool IsEquals(EPC? epc)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, epc))
-                {
-                    return false;
-                }
-
-                if (this.ToString().ToLower() == epc.ToString().ToLower())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        #endregion IEquatable<EPC>
-
-        #region IComparable
-
-        public int CompareTo(EPC epc)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, epc))
-                {
-                    throw new ArgumentNullException(nameof(epc));
-                }
-
-                long myInt64Hash = this.ToString().GetInt64HashCode();
-                long otherInt64Hash = epc.ToString().GetInt64HashCode();
-
-                if (myInt64Hash > otherInt64Hash) return -1;
-                if (myInt64Hash == otherInt64Hash) return 0;
-
-                return 1;
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        #endregion IComparable
-     */
 
 }

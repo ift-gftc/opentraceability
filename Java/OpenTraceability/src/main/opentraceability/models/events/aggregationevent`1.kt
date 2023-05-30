@@ -29,8 +29,8 @@ class AggregationEvent<T : EventILMD>(
         21,
         OpenTraceabilityProductsListType.QuantityList
     )
-    //@OpenTraceabilityProductsAttribute("childQuantityList", EPCISVersion.V2, EventProductType.CHILD, 15, OpenTraceabilityProductsListType.QuantityList)
-    //@OpenTraceabilityProductsAttribute("childEPCs", EventProductType.CHILD, 8, OpenTraceabilityProductsListType.EPC_LIST, required = true)
+    @OpenTraceabilityProductsAttribute("childQuantityList", EPCISVersion.V2, EventProductType.CHILD, 15, OpenTraceabilityProductsListType.QuantityList)
+    @OpenTraceabilityProductsAttribute("childEPCs", EventProductType.CHILD, 8, OpenTraceabilityProductsListType.EPC_LIST, required = true)
     var children: MutableList<EventProduct> = ArrayList(),
 
     @OpenTraceabilityAttribute("", "action", 9)
@@ -58,13 +58,13 @@ class AggregationEvent<T : EventILMD>(
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("source")
     @OpenTraceabilityAttribute("", "sourceList", 16, EPCISVersion.V2)
-    //@OpenTraceabilityAttribute("","baseExtension/sourceList", 22, EPCISVersion.V1)
+    @OpenTraceabilityAttribute("","baseExtension/sourceList", 22, EPCISVersion.V1)
     var sourceList: MutableList<EventSource> = ArrayList(),
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("destination")
     @OpenTraceabilityAttribute("", "destinationList", 17, EPCISVersion.V2)
-    //@OpenTraceabilityAttribute("","baseExtension/destinationList", 23, EPCISVersion.V1)
+    @OpenTraceabilityAttribute("","baseExtension/destinationList", 23, EPCISVersion.V1)
     var destinationList: MutableList<EventDestination> = ArrayList(),
 
     @OpenTraceabilityObjectAttribute

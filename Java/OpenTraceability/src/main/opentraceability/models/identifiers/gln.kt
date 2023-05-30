@@ -8,268 +8,246 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
     internal var _glnStr: String = ""
 
 
-
     constructor() {
     }
 
     constructor(glnStr: String) {
-        TODO("Not yet implemented")
-        /*
-        try
-        {
-            string error = GLN.DetectGLNIssue(glnStr);
-            if (!string.IsNullOrWhiteSpace(error))
-            {
-                throw new Exception($"The GLN {glnStr} is invalid. {error}");
+        try {
+            val error = GLN.DetectGLNIssue(glnStr)
+            if (!error.isNullOrBlank()) {
+                throw Exception("The GLN $glnStr is invalid. $error")
             }
-            this._glnStr = glnStr;
+            this._glnStr = glnStr
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
-        catch (Exception Ex)
-        {
-            OTLogger.Error(Ex);
-            throw;
-        }
-        */
+
     }
 
-
+    fun toDigitalLinkURL(): String {
+        return try {
+            if (isGS1PGLN()) {
+                val gtinParts = _glnStr.split(':').last().split('.')
+                val pgln = gtinParts[0] + gtinParts[1] + GS1Util.calculateGLN13CheckSum(gtinParts[0] + gtinParts[1])
+                "414/$pgln"
+            } else {
+                "414/$_glnStr"
+            }
+        } catch (ex: Exception) {
+            OTLogger.error(ex)
+            throw ex
+        }
+    }
 
     companion object {
+        fun isGLN(glnStr: String): Boolean {
+            return try {
+                detectGLNIssue(glnStr) == null
+            } catch (ex: Exception) {
+                OTLogger.error(ex)
+                throw ex
+            }
+        }
+
+        fun detectGLNIssue(glnStr: String): String? {
+            return try {
+                if (glnStr.isNullOrEmpty()) {
+                    return "The GLN is NULL or EMPTY."
+                } else if (!glnStr.isURICompatibleChars()) {
+                    return "The GLN contains non-compatiable characters for a URI."
+                } else if (glnStr.contains(" ")) {
+                    return "GLN cannot contain spaces."
+                } else if (glnStr.length == 13 && glnStr.isOnlyDigits()) {
+                    val checksum = GS1Util.calculateGLN13CheckSum(glnStr)
+                    if (checksum != glnStr.last()) {
+                        return "The check sum did not calculate correctly. The expected check sum was $checksum. " +
+                                "Please make sure to validate that you typed the GLN correctly. It's possible the check sum " +
+                                "was typed correctly but another number was entered wrong."
+                    }
+                    null
+                } else if (glnStr.startsWith("urn:") && glnStr.contains(":location:loc:")) {
+                    null
+                } else if (glnStr.startsWith("urn:") && glnStr.contains(":location:extension:loc:")) {
+                    null
+                } else if (glnStr.contains(":id:sgln:")) {
+                    val pieces = glnStr.split(':').last().split('.')
+                    if (pieces.size < 2) {
+                        throw Exception("The GLN $glnStr is not valid.")
+                    }
+                    val lastPiece = pieces[0] + pieces[1]
+                    if (!lastPiece.isOnlyDigits()) {
+                        return "This is supposed to be a GS1 GLN based on the System Prefix and " +
+                                "Data Type Prefix. That means the Company Prefix and Serial Numbers " +
+                                "should only be digits. Found non-digit characters in the Company Prefix " +
+                                "or Serial Number."
+                    } else if (lastPiece.length != 12) {
+                        return "This is supposed to be a GS1 GLN based on the System Prefix and Data Type " +
+                                "Prefix. That means the Company Prefix and Serial Numbers should contain a maximum " +
+                                "total of 12 digits between the two. The total number of digits when combined " +
+                                "is ${lastPiece.length}."
+                    }
+                    null
+                } else {
+                    "The GLN is not in a valid EPCIS URI format or in GS1 GLN-13 format. Value = $glnStr"
+                }
+            } catch (ex: Exception) {
+                OTLogger.error(ex)
+                throw ex
+            }
+        }
+
+        fun tryParse(glnStr: String, out gln: GLN?, out error: String?): Boolean {
+            return try {
+                error = detectGLNIssue(glnStr)
+                if (error.isNullOrEmpty()) {
+                    gln = GLN(glnStr)
+                    true
+                } else {
+                    gln = null
+                    false
+                }
+            } catch (ex: Exception) {
+                OTLogger.error(ex)
+                throw ex
+            }
+        }
     }
 
-    fun IsGS1PGLN(): Boolean {
-        TODO("Not yet implemented")
-        //return (_glnStr.Contains(":id:sgln:"))
+    fun isGS1PGLN(): Boolean {
+        return _glnStr.contains(":id:sgln:")
     }
 
-    fun ToDigitalLinkURL(): String {
-        TODO("Not yet implemented")
+    fun clone(): Any {
+        val gln = GLN(toString())
+        return gln
     }
 
-    fun IsGLN(): Boolean {
-        TODO("Not yet implemented")
+
+
+    fun equals(obj1: GLN?, obj2: GLN?): Boolean {
+        try {
+            if (obj1 === null && obj2 === null) {
+                return true
+            }
+
+            if (obj1 === null || obj2 === null) {
+                return false
+            }
+
+            return obj1.equals(obj2)
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
+        }
     }
 
-    fun DetectGLNIssue(glnStr: String): String? {
-        TODO("Not yet implemented")
+    fun notEquals(obj1: GLN?, obj2: GLN?): Boolean {
+        try {
+            if (obj1 === null && obj2 === null) {
+                return false
+            }
+
+            if (obj1 === null || obj2 === null) {
+                return true
+            }
+
+            return !obj1.equals(obj2)
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
+        }
     }
 
-    fun TryParse(glnStr: String, gln: GLN?, error: String?): Boolean {
-        TODO("Not yet implemented")
+    override fun equals(obj: Any?): Boolean {
+        try {
+            if (obj == null) {
+                return false
+            }
+
+            if (this === obj) {
+                return true
+            }
+
+            if (javaClass != obj.javaClass) {
+                return false
+            }
+
+            return isEquals(obj as GLN)
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
+        }
     }
 
-    fun Clone(): Object {
-        TODO("Not yet implemented")
+    override fun hashCode(): Int {
+        try {
+            val hash = toString().hashCode()
+            return hash
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
+        }
     }
 
-    /*
-        #region Overrides
-
-        public static bool operator ==(GLN? obj1, GLN? obj2)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return true;
-                }
-
-                if (Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return false;
-                }
-
-                if (Object.ReferenceEquals(null, obj1) && !Object.ReferenceEquals(null, obj2))
-                {
-                    return false;
-                }
-
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                return obj1.Equals(obj2);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
+    override fun toString(): String {
+        try {
+            return _glnStr.toLowerCase()
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        public static bool operator !=(GLN? obj1, GLN? obj2)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return false;
-                }
-
-                if (!Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
-                {
-                    return true;
-                }
-
-                if (Object.ReferenceEquals(null, obj1) && !Object.ReferenceEquals(null, obj2))
-                {
-                    return true;
-                }
-
-                if (obj1 == null)
-                {
-                    return true;
-                }
-
-                return !obj1.Equals(obj2);
+    fun equals(gln: GLN?): Boolean {
+        try {
+            if (gln == null) {
+                return false
             }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
+
+            if (this === gln) {
+                return true
             }
+
+            return toString() == gln.toString()
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        public override bool Equals(object? obj)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, obj))
-                {
-                    return false;
-                }
-
-                if (Object.ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                if (obj.GetType() != this.GetType())
-                {
-                    return false;
-                }
-
-                return this.IsEquals((GLN)obj);
+     fun isEquals(gln: GLN): Boolean {
+        try {
+            if (gln == null) {
+                return false
             }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
+
+            return toString().toLowerCase() == gln.toString().toLowerCase()
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        public override int GetHashCode()
-        {
-            try
-            {
-                int hash = this.ToString().GetInt32HashCode();
-                return hash;
+    fun compareTo(gln: GLN?): Int {
+        try {
+            if (gln == null) {
+                throw NullPointerException("gln")
             }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
+
+            val myInt64Hash = toString().getInt64HashCode()
+            val otherInt64Hash = gln.toString().getInt64HashCode()
+
+            return when {
+                myInt64Hash > otherInt64Hash -> -1
+                myInt64Hash == otherInt64Hash -> 0
+                else -> 1
             }
+        } catch (ex: Exception) {
+            OTLogger.Error(ex)
+            throw ex
         }
+    }
 
-        public override string ToString()
-        {
-            try
-            {
-                return _glnStr.ToLower();
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        #endregion Overrides
-
-        #region IEquatable<GLN>
-
-        public bool Equals(GLN? gln)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, gln))
-                {
-                    return false;
-                }
-
-                if (Object.ReferenceEquals(this, gln))
-                {
-                    return true;
-                }
-
-                if (gln is null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return this.ToString() == gln.ToString();
-                }
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        private bool IsEquals(GLN gln)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, gln))
-                {
-                    return false;
-                }
-
-                if (this.ToString().ToLower() == gln.ToString().ToLower())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        #endregion IEquatable<GLN>
-
-        #region IComparable
-
-        public int CompareTo(GLN? gln)
-        {
-            try
-            {
-                if (Object.ReferenceEquals(null, gln))
-                {
-                    throw new ArgumentNullException(nameof(gln));
-                }
-
-                long myInt64Hash = this.ToString().GetInt64HashCode();
-                long otherInt64Hash = gln.ToString().GetInt64HashCode();
-
-                if (myInt64Hash > otherInt64Hash) return -1;
-                if (myInt64Hash == otherInt64Hash) return 0;
-                return 1;
-            }
-            catch (Exception Ex)
-            {
-                OTLogger.Error(Ex);
-                throw;
-            }
-        }
-
-        #endregion IComparable
-     */
 
 }

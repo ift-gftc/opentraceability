@@ -2,9 +2,10 @@ package models.events.kdes
 
 import com.fasterxml.jackson.core.JsonToken
 import interfaces.IEventKDE
+import org.json.simple.JSONObject
 import java.lang.reflect.Type
 import java.time.OffsetDateTime
-import javax.xml.bind.annotation.XmlElement
+import org.w3c.dom.Element
 
 class EventKDEDateTime: EventKDEBase, IEventKDE {
 
@@ -12,29 +13,25 @@ class EventKDEDateTime: EventKDEBase, IEventKDE {
 
     var Value: OffsetDateTime? = null
 
-    constructor() {
-
-    }
-
     constructor(ns: String, name: String) {
         this.Namespace = ns;
         this.Name = name;
     }
 
 
-    override fun GetJson(): JsonToken? {
+    override fun GetJson(): JSONObject? {
         TODO("Not yet implemented")
     }
 
-    override fun GetXml(): XmlElement? {
+    override fun GetXml(): Element? {
         TODO("Not yet implemented")
     }
 
-    override fun SetFromJson(json: JsonToken) {
+    override fun SetFromJson(json: JSONObject) {
         TODO("Not yet implemented")
     }
 
-    override fun SetFromXml(xml: XmlElement) {
+    override fun SetFromXml(xml: Element) {
         TODO("Not yet implemented")
     }
 

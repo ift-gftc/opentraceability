@@ -6,6 +6,7 @@ import models.events.EPCISVersion
 import java.lang.reflect.Type
 import javax.xml.namespace.QName
 
+@Repeatable
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class OpenTraceabilityAttribute(

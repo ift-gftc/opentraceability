@@ -1,25 +1,16 @@
 package utility
 
-import com.google.gson.JsonSerializer
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonWriter
+import com.google.gson.*
 import models.identifiers.GTIN
-import java.lang.reflect.Type
 
-class GTINConverter /*: JsonConverter<GTIN>*/ {
-
-    fun WriteJson(writer: JsonWriter, value: GTIN?, serializer: JsonSerializer<Any>) {
-        TODO("Not yet implemented")
+class GTINConverter : JsonSerializer<GTIN>, JsonDeserializer<GTIN> {
+    override fun serialize(src: GTIN?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+        val strValue = src?.toString()
+        return JsonPrimitive(strValue)
     }
 
-    fun ReadJson(
-        reader: JsonReader,
-        objectType: Type,
-        existingValue: GTIN?,
-        hasExistingValue: Boolean,
-        serializer: JsonSerializer<Any>
-    ): GTIN? {
-        TODO("Not yet implemented")
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): GTIN? {
+        val strValue = json?.asString
+        return if (strValue != null) GTIN(strValue) else null
     }
-
 }

@@ -7,30 +7,23 @@ import java.util.*
 import models.identifiers.*
 import java.lang.reflect.Type
 
-class VocabularyElement /*: IVocabularyElement*/ {
+class VocabularyElement : IVocabularyElement {
     var ID: String? = null
     var EPCISType: String? = null
     var JsonLDType: String? = null
     var Context: JsonToken? = null
 
-    /*
-    var VocabularyType: VocabularyType = VocabularyType()
-    public VocabularyType VocabularyType
-    {
-        get
-        {
-            VocabularyType type = VocabularyType.Unknown;
-            foreach (VocabularyType t in Enum.GetValues(typeof(VocabularyType)))
-            {
-                if (EnumUtil.GetEnumDescription(t).Trim().ToLower() == EPCISType?.Trim().ToLower())
-                {
-                    type = t;
+    val vocabularyType: VocabularyType
+        get() {
+            var type = VocabularyType.Unknown
+            for (t in VocabularyType.values()) {
+                if (EnumUtil.getEnumDescription(t).trim().toLowerCase() == epcisType?.trim().toLowerCase()) {
+                    type = t
                 }
             }
-            return type;
+            return type
         }
-    }
-     */
+
 
 
     var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()

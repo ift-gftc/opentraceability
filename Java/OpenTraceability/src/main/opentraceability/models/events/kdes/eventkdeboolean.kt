@@ -37,7 +37,7 @@ class EventKDEBoolean() : EventKDEBase(), IEventKDE {
     }
 
     override fun SetFromJson(json: JSONObject) {
-        this.value = json.getBoolean("value")
+        this.value = json["value"] as Boolean
     }
 
     override fun SetFromXml(xml: Element) {

@@ -2,9 +2,11 @@ package models.events.kdes
 
 import com.fasterxml.jackson.core.JsonToken
 import interfaces.IEventKDE
+import org.json.simple.JSONObject
+import org.w3c.dom.Element
+import utility.Countries
 import utility.Country
 import java.lang.reflect.Type
-import javax.xml.bind.annotation.XmlElement
 
 class EventKDECountry: EventKDEBase, IEventKDE {
 
@@ -12,9 +14,6 @@ class EventKDECountry: EventKDEBase, IEventKDE {
 
     var Value: Country? = null
 
-    constructor() {
-
-    }
 
     constructor(ns: String, name: String) {
         this.Namespace = ns;
@@ -26,16 +25,22 @@ class EventKDECountry: EventKDEBase, IEventKDE {
         TODO("Not yet implemented")
     }
 
-    override fun GetXml(): XmlElement? {
-        TODO("Not yet implemented")
+    override fun GetXml(): Element? {
+        val value = this.Value ?: return null
+        // you would typically use a XML parser here
+        val document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
+        val element = document.createElement(this.Name)
+        element.TextContent = value.ISO
+        return element
     }
 
-    override fun SetFromJson(json: JsonToken) {
-        TODO("Not yet implemented")
+    override fun SetFromJson(json: JSONObject) {
+        val strValue = json.toString()
+        this.Value = Countries.Parse(strValue)
     }
 
-    override fun SetFromXml(xml: XmlElement) {
-        TODO("Not yet implemented")
+    override fun SetFromXml(xml: Element) {
+        this.Value = Countries.Parse(xml.textContent)
     }
 
     override fun toString(): String {

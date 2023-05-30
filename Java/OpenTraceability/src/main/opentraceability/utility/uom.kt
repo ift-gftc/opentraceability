@@ -3,217 +3,119 @@ package utility
 import com.intellij.json.psi.JsonObject
 import OTLogger
 
-//[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)
-//[DataContract]
-class UOM {
+
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
+
+ class UOM {
+     val Name: String = ""
+     val Abbreviation: String = ""
+     val UnitDimension: String = ""
+     val SubGroup: String = ""
+     val UNCode: String = ""
+     val A: Double= 0.0
+     val B: Double= 0.0
+     val C: Double= 0.0
+     val D: Double = 0.0
+     val Offset: Double = 0.0
 
     companion object {
+        private val uomListLock = ReentrantLock()
+        private var uomList: List<UOM>? = null
 
-
-        var _locker: Object = Object()
-
-        fun LookUpFromUNCode(unCode: String): UOM? {
-            try {
-                //TODO: _locker not yet implemented
-                //lock(_locker) {
-
-                var uom: UOM? = UOMS.List.filter { s -> s.UNCode == unCode }.single()
-                if (uom == null) {
-                    uom = UOM()
-                }
-
-                return uom
-                //}
-            } catch (ex: Exception) {
-                OTLogger.Error(ex)
-                throw ex
+        fun LookUpFromUNCode(unCode: String): UOM {
+            return uomListLock.withLock {
+                val uom = getUOMList().find { it.UNCode == unCode }
+                return uom ?: UOM()
             }
         }
 
-
-        fun IsNullOrEmpty(uom: UOM): Boolean {
-            if (uom == null) {
-                return true
-            } else if (!uom.Abbreviation.isNullOrEmpty()) {
-                return true
-            } else {
-                return false
-            }
+        fun IsNullOrEmpty(uom: UOM?): Boolean {
+            return uom == null || uom.Abbreviation.isNullOrEmpty()
         }
 
-        fun ParseFromName(name: String): UOM? {
-            var u: UOM? = null
-
+        fun ParseFromName(name: String): UOM {
             try {
-
                 if (name.isNullOrEmpty()) {
-                    throw Exception("argument is null");
+                    throw IllegalArgumentException("name")
                 }
 
-                var uom: UOM? = UOMS.GetUOMFromName(name);
-                if (uom != null) {
-                    u = UOM();
-                    u.Name = uom.Name;
-                    u.Abbreviation = uom.Abbreviation;
-                    u.UnitDimension = uom.UnitDimension;
-                    u.UNCode = uom.UNCode;
-                    u.Offset = uom.Offset;
-                    u.SubGroup = uom.SubGroup;
-                    u.A = uom.A;
-                    u.B = uom.B;
-                    u.C = uom.C;
-                    u.D = uom.D;
-                } else {
-                    uom = UOMS.GetUOMFromUNCode(name.toUpperCase());
-                    if (uom != null) {
-                        u = UOM();
-                        u.Name = uom.Name;
-                        u.Abbreviation = uom.Abbreviation;
-                        u.UnitDimension = uom.UnitDimension;
-                        u.SubGroup = uom.SubGroup;
-                        u.UNCode = uom.UNCode;
-                        u.Offset = uom.Offset;
-                        u.A = uom.A;
-                        u.B = uom.B;
-                        u.C = uom.C;
-                        u.D = uom.D;
-                    } else {
-                        throw Exception("Failed to parse UOM");
-                    }
-                }
+                val uom = getUOMList().find { it.Name == name }
+                    ?: getUOMList().find { it.UNCode.equals(name, ignoreCase = true) }
+                    ?: throw Exception("Failed to parse UOM")
 
-                return u
+                return UOM(
+                    uom.Name,
+                    uom.Abbreviation,
+                    uom.UnitDimension,
+                    uom.SubGroup,
+                    uom.UNCode,
+                    uom.A,
+                    uom.B,
+                    uom.C,
+                    uom.D,
+                    uom.Offset
+                )
             } catch (ex: Exception) {
                 OTLogger.Error(ex)
                 throw ex
             }
         }
-    }
 
-    var Key: String = String()
-        get() {
-            return (Abbreviation);
+        private fun getUOMList(): List<UOM> {
+            if (uomList == null) {
+                // Initialize the list if it's null
+                uomList = loadUOMList()
+            }
+            return uomList!!
         }
 
-
-    var Name: String = String()
-    var Abbreviation: String = String()
-    var UnitDimension: String = String()
-    var SubGroup: String = String()
-    var UNCode: String = String()
-    var A: Double = 0.0
-    var B: Double = 0.0
-    var C: Double = 0.0
-    var D: Double = 0.0
-    var Offset: Double = 0.0
-
-    constructor() {
-        this.A = 0.0
-        this.B = 1.0
-        this.C = 1.0
-        this.D = 0.0
-    }
-
-    constructor(uom: UOM) {
-        this.Abbreviation = uom.Abbreviation;
-        this.Name = uom.Name;
-        this.UnitDimension = uom.UnitDimension;
-        this.UNCode = uom.UNCode;
-        this.SubGroup = uom.SubGroup;
-        this.Offset = uom.Offset;
-        this.A = uom.A;
-        this.B = uom.B;
-        this.C = uom.C;
-        this.D = uom.D;
-    }
-
-    fun CopyFrom(uom: UOM) {
-        this.Abbreviation = uom.Abbreviation;
-        this.Name = uom.Name;
-        this.UnitDimension = uom.UnitDimension;
-        this.UNCode = uom.UNCode;
-        this.SubGroup = uom.SubGroup;
-        this.Offset = uom.Offset;
-        this.A = uom.A;
-        this.B = uom.B;
-        this.C = uom.C;
-        this.D = uom.D;
+        private fun loadUOMList(): List<UOM> {
+            // Perform the loading of UOMs from the appropriate source
+            // and return the list of UOM objects
+            // ...
+            return emptyList()
+        }
     }
 
     fun IsBase(): Boolean {
-        if (A == 0.0 && B == 1.0 && C == 1.0 && D == 0.0) {
-            return (true);
-        } else {
-            return (false);
-        }
+        return A == 0.0 && B == 1.0 && C == 1.0 && D == 0.0
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj != null) {
-            if (obj is UOM) {
-                var other: UOM = obj;
-                if (UNCode == other.UNCode) {
-                    return (true);
-                }
-            }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
         }
-        return (false);
+        if (other !is UOM) {
+            return false
+        }
+        return UNCode == other.UNCode
     }
 
     override fun hashCode(): Int {
-        if (UNCode != null) {
-            return (UNCode.hashCode());
-        } else {
-            //TODO: implement base class
-            //return (base.hashCode());
-            return 1
-        }
+        return UNCode.hashCode()
     }
 
-
-    constructor(juom: JsonObject) {
-
-        this.A = 0.0
-        this.B = 1.0
-        this.C = 1.0
-        this.D = 0.0
-
-        //TODO: implement Json
-        /*
-        this.Abbreviation = uom.Abbreviation;
-        this.Name = uom.Name;
-        this.UnitDimension = uom.UnitDimension;
-        this.UNCode = uom.UNCode;
-        this.SubGroup = uom.SubGroup;
-        this.Offset = uom.Offset;
-        */
-    }
-
+    val Key: String
+        get() = Abbreviation
 
     fun Convert(value: Double, to: UOM): Double {
-        var valueBase: Double = this.ToBase(value);
-        var valueNew: Double = to.FromBase(valueBase);
-        return (valueNew);
-    }
-
-    fun Convert(value: Double, from: UOM, to: UOM): Double {
-        var valueBase: Double = from.ToBase(value);
-        var valueNew: Double = to.FromBase(valueBase);
-        return (valueNew);
+        val valueBase = this.ToBase(value)
+        val valueNew = to.FromBase(valueBase)
+        return valueNew
     }
 
     fun ToBase(value: Double): Double {
-        var baseValue: Double = ((A + B * value) / (C + D * value)) - Offset;
-        return baseValue;
+        val baseValue = ((A + B * value) / (C + D * value)) - Offset
+        return baseValue
     }
 
     fun FromBase(baseValue: Double): Double {
-        var value: Double  = ((A - C * baseValue) / (D * baseValue - B)) + Offset;
-        return value;
+        val value = ((A - C * baseValue) / (D * baseValue - B)) + Offset
+        return value
     }
 
-
-    fun ToString(): String {
-        return this.Name + " [" + this.Abbreviation + "]"
+    override fun toString(): String {
+        return "$Name [$Abbreviation]"
     }
 }

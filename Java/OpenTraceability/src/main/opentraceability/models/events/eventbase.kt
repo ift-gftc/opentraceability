@@ -23,12 +23,12 @@ open class EventBase {
     var eventTimeZoneOffset: Duration? = null
 
     @OpenTraceabilityAttribute("","eventID", 4, EPCISVersion.V2)
-    //@OpenTraceabilityAttribute("","baseExtension/eventID", 4, EPCISVersion.V1)
-    var eventID: URI? = null
+    @OpenTraceabilityAttribute("","baseExtension/eventID", 4, EPCISVersion.V1)
+    var  eventID: URI? = null
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","errorDeclaration", 5, EPCISVersion.V2)
-    //@OpenTraceabilityAttribute("","baseExtension/errorDeclaration", 5, EPCISVersion.V1)
+    @OpenTraceabilityAttribute("","baseExtension/errorDeclaration", 5, EPCISVersion.V1)
     var errorDeclaration: ErrorDeclaration? = null
 
     @OpenTraceabilityAttribute("","certificationInfo", 6, EPCISVersion.V2)

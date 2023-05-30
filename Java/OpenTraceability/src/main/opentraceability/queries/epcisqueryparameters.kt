@@ -7,138 +7,134 @@ import org.intellij.markdown.lexer.push
 import java.lang.reflect.Type
 import java.net.URL
 
+import org.apache.http.client.utils.URIBuilder
+import java.net.URI
+import java.net.URLDecoder
+import java.net.URLEncoder
+import kotlin.reflect.KMutableProperty
+
 class EPCISQueryParameters {
+    private val propMapping = mutableMapOf<String, KMutableProperty<*>>()
+
+    init {
+        for (prop in EPCISQuery::class.members) {
+            if (prop is KMutableProperty<*>) {
+                propMapping[prop.name] = prop
+            }
+        }
+    }
+
     var queryType: EPCISQueryType = EPCISQueryType.events
-    var query: EPCISQuery = EPCISQuery()
+    val query: EPCISQuery = EPCISQuery()
 
+    constructor()
 
-    constructor(epcs: ArrayList<EPC>) {
-        epcs.forEach { epc ->
-            if (epc.Type == EPCType.Class) {
-                if (query.MATCH_anyEPCClass == null) {
-                    query.MATCH_anyEPCClass = ArrayList<String>();
-                }
-                query.MATCH_anyEPCClass.push(epc.toString());
+    constructor(vararg epcs: EPC) {
+        for (epc in epcs) {
+            if (epc.type == EPCType.Class) {
+                query.MATCH_anyEPCClass?.add(epc.toString())
+                    ?: run { query.MATCH_anyEPCClass = mutableListOf(epc.toString()) }
             } else {
-                if (query.MATCH_anyEPC == null) {
-                    query.MATCH_anyEPC = ArrayList<String>();
-                }
-                query.MATCH_anyEPC.push(epc.toString());
+                query.MATCH_anyEPC?.add(epc.toString())
+                    ?: run { query.MATCH_anyEPC = mutableListOf(epc.toString()) }
             }
         }
     }
 
+    constructor(uri: URI) {
+        val queryParameters = URIBuilder(uri).parameters
+        for (param in queryParameters) {
+            val key = param.name
+            val value = URLDecoder.decode(param.value, "UTF-8")
 
-    constructor(uri: URL) {
-        // split into each query parameter
-        if (uri.query != null && uri.query.length > 1) {
-            var arr = uri.query.substring(1).split('&')
-
-            arr.forEach { qp ->
-
-                var key: String = qp.split('=').first();
-                /*
-                 string value = HttpUtility.UrlDecode(qp.Split('=').Last());
-
-                     if (_prop_mapping.ContainsKey(key))
-                     {
-                         PropertyInfo prop = _prop_mapping[key];
-                         if (prop != null)
-                         {
-                             if (prop.PropertyType == typeof(DateTimeOffset?))
-                             {
-                                 DateTimeOffset dt = DateTimeOffset.Parse(value);
-                                 prop.SetValue(query, dt);
-                             }
-                             else if (prop.PropertyType == typeof(List<string>))
-                             {
-                                 List<string> values = value.Split('|').ToList();
-                                 prop.SetValue(query, values);
-                             }
-                             else if (prop.PropertyType == typeof(List<Uri>))
-                             {
-                                 List<Uri> values = value.Split('|').Select(u => new Uri(u)).ToList();
-                                 prop.SetValue(query, values);
-                             }
-                         }
-                     }
-                 */
-
+            val prop = propMapping[key]
+            if (prop != null) {
+                when (prop.returnType) {
+                    KType.Companion.typeOf<DateTimeOffset?>() -> {
+                        val dt = DateTimeOffset.parse(value)
+                        prop.setter.call(query, dt)
+                    }
+                    KType.Companion.typeOf<MutableList<String>?>() -> {
+                        val values = value.split("|")
+                        prop.setter.call(query, values.toMutableList())
+                    }
+                    KType.Companion.typeOf<MutableList<URI>?>() -> {
+                        val values = value.split("|").map { URI(it) }
+                        prop.setter.call(query, values.toMutableList())
+                    }
+                }
             }
         }
     }
 
-    fun IsValid(error: String?): Boolean {
-        var error = null;
-        return true;
+    fun isValid(): Boolean {
+        return true
     }
 
-    fun ToJSON(): String {
-        TODO("Not yet implemented")
-        /*
-            string json = JsonConvert.SerializeObject(this.query, new JsonSerializerSettings()
-            {
-                Formatting = Formatting.Indented,
-                DateFormatString = "o",
-                NullValueHandling = NullValueHandling.Ignore
-            });
+    fun toUri(): URI {
+        val queryParameters = mutableListOf<String>()
 
-            JObject jobject = new JObject();
-            jobject["queryType"] = this.queryType.ToString();
-            jobject["query"] = JObject.Parse(json);
-
-            return jobject.ToString();
-         */
-
-    }
-
-    fun ToQueryParameters(): String {
-
-        var queryParameters: ArrayList<String> = ArrayList<String>()
-        TODO("Not yet implemented")
-
-        /*
-            // go through each property on the on the query
-            foreach (var prop in typeof(EPCISQuery).GetProperties())
-            {
-                if (prop.PropertyType == typeof(DateTimeOffset?))
-                {
-                    DateTimeOffset? dateTime = (DateTimeOffset?)prop.GetValue(query);
-                    if (dateTime != null)
-                    {
-                        string queryParam = $"{prop.Name}={HttpUtility.UrlEncode(dateTime.Value.ToString("o"))}";
-                        queryParameters.Add(queryParam);
+        for (prop in EPCISQuery::class.members) {
+            if (prop is KMutableProperty<*>) {
+                when (val value = prop.getter.call(query)) {
+                    is DateTimeOffset? -> {
+                        value?.let { queryParameters.add("${prop.name}=${URLEncoder.encode(it.toString(), "UTF-8")}") }
                     }
-                }
-                else if (prop.PropertyType == typeof(List<string>))
-                {
-                    List<string>? list = prop.GetValue(query) as List<string>;
-                    if (list != null && list.Count > 0)
-                    {
-                        string queryParam = $"{prop.Name}={string.Join('|', list.Select(l => HttpUtility.UrlEncode(l)))}";
-                        queryParameters.Add(queryParam);
+                    is MutableList<*> -> {
+                        value.let {
+                            if (it.isNotEmpty()) {
+                                val encodedValues = it.map { URLEncoder.encode(it.toString(), "UTF-8") }
+                                queryParameters.add("${prop.name}=${encodedValues.joinToString("|")}")
+                            }
+                        }
                     }
-                }
-                else if (prop.PropertyType == typeof(List<Uri>))
-                {
-                    List<Uri>? list = prop.GetValue(query) as List<Uri>;
-                    if (list != null && list.Count > 0)
-                    {
-                        string queryParam = $"{prop.Name}={string.Join('|', list.Select(l => HttpUtility.UrlEncode(l.ToString())))}";
-                        queryParameters.Add(queryParam);
+                    is MutableList<URI> -> {
+                        value.let {
+                            if (it.isNotEmpty()) {
+                                val encodedValues = it.map { URLEncoder.encode(it.toString(), "UTF-8") }
+                                queryParameters.add("${prop.name}=${encodedValues.joinToString("|")}")
+                            }
+                        }
                     }
                 }
             }
-         */
+        }
 
-
-        var q:String  = "?" + queryParameters.joinToString("&")
-        return q;
+        val queryString = queryParameters.joinToString("&")
+        return URI.create("?${queryString}")
     }
 
-
-
-    fun Merge(queryParameters: EPCISQueryParameters) {
-        TODO("Not yet implemented")
+    fun merge(queryParameters: EPCISQueryParameters) {
+        for (prop in EPCISQuery::class.members) {
+            if (prop is KMutableProperty<*>) {
+                when (val otherValue = prop.getter.call(queryParameters.query)) {
+                    is DateTimeOffset? -> {
+                        if (otherValue != null) {
+                            prop.setter.call(this.query, otherValue)
+                        }
+                    }
+                    is MutableList<*> -> {
+                        if (otherValue.isNotEmpty()) {
+                            val list = prop.getter.call(this.query) as? MutableList<Any>
+                            if (list == null) {
+                                prop.setter.call(this.query, otherValue.toMutableList())
+                            } else {
+                                list.addAll(otherValue as Collection<Any>)
+                            }
+                        }
+                    }
+                    is MutableList<URI> -> {
+                        if (otherValue.isNotEmpty()) {
+                            val list = prop.getter.call(this.query) as? MutableList<URI>
+                            if (list == null) {
+                                prop.setter.call(this.query, otherValue.toMutableList())
+                            } else {
+                                list.addAll(otherValue as Collection<URI>)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

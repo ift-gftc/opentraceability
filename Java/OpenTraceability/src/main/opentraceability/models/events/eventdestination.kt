@@ -1,13 +1,12 @@
 package models.events
 
+import utility.CBVAttribute
 import utility.attributes.OpenTraceabilityAttribute
 import utility.attributes.OpenTraceabilityJsonAttribute
 import java.lang.reflect.Type
 import java.net.URI
 
 class EventDestination {
-
-    //TODO: review this
 
     @OpenTraceabilityJsonAttribute("type")
     @OpenTraceabilityAttribute("","@type")
@@ -17,34 +16,24 @@ class EventDestination {
     @OpenTraceabilityAttribute("","text()")
     var Value: String? = null
 
+    var parsedType: EventDestinationType
+        get() {
+            var type = EventDestinationType.Unknown
 
-    /*
-    var ParsedType: EventDestinationType = EventDestinationType()
-
-    public EventDestinationType ParsedType
-    {
-        get
-        {
-            EventDestinationType type = EventDestinationType.Unknown;
-
-            foreach (var e in Enum.GetValues<EventDestinationType>())
-            {
-                if (EnumUtil.GetEnumAttributes<CBVAttribute>(e).Exists(e => e.Value.ToLower() == Type?.ToString().ToLower()))
-                {
-                    return e;
+            for (e in EventDestinationType.values()) {
+                val annotation = e::class.java.getAnnotation(CBVAttribute::class.java)
+                if (annotation != null && annotation.Value.equals(type.toString(), ignoreCase = true)) {
+                    return e
                 }
             }
 
-            return type;
+            return type
         }
-        set
-        {
-            string? t = EnumUtil.GetEnumAttributes<CBVAttribute>(value).Where(e => e.Value.StartsWith("urn")).FirstOrDefault()?.Value;
-            if (!string.IsNullOrWhiteSpace(t))
-            {
-                this.Type = new Uri(t);
+        set(value) {
+            val annotation = value::class.java.getAnnotation(CBVAttribute::class.java)
+            if (annotation != null && annotation.Value.isNotBlank() && annotation.Value.startsWith("urn")) {
+                this.Type = URI.create(annotation.Value)
             }
         }
-    }
-    */
+
 }

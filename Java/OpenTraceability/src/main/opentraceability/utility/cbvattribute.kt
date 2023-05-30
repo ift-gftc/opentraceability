@@ -1,10 +1,7 @@
 package utility
 
-//[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)
-class CBVAttribute /*:Attribute*/ {
-    var Value: String = ""
+@Repeatable
+@Target(AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class CBVAttribute(val value: String)
 
-    constructor(value: String) {
-        Value = value
-    }
-}

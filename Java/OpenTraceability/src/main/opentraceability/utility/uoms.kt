@@ -4,150 +4,94 @@ import OTLogger
 import org.intellij.markdown.lexer.push
 import java.util.*
 
-//[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)
-//[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)
-class UOMS {
+import org.json.JSONArray
 
-    //TODO: Not yet implemented
+object UOMS {
+    private val uomsAbbrevDict = mutableMapOf<String, UOM>()
+    private val uomsUNCodeDict = mutableMapOf<String, UOM>()
 
-    companion object {
-        var uomsAbbrevDict: MutableMap<String, UOM> = mutableMapOf()
-        var uomsUNCodeDict: MutableMap<String, UOM> = mutableMapOf()
-        var _locker: Object = Object()
-
-        fun Load() {
-            try {
-                /*
-                // load the subscriptions xml
-                EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                JArray jarr = JArray.Parse(loader.ReadString("OpenTraceability", "OpenTraceability.Utility.Data.uoms.json"));
-                foreach (JObject juom in jarr)
-                {
-                    UOM uom = new UOM(juom);
-                    if (!uomsAbbrevDict.ContainsKey(uom.Abbreviation.ToLower()))
-                    {
-                        uomsAbbrevDict.TryAdd(uom.Abbreviation.ToLower(), uom);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Trace.WriteLine("Duplicate Unit abbreviation detected:" + uom.Abbreviation);
-                    }
-                    if (!uomsUNCodeDict.ContainsKey(uom.UNCode.ToUpper()))
-                    {
-                        uomsUNCodeDict.TryAdd(uom.UNCode.ToUpper(), uom);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Trace.WriteLine("Duplicate Unit UNCode detected:" + uom.UNCode);
-                    }
-                }
-                */
-            } catch (ex: Exception) {
-                OTLogger.Error(ex)
-                throw ex
-            }
-        }
-
-        fun GetBase(uom: UOM): UOM {
-            return (GetBase(uom.UnitDimension));
-        }
-
-        fun GetBase(dimension: String): UOM {
-
-            uomsAbbrevDict.forEach { kvp ->
-                if (kvp.value.UnitDimension == dimension) {
-                    if (kvp.value.IsBase()) {
-                        return (kvp.value);
-                    }
-                }
-            }
-
-            throw Exception("Failed to get base for dimension = " + dimension);
-        }
-
-        fun GetUOMFromName(Name: String): UOM? {
-            var uom: UOM? = null;
-            var Name = Name.toLowerCase();
-            if (Name == "count") {
-                Name = "ea";
-            }
-            if (Name == "pound" || Name == "pounds" || Name == "ib") {
-                Name = "lb";
-            }
-            if (Name[Name.length - 1] == '.') {
-                Name = Name.substring(0, Name.length - 1);
-            }
-            if (uomsAbbrevDict.containsKey(Name)) {
-                uom = uomsAbbrevDict[Name];
-            } else {
-                run loop@{
-                    uomsAbbrevDict.forEach { kvp ->
-                        if (kvp.value.Name.toLowerCase() == Name) {
-                            uom = kvp.value;
-                            return@loop
-                        }
-                    }
-                }
-
-                if (uom == null) {
-                    if (Name[Name.length - 1] == 's') {
-                        Name = Name.substring(0, Name.length - 1);
-
-                        run loop@{
-                            uomsAbbrevDict.forEach { kvp ->
-                                if (kvp.value.Name.toLowerCase() == Name) {
-                                    uom = kvp.value;
-                                    return@loop
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-
-            return (uom);
-        }
-
-        fun GetUOMFromUNCode(Name: String): UOM? {
-            var uom: UOM? = null;
-
-            var Name = Name.uppercase()
-
-            if (uomsUNCodeDict.containsKey(Name)) {
-                uom = uomsUNCodeDict[Name];
-            } else {
-                run loop@{
-                    uomsAbbrevDict.forEach { kvp ->
-                        if (kvp.value.UNCode.toLowerCase() == Name) {
-                            uom = kvp.value;
-                            return@loop
-                        }
-                    }
-                }
-            }
-
-            return uom
-        }
-
-        var List: ArrayList<UOM> = ArrayList<UOM>()
-            get() {
-                var lst: ArrayList<UOM> = ArrayList<UOM>();
-                //lock(_locker) {
-                    uomsAbbrevDict.forEach { kvp ->
-                        lst.push(kvp.value);
-                    }
-
-                    return lst;
-                //}
-            }
+    init {
+        load()
     }
 
-    constructor() {
-        _locker = Object()
-        uomsAbbrevDict = mutableMapOf()
-        uomsUNCodeDict = mutableMapOf()
-        Load()
+    private fun load() {
+        try {
+            val loader = EmbeddedResourceLoader()
+            val jarr = JSONArray(loader.readString("OpenTraceability", "OpenTraceability.Utility.Data.uoms.json"))
+            for (i in 0 until jarr.length()) {
+                val juom = jarr.getJSONObject(i)
+                val uom = UOM(juom)
+                if (!uomsAbbrevDict.containsKey(uom.abbreviation.toLowerCase())) {
+                    uomsAbbrevDict[uom.abbreviation.toLowerCase()] = uom
+                } else {
+                    println("Duplicate Unit abbreviation detected: ${uom.abbreviation}")
+                }
+                if (!uomsUNCodeDict.containsKey(uom.unCode.toUpperCase())) {
+                    uomsUNCodeDict[uom.unCode.toUpperCase()] = uom
+                } else {
+                    println("Duplicate Unit UNCode detected: ${uom.unCode}")
+                }
+            }
+        } catch (ex: Exception) {
+            OTLogger.error(ex)
+            throw ex
+        }
     }
 
+    fun getBase(uom: UOM): UOM {
+        return getBase(uom.unitDimension)
+    }
+
+    private fun getBase(dimension: String): UOM {
+        for (entry in uomsAbbrevDict) {
+            if (entry.value.unitDimension == dimension && entry.value.isBase()) {
+                return entry.value
+            }
+        }
+        throw Exception("Failed to get base for dimension = $dimension")
+    }
+
+    fun getUOMFromName(name: String): UOM? {
+        var uom: UOM? = null
+        var formattedName = name.toLowerCase()
+        if (formattedName == "count") {
+            formattedName = "ea"
+        }
+        if (formattedName == "pound" || formattedName == "pounds" || formattedName == "ib") {
+            formattedName = "lb"
+        }
+        if (formattedName[formattedName.length - 1] == '.') {
+            formattedName = formattedName.substring(0, formattedName.length - 1)
+        }
+        if (uomsAbbrevDict.containsKey(formattedName)) {
+            uom = uomsAbbrevDict[formattedName]
+        } else {
+            for (entry in uomsAbbrevDict) {
+                if (entry.value.name.toLowerCase() == formattedName) {
+                    uom = entry.value
+                    break
+                }
+            }
+            if (uom == null) {
+                if (formattedName[formattedName.length - 1] == 's') {
+                    formattedName = formattedName.substring(0, formattedName.length - 1)
+                    for (entry in uomsAbbrevDict) {
+                        if (entry.value.name.toLowerCase() == formattedName) {
+                            uom = entry.value
+                            break
+                        }
+                    }
+                }
+            }
+        }
+        return uom
+    }
+
+    fun getUOMFromUNCode(name: String): UOM? {
+        val formattedName = name.toUpperCase()
+        return uomsUNCodeDict[formattedName] ?: uomsAbbrevDict.values.find { it.unCode.equals(formattedName, ignoreCase = true) }
+    }
+
+    val list: List<UOM>
+        get() = uomsAbbrevDict.values.toList()
 }

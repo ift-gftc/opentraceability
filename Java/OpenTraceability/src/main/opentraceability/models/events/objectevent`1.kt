@@ -4,15 +4,12 @@ import java.util.*
 import models.identifiers.*
 import models.events.kdes.CertificationList
 import models.events.*
-import utility.attributes.OpenTraceabilityAttribute
-import utility.attributes.OpenTraceabilityObjectAttribute
+import utility.attributes.*
 import utility.attributes.OpenTraceabilityXmlIgnoreAttribute
 import java.time.Duration
 import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
-
-//TODO: review this
 
 class ObjectEvent<T>: EventBase() {
 
@@ -20,9 +17,9 @@ class ObjectEvent<T>: EventBase() {
     @OpenTraceabilityAttribute("","type", 0)
     lateinit var EventType: EventType
 
-    //[OpenTraceabilityProducts("extension/quantityList", EPCISVersion.V1, EventProductType.Reference, 20, OpenTraceabilityProductsListType.QuantityList)
-    //[OpenTraceabilityProducts("quantityList", EPCISVersion.V2, EventProductType.Reference, 14, OpenTraceabilityProductsListType.QuantityList)
-    //[OpenTraceabilityProducts("epcList", EventProductType.Reference, 7, OpenTraceabilityProductsListType.EPCList, Required = true)
+    @OpenTraceabilityProductsAttribute("extension/quantityList", EPCISVersion.V1, EventProductType.Reference, 20, OpenTraceabilityProductsListType.QuantityList)
+    @OpenTraceabilityProductsAttribute("quantityList", EPCISVersion.V2, EventProductType.Reference, 14, OpenTraceabilityProductsListType.QuantityList)
+    @OpenTraceabilityProductsAttribute("epcList", EventProductType.Reference, 7, OpenTraceabilityProductsListType.EPCList, Required = true)
     var ReferenceProducts: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
     @OpenTraceabilityAttribute("","action", 8)
@@ -44,61 +41,53 @@ class ObjectEvent<T>: EventBase() {
     var Location: EventLocation? = null
 
     @OpenTraceabilityObjectAttribute
-    //[OpenTraceabilityArray("bizTransaction")
+    @OpenTraceabilityArrayAttribute("bizTransaction")
     @OpenTraceabilityAttribute("","bizTransactionList", 13)
     var BizTransactionList: ArrayList<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
 
     @OpenTraceabilityObjectAttribute
-    //[OpenTraceabilityArray("source")
+    @OpenTraceabilityArrayAttribute("source")
     @OpenTraceabilityAttribute("","sourceList", 15, EPCISVersion.V2)
-    //@OpenTraceabilityAttribute("","extension/sourceList", 21, EPCISVersion.V1)
+    @OpenTraceabilityAttribute("","extension/sourceList", 21, EPCISVersion.V1)
     var SourceList: ArrayList<EventSource> = ArrayList<EventSource>()
 
     @OpenTraceabilityObjectAttribute
-    //[OpenTraceabilityArray("destination")
+    @OpenTraceabilityArrayAttribute("destination")
     @OpenTraceabilityAttribute("","destinationList", 16, EPCISVersion.V2)
-    //@OpenTraceabilityAttribute("","extension/destinationList", 22, EPCISVersion.V1)
+    @OpenTraceabilityAttribute("","extension/destinationList", 22, EPCISVersion.V1)
     var DestinationList: ArrayList<EventDestination> = ArrayList<EventDestination>()
 
     @OpenTraceabilityObjectAttribute
-    //[OpenTraceabilityArray("sensorElement")
+    @OpenTraceabilityArrayAttribute("sensorElement")
     @OpenTraceabilityAttribute("","sensorElementList", 17, EPCISVersion.V2)
-    //@OpenTraceabilityAttribute("","extension/sensorElementList",  EPCISVersion.V1)
+    @OpenTraceabilityAttribute("","extension/sensorElementList",  EPCISVersion.V1)
     var SensorElementList: ArrayList<SensorElement> = ArrayList<SensorElement>()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","persistentDisposition", 18)
-    //@OpenTraceabilityAttribute("","extension/persistentDisposition", EPCISVersion.V1)
+    @OpenTraceabilityAttribute("","extension/persistentDisposition", EPCISVersion.V1)
     var PersistentDisposition: PersistentDisposition? = null
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","ilmd", 19, EPCISVersion.V2)
-    //@OpenTraceabilityAttribute("","extension/ilmd", 23, EPCISVersion.V1)
+    @OpenTraceabilityAttribute("","extension/ilmd", 23, EPCISVersion.V1)
     var ILMD: T? = null
 
     var Products: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
-    /*
-    public ReadOnlyCollection<EventProduct> Products
-    {
-        get
-        {
-            ArrayList<EventProduct> products = new ArrayList<EventProduct>();
-            products.AddRange(this.ReferenceProducts);
-            return new ReadOnlyCollection<EventProduct>(products);
+    val products: List<EventProduct>
+        get() {
+            val products = ArrayList<EventProduct>()
+            products.addAll(ReferenceProducts)
+            return ReadOnlyCollection(products)
+        }
+
+    fun addProduct(product: EventProduct) {
+        if (product.Type == EventProductType.Reference) {
+            ReferenceProducts.add(product)
+        } else {
+            throw Exception("Object event only supports references.")
         }
     }
 
-    public void AddProduct(EventProduct product)
-    {
-        if (product.Type == EventProductType.Reference)
-        {
-            this.ReferenceProducts.Add(product);
-        }
-        else
-        {
-            throw new Exception("Object event only supports references.");
-        }
-    }
-    */
 }

@@ -1,21 +1,23 @@
 package models.events
 
 import interfaces.IEventKDE
+import interfaces.ITransformationEvent
 import java.util.*
 import models.identifiers.*
 import models.events.kdes.CertificationList
 import models.events.*
+import utility.attributes.OpenTraceabilityProductsAttribute
+import utility.attributes.OpenTraceabilityProductsListType
 import java.time.Duration
 import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
 
-//TODO: review this
 
-class TransformationEvent<T> /*: EventBase, ITransformationEvent*/ {
+class TransformationEvent<T> : EventBase, ITransformationEvent {
 
-    //[OpenTraceabilityProducts("inputQuantityList", EventProductType.Input, 8, OpenTraceabilityProductsListType.QuantityList)
-    //[OpenTraceabilityProducts("inputEPCList", EventProductType.Input, 7, OpenTraceabilityProductsListType.EPCList)
+    @OpenTraceabilityProductsAttribute("inputQuantityList", EventProductType.Input, 8, OpenTraceabilityProductsListType.QuantityList)
+    @OpenTraceabilityProductsAttribute("inputEPCList", EventProductType.Input, 7, OpenTraceabilityProductsListType.EPCList)
     var Inputs: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
     var Outputs: ArrayList<EventProduct> = ArrayList<EventProduct>()
@@ -50,36 +52,20 @@ class TransformationEvent<T> /*: EventBase, ITransformationEvent*/ {
     //public EventILMD? GetILMD() => ILMD;
 
 
+    val Products: List<EventProduct>
+        get() {
+            val products = mutableListOf<EventProduct>()
+            products.addAll(Inputs)
+            products.addAll(Outputs)
+            return ReadOnlyCollection(products)
+        }
 
-    var Products: ArrayList<EventProduct> = ArrayList<EventProduct>()
-    /*
-    public ReadOnlyCollection<EventProduct> Products
-    {
-        get
-        {
-            ArrayList<EventProduct> products = new ArrayList<EventProduct>();
-            products.AddRange(Inputs);
-            products.AddRange(Outputs);
-            return new ReadOnlyCollection<EventProduct>(products);
+    fun AddProduct(product: EventProduct) {
+        when (product.type) {
+            EventProductType.Output -> Outputs.add(product)
+            EventProductType.Input -> Inputs.add(product)
+            else -> throw Exception("Transformation event only supports inputs and outputs.")
         }
     }
-    */
 
-    /*
-    public void AddProduct(EventProduct product)
-    {
-        if (product.Type == EventProductType.Output)
-        {
-            this.Outputs.Add(product);
-        }
-        else if (product.Type == EventProductType.Input)
-        {
-            this.Inputs.Add(product);
-        }
-        else
-        {
-            throw new Exception("Transformation event only supports inputs and outputs.");
-        }
-    }
-    */
 }

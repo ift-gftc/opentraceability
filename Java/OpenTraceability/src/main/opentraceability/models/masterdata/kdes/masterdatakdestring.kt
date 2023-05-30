@@ -2,65 +2,94 @@ package models.masterdata.kdes
 
 import com.fasterxml.jackson.core.JsonToken
 import interfaces.IEventKDE
+import interfaces.IMasterDataKDE
 import models.events.kdes.EventKDEBase
 import java.lang.reflect.Type
 import javax.xml.bind.annotation.XmlElement
 
-//TODO: review this file
 
-class MasterDataKDEString /*: MasterDataKDEBase, IMasterDataKDE*/ {
+class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
+    override val valueType: Class<*>
+        get() = String::class.java
 
-    var ValueType: Type = String::class.java
-    var Value: String? = null
-    var Type: String? = null
-    var Attributes: MutableMap<String, String> = mutableMapOf()
-
+    var value: String? = null
+    var type: String? = null
+    val attributes: MutableMap<String, String> = mutableMapOf()
 
     constructor() {
-
+        // Default constructor
     }
 
     constructor(ns: String, name: String) {
-        //this.Namespace = ns;
-        //this.Name = name;
+        namespace = ns
+        this.name = name
     }
 
-
-    fun GetJson(): JsonToken? {
-        TODO("Not yet implemented")
+    fun getJson(): JToken? {
+        return if (value.isNullOrBlank()) {
+            null
+        } else {
+            JToken.fromObject(value)
+        }
     }
 
-    fun GetXml(): XmlElement? {
-        TODO("Not yet implemented")
+    fun getXml(): XElement? {
+        return if (value.isNullOrBlank()) {
+            null
+        } else {
+            val xname = (XNamespace)namespace + name
+            val x = XElement(xname, value)
+
+            // set the xsi type...
+            attributes.forEach { (key, value) ->
+                x.add(XAttribute(key, value))
+            }
+
+            x
+        }
     }
 
-    fun SetFromJson(json: JsonToken){
-        TODO("Not yet implemented")
+    fun setFromJson(json: JToken) {
+        value = json.toString()
     }
 
-    fun SetFromXml(xml: XmlElement){
-        TODO("Not yet implemented")
+    fun setFromXml(xml: XElement) {
+        value = xml.value
+
+        xml.attributes().forEach { xatt ->
+            attributes[xatt.name.toString()] = xatt.value
+        }
     }
 
-
-
-    fun SetFromGS1WebVocabJson(json: JsonToken) {
-        TODO("Not yet implemented")
+    override fun toString(): String {
+        return value ?: ""
     }
 
-    fun GetGS1WebVocabJson(): JsonToken? {
-        TODO("Not yet implemented")
+    override fun setFromGS1WebVocabJson(json: JToken) {
+        value = json.toString()
     }
 
-    fun SetFromEPCISXml(xml: XmlElement) {
-        TODO("Not yet implemented")
+    override fun getGS1WebVocabJson(): JToken? {
+        return if (value != null) {
+            JToken.fromObject(value)
+        } else {
+            null
+        }
     }
 
-
-    fun GetEPCISXml(): XmlElement? {
-        TODO("Not yet implemented")
+    override fun setFromEPCISXml(xml: XElement) {
+        name = xml.attribute("id")?.value ?: ""
+        value = xml.value
     }
 
-
+    override fun getEPCISXml(): XElement? {
+        return if (value != null) {
+            val x = XElement("attribute")
+            x.add(XAttribute("id", name))
+            x.value = value
+            x
+        } else {
+            null
+        }
+    }
 }
-

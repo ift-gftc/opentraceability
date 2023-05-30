@@ -9,8 +9,6 @@ import utility.attributes.*
 import java.time.OffsetDateTime
 class EventILMD {
 
-    //TODO: review this
-
     @OpenTraceabilityAttribute(Constants.CBVMDA_NAMESPACE, "productionMethodForFishAndSeafoodCode")
     @OpenTraceabilityJsonAttribute("cbvmda:productionMethodForFishAndSeafoodCode")
     var ProductionMethodForFishAndSeafoodCode: String? = null

@@ -9,8 +9,6 @@ import java.lang.reflect.Type
 
 class Address {
 
-    //TODO: review this file
-
     @OpenTraceabilityJsonAttribute("@type")
     var Type: String? = "gs1:PostalAddress"
 

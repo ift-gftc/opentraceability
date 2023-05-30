@@ -5,21 +5,16 @@ import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
 import models.identifiers.GLN
 import java.lang.reflect.Type
+import com.google.gson.*
 
-class GLNConverter /*: JsonConverter<GLN>*/ {
-
-    fun WriteJson(writer: JsonWriter, value: GLN?, serializer: JsonSerializer<Any>) {
-        TODO("Not yet implemented")
+class GLNConverter : JsonSerializer<GLN>, JsonDeserializer<GLN> {
+    override fun serialize(src: GLN?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+        val strValue = src?.toString()
+        return JsonPrimitive(strValue)
     }
 
-    fun ReadJson(
-        reader: JsonReader,
-        objectType: Type,
-        existingValue: GLN?,
-        hasExistingValue: Boolean,
-        serializer: JsonSerializer<Any>
-    ): GLN? {
-        TODO("Not yet implemented")
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): GLN? {
+        val strValue = json?.asString
+        return if (strValue != null) GLN(strValue) else null
     }
-
 }

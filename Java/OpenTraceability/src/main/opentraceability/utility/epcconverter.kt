@@ -7,21 +7,16 @@ import models.identifiers.*
 import models.identifiers.EPC
 import java.lang.reflect.Type
 
+import com.google.gson.*
 
-class EPCConverter  /*: JsonConverter<EPC>*/ {
-
-    fun WriteJson(writer: JsonWriter, value: EPC?, serializer: JsonSerializer<Any>) {
-        TODO("Not yet implemented")
+class EPCConverter : JsonSerializer<EPC>, JsonDeserializer<EPC> {
+    override fun serialize(src: EPC?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+        val strValue = src?.toString()
+        return JsonPrimitive(strValue)
     }
 
-    fun ReadJson(
-        reader: JsonReader,
-        objectType: Type,
-        existingValue: EPC?,
-        hasExistingValue: Boolean,
-        serializer: JsonSerializer<Any>
-    ): EPC? {
-        TODO("Not yet implemented")
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): EPC? {
+        val strValue = json?.asString
+        return if (strValue != null) EPC(strValue) else null
     }
-
 }

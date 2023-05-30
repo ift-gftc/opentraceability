@@ -6,6 +6,7 @@ import models.events.EPCISVersion
 import models.events.EventProductType
 import java.lang.reflect.Type
 
+@Repeatable
 annotation class OpenTraceabilityProductsAttribute(
     val name: String,
     val version: EPCISVersion = EPCISVersion.V2,

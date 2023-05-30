@@ -1,15 +1,17 @@
 package utility
 
-import java.net.http.HttpClient
+import java.util.concurrent.TimeUnit
+import okhttp3.OkHttpClient
 
-class HttpClientPool {
-    companion object {
+object HttpClientPool {
+    private val clientPool = LimitedPool<OkHttpClient>({
+        OkHttpClient.Builder().build()
+    }, { client ->
+        client.dispatcher.executorService.shutdown()
+        client.connectionPool.evictAll()
+    }, TimeUnit.MINUTES.toMillis(5))
 
-        internal lateinit var _clientPool: LimitedPoolItem<HttpClient>
-
-        fun GetClient(): LimitedPoolItem<HttpClient> {
-            TODO("Not yet implemented")
-        }
-
+    fun getClient(): LimitedPoolItem<OkHttpClient> {
+        return clientPool.get()
     }
 }

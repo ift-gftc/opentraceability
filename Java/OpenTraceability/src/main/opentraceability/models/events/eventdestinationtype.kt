@@ -1,21 +1,23 @@
 package models.events
+
+import utility.CBVAttribute
+
 enum class EventDestinationType(val value: Int) {
-    //TODO: review this
 
     Unknown(0),
 
-    //[CBV("owning_party")
-    //[CBV("https://ref.gs1.org/cbv/SDT-owning_party")
-    //[CBV("urn:epcglobal:cbv:sdt:owning_party")
+    @CBVAttribute("owning_party")
+    @CBVAttribute("https://ref.gs1.org/cbv/SDT-owning_party")
+    @CBVAttribute("urn:epcglobal:cbv:sdt:owning_party")
     Owner(1),
 
-    //[CBV("possessing_party")
-    //[CBV("https://ref.gs1.org/cbv/SDT-possessing_party")
-    //[CBV("urn:epcglobal:cbv:sdt:possessing_party")
+    @CBVAttribute("possessing_party")
+    @CBVAttribute("https://ref.gs1.org/cbv/SDT-possessing_party")
+    @CBVAttribute("urn:epcglobal:cbv:sdt:possessing_party")
     Possessor(2),
 
-    //[CBV("location")
-    //[CBV("https://ref.gs1.org/cbv/SDT-location")
-    //[CBV("urn:epcglobal:cbv:sdt:location")
+    @CBVAttribute("location")
+    @CBVAttribute("https://ref.gs1.org/cbv/SDT-location")
+    @CBVAttribute("urn:epcglobal:cbv:sdt:location")
     Location(3),
 }
