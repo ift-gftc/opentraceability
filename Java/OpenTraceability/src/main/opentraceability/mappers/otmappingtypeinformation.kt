@@ -1,136 +1,127 @@
 package mappers
 
+import com.sun.beans.introspect.PropertyInfo
 import utility.attributes.*
 import java.beans.BeanInfo
 import java.util.*
 import java.lang.reflect.Type
 import kotlin.reflect.KProperty
+import java.util.concurrent.locks.ReentrantLock
 
-class OTMappingTypeInformation {
+class OTMappingTypeInformation private constructor(
+    val type: Class<*>,
+    val properties: List<OTMappingTypeInformationProperty>,
+    val extensionKDEs: PropertyInfo?,
+    val extensionAttributes: PropertyInfo?
+) {
     companion object {
-        var _XmlTypeInfos: MutableMap<Type, OTMappingTypeInformation> = mutableMapOf()
-        var _JsonTypeInfos: MutableMap<Type, OTMappingTypeInformation> = mutableMapOf()
-        var _masterDataXmlTypeInfos: MutableMap<Type, OTMappingTypeInformation> = mutableMapOf()
-        var _masterDataJsonTypeInfos: MutableMap<Type, OTMappingTypeInformation> = mutableMapOf()
+        private val locker = ReentrantLock()
+        private val xmlTypeInfos = mutableMapOf<Class<*>, OTMappingTypeInformation>()
+        private val jsonTypeInfos = mutableMapOf<Class<*>, OTMappingTypeInformation>()
+        private val masterDataXmlTypeInfos = mutableMapOf<Class<*>, OTMappingTypeInformation>()
+        private val masterDataJsonTypeInfos = mutableMapOf<Class<*>, OTMappingTypeInformation>()
 
-        fun GetXmlTypeInfo(t: KClass<*>): OTMappingTypeInformation {
-            if (!_XmlTypeInfos.containsKey(t)) {
-                synchronized(_locker) {
-                    if (!_XmlTypeInfos.containsKey(t)) {
-                        val typeInfo = OTMappingTypeInformation(t, EPCISDataFormat.XML)
-                        _XmlTypeInfos[t] = typeInfo
-                    }
+        fun getXmlTypeInfo(t: Class<*>): OTMappingTypeInformation {
+            if (!xmlTypeInfos.containsKey(t)) {
+                locker.lock()
+                if (!xmlTypeInfos.containsKey(t)) {
+                    val typeInfo = OTMappingTypeInformation(t, EPCISDataFormat.XML)
+                    xmlTypeInfos[t] = typeInfo
                 }
+                locker.unlock()
             }
-            return _XmlTypeInfos[t]!!
+            return xmlTypeInfos[t]!!
         }
 
-        fun GetJsonTypeInfo(t: KClass<*>): OTMappingTypeInformation {
-            if (!_JsonTypeInfos.containsKey(t)) {
-                synchronized(_locker) {
-                    if (!_JsonTypeInfos.containsKey(t)) {
-                        val typeInfo = OTMappingTypeInformation(t, EPCISDataFormat.JSON)
-                        _JsonTypeInfos[t] = typeInfo
-                    }
+        fun getJsonTypeInfo(t: Class<*>): OTMappingTypeInformation {
+            if (!jsonTypeInfos.containsKey(t)) {
+                locker.lock()
+                if (!jsonTypeInfos.containsKey(t)) {
+                    val typeInfo = OTMappingTypeInformation(t, EPCISDataFormat.JSON)
+                    jsonTypeInfos[t] = typeInfo
                 }
+                locker.unlock()
             }
-            return _JsonTypeInfos[t]!!
+            return jsonTypeInfos[t]!!
         }
 
-        fun GetMasterDataXmlTypeInfo(t: KClass<*>): OTMappingTypeInformation {
-            if (!_masterDataXmlTypeInfos.containsKey(t)) {
-                synchronized(_locker) {
-                    if (!_masterDataXmlTypeInfos.containsKey(t)) {
-                        val typeInfo = OTMappingTypeInformation(t, EPCISDataFormat.XML, true)
-                        _masterDataXmlTypeInfos[t] = typeInfo
-                    }
+        fun getMasterDataXmlTypeInfo(t: Class<*>): OTMappingTypeInformation {
+            if (!masterDataXmlTypeInfos.containsKey(t)) {
+                locker.lock()
+                if (!masterDataXmlTypeInfos.containsKey(t)) {
+                    val typeInfo = OTMappingTypeInformation(t, EPCISDataFormat.XML, true)
+                    masterDataXmlTypeInfos[t] = typeInfo
                 }
+                locker.unlock()
             }
-            return _masterDataXmlTypeInfos[t]!!
+            return masterDataXmlTypeInfos[t]!!
         }
 
-        fun GetMasterDataJsonTypeInfo(t: KClass<*>): OTMappingTypeInformation {
-            if (!_masterDataJsonTypeInfos.containsKey(t)) {
-                synchronized(_locker) {
-                    if (!_masterDataJsonTypeInfos.containsKey(t)) {
-                        val typeInfo = OTMappingTypeInformation(t, EPCISDataFormat.JSON, true)
-                        _masterDataJsonTypeInfos[t] = typeInfo
-                    }
+        fun getMasterDataJsonTypeInfo(t: Class<*>): OTMappingTypeInformation {
+            if (!masterDataJsonTypeInfos.containsKey(t)) {
+                locker.lock()
+                if (!masterDataJsonTypeInfos.containsKey(t)) {
+                    val typeInfo = OTMappingTypeInformation(t, EPCISDataFormat.JSON, true)
+                    masterDataJsonTypeInfos[t] = typeInfo
                 }
+                locker.unlock()
             }
-            return _masterDataJsonTypeInfos[t]!!
+            return masterDataJsonTypeInfos[t]!!
         }
-
     }
 
-    lateinit var Type: Type
-    var Properties: ArrayList<OTMappingTypeInformationProperty> = ArrayList<OTMappingTypeInformationProperty>()
-    var ExtensionKDEs: BeanInfo? = null
-    var ExtensionAttributes: BeanInfo? = null
+    private val dic = mutableMapOf<String, OTMappingTypeInformationProperty>()
 
-    class OTMappingTypeInformation(val type: KClass<*>, format: EPCISDataFormat, isMasterDataMapping: Boolean = false) {
-        val properties: MutableList<OTMappingTypeInformationProperty> = mutableListOf()
-        private val _dic: MutableMap<String, OTMappingTypeInformationProperty> = mutableMapOf()
-        var extensionKDEs: KProperty<*>? = null
-        var extensionAttributes: KProperty<*>? = null
+    init {
+        type.declaredProperties.forEach { p ->
+            if (p.isAnnotationPresent(OpenTraceabilityXmlIgnoreAttribute::class.java) && format == EPCISDataFormat.XML) {
+                return@forEach
+            }
 
-        init {
-            type.memberProperties.forEach { p ->
-                if (format == EPCISDataFormat.XML && p.findAnnotation<OpenTraceabilityXmlIgnoreAttribute>() != null) {
-                    return@forEach
+            if (isMasterDataMapping) {
+                val mdAtt = p.getAnnotation(OpenTraceabilityMasterDataAttribute::class.java)
+
+                if (mdAtt != null) {
+                    val property = OTMappingTypeInformationProperty(p, mdAtt, format)
+                    properties.add(property)
+                    dic[property.name] = property
                 }
+            } else {
+                val atts = p.getAnnotationsByType(OpenTraceabilityAttribute::class.java)
+                val jsonAtt = p.getAnnotation(OpenTraceabilityJsonAttribute::class.java)
+                val productAtts = p.getAnnotationsByType(OpenTraceabilityProductsAttribute::class.java)
 
-                if (isMasterDataMapping) {
-                    val mdAtt = p.findAnnotation<OpenTraceabilityMasterDataAttribute>()
-
-                    if (mdAtt != null) {
-                        val property = OTMappingTypeInformationProperty(p, mdAtt, format)
-                        properties.add(property)
-                        _dic[property.Name] = property
-                    }
-                } else {
-                    val atts = p.annotations.filterIsInstance<OpenTraceabilityAttribute>()
-                    val jsonAtt = p.findAnnotation<OpenTraceabilityJsonAttribute>()
-                    val productAtts = p.annotations.filterIsInstance<OpenTraceabilityProductsAttribute>()
-
-                    if (atts.isNotEmpty()) {
-                        atts.forEach { att ->
-                            val property = OTMappingTypeInformationProperty(p, att, format)
-                            if (!_dic.containsKey(property.Name)) {
-                                properties.add(property)
-                                _dic[property.Name] = property
-                            }
-                        }
-                    } else if (jsonAtt != null && format == EPCISDataFormat.JSON) {
-                        val property = OTMappingTypeInformationProperty(p, jsonAtt, format)
-                        if (!_dic.containsKey(property.Name)) {
+                if (atts.isNotEmpty()) {
+                    atts.forEach { att ->
+                        val property = OTMappingTypeInformationProperty(p, att, format)
+                        if (!dic.containsKey(property.name)) {
                             properties.add(property)
-                            _dic[property.Name] = property
+                            dic[property.name] = property
                         }
-                    } else if (productAtts.isNotEmpty()) {
-                        productAtts.forEach { att ->
-                            val property = OTMappingTypeInformationProperty(p, att, format)
-                            if (!_dic.containsKey(property.Name)) {
-                                properties.add(property)
-                                _dic[property.Name] = property
-                            }
-                        }
-                    } else if (p.findAnnotation<OpenTraceabilityExtensionElementsAttribute>() != null) {
-                        extensionKDEs = p
-                    } else if (p.findAnnotation<OpenTraceabilityExtensionAttributesAttribute>() != null) {
-                        extensionAttributes = p
                     }
-
-                    properties.sortBy { p -> p.SequenceOrder == null }
-                    properties.sortBy { p -> p.SequenceOrder }
+                } else if (jsonAtt != null && format == EPCISDataFormat.JSON) {
+                    val property = OTMappingTypeInformationProperty(p, jsonAtt, format)
+                    if (!dic.containsKey(property.name)) {
+                        properties.add(property)
+                        dic[property.name] = property
+                    }
+                } else if (productAtts.isNotEmpty()) {
+                    productAtts.forEach { att ->
+                        val property = OTMappingTypeInformationProperty(p, att, format)
+                        if (!dic.containsKey(property.name)) {
+                            properties.add(property)
+                            dic[property.name] = property
+                        }
+                    }
+                } else if (p.isAnnotationPresent(OpenTraceabilityExtensionElementsAttribute::class.java)) {
+                    extensionKDEs = p
+                } else if (p.isAnnotationPresent(OpenTraceabilityExtensionAttributesAttribute::class.java)) {
+                    extensionAttributes = p
                 }
+                properties = properties.sortedWith(compareBy({ it.sequenceOrder == null }, { it.sequenceOrder })).toMutableList()
             }
-        }
-
-        operator fun get(name: String): OTMappingTypeInformationProperty? {
-            return _dic[name]
         }
     }
 
-
+    operator fun get(name: String): OTMappingTypeInformationProperty? = dic[name]
 }

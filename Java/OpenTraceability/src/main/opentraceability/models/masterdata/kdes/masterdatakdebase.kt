@@ -1,6 +1,6 @@
 package models.masterdata.kdes
 
-class MasterDataKDEBase {
-    var Namespace: String = ""
-    var Name: String = ""
+open class MasterDataKDEBase {
+    var namespace: String = ""
+    var name: String = ""
 }

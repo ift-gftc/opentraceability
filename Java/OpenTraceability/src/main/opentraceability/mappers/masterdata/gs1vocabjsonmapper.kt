@@ -1,6 +1,7 @@
 package mappers.masterdata
 
 import com.fasterxml.jackson.core.JsonToken
+import com.intellij.util.containers.reverse
 import interfaces.IMasterDataMapper
 import interfaces.IVocabularyElement
 import mappers.OpenTraceabilityJsonLDMapper
@@ -22,7 +23,7 @@ class GS1VocabJsonMapper : IMasterDataMapper {
         }
 
         val namespaces = GetNamespaces(vocab.Context ?: throw Exception("vocab.Context is null."))
-        val json = OpenTraceabilityJsonLDMapper.ToJson(vocab, namespaces.asReversed()) as JSONObject? ?: throw Exception("Failed to map master data into GS1 web vocab.")
+        val json = OpenTraceabilityJsonLDMapper.ToJson(vocab, namespaces.reverse()) as JSONObject? ?: throw Exception("Failed to map master data into GS1 web vocab.")
         json["@context"] = vocab.Context
         return json.toString()
     }

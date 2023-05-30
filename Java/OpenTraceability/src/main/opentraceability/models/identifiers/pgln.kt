@@ -1,6 +1,7 @@
 package models.identifiers
 
 import models.identifiers.*
+import utility.ObjectExtensions.getInt64HashCode
 
 class PGLN {
 
@@ -15,8 +16,12 @@ class PGLN {
         if (!error.isNullOrBlank()) {
             throw Exception("The PGLN $pglnStr is not valid. $error")
         }
-        this._pglnStr = pglnStr
-
+        if (pglnStr != null) {
+            this._pglnStr = pglnStr
+        }
+        else{
+            this._pglnStr = ""
+        }
     }
 
     fun isGS1PGLN(): Boolean {
@@ -63,9 +68,9 @@ class PGLN {
                     return "PGLN is NULL or EMPTY."
                 } else if (pglnStr.contains(" ")) {
                     return "PGLN cannot contain spaces."
-                } else if (!pglnStr.isURICompatibleChars()) {
+                } else if (!isURICompatibleChars(pglnStr)) {
                     return "The PGLN contains non-compatible characters for a URI."
-                } else if (pglnStr.length == 13 && pglnStr.isOnlyDigits()) {
+                } else if (pglnStr.length == 13 && isOnlyDigits(pglnStr)) {
                     val checksum = GS1Util.calculateGLN13CheckSum(pglnStr)
                     if (checksum != pglnStr.last()) {
                         return "The check sum did not calculate correctly. The expected check sum was $checksum. " +
@@ -81,7 +86,7 @@ class PGLN {
                         return "This is supposed to contain the company prefix and the location code. Did not find these two pieces."
                     }
                     val lastPiece = pieces[0] + pieces[1]
-                    if (!lastPiece.isOnlyDigits()) {
+                    if (!isOnlyDigits(lastPiece)) {
                         return "This is supposed to be a GS1 PGLN based on the System Prefix and " +
                                 "Data Type Prefix. That means the Company Prefix and Serial Numbers " +
                                 "should only be digits. Found non-digit characters in the Company Prefix " +
@@ -100,6 +105,19 @@ class PGLN {
                 OTLogger.error(ex)
                 throw ex
             }
+        }
+
+        fun isURICompatibleChars(input: String): Boolean {
+            val reservedChars = ":/?#[]@!$&'()*+,;="
+            val unreservedChars = "-._~"
+            val allowedChars = reservedChars + unreservedChars + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+            return input.all { allowedChars.contains(it) }
+        }
+
+        fun isOnlyDigits(input: String): Boolean {
+            val regex = Regex("\\d+")
+            return regex.matches(input)
         }
 
         fun tryParsePGLN(pglnStr: String?, pgln: PGLN? = null): Pair<Boolean, PGLN?> {

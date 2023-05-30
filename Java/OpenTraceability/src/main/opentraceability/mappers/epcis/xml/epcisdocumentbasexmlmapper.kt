@@ -133,7 +133,7 @@ class EPCISDocumentBaseXMLMapper {
         }
 
 
-        internal fun GetEventTypeFromProfile(xEvent: XElement): Type {
+        internal fun getEventTypeFromProfile(xEvent: XElement): Type {
             val actionValue = xEvent.element("action")?.value
             val action = EventAction.valueOf(actionValue)
             val bizStep = xEvent.element("bizStep")?.value

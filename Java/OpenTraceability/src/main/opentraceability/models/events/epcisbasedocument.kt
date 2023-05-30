@@ -7,6 +7,7 @@ import java.util.*
 import models.identifiers.*
 import models.events.*
 import queries.EPCISQueryParameters
+import java.net.URI
 import java.net.URL
 import java.time.OffsetDateTime
 
@@ -20,7 +21,7 @@ open class EPCISBaseDocument {
     var Contexts: ArrayList<String> = ArrayList<String>()
     var Attributes: MutableMap<String, String> = mutableMapOf()
 
-    fun <T : IVocabularyElement> GetMasterData(): List<T> {
+    inline fun <reified T : IVocabularyElement> GetMasterData(): List<T> {
         return this.MasterData.filterIsInstance<T>()
     }
 
@@ -143,7 +144,7 @@ open class EPCISBaseDocument {
             val epcMatch = EPC(epcMatchStr)
             for (product in evt.Products) {
                 if (allowedTypes.isEmpty() || allowedTypes.contains(product.Type)) {
-                    if (epcMatch.Matches(product.EPC)) {
+                    if (epcMatch.matches(product.EPC)) {
                         return true
                     }
                 }
@@ -152,11 +153,11 @@ open class EPCISBaseDocument {
         return false
     }
 
-    fun HasUriMatch(uri: Uri?, filter: MutableList<String>, prefix: String, replacePrefix: String): Boolean {
+    fun HasUriMatch(uri: URI?, filter: MutableList<String>, prefix: String, replacePrefix: String): Boolean {
         // make sure all of the EQ_bizStep are converted into URI format before comparing
         for (i in filter.indices) {
             val bizStep = filter[i]
-            val u: Uri? = Uri.parse(bizStep)
+            val u: URI? = URI.create(bizStep)
             if (u == null) {
                 filter[i] = "$replacePrefix$bizStep"
             } else if (bizStep.startsWith(prefix)) {
@@ -166,12 +167,12 @@ open class EPCISBaseDocument {
 
         // we need to handle the various formats that the bizStep can occur in
         if (uri != null) {
-            var bizStep = Uri.parse(uri.toString())
+            var bizStep = URI.create(uri.toString())
             if (bizStep.toString().startsWith(prefix)) {
-                bizStep = Uri.parse("$replacePrefix${uri.toString().split("-").last()}")
+                bizStep = URI.create("$replacePrefix${uri.toString().split("-").last()}")
             }
 
-            val filterUris = filter.map { Uri.parse(it) }
+            val filterUris = filter.map { URI.create(it) }
             if (!filterUris.map { it.toString().toLowerCase() }.contains(bizStep.toString().toLowerCase())) {
                 return false
             }

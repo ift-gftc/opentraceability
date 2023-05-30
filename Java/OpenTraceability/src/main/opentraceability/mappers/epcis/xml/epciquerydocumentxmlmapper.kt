@@ -1,6 +1,7 @@
 package mappers.epcis.xml
 
 import interfaces.IEPCISQueryDocumentMapper
+import interfaces.IEvent
 import mappers.OpenTraceabilityXmlMapper
 import models.events.*
 import models.events.EPCISQueryDocument
@@ -20,10 +21,10 @@ class EPCISQueryDocumentXMLMapper : IEPCISQueryDocumentMapper {
             }
 
             if (checkSchema) {
-                EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.epcisVersion)
+                EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.EpcisVersion)
             }
 
-            val epcisQueryXName = if (document.EpcisVersion == EPCISVersion.V1) Constants.EPCISQUERY_1_XNAMESPACE else Constants.EPCISQUERY_2_XNAMESPACE
+            val epcisQueryXName = if (document.EPCISVersion == EPCISVersion.V1) Constants.EPCISQUERY_1_XNAMESPACE else Constants.EPCISQUERY_2_XNAMESPACE
 
             // read the query name
             val xQueryName = xDoc.root?.element("EPCISBody")?.element(epcisQueryXName + "QueryResults")?.element("queryName")
@@ -40,7 +41,7 @@ class EPCISQueryDocumentXMLMapper : IEPCISQueryDocumentMapper {
                     x = xEvent.element("TransformationEvent")
                 }
                 val eventType = EPCISDocumentBaseXMLMapper.getEventTypeFromProfile(x)
-                val e = OpenTraceabilityXmlMapper.fromXml(x, eventType, document.epcisVersion)
+                val e = OpenTraceabilityXmlMapper.fromXml(x, eventType, document.EpcisVersion)
                 document.Events.add(e as IEvent)
             }
 
@@ -53,18 +54,18 @@ class EPCISQueryDocumentXMLMapper : IEPCISQueryDocumentMapper {
     }
 
     override fun map(doc: EPCISQueryDocument): String {
-        if (doc.epcisVersion == null) {
+        if (doc.EPCISVersion == null) {
             throw Exception("doc.EPCISVersion is NULL. This must be set to a version.")
         }
 
-        val epcisNS = if (doc.epcisVersion == EPCISVersion.V2) Constants.EPCISQUERY_2_NAMESPACE else Constants.EPCISQUERY_1_NAMESPACE
+        val epcisNS = if (doc.EPCISVersion == EPCISVersion.V2) Constants.EPCISQUERY_2_NAMESPACE else Constants.EPCISQUERY_1_NAMESPACE
 
         val xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, epcisNS, "EPCISQueryDocument")
         if (xDoc.root == null) {
             throw Exception("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.")
         }
 
-        val epcisQueryXName = if (doc.epcisVersion == EPCISVersion.V1) Constants.EPCISQUERY_1_XNAMESPACE else Constants.EPCISQUERY_2_XNAMESPACE
+        val epcisQueryXName = if (doc.EPCISVersion == EPCISVersion.V1) Constants.EPCISQUERY_1_XNAMESPACE else Constants.EPCISQUERY_2_XNAMESPACE
 
         // write the query name
         xDoc.root.addElement(
@@ -83,10 +84,10 @@ class EPCISQueryDocumentXMLMapper : IEPCISQueryDocumentMapper {
         // write the events
         val xEventList = xDoc.root?.element("EPCISBody")?.element(epcisQueryXName + "QueryResults")?.element("resultsBody")?.element("EventList")
             ?: throw Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root")
-        for (e in doc.events) {
+        for (e in doc.Events) {
             val xname = EPCISDocumentBaseXMLMapper.GetEventXName(e)
-            val xEvent = OpenTraceabilityXmlMapper.toXml(xname, e, doc.epcisVersion)
-            if (e.eventType == EventType.TransformationEvent && doc.epcisVersion == EPCISVersion.V1) {
+            val xEvent = OpenTraceabilityXmlMapper.toXml(xname, e, doc.EPCISVersion)
+            if (e.EventType == EventType.TransformationEvent && doc.EPCISVersion == EPCISVersion.V1) {
                 xEvent?.let {
                     xEventList.addElement("extension", it)
                 }
@@ -97,7 +98,7 @@ class EPCISQueryDocumentXMLMapper : IEPCISQueryDocumentMapper {
             }
         }
 
-        EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.epcisVersion)
+        EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.EPCISVersion)
 
         return xDoc.toString()
     }

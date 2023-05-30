@@ -1,11 +1,15 @@
 package models.identifiers
 
+import utility.ObjectExtensions.getInt64HashCode
+import utility.StringExtensions.isOnlyDigits
+import utility.StringExtensions.isURICompatibleChars
+import java.lang.Exception
+import java.lang.NullPointerException
+import java.lang.StringBuilder
 
-//[DataContract]
-//[JsonConverter(typeof(GTINConverter))]
-class GTIN /*: IEquatable<GTIN>, IComparable<GTIN>*/{
+class GTIN : Comparable<GTIN> {
 
-    internal var _gtinStr: String = ""
+    var _gtinStr: String = ""
 
     constructor() {
     }
@@ -24,31 +28,26 @@ class GTIN /*: IEquatable<GTIN>, IComparable<GTIN>*/{
 
     }
 
-    fun isGS1GTIN(): Boolean {
-        return _gtinStr.contains(":idpat:sgtin:")
-    }
-
-
-    fun toDigitalLinkURL(): String {
-        try {
-            if (_gtinStr.isNullOrEmpty()) {
-                return ""
-            } else if (isGS1GTIN()) {
-                val gtinParts = _gtinStr.split(":").last().split(".")
-                val gtin14 = "${gtinParts[1][0]}${gtinParts[0]}${gtinParts[1].substring(1)}" +
-                        GS1Util.calculateGTIN14CheckSum("${gtinParts[1][0]}${gtinParts[0]}${gtinParts[1].substring(1)}")
-                return "01/$gtin14"
-            } else {
-                return "01/$_gtinStr"
-            }
-        } catch (ex: Exception) {
-            OTLogger.error(ex)
-            throw ex
-        }
-    }
-
-
     companion object {
+        fun tryParse(gtinStr: String?): Pair<GTIN?, String?> {
+            try {
+                val error = detectGTINIssue(gtinStr)
+                return if (error.isNullOrBlank()) Pair(GTIN(gtinStr), null) else Pair(null, error)
+            } catch (ex: Exception) {
+                OTLogger.error(ex)
+                throw ex
+            }
+        }
+
+        fun isGTIN(gtinStr: String): Boolean {
+            try {
+                return detectGTINIssue(gtinStr) == null
+            } catch (ex: Exception) {
+                OTLogger.error(ex)
+                throw ex
+            }
+        }
+
         fun detectGTINIssue(gtinStr: String?): String? {
             try {
                 if (gtinStr.isNullOrEmpty()) {
@@ -68,7 +67,7 @@ class GTIN /*: IEquatable<GTIN>, IComparable<GTIN>*/{
                 } else if (gtinStr.startsWith("urn:") && gtinStr.contains(":product:class:")) {
                     return null
                 } else if (gtinStr.startsWith("urn:") && gtinStr.contains(":idpat:sgtin:")) {
-                    val lastPiece = gtinStr.split(":").last().replace(".", "")
+                    val lastPiece = gtinStr.split(':').last().replace(".", "")
                     if (!lastPiece.isOnlyDigits()) {
                         return "This is supposed to be a GS1 GTIN based on the System Prefix and " +
                                 "Data Type Prefix. That means the Company Prefix and Serial Numbers " +
@@ -85,99 +84,78 @@ class GTIN /*: IEquatable<GTIN>, IComparable<GTIN>*/{
                     return "The GTIN is not in a valid EPCIS URI format or in GS1 GTIN-14 format."
                 }
             } catch (ex: Exception) {
-                OTLogger.error(ex)
-                throw ex
+                val exception = Exception("Failed to detect GTIN Issues. GTIN=$gtinStr", ex)
+                OTLogger.error(exception)
+                throw exception
             }
         }
-
-
-        fun tryParse(gtinStr: String?, out gtin: GTIN?, out error: String?): Boolean {
-            try {
-                error = GTIN.detectGTINIssue(gtinStr)
-                if (error.isNullOrEmpty()) {
-                    gtin = GTIN(gtinStr)
-                    return true
-                } else {
-                    gtin = null
-                    return false
-                }
-            } catch (ex: Exception) {
-                OTLogger.error(ex)
-                throw ex
-            }
-        }
-
-        fun isGTIN(gtinStr: String): Boolean {
-            try {
-                return detectGTINIssue(gtinStr) == null
-            } catch (ex: Exception) {
-                OTLogger.error(ex)
-                throw ex
-            }
-        }
-
     }
 
-
-
-
-
-    fun clone(): Any {
-        return GTIN(toString())
+    fun isGS1GTIN(): Boolean {
+        return _gtinStr?.contains(":idpat:sgtin:") ?: false
     }
 
+    fun toDigitalLinkURL(): String {
+        try {
+            if (_gtinStr == null) {
+                return ""
+            } else if (isGS1GTIN()) {
+                val gtinParts = _gtinStr.split(':').last().split('.')
+                val gtin14 = gtinParts[1][0] + gtinParts[0] + gtinParts[1].drop(1)
+                val gtinWithChecksum = gtin14 + GS1Util.calculateGTIN14CheckSum(gtin14)
+                return "01/$gtinWithChecksum"
+            } else {
+                return "01/$_gtinStr"
+            }
+        } catch (ex: Exception) {
+            OTLogger.error(ex)
+            throw ex
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is GTIN) return false
-        return this.isEquals(other)
+        try {
+            if (this === other) {
+                return true
+            }
+
+            if (other !is GTIN) {
+                return false
+            }
+
+            return toString().toLowerCase() == other.toString().toLowerCase()
+        } catch (ex: Exception) {
+            OTLogger.error(ex)
+            throw ex
+        }
     }
 
     override fun hashCode(): Int {
-        return toString().hashCode()
+        try {
+            return toString().toLowerCase().hashCode()
+        } catch (ex: Exception) {
+            OTLogger.error(ex)
+            throw ex
+        }
     }
 
     override fun toString(): String {
-        return _gtinStr?.toLowerCase() ?: ""
-    }
-
-    fun equals(obj1: GTIN?, obj2: GTIN?): Boolean {
-        if (obj1 === obj2) return true
-        if (obj1 == null || obj2 == null) return false
-        return obj1.equals(obj2)
-    }
-
-    fun notEquals(obj1: GTIN?, obj2: GTIN?): Boolean {
-        return !equals(obj1, obj2)
-    }
-
-
-
-
-    fun equals(gtin: GTIN?): Boolean {
-        if (gtin == null) return false
-        if (this === gtin) return true
-        return isEquals(gtin)
-    }
-
-    fun isEquals(gtin: GTIN?): Boolean {
-        if (gtin == null) return false
-        return toString().equals(gtin.toString(), ignoreCase = true)
-    }
-
-
-
-    fun compareTo(gtin: GTIN?): Int {
-        if (gtin == null) {
-            throw IllegalArgumentException("gtin")
-        }
-        val myInt64Hash = toString().getInt64HashCode()
-        val otherInt64Hash = gtin.toString().getInt64HashCode()
-        return when {
-            myInt64Hash > otherInt64Hash -> -1
-            myInt64Hash == otherInt64Hash -> 0
-            else -> 1
+        try {
+            return _gtinStr?.toLowerCase() ?: ""
+        } catch (ex: Exception) {
+            OTLogger.error(ex)
+            throw ex
         }
     }
 
+    override fun compareTo(other: GTIN): Int {
+        try {
+            val myInt64Hash = toString().getInt64HashCode()
+            val otherInt64Hash = other.toString().getInt64HashCode()
+            return myInt64Hash.compareTo(otherInt64Hash)
+        } catch (ex: Exception) {
+            OTLogger.error(ex)
+            throw ex
+        }
+    }
 }

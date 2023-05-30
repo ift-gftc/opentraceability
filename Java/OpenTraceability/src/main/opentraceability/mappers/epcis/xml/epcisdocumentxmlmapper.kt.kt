@@ -19,15 +19,15 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
             if (xDoc.root == null) {
                 throw Exception("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.")
             }
-            if (document.EpcisVersion == null) {
+            if (document.EPCISVersion == null) {
                 throw Exception("doc.epcisVersion is NULL. This must be set to a version.")
             }
 
             if (checkSchema) {
-                EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.EpcisVersion!!)
+                EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.EPCISVersion!!)
             }
 
-            val epcisQueryXName = if (document.EpcisVersion == EPCISVersion.V1) {
+            val epcisQueryXName = if (document.EPCISVersion == EPCISVersion.V1) {
                 Constants.EPCISQUERY_1_XNAMESPACE
             } else {
                 Constants.EPCISQUERY_2_XNAMESPACE
@@ -44,11 +44,11 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
                 ?: throw Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root")
             xEventList.elements().forEach { xEvent ->
                 var x = xEvent
-                if (document.EpcisVersion == EPCISVersion.V1 && x.element("TransformationEvent") != null) {
+                if (document.EPCISVersion == EPCISVersion.V1 && x.element("TransformationEvent") != null) {
                     x = xEvent.element("TransformationEvent")
                 }
                 val eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(x)
-                val e = OpenTraceabilityXmlMapper.fromXml(x, eventType, document.EpcisVersion!!)
+                val e = OpenTraceabilityXmlMapper.fromXml(x, eventType, document.EPCISVersion!!)
                 document.Events.add(e as IEvent)
             }
 
@@ -63,11 +63,11 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
 
 
     fun Map(doc: EPCISQueryDocument): String {
-        if (doc.EpcisVersion == null) {
+        if (doc.EPCISVersion == null) {
             throw Exception("doc.epcisVersion is NULL. This must be set to a version.")
         }
 
-        val epcisNS = if (doc.EpcisVersion == EPCISVersion.V2) {
+        val epcisNS = if (doc.EPCISVersion == EPCISVersion.V2) {
             Constants.EPCISQUERY_2_NAMESPACE
         } else {
             Constants.EPCISQUERY_1_NAMESPACE
@@ -78,7 +78,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
             throw Exception("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.")
         }
 
-        val epcisQueryXName = if (doc.EpcisVersion == EPCISVersion.V1) {
+        val epcisQueryXName = if (doc.EPCISVersion == EPCISVersion.V1) {
             Constants.EPCISQUERY_1_XNAMESPACE
         } else {
             Constants.EPCISQUERY_2_XNAMESPACE
@@ -105,8 +105,8 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
             ?: throw Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root")
         for (e in doc.Events) {
             val xname = EPCISDocumentBaseXMLMapper.getEventXName(e)
-            var xEvent = OpenTraceabilityXmlMapper.toXml(xname, e, doc.EpcisVersion!!)
-            if (e.EventType == EventType.TransformationEvent && doc.EpcisVersion == EPCISVersion.V1) {
+            var xEvent = OpenTraceabilityXmlMapper.toXml(xname, e, doc.EPCISVersion!!)
+            if (e.EventType == EventType.TransformationEvent && doc.EPCISVersion == EPCISVersion.V1) {
                 xEvent = XElement("extension", xEvent)
             }
             if (xEvent != null) {
@@ -114,7 +114,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
             }
         }
 
-        EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.EpcisVersion!!)
+        EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.EPCISVersion!!)
 
         return xDoc.toString()
     }

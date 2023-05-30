@@ -7,11 +7,8 @@ import org.w3c.dom.Element
 import org.w3c.dom.Document
 import javax.xml.parsers.DocumentBuilderFactory
 import java.io.StringReader
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
-import java.io.StringWriter
-
+import org.json.JSONObject
+import org.json.XML
 
 class EventKDEObject: EventKDEBase, IEventKDE {
 
@@ -30,30 +27,26 @@ class EventKDEObject: EventKDEBase, IEventKDE {
     }
 
 
-    override fun GetJson(): JSONObject? {
+    fun getJson(): JSONObject? {
         if (_xml != null) {
-            // Convert _xml to JObject
-            val docFactory = DocumentBuilderFactory.newInstance()
-            val docBuilder = docFactory.newDocumentBuilder()
-            val document: Document = docBuilder.parse(StringReader(_xml))
-
-            val transformerFactory = TransformerFactory.newInstance()
-            val transformer = transformerFactory.newTransformer()
-            val source = DOMSource(document)
-            val writer = StringWriter()
-            val result = StreamResult(writer)
-            transformer.transform(source, result)
-
-            val xmlString = writer.toString()
-            val json = XML.toJSONObject(xmlString)
-
-            return JSONObject(json.toString(4)) // 4 is for indentation
+            val factory = DocumentBuilderFactory.newInstance()
+            val builder = factory.newDocumentBuilder()
+            val xmlDocument: Document = builder.parse(_xml.createReader())
+            val j = XML.toString(xmlDocument)
+            return JSONObject(j)
         } else if (_json != null) {
             return _json
         } else {
             return null
         }
     }
+
+
+
+
+
+
+
 
     override fun GetXml(): Element? {
         if (_xml != null) {

@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlElement
 class MasterDataKDECountry : MasterDataKDEBase, IMasterDataKDE {
     var value: Country? = null
 
-    override val valueType: Class<*>
+     val valueType: Class<*>
         get() = Country::class.java
 
     fun getEPCISXml(): XElement? {
@@ -23,25 +23,25 @@ class MasterDataKDECountry : MasterDataKDEBase, IMasterDataKDE {
         }
     }
 
-    override fun getGS1WebVocabJson(): JToken? {
+    override fun getGS1WebVocabJson(): JsonToken? {
         TODO("Not Implemented Exception")
     }
 
-    fun getXml(): XElement? {
-        return if (value == null) null else XElement((Namespace as XNamespace) + name, value.iso)
+    fun getXml(): XmlElement? {
+        return if (value == null) null else XmlElement((Namespace as XNamespace) + name, value.iso)
     }
 
-    fun setFromEPCISXml(xml: XElement) {
+    fun setFromEPCISXml(xml: XmlElement) {
         val country = Countries.parse(xml.value)
         value = country
         name = xml.getAttributeValue("id") ?: ""
     }
 
-    override fun setFromGS1WebVocabJson(json: JToken) {
+    override fun setFromGS1WebVocabJson(json: JsonToken) {
         TODO("Not Implemented Exception")
     }
 
     override fun toString(): String {
-        return value?.name ?: ""
+        return value?.Name ?: ""
     }
 }

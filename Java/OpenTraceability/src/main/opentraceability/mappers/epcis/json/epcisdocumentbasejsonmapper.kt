@@ -5,6 +5,7 @@ import models.events.EPCISVersion
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.simple.JSONObject
+import utility.JsonContextHelper
 import java.net.URI
 import java.util.*
 
@@ -53,7 +54,7 @@ object EPCISDocumentBaseJsonMapper {
                     }
 
                     // add it to the contexts..
-                    document.contexts.add(jobj.toString())
+                    document.Contexts.add(jobj.toString())
                 } else {
                     val `val` = jt.toString()
 
@@ -67,7 +68,7 @@ object EPCISDocumentBaseJsonMapper {
                             }
                         }
 
-                        document.contexts.add(`val`)
+                        document.Contexts.add(`val`)
                     }
                 }
             }

@@ -88,7 +88,7 @@ object EPCISJsonMasterDataWriter {
                         }
                     }
                 } else if (p.getAnnotation(OpenTraceabilityObjectAttribute::class.java) != null) {
-                    val jAttribute = JObject(JProperty("id", id), JProperty("attribute", WriteObject(p.type, o)))
+                    val jAttribute = JObject(JProperty("id", id), JProperty("attribute", writeObject(p.type, o)))
                     jAttributes.add(jAttribute)
                 } else if (p.getAnnotation(OpenTraceabilityArrayAttribute::class.java) != null) {
                     val l = o as List<*>

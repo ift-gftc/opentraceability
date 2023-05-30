@@ -1,17 +1,19 @@
 package utility
+
 import com.fasterxml.jackson.core.JsonToken
 import com.intellij.psi.xml.XmlDocument
 import javax.xml.bind.annotation.*
 import java.util.*
 import java.net.URI
 import java.time.OffsetDateTime
+
 class XElementExtensions {
     companion object {
         fun <String> GetDocumentNamespaces(x: XmlDocument): MutableMap<String, String> {
-            if (this.documentElement == null) throw Exception("Root on XDocument is null.")
+            if (x.rootTag == null) throw Exception("Root on XDocument is null.")
 
             val result = mutableMapOf<String, String>()
-            val attributes = this.documentElement.attributes
+            val attributes = x.documentElement.attributes
 
             for (i in 0 until attributes.length) {
                 val attribute = attributes.item(i) as? Attr
@@ -29,7 +31,7 @@ class XElementExtensions {
 
         fun QueryXPath(x: XmlElement, xpath: String): XmlElement? {
             val xpathParts = xpath.splitXPath()
-            val xfind = this.getElement(xpathParts[0])
+            val xfind = x.getElement(xpathParts[0])
 
             if (xfind == null) {
                 return xfind
@@ -53,8 +55,8 @@ class XElementExtensions {
             }
         }
 
-        fun attributeISODateTime(attName: String): DateTimeOffset? {
-            val strValue = this.getAttribute(attName)?.value
+        fun attributeISODateTime(x: XmlElement,attName: String): OffsetDateTime? {
+            val strValue = x.getAttribute(attName)?.value
 
             if (!strValue.isNullOrEmpty()) {
                 return strValue.tryConvertToDateTimeOffset()
@@ -63,12 +65,14 @@ class XElementExtensions {
             return null
         }
 
-        fun attributeURI(attName: String): Uri? {
-            val strValue = this.getAttribute(attName)?.value
+
+
+        fun attributeURI(x: XmlElement,attName: String): URI? {
+            val strValue = x.getAttribute(attName)?.value
 
             if (!strValue.isNullOrEmpty()) {
                 try {
-                    return Uri(strValue)
+                    return URI(strValue)
                 } catch (ex: Exception) {
                     val exception = Exception("Failed to create URI from string = $strValue", ex)
                     OTLogger.error(exception)
@@ -79,8 +83,8 @@ class XElementExtensions {
             return null
         }
 
-        fun attributeBoolean(attName: String): Boolean? {
-            val strValue = this.getAttribute(attName)?.value
+        fun attributeBoolean(x: XmlElement,attName: String): Boolean? {
+            val strValue = x.getAttribute(attName)?.value
 
             if (!strValue.isNullOrEmpty()) {
                 try {
@@ -95,8 +99,8 @@ class XElementExtensions {
             return null
         }
 
-        fun attributeDouble(attName: String): Double? {
-            val strValue = this.getAttribute(attName)?.value
+        fun attributeDouble(x: XmlElement,attName: String): Double? {
+            val strValue = x.getAttribute(attName)?.value
 
             if (!strValue.isNullOrEmpty()) {
                 try {
@@ -111,8 +115,8 @@ class XElementExtensions {
             return null
         }
 
-        fun attributeUOM(attName: String): UOM? {
-            val strValue = this.getAttribute(attName)?.value
+        fun attributeUOM(x: XmlElement,attName: String): UOM? {
+            val strValue = x.getAttribute(attName)?.value
 
             if (!strValue.isNullOrEmpty()) {
                 try {
@@ -127,15 +131,15 @@ class XElementExtensions {
             return null
         }
 
-        fun addStringElement(xname: XName, value: String?) {
+        fun addStringElement(x: XmlElement,xname: XName, value: String?) {
             if (!value.isNullOrBlank()) {
-                this.add(XElement(xname, value))
+                x.add(XmlElement(xname, value))
             }
         }
 
-        fun addDateTimeOffsetISOElement(xname: XName, value: DateTimeOffset?) {
+        fun addDateTimeOffsetISOElement(x: XmlElement,xname: XName, value: OffsetDateTime?) {
             if (value != null) {
-                this.add(XElement(xname, value.toString("o")))
+                x.add(XmlElement(xname, value.toString("o")))
             }
         }
 

@@ -1,9 +1,15 @@
 package models.identifiers
 
 import models.identifiers.*
+import utility.ObjectExtensions.getInt64HashCode
+import utility.StringExtensions.isURICompatibleChars
 import java.lang.reflect.Type
+import java.net.URI
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 
-//[JsonConverter(typeof(EPCConverter))]
+//@JsonDeserialize(using = EPCDeserializer::class)
+//@JsonSerialize(using = EPCSerializer::class)
 class EPC {
 
     internal var _epcStr: String = ""
@@ -20,7 +26,8 @@ class EPC {
             if (!error.isNullOrBlank()) {
                 throw Exception("The EPC $epcStr is invalid. $error")
             } else if (epcStr == null) {
-                throw ArgumentNullException("epcStr")
+                //throw ArgumentNullException("epcStr")
+                throw Exception("ArgumentNullException epcStr")
             }
 
             this._epcStr = epcStr
@@ -71,7 +78,7 @@ class EPC {
                     this.SerialLotNumber = lotNumber
                 }
                 gtinStr.replace(":product:lot:class:", ":product:class:")
-                models.identifiers.GTIN = GTIN(gtinStr)
+                this.GTIN = GTIN(gtinStr)
             }
             // else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
             else if (epcStr.startsWith("urn:") && epcStr.contains(":product:serial:obj:")) {
@@ -86,20 +93,20 @@ class EPC {
                     this.SerialLotNumber = lotNumber
                 }
                 gtinStr.replace(":product:serial:obj:", ":product:class:")
-                models.identifiers.GTIN = GTIN(gtinStr)
+                this.GTIN = GTIN(gtinStr)
             } else if (epcStr.startsWith("urn:sscc:")) {
                 this.Type = EPCType.SSCC
             } else if (epcStr.startsWith("urn:") && epcStr.contains(":lpn:obj:")) {
                 this.Type = EPCType.SSCC
             } else if (epcStr.startsWith("urn:epc:id:bic:")) {
                 this.Type = EPCType.SSCC
-            } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
+            } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
                 this.Type = EPCType.Instance
                 this.SerialLotNumber = epcStr.split('/').lastOrNull()
-            } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
+            } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
                 this.Type = EPCType.Class
                 this.SerialLotNumber = epcStr.split('/').lastOrNull()
-            } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute)) {
+            } else if (isWellFormedUriString(epcStr)) {
                 this.Type = EPCType.URI
             }
         } catch (ex: Exception) {
@@ -227,11 +234,11 @@ class EPC {
                     }
 
                     return null
-                } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
+                } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
                     return null
-                } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
+                } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
                     return null
-                } else if (Uri.isWellFormedUriString(epcStr, UriKind.Absolute)) {
+                } else if (isWellFormedUriString(epcStr)) {
                     return null
                 } else {
                     return "This EPC does not fit any of the allowed formats."
@@ -242,14 +249,28 @@ class EPC {
             }
         }
 
-        fun tryParse(epcStr: String?, outEPC: EPC?, outError: String?): Boolean {
+        fun isWellFormedUriString(uriString: String): Boolean {
             try {
-                outError = detectEPCIssue(epcStr)
-                if (outError.isNullOrBlank()) {
-                    outEPC = EPC(epcStr)
+                URI(uriString).toURL()
+                return true
+            } catch (ex: Exception) {
+                return false
+            }
+        }
+
+
+        fun tryParse(epcStr: String?, epc: EPC?, error: String?): Boolean {
+
+            var error: String? = error
+            var epc: EPC? = epc
+
+            try {
+                error = EPC.detectEPCIssue(epcStr)
+                if (error.isNullOrBlank()) {
+                    epc = EPC(epcStr)
                     return true
                 } else {
-                    outEPC = null
+                    epc = null
                     return false
                 }
             } catch (ex: Exception) {
@@ -257,6 +278,7 @@ class EPC {
                 throw ex
             }
         }
+
     }
 
     fun matches(targetEPC: EPC): Boolean {

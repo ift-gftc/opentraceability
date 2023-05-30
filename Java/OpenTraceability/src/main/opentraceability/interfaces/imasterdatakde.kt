@@ -6,12 +6,12 @@ import java.lang.reflect.Type
 
 interface IMasterDataKDE {
 
-    var Namespace: String
-    var Name: String
-    var ValueType: Type
+    var namespace: String
+    var name: String
+    var valueType: Class<*>
 
-    fun SetFromGS1WebVocabJson(json: JsonToken)
-    fun GetGS1WebVocabJson(): JsonToken?
-    fun SetFromEPCISXml(xml: XmlElement)
-    fun GetEPCISXml(): XmlElement?
+    fun setFromGS1WebVocabJson(json: JsonToken)
+    fun getGS1WebVocabJson(): JsonToken?
+    fun setFromEPCISXml(xml: XmlElement)
+    fun getEPCISXml(): XmlElement?
 }

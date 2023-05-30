@@ -46,8 +46,8 @@ class EPCISQueryParameters {
             val prop = propMapping[key]
             if (prop != null) {
                 when (prop.returnType) {
-                    KType.Companion.typeOf<DateTimeOffset?>() -> {
-                        val dt = DateTimeOffset.parse(value)
+                    KType.Companion.typeOf<OffsetDateTime?>() -> {
+                        val dt = OffsetDateTime.parse(value)
                         prop.setter.call(query, dt)
                     }
                     KType.Companion.typeOf<MutableList<String>?>() -> {
@@ -73,7 +73,7 @@ class EPCISQueryParameters {
         for (prop in EPCISQuery::class.members) {
             if (prop is KMutableProperty<*>) {
                 when (val value = prop.getter.call(query)) {
-                    is DateTimeOffset? -> {
+                    is OffsetDateTime? -> {
                         value?.let { queryParameters.add("${prop.name}=${URLEncoder.encode(it.toString(), "UTF-8")}") }
                     }
                     is MutableList<*> -> {
@@ -104,7 +104,7 @@ class EPCISQueryParameters {
         for (prop in EPCISQuery::class.members) {
             if (prop is KMutableProperty<*>) {
                 when (val otherValue = prop.getter.call(queryParameters.query)) {
-                    is DateTimeOffset? -> {
+                    is OffsetDateTime? -> {
                         if (otherValue != null) {
                             prop.setter.call(this.query, otherValue)
                         }

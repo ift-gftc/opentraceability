@@ -15,7 +15,7 @@ import kotlin.collections.List
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class AggregationEvent<T : EventILMD>(
+ class AggregationEvent<T : EventILMD>(
     @JsonProperty("@type")
     val type: EventType = EventType.TransformationEvent,
 

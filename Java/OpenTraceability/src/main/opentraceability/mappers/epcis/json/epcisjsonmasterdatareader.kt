@@ -1,7 +1,6 @@
 package mappers.epcis.json
 
 import com.fasterxml.jackson.core.JsonToken
-import com.intellij.icons.AllIcons.Nodes.Models
 import com.intellij.json.psi.JsonObject
 import interfaces.IVocabularyElement
 import mappers.OTMappingTypeInformation
@@ -9,6 +8,7 @@ import models.common.LanguageString
 import models.events.*
 import models.events.EPCISBaseDocument
 import models.identifiers.PGLN
+import models.masterdata.Location
 import models.masterdata.Tradeitem
 import models.masterdata.TradingParty
 import models.masterdata.VocabularyElement

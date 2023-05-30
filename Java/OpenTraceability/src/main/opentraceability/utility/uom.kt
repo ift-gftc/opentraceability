@@ -23,18 +23,18 @@ import kotlin.concurrent.withLock
         private val uomListLock = ReentrantLock()
         private var uomList: List<UOM>? = null
 
-        fun LookUpFromUNCode(unCode: String): UOM {
+        fun lookUpFromUNCode(unCode: String): UOM {
             return uomListLock.withLock {
                 val uom = getUOMList().find { it.UNCode == unCode }
                 return uom ?: UOM()
             }
         }
 
-        fun IsNullOrEmpty(uom: UOM?): Boolean {
+        fun isNullOrEmpty(uom: UOM?): Boolean {
             return uom == null || uom.Abbreviation.isNullOrEmpty()
         }
 
-        fun ParseFromName(name: String): UOM {
+        fun parseFromName(name: String): UOM {
             try {
                 if (name.isNullOrEmpty()) {
                     throw IllegalArgumentException("name")
@@ -78,7 +78,7 @@ import kotlin.concurrent.withLock
         }
     }
 
-    fun IsBase(): Boolean {
+    fun isBase(): Boolean {
         return A == 0.0 && B == 1.0 && C == 1.0 && D == 0.0
     }
 
@@ -96,21 +96,21 @@ import kotlin.concurrent.withLock
         return UNCode.hashCode()
     }
 
-    val Key: String
+    val key: String
         get() = Abbreviation
 
-    fun Convert(value: Double, to: UOM): Double {
-        val valueBase = this.ToBase(value)
-        val valueNew = to.FromBase(valueBase)
+    fun convert(value: Double, to: UOM): Double {
+        val valueBase = this.toBase(value)
+        val valueNew = to.fromBase(valueBase)
         return valueNew
     }
 
-    fun ToBase(value: Double): Double {
+    fun toBase(value: Double): Double {
         val baseValue = ((A + B * value) / (C + D * value)) - Offset
         return baseValue
     }
 
-    fun FromBase(baseValue: Double): Double {
+    fun fromBase(baseValue: Double): Double {
         val value = ((A - C * baseValue) / (D * baseValue - B)) + Offset
         return value
     }

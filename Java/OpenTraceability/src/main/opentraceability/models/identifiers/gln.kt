@@ -1,5 +1,7 @@
 package models.identifiers
 
+import utility.ObjectExtensions.getInt64HashCode
+
 
 //[DataContract]
 //[JsonConverter(typeof(GLNConverter))]
@@ -40,6 +42,8 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
         }
     }
 
+
+
     companion object {
         fun isGLN(glnStr: String): Boolean {
             return try {
@@ -50,15 +54,29 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
             }
         }
 
+        fun isURICompatibleChars(input: String): Boolean {
+            val reservedChars = ":/?#[]@!$&'()*+,;="
+            val unreservedChars = "-._~"
+            val allowedChars = reservedChars + unreservedChars + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+            return input.all { allowedChars.contains(it) }
+        }
+        fun isOnlyDigits(input: String): Boolean {
+            val regex = Regex("\\d+")
+            return regex.matches(input)
+        }
+
+
+
         fun detectGLNIssue(glnStr: String): String? {
             return try {
                 if (glnStr.isNullOrEmpty()) {
                     return "The GLN is NULL or EMPTY."
-                } else if (!glnStr.isURICompatibleChars()) {
+                } else if (!isURICompatibleChars(glnStr)) {
                     return "The GLN contains non-compatiable characters for a URI."
                 } else if (glnStr.contains(" ")) {
                     return "GLN cannot contain spaces."
-                } else if (glnStr.length == 13 && glnStr.isOnlyDigits()) {
+                } else if (glnStr.length == 13 && isOnlyDigits(glnStr)) {
                     val checksum = GS1Util.calculateGLN13CheckSum(glnStr)
                     if (checksum != glnStr.last()) {
                         return "The check sum did not calculate correctly. The expected check sum was $checksum. " +
@@ -76,7 +94,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
                         throw Exception("The GLN $glnStr is not valid.")
                     }
                     val lastPiece = pieces[0] + pieces[1]
-                    if (!lastPiece.isOnlyDigits()) {
+                    if (!isOnlyDigits(lastPiece)) {
                         return "This is supposed to be a GS1 GLN based on the System Prefix and " +
                                 "Data Type Prefix. That means the Company Prefix and Serial Numbers " +
                                 "should only be digits. Found non-digit characters in the Company Prefix " +
@@ -97,7 +115,11 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
             }
         }
 
-        fun tryParse(glnStr: String, out gln: GLN?, out error: String?): Boolean {
+        fun tryParse(glnStr: String, gln: GLN?, error: String?): Boolean {
+
+            var gln: GLN? = gln
+            var error: String? = error
+
             return try {
                 error = detectGLNIssue(glnStr)
                 if (error.isNullOrEmpty()) {

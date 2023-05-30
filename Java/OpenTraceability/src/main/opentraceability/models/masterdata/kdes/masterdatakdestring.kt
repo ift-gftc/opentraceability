@@ -1,28 +1,24 @@
 package models.masterdata.kdes
 
-import com.fasterxml.jackson.core.JsonToken
-import interfaces.IEventKDE
 import interfaces.IMasterDataKDE
-import models.events.kdes.EventKDEBase
-import java.lang.reflect.Type
-import javax.xml.bind.annotation.XmlElement
 
 
 class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
-    override val valueType: Class<*>
+    override var ValueType: Class<*>
         get() = String::class.java
 
     var value: String? = null
     var type: String? = null
     val attributes: MutableMap<String, String> = mutableMapOf()
 
-    constructor() {
+    constructor(ValueType: Class<*>) {
         // Default constructor
+        this.ValueType = ValueType
     }
 
     constructor(ns: String, name: String) {
-        this.Namespace = ns
-        this.Name = name
+        super.namespace = ns
+        super.name = name
     }
 
     fun getJson(): JToken? {
@@ -37,7 +33,7 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
         return if (value.isNullOrBlank()) {
             null
         } else {
-            val xname = (XNamespace)namespace + this.Name
+            val xname = (XNamespace)namespace + super.name
             val x = XElement(xname, value)
 
             // set the xsi type...
@@ -85,7 +81,7 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
     override fun getEPCISXml(): XElement? {
         return if (value != null) {
             val x = XElement("attribute")
-            x.add(XAttribute("id", this.Name))
+            x.add(XAttribute("id", super.name))
             x.value = value
             x
         } else {
