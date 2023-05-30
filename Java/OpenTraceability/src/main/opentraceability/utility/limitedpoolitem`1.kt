@@ -33,7 +33,7 @@ class LimitedPoolItem<T>(
 
     fun dispose() {
         dispose(true)
-        GC.suppressFinalize(this)
+        //GC.suppressFinalize(this)
     }
 
     fun dispose(disposing: Boolean) {

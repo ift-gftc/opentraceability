@@ -1,8 +1,5 @@
 package utility
 
-import OTLogger
-import java.time.OffsetDateTime
-
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 

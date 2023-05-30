@@ -1,8 +1,6 @@
 package utility
 
 import java.util.*
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.memberProperties
 
 object EnumUtil {
     inline fun <reified T : Enum<T>> getEnumDescription(value: T): String {

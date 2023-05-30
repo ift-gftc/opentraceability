@@ -1,11 +1,12 @@
 package utility
 
 import OTLogger
+import org.w3c.dom.Element
 import javax.xml.bind.annotation.XmlElement
 
 //[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)
 //[DataContract]
-class Country : IEquatable<Country>, IComparable<Country> {
+class Country :  Comparable<Country> {
     var CultureInfoCode: String = ""
     var Name: String = ""
     var AlternativeName: String = ""
@@ -22,15 +23,14 @@ class Country : IEquatable<Country>, IComparable<Country> {
         this.CultureInfoCode = other.CultureInfoCode
     }
 
-    constructor(xmlCountry: XmlElement) {
-        this.Name = xmlCountry.attribute("Name")?.value ?: ""
-        this.AlternativeName = xmlCountry.attribute("AlternativeName")?.value ?: ""
-        this.Abbreviation = xmlCountry.attribute("Abbreviation")?.value ?: ""
-        this.Alpha3 = xmlCountry.attribute("Alpha3")?.value ?: ""
-        val isoValue = xmlCountry.attribute("ISO")?.value
+    constructor(xmlCountry: Element) {
+        this.Name = xmlCountry.getAttribute("Name") ?: ""
+        this.AlternativeName = xmlCountry.getAttribute("AlternativeName") ?: ""
+        this.Abbreviation = xmlCountry.getAttribute("Abbreviation") ?: ""
+        this.Alpha3 = xmlCountry.getAttribute("Alpha3") ?: ""
+        val isoValue = xmlCountry.getAttribute("ISO")
         this.ISO = isoValue?.toIntOrNull() ?: 0
-        this.CultureInfoCode = xmlCountry.attribute("CultureInfoCode")?.value ?: ""
-
+        this.CultureInfoCode = xmlCountry.getAttribute("CultureInfoCode") ?: ""
     }
 
     fun clone(): Country {
@@ -47,6 +47,7 @@ class Country : IEquatable<Country>, IComparable<Country> {
     override fun toString(): String {
         return this.Abbreviation.toString()
     }
+
 
     override fun equals(obj: Any?): Boolean {
 
@@ -69,8 +70,10 @@ class Country : IEquatable<Country>, IComparable<Country> {
         if (other == null) return false
         return (ISO == other.ISO)
     }
-    fun compareTo(other: Country?): Int {
+    override fun compareTo(other: Country): Int {
         if (other == null) return 1;
         return (ISO.compareTo(other.ISO));
     }
+
+
 }

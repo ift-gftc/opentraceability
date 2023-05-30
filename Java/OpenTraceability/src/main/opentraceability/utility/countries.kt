@@ -1,6 +1,12 @@
 package utility
 
 import java.util.*
+import javax.xml.parsers.DocumentBuilderFactory
+import org.xml.sax.InputSource
+import java.io.StringReader
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import org.w3c.dom.Node
 
 class Countries {
 
@@ -8,25 +14,34 @@ class Countries {
         _dirCountries = mutableMapOf()
         _dirAlpha3Countries = mutableMapOf()
         _dirNameCountries = mutableMapOf()
-        Load()
+        load()
     }
 
     companion object {
         internal var _dirCountries: MutableMap<String, Country> = mutableMapOf()
         internal var _dirAlpha3Countries: MutableMap<String, Country> = mutableMapOf()
         internal var _dirNameCountries: MutableMap<String, Country> = mutableMapOf()
-        var _locker: Object = Object()
 
         fun load() {
-            var data: String? = null
-            data = StaticData.readData("Countries.xml")
-            val xmlCountries = XDocument.parse(data)
-            for (x in xmlCountries.root.elements()) {
-                val country = Country(x)
-                _dirCountries[country.abbreviation.toUpperCase()] = country
-                _dirNameCountries[country.name.toUpperCase()] = country
-                if (!country.alpha3.isNullOrEmpty()) {
-                    _dirAlpha3Countries[country.alpha3.toUpperCase()] = country
+            var data: String? = StaticData.readData("Countries.xml")
+
+            val dbFactory = DocumentBuilderFactory.newInstance()
+            val dBuilder = dbFactory.newDocumentBuilder()
+            val xmlInput = InputSource(StringReader(data))
+            val xmlCountries: Document = dBuilder.parse(xmlInput)
+
+            val root = xmlCountries.documentElement // get root element
+
+            for (i in 0 until root.childNodes.length) {
+                val node = root.childNodes.item(i)
+                if (node.nodeType == Node.ELEMENT_NODE) {
+                    val x = node as Element
+                    val country = Country(x)
+                    _dirCountries[country.Abbreviation.toUpperCase()] = country
+                    _dirNameCountries[country.Name.toUpperCase()] = country
+                    if (!country.Alpha3.isNullOrEmpty()) {
+                        _dirAlpha3Countries[country.Alpha3.toUpperCase()] = country
+                    }
                 }
             }
         }

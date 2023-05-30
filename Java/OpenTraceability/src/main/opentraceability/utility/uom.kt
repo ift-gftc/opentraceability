@@ -7,17 +7,33 @@ import OTLogger
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
- class UOM {
-     val Name: String = ""
-     val Abbreviation: String = ""
-     val UnitDimension: String = ""
-     val SubGroup: String = ""
-     val UNCode: String = ""
-     val A: Double= 0.0
-     val B: Double= 0.0
-     val C: Double= 0.0
-     val D: Double = 0.0
-     val Offset: Double = 0.0
+class UOM {
+    var Name: String = ""
+    var Abbreviation: String = ""
+    var UnitDimension: String = ""
+    var SubGroup: String = ""
+    var UNCode: String = ""
+    var A: Double = 0.0
+    var B: Double = 0.0
+    var C: Double = 0.0
+    var D: Double = 0.0
+    var Offset: Double = 0.0
+
+    constructor(){}
+
+    constructor(uom: UOM) {
+        this.Abbreviation = uom.Abbreviation
+        this.Name = uom.Name
+        this.UnitDimension= uom.UnitDimension
+        this.UNCode= uom.UNCode
+        this.SubGroup = uom.SubGroup
+        this.Offset = uom.Offset
+        this.A = uom.A
+        this.B = uom.B
+        this.C = uom.C
+        this.D= uom.D
+    }
+
 
     companion object {
         private val uomListLock = ReentrantLock()
@@ -44,18 +60,7 @@ import kotlin.concurrent.withLock
                     ?: getUOMList().find { it.UNCode.equals(name, ignoreCase = true) }
                     ?: throw Exception("Failed to parse UOM")
 
-                return UOM(
-                    uom.Name,
-                    uom.Abbreviation,
-                    uom.UnitDimension,
-                    uom.SubGroup,
-                    uom.UNCode,
-                    uom.A,
-                    uom.B,
-                    uom.C,
-                    uom.D,
-                    uom.Offset
-                )
+                return UOM(uom)
             } catch (ex: Exception) {
                 OTLogger.error(ex)
                 throw ex

@@ -3,8 +3,7 @@ package utility
 import OTLogger
 import org.intellij.markdown.lexer.push
 import java.util.*
-
-import org.json.JSONArray
+import org.json.simple.JSONArray
 
 object UOMS {
     private val uomsAbbrevDict = mutableMapOf<String, UOM>()
@@ -21,15 +20,15 @@ object UOMS {
             for (i in 0 until jarr.length()) {
                 val juom = jarr.getJSONObject(i)
                 val uom = UOM(juom)
-                if (!uomsAbbrevDict.containsKey(uom.abbreviation.toLowerCase())) {
-                    uomsAbbrevDict[uom.abbreviation.toLowerCase()] = uom
+                if (!uomsAbbrevDict.containsKey(uom.Abbreviation.toLowerCase())) {
+                    uomsAbbrevDict[uom.Abbreviation.toLowerCase()] = uom
                 } else {
-                    println("Duplicate Unit abbreviation detected: ${uom.abbreviation}")
+                    println("Duplicate Unit abbreviation detected: ${uom.Abbreviation}")
                 }
-                if (!uomsUNCodeDict.containsKey(uom.unCode.toUpperCase())) {
-                    uomsUNCodeDict[uom.unCode.toUpperCase()] = uom
+                if (!uomsUNCodeDict.containsKey(uom.UNCode.toUpperCase())) {
+                    uomsUNCodeDict[uom.UNCode.toUpperCase()] = uom
                 } else {
-                    println("Duplicate Unit UNCode detected: ${uom.unCode}")
+                    println("Duplicate Unit UNCode detected: ${uom.UNCode}")
                 }
             }
         } catch (ex: Exception) {
@@ -39,12 +38,12 @@ object UOMS {
     }
 
     fun getBase(uom: UOM): UOM {
-        return getBase(uom.unitDimension)
+        return getBase(uom.UnitDimension)
     }
 
     fun getBase(dimension: String): UOM {
         for (entry in uomsAbbrevDict) {
-            if (entry.value.unitDimension == dimension && entry.value.isBase()) {
+            if (entry.value.UnitDimension == dimension && entry.value.isBase()) {
                 return entry.value
             }
         }
@@ -67,7 +66,7 @@ object UOMS {
             uom = uomsAbbrevDict[formattedName]
         } else {
             for (entry in uomsAbbrevDict) {
-                if (entry.value.name.toLowerCase() == formattedName) {
+                if (entry.value.Name.toLowerCase() == formattedName) {
                     uom = entry.value
                     break
                 }
@@ -76,7 +75,7 @@ object UOMS {
                 if (formattedName[formattedName.length - 1] == 's') {
                     formattedName = formattedName.substring(0, formattedName.length - 1)
                     for (entry in uomsAbbrevDict) {
-                        if (entry.value.name.toLowerCase() == formattedName) {
+                        if (entry.value.Name.toLowerCase() == formattedName) {
                             uom = entry.value
                             break
                         }
@@ -89,7 +88,7 @@ object UOMS {
 
     fun getUOMFromUNCode(name: String): UOM? {
         val formattedName = name.toUpperCase()
-        return uomsUNCodeDict[formattedName] ?: uomsAbbrevDict.values.find { it.unCode.equals(formattedName, ignoreCase = true) }
+        return uomsUNCodeDict[formattedName] ?: uomsAbbrevDict.values.find { it.UNCode.equals(formattedName, ignoreCase = true) }
     }
 
     val list: List<UOM>

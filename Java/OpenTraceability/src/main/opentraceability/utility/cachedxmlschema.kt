@@ -1,11 +1,12 @@
 package utility
 
-import com.google.type.DateTime
-import java.time.LocalDateTime
-import javax.xml.bind.annotation.XmlSchema
+import javax.xml.validation.Schema
+import java.time.ZonedDateTime
+import java.time.ZoneOffset
 
 class CachedXmlSchema {
     var url: String? = null
-    var schemaSet: XmlSchemaSet? = null
-    val lastUpdated: DateTime = DateTime.UtcNow
+    var schemaSet: Schema? = null
+    val lastUpdated: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)
+
 }

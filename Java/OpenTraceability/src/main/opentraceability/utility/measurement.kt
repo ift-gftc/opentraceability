@@ -1,27 +1,31 @@
 package utility
 
 import java.lang.Exception
+import org.w3c.dom.Element
 
 class Measurement : Comparable<Measurement?> {
     var value: Double = 0.0
     var uom: UOM = UOM()
 
-    constructor(xmlElement: XElement) : this() {
-        value = xmlElement.getAttribute("Value")?.value?.toDoubleOrNull() ?: 0.0
-        uom = UOM.parseFromName(xmlElement.getAttribute("UoM")?.value ?: "")
+
+    constructor() {}
+
+    constructor(xmlElement: Element) {
+        value = xmlElement.getAttribute("Value")?.toDoubleOrNull() ?: 0.0
+        uom = UOM.parseFromName(xmlElement.getAttribute("UoM") ?: "")
     }
 
-    constructor(copyFrom: Measurement) : this() {
+    constructor(copyFrom: Measurement) {
         value = copyFrom.value
         uom = UOM(copyFrom.uom)
     }
 
-    constructor(value: Double, unitCode: UOM) : this() {
+    constructor(value: Double, unitCode: UOM){
         this.value = value
         uom = unitCode
     }
 
-    constructor(value: Double, unitCode: String) : this() {
+    constructor(value: Double, unitCode: String)  {
         this.value = value
         uom = UOM.parseFromName(unitCode)
     }
@@ -38,7 +42,7 @@ class Measurement : Comparable<Measurement?> {
     }
 
     operator fun plus(right: Measurement): Measurement {
-        if (uom.unitDimension != right.uom.unitDimension) {
+        if (uom.UnitDimension != right.uom.UnitDimension) {
             throw Exception("All operands must be of the same unit dimension. Left UoM = ${uom.UNCode} | Right UoM = ${right.uom.UNCode}.")
         }
 
@@ -49,7 +53,7 @@ class Measurement : Comparable<Measurement?> {
     }
 
     operator fun minus(right: Measurement): Measurement {
-        if (uom.unitDimension != right.uom.unitDimension) {
+        if (uom.UnitDimension != right.uom.UnitDimension) {
             throw Exception("All operands must be of the same unit dimension.")
         }
 
@@ -115,7 +119,7 @@ class Measurement : Comparable<Measurement?> {
     fun toStringEx(): String {
         try {
             var str = value.toString()
-            str += " " + uom.abbreviation
+            str += " " + uom.Abbreviation
             return str
         } catch (ex: Exception) {
             OTLogger.error(ex)
@@ -159,7 +163,7 @@ class Measurement : Comparable<Measurement?> {
                 val dblValue = numberStr.toDouble()
                 var uom = UOMS.getUOMFromUNCode(uomStr)
                 if (uom == null) {
-                    uom = uoms.find { it.abbreviation.toLowerCase() == uomStr.toLowerCase() || uomStr.toLowerCase() == it.name.toLowerCase() }
+                    uom = uoms.find { it.Abbreviation.toLowerCase() == uomStr.toLowerCase() || uomStr.toLowerCase() == it.Name.toLowerCase() }
                 }
 
                 if (uom == null) {
