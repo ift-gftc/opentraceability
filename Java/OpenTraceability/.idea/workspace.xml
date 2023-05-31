@@ -6,17 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="1137e723-d626-4e84-b8c7-a5d16601c2b4" name="Changes" comment="&#10;fix GPT convertion">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/cachedxmlschema.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/cachedxmlschema.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/countries.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/countries.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/country.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/country.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/enumutil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/enumutil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/jsoncontexthelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/jsoncontexthelper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/jsonschemachecker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/jsonschemachecker.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/limitedpoolitem`1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/limitedpoolitem`1.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/measurement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/measurement.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/measurementconverter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/measurementconverter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/stringextensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/stringextensions.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/uom.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/uom.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/uoms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/uoms.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -92,7 +81,7 @@
       <workItem from="1684998105896" duration="26560000" />
       <workItem from="1685343916963" duration="17487000" />
       <workItem from="1685366661741" duration="11588000" />
-      <workItem from="1685428571650" duration="30682000" />
+      <workItem from="1685428571650" duration="32384000" />
     </task>
     <task id="LOCAL-00001" summary="&#10;Working on converting to kotlin">
       <created>1684772773191</created>
@@ -192,7 +181,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685462821925</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="&#10;fix GPT convertion">
+      <created>1685466039927</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1685466039927</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

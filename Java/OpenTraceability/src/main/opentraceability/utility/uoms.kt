@@ -1,9 +1,9 @@
 package utility
 
 import OTLogger
-import org.intellij.markdown.lexer.push
 import java.util.*
-import org.json.simple.JSONArray
+import org.json.JSONArray
+import org.json.JSONObject
 
 object UOMS {
     private val uomsAbbrevDict = mutableMapOf<String, UOM>()
@@ -15,18 +15,25 @@ object UOMS {
 
     fun load() {
         try {
+            // Load the subscriptions JSON
             val loader = EmbeddedResourceLoader()
-            val jarr = JSONArray(loader.readString("OpenTraceability", "OpenTraceability.Utility.Data.uoms.json"))
+            val jsonText = loader.readString("OpenTraceability", "OpenTraceability.Utility.Data.uoms.json")
+            val jarr = JSONArray(jsonText)
+
             for (i in 0 until jarr.length()) {
                 val juom = jarr.getJSONObject(i)
                 val uom = UOM(juom)
-                if (!uomsAbbrevDict.containsKey(uom.Abbreviation.toLowerCase())) {
-                    uomsAbbrevDict[uom.Abbreviation.toLowerCase()] = uom
+                val lowerCaseAbbreviation = uom.Abbreviation.toLowerCase()
+                val upperCaseUNCode = uom.UNCode.toUpperCase()
+
+                if (!uomsAbbrevDict.containsKey(lowerCaseAbbreviation)) {
+                    uomsAbbrevDict[lowerCaseAbbreviation] = uom
                 } else {
                     println("Duplicate Unit abbreviation detected: ${uom.Abbreviation}")
                 }
-                if (!uomsUNCodeDict.containsKey(uom.UNCode.toUpperCase())) {
-                    uomsUNCodeDict[uom.UNCode.toUpperCase()] = uom
+
+                if (!uomsUNCodeDict.containsKey(upperCaseUNCode)) {
+                    uomsUNCodeDict[upperCaseUNCode] = uom
                 } else {
                     println("Duplicate Unit UNCode detected: ${uom.UNCode}")
                 }
@@ -36,6 +43,7 @@ object UOMS {
             throw ex
         }
     }
+
 
     fun getBase(uom: UOM): UOM {
         return getBase(uom.UnitDimension)
