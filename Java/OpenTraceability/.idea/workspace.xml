@@ -4,240 +4,83 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1137e723-d626-4e84-b8c7-a5d16601c2b4" name="Changes" comment="&#10;fix GPT convertion" />
+    <list default="true" id="97ebc57f-a43a-45e7-8bab-7900e03de93a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-        <option value="Kotlin Class" />
-      </list>
-    </option>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="untitled" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/opentraceability/interfaces/iepcisquerydocumentmapper.kt" root0="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectId" id="2PvL58vKthfS5acJyv64E3TvIHd" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="2QYA1MZicYcSzQptnBZSgpnqkng" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Projects/Philip/opentraceability/Java/OpenTraceability&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Projects/Philip/opentraceability/Java/OpenTraceability",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Projects\Philip\opentraceability\Java\OpenTraceability\src\main\opentraceability\models\masterdata\kdes" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Temp\Philip\untitled\src\main\kotlin" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="1137e723-d626-4e84-b8c7-a5d16601c2b4" name="Changes" comment="" />
-      <created>1684332424156</created>
+      <changelist id="97ebc57f-a43a-45e7-8bab-7900e03de93a" name="Changes" comment="" />
+      <created>1685519925883</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1684332424156</updated>
-      <workItem from="1684332425541" duration="5129000" />
-      <workItem from="1684394901262" duration="19841000" />
-      <workItem from="1684421584034" duration="4001000" />
-      <workItem from="1684748638116" duration="19841000" />
-      <workItem from="1684825562638" duration="1754000" />
-      <workItem from="1684827336661" duration="24765000" />
-      <workItem from="1684911926175" duration="29125000" />
-      <workItem from="1684998105896" duration="26560000" />
-      <workItem from="1685343916963" duration="17487000" />
-      <workItem from="1685366661741" duration="11588000" />
-      <workItem from="1685428571650" duration="32384000" />
-      <workItem from="1685515655327" duration="107000" />
+      <updated>1685519925883</updated>
+      <workItem from="1685519926850" duration="438000" />
+      <workItem from="1685520379545" duration="453000" />
+      <workItem from="1685520844983" duration="4426000" />
+      <workItem from="1685525344382" duration="309000" />
+      <workItem from="1685525666812" duration="3463000" />
+      <workItem from="1685529182440" duration="2032000" />
+      <workItem from="1685531247376" duration="622000" />
     </task>
-    <task id="LOCAL-00001" summary="&#10;Working on converting to kotlin">
-      <created>1684772773191</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1684772773191</updated>
-    </task>
-    <task id="LOCAL-00002" summary="&#10;Working on converting to kotlin">
-      <created>1684772795428</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1684772795428</updated>
-    </task>
-    <task id="LOCAL-00003" summary="&#10;Working on converting to kotlin">
-      <created>1684833399377</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1684833399377</updated>
-    </task>
-    <task id="LOCAL-00004" summary="&#10;Working on converting to kotlin">
-      <created>1684859046702</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1684859046702</updated>
-    </task>
-    <task id="LOCAL-00005" summary="&#10;Working on converting to kotlin">
-      <created>1684941438028</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1684941438028</updated>
-    </task>
-    <task id="LOCAL-00006" summary="&#10;Working on converting to kotlin">
-      <created>1684952073940</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1684952073940</updated>
-    </task>
-    <task id="LOCAL-00007" summary="&#10;Working on converting to kotlin">
-      <created>1685001408756</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1685001408756</updated>
-    </task>
-    <task id="LOCAL-00008" summary="&#10;Working on converting to kotlin">
-      <created>1685029005718</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1685029005718</updated>
-    </task>
-    <task id="LOCAL-00009" summary="&#10;Working on converting to kotlin">
-      <created>1685367011353</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1685367011353</updated>
-    </task>
-    <task id="LOCAL-00010" summary="&#10;Working on converting to kotlin">
-      <created>1685367020709</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1685367020709</updated>
-    </task>
-    <task id="LOCAL-00011" summary="&#10;Working on converting to kotlin">
-      <created>1685367382482</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1685367382482</updated>
-    </task>
-    <task id="LOCAL-00012" summary="&#10;GPT convertion">
-      <created>1685444370606</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1685444370606</updated>
-    </task>
-    <task id="LOCAL-00013" summary="&#10;fix GPT convertion">
-      <created>1685448711901</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1685448711901</updated>
-    </task>
-    <task id="LOCAL-00014" summary="&#10;fix GPT convertion">
-      <created>1685462821925</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1685462821925</updated>
-    </task>
-    <task id="LOCAL-00015" summary="&#10;fix GPT convertion">
-      <created>1685466039927</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1685466039927</updated>
-    </task>
-    <task id="LOCAL-00016" summary="&#10;fix GPT convertion">
-      <created>1685515757195</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1685515757195</updated>
-    </task>
-    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="&#10;Working on converting to kotlin" />
-    <MESSAGE value="&#10;GPT convertion" />
-    <MESSAGE value="&#10;fix GPT convertion" />
-    <option name="LAST_COMMIT_MESSAGE" value="&#10;fix GPT convertion" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="kotlin-function">
-          <url>file://$PROJECT_DIR$/src/main/opentraceability/mappers/epcis/xml/epcisdocumentbasexmlmapper.kt</url>
-          <line>20</line>
-          <properties class="mappers.epcis.xml.EPCISDocumentBaseXMLMapper.Companion">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-function">
-          <url>file://$PROJECT_DIR$/src/main/opentraceability/models/identifiers/gln.kt</url>
-          <line>12</line>
-          <properties class="models.identifiers.GLN" method="&lt;init&gt;">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
