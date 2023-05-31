@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1137e723-d626-4e84-b8c7-a5d16601c2b4" name="Changes" comment="&#10;fix GPT convertion">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/opentraceability/utility/uoms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/opentraceability/utility/uoms.kt" afterDir="false" />
-    </list>
+    <list default="true" id="1137e723-d626-4e84-b8c7-a5d16601c2b4" name="Changes" comment="&#10;fix GPT convertion" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -82,6 +79,7 @@
       <workItem from="1685343916963" duration="17487000" />
       <workItem from="1685366661741" duration="11588000" />
       <workItem from="1685428571650" duration="32384000" />
+      <workItem from="1685515655327" duration="107000" />
     </task>
     <task id="LOCAL-00001" summary="&#10;Working on converting to kotlin">
       <created>1684772773191</created>
@@ -188,7 +186,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685466039927</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="&#10;fix GPT convertion">
+      <created>1685515757195</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1685515757195</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
