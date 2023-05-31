@@ -4,7 +4,7 @@ class EPCISQueryDocument : EPCISBaseDocument() {
     var QueryName: String = ""
     var SubscriptionID: String = ""
 
-    fun ToEPCISDocument(): EPCISDocument {
+    fun toEPCISDocument(): EPCISDocument {
         val document = EPCISDocument()
 
         // get all properties from EPCISBaseDocument

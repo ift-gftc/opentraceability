@@ -1,8 +1,6 @@
 package models.events
 
 import java.util.*
-import models.identifiers.*
-import models.events.*
 import utility.attributes.*
 import java.net.URI
 
@@ -26,13 +24,7 @@ class ObjectEvent<T> : EventBase() {
         14,
         OpenTraceabilityProductsListType.QuantityList
     )
-    @OpenTraceabilityProductsAttribute(
-        "epcList",
-        EventProductType.Reference,
-        7,
-        OpenTraceabilityProductsListType.EPCList,
-        Required = true
-    )
+    @OpenTraceabilityProductsAttribute("epcList",EPCISVersion.V2,EventProductType.Reference,7,OpenTraceabilityProductsListType.EPCList,true)
     var ReferenceProducts: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
     @OpenTraceabilityAttribute("", "action", 8)
@@ -73,12 +65,12 @@ class ObjectEvent<T> : EventBase() {
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("sensorElement")
     @OpenTraceabilityAttribute("", "sensorElementList", 17, EPCISVersion.V2)
-    @OpenTraceabilityAttribute("", "extension/sensorElementList", EPCISVersion.V1)
+    @OpenTraceabilityAttribute("", "extension/sensorElementList", 17, EPCISVersion.V1)
     var SensorElementList: ArrayList<SensorElement> = ArrayList<SensorElement>()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("", "persistentDisposition", 18)
-    @OpenTraceabilityAttribute("", "extension/persistentDisposition", EPCISVersion.V1)
+    @OpenTraceabilityAttribute("", "extension/persistentDisposition", 18, EPCISVersion.V1)
     var PersistentDisposition: PersistentDisposition? = null
 
     @OpenTraceabilityObjectAttribute
@@ -92,7 +84,7 @@ class ObjectEvent<T> : EventBase() {
         get() {
             val products = ArrayList<EventProduct>()
             products.addAll(ReferenceProducts)
-            return ReadOnlyCollection(products)
+            return products
         }
 
     fun addProduct(product: EventProduct) {

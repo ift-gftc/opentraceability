@@ -3,7 +3,7 @@ package models.events.kdes
 
 import interfaces.IEventKDE
 import org.json.*
-import org.jdom2.Element
+import org.w3c.dom.Element
 import utility.*
 import java.lang.reflect.Type
 import javax.xml.parsers.DocumentBuilderFactory
@@ -21,11 +21,11 @@ class EventKDECountry: EventKDEBase, IEventKDE {
     }
 
 
-    override fun GetJson(): JSONObject? {
+    override fun getJson(): JSONObject? {
         TODO("Not yet implemented")
     }
 
-    override fun GetXml(): Element? {
+    override fun getXml(): Element? {
         val value = this.Value ?: return null
         // you would typically use a XML parser here
         val document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
@@ -34,12 +34,12 @@ class EventKDECountry: EventKDEBase, IEventKDE {
         return element
     }
 
-    override fun SetFromJson(json: JSONObject) {
+    override fun setFromJson(json: JSONObject) {
         val strValue = json.toString()
         this.Value = Countries.Parse(strValue)
     }
 
-    override fun SetFromXml(xml: Element) {
+    override fun setFromXml(xml: Element) {
         this.Value = Countries.Parse(xml.textContent)
     }
 

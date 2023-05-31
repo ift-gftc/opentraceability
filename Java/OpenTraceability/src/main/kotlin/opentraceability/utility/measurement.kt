@@ -1,7 +1,8 @@
 package utility
 
 import java.lang.Exception
-import org.jdom2.Element
+import org.w3c.dom.Element
+import kotlin.math.round
 
 class Measurement : Comparable<Measurement?> {
     var value: Double = 0.0
@@ -76,7 +77,7 @@ class Measurement : Comparable<Measurement?> {
         if (trBase.uom.UNCode.isNullOrBlank()) throw NullPointerException("Failed to look up base UoM. UNCode=${uom.UNCode}")
 
         trBase.value = uom.convert(value, trBase.uom)
-        trBase.value = trBase.value.round()
+        trBase.value = round(trBase.value)
         return trBase
     }
 
@@ -85,12 +86,12 @@ class Measurement : Comparable<Measurement?> {
             return this
         }
         val trBase = Measurement()
-        trBase.uom = UOMS.getUOMFromUNCode(uomStr)
+        trBase.uom = UOMS.getUOMFromUNCode(uomStr)!!
         if (trBase.uom == null) {
             return this
         }
         trBase.value = uom.convert(value, trBase.uom)
-        trBase.value = trBase.value.round()
+        trBase.value = round(trBase.value)
         return trBase
     }
 
@@ -101,7 +102,7 @@ class Measurement : Comparable<Measurement?> {
         val trBase = Measurement()
         trBase.uom = uom
         trBase.value = uom.convert(value, trBase.uom)
-        trBase.value = trBase.value.round()
+        trBase.value = round(trBase.value)
         return trBase
     }
 

@@ -1,5 +1,7 @@
 package utility
 
+import javax.sql.rowset.spi.XmlReader
+
 
 class XmlSchemaChecker {
     private val cache: MutableMap<String, CachedXmlSchema> = mutableMapOf()
@@ -28,7 +30,7 @@ class XmlSchemaChecker {
 
             var bOk = true
 
-            stringReader = StringReader(xml.toString())
+            stringReader = stringReader(xml.toString())
             reader = XmlReader.create(stringReader, settings)
 
             do {

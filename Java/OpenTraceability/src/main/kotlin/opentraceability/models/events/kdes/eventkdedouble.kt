@@ -22,7 +22,7 @@ class EventKDEDouble: EventKDEBase, IEventKDE {
     }
 
 
-    override fun GetJson(): Any? {
+    override fun getJson(): Any? {
         if (this.Value == null) {
             return null
         } else {
@@ -32,7 +32,7 @@ class EventKDEDouble: EventKDEBase, IEventKDE {
         }
     }
 
-    override fun GetXml(): Element? {
+    override fun getXml(): Element? {
         val value = this.Value ?: return null
 
         val docFactory = DocumentBuilderFactory.newInstance()
@@ -49,11 +49,11 @@ class EventKDEDouble: EventKDEBase, IEventKDE {
         return element
     }
 
-    override fun SetFromJson(json: JSONObject) {
+    override fun setFromJson(json: JSONObject) {
         this.Value = json["value"] as Double
     }
 
-    override fun SetFromXml(xml: Element) {
+    override fun setFromXml(xml: Element) {
         this.Value = xml.textContent.toDoubleOrNull()
     }
 

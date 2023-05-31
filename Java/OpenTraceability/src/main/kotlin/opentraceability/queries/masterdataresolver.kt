@@ -1,7 +1,5 @@
 package queries
 
-import io.grpc.netty.shaded.io.netty.internal.tcnative.AsyncTask
-import java.net.http.HttpClient
 import models.identifiers.*
 import models.events.*
 import models.masterdata.Location
@@ -12,8 +10,6 @@ import models.identifiers.GTIN
 import models.identifiers.PGLN
 import models.masterdata.TradingParty
 import java.lang.reflect.Type
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import mappers.OpenTraceabilityMappers
 import models.masterdata.DigitalLink
 import java.net.URI
@@ -40,7 +36,7 @@ class MasterDataResolver {
 
                 for (source in evt.SourceList) {
                     if (source.parsedType == EventSourceType.Owner) {
-                        val pgln = PGLN(source.value ?: throw Exception("source in event source list has NULL value."))
+                        val pgln = PGLN(source.Value ?: throw Exception("source in event source list has NULL value."))
                         if (pgln != null) {
                             resolveTradingParty(options, pgln, doc, client)
                         }
@@ -49,7 +45,7 @@ class MasterDataResolver {
 
                 for (dest in evt.DestinationList) {
                     if (dest.parsedType == EventDestinationType.Owner) {
-                        val pgln = PGLN(dest.value ?: throw Exception("source in event source list has NULL value."))
+                        val pgln = PGLN(dest.Value ?: throw Exception("source in event source list has NULL value."))
                         if (pgln != null) {
                             resolveTradingParty(options, pgln, doc, client)
                         }
@@ -58,32 +54,32 @@ class MasterDataResolver {
             }
         }
 
-        suspend inline fun <reified TTradeitem : Tradeitem, TLocation : Location, TTradingParty : TradingParty> resolveMasterData(
+        suspend inline fun <reified TTradeitem : Tradeitem, reified TLocation : Location, reified TTradingParty : TradingParty> resolveMasterData(
             options: DigitalLinkQueryOptions,
             doc: EPCISBaseDocument,
             client: HttpClient
         ) {
-            for (evt in doc.events) {
-                for (p in evt.products) {
-                    if (p.epc.type == EPCType.Class || p.epc.type == EPCType.Instance) {
-                        resolveTradeitem<TTradeitem>(options, p.epc.gtin, doc, client)
+            for (evt in doc.Events) {
+                for (p in evt.Products) {
+                    if (p.EPC.Type == EPCType.Class || p.EPC.Type == EPCType.Instance) {
+                        resolveTradeitem<TTradeitem>(options, p.EPC.GTIN, doc, client)
                     }
                 }
 
-                resolveLocation<TLocation>(options, evt.location?.gln, doc, client)
+                resolveLocation<TLocation>(options, evt.Location?.GLN, doc, client)
 
-                for (source in evt.sourceList) {
-                    if (source.type == OpenTraceability.Constants.EPCIS.URN.SDT_Owner) {
-                        val pgln = PGLN(source.value ?: throw Exception("source in event source list has NULL value."))
+                for (source in evt.SourceList) {
+                    if (source.Type == Constants.EPCIS.URN.SDT_Owner) {
+                        val pgln = PGLN(source.Value ?: throw Exception("source in event source list has NULL value."))
                         if (pgln != null) {
                             resolveTradingParty<TTradingParty>(options, pgln, doc, client)
                         }
                     }
                 }
 
-                for (dest in evt.destinationList) {
-                    if (dest.type == OpenTraceability.Constants.EPCIS.URN.SDT_Owner) {
-                        val pgln = PGLN(dest.value ?: throw Exception("source in event source list has NULL value."))
+                for (dest in evt.DestinationList) {
+                    if (dest.Type == Constants.EPCIS.URN.SDT_Owner) {
+                        val pgln = PGLN(dest.Value ?: throw Exception("source in event source list has NULL value."))
                         if (pgln != null) {
                             resolveTradingParty<TTradingParty>(options, pgln, doc, client)
                         }

@@ -2,7 +2,7 @@ package models.masterdata.kdes
 
 import interfaces.IMasterDataKDE
 import org.json.JSONObject
-import org.jdom2.Element
+import org.w3c.dom.Element
 
 class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
     override var ValueType: Class<*>

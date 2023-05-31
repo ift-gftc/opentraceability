@@ -1,14 +1,19 @@
 package utility
 
 
+import org.json.JSONObject
+import org.w3c.dom.Attr
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import utility.StringExtensions.tryConvertToDateTimeOffset
 import java.util.*
 import java.net.URI
 import java.time.OffsetDateTime
 
 class XElementExtensions {
     companion object {
-        fun <String> GetDocumentNamespaces(x: XmlDocument): MutableMap<String, String> {
-            if (x.rootTag == null) throw Exception("Root on XDocument is null.")
+        fun <String> GetDocumentNamespaces(x: Document): MutableMap<String, String> {
+            if (x.documentElement == null) throw Exception("Root on XDocument is null.")
 
             val result = mutableMapOf<String, String>()
             val attributes = x.documentElement.attributes
@@ -16,11 +21,12 @@ class XElementExtensions {
             for (i in 0 until attributes.length) {
                 val attribute = attributes.item(i) as? Attr
 
-                if (attribute?.isNamespaceDeclaration == true) {
-                    val namespaceKey = if (attribute.name.namespaceURI == null) "" else attribute.localName
-                    val namespaceValue = attribute.value
+                if (attribute.isNamespaceDeclaration == true) {
+                    var namespaceKey = if (attribute?.namespaceURI == null) "" else attribute.localName
+                    var namespaceValue = attribute?.value
 
-                    result[namespaceKey] = namespaceValue
+                    //result[namespaceKey] = namespaceValue
+                    result.put(namespaceKey, namespaceValue)
                 }
             }
 
@@ -54,7 +60,7 @@ class XElementExtensions {
         }
 
         fun attributeISODateTime(x: Element,attName: String): OffsetDateTime? {
-            val strValue = x.getAttribute(attName)?.value
+            val strValue = x.getAttribute(attName)
 
             if (!strValue.isNullOrEmpty()) {
                 return strValue.tryConvertToDateTimeOffset()
@@ -66,7 +72,7 @@ class XElementExtensions {
 
 
         fun attributeURI(x: Element,attName: String): URI? {
-            val strValue = x.getAttribute(attName)?.value
+            val strValue = x.getAttribute(attName)
 
             if (!strValue.isNullOrEmpty()) {
                 try {
@@ -82,7 +88,7 @@ class XElementExtensions {
         }
 
         fun attributeBoolean(x: Element,attName: String): Boolean? {
-            val strValue = x.getAttribute(attName)?.value
+            val strValue = x.getAttribute(attName)
 
             if (!strValue.isNullOrEmpty()) {
                 try {
@@ -98,7 +104,7 @@ class XElementExtensions {
         }
 
         fun attributeDouble(x: Element,attName: String): Double? {
-            val strValue = x.getAttribute(attName)?.value
+            val strValue = x.getAttribute(attName)
 
             if (!strValue.isNullOrEmpty()) {
                 try {
@@ -114,7 +120,7 @@ class XElementExtensions {
         }
 
         fun attributeUOM(x: Element,attName: String): UOM? {
-            val strValue = x.getAttribute(attName)?.value
+            val strValue = x.getAttribute(attName)
 
             if (!strValue.isNullOrEmpty()) {
                 try {

@@ -4,7 +4,6 @@ import interfaces.IEPCISDocumentMapper
 import interfaces.IEvent
 import mappers.OpenTraceabilityXmlMapper
 import models.events.*
-import models.events.EPCISDocument
 
 class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
 
@@ -15,7 +14,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
 
             // TODO: validate the schema depending on the version in the document
 
-            document = EPCISDocumentBaseXMLMapper.ReadXml<EPCISQueryDocument>(strValue, xDoc)
+            document = EPCISDocumentBaseXMLMapper.readXml<EPCISQueryDocument>(strValue, xDoc)
             if (xDoc.root == null) {
                 throw Exception("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.")
             }

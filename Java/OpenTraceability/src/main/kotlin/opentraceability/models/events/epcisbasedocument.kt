@@ -18,11 +18,11 @@ open class EPCISBaseDocument {
     var Contexts: ArrayList<String> = ArrayList<String>()
     var Attributes: MutableMap<String, String> = mutableMapOf()
 
-    inline fun <reified T : IVocabularyElement> GetMasterData(): List<T> {
+    inline fun <reified T : IVocabularyElement> getMasterData(): List<T> {
         return this.MasterData.filterIsInstance<T>()
     }
 
-    open fun Merge(data: EPCISBaseDocument) {
+    open fun merge(data: EPCISBaseDocument) {
         data.Events.forEach { e ->
             var found: Boolean = false;
 

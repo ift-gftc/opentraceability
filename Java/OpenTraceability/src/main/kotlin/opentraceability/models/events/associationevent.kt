@@ -6,13 +6,13 @@ import models.identifiers.*
 import utility.attributes.*
 import java.net.URI
 
-class AssociationEvent : EventBase(), IEvent {
+abstract class AssociationEvent : EventBase(), IEvent {
 
     @OpenTraceabilityAttribute("","parentID", 7)
     var ParentID: EPC? = null
 
     @OpenTraceabilityProductsAttribute("childQuantityList", EPCISVersion.V2, EventProductType.Child, 9, OpenTraceabilityProductsListType.QuantityList)
-    @OpenTraceabilityProductsAttribute("childEPCs", EventProductType.Child, 8, OpenTraceabilityProductsListType.EPCList)
+    @OpenTraceabilityProductsAttribute("childEPCs", EPCISVersion.V2, EventProductType.Child, 8, OpenTraceabilityProductsListType.EPCList)
     var Children: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
     @OpenTraceabilityAttribute("","action", 10)

@@ -1,7 +1,5 @@
 package utility.attributes
 
-import models.identifiers.*
-import models.events.*
 import models.events.EPCISVersion
 import models.events.EventProductType
 import java.lang.reflect.Type

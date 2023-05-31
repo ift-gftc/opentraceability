@@ -2,12 +2,11 @@ package mappers
 
 import models.events.*
 import utility.attributes.*
-import java.beans.BeanInfo
 import kotlin.reflect.KProperty
 
 class OTMappingTypeInformationProperty {
 
-    lateinit var Property: BeanInfo
+    lateinit var Property: PropertyInfo
     var Required: Boolean = false
     var IsObject: Boolean = false
     var IsArray: Boolean = false

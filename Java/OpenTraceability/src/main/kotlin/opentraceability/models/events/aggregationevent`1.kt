@@ -9,7 +9,7 @@ import kotlin.collections.*
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
- class AggregationEvent<T : EventILMD>(
+class AggregationEvent<T : EventILMD>(
     @JsonProperty("@type")
     val type: EventType = EventType.TransformationEvent,
 
@@ -23,8 +23,8 @@ import kotlin.collections.*
         21,
         OpenTraceabilityProductsListType.QuantityList
     )
-    @OpenTraceabilityProductsAttribute("childQuantityList", EPCISVersion.V2, EventProductType.CHILD, 15, OpenTraceabilityProductsListType.QuantityList)
-    @OpenTraceabilityProductsAttribute("childEPCs", EventProductType.CHILD, 8, OpenTraceabilityProductsListType.EPC_LIST, required = true)
+    @OpenTraceabilityProductsAttribute("childQuantityList", EPCISVersion.V2, EventProductType.Child, 15, OpenTraceabilityProductsListType.QuantityList)
+    @OpenTraceabilityProductsAttribute("childEPCs", EPCISVersion.V2, EventProductType.Child, 8, OpenTraceabilityProductsListType.EPCList,  true)
     var children: MutableList<EventProduct> = ArrayList(),
 
     @OpenTraceabilityAttribute("", "action", 9)

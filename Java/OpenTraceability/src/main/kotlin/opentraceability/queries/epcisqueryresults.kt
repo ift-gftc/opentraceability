@@ -1,10 +1,7 @@
 package queries
 
 import java.util.*
-import models.identifiers.*
-import models.events.*
 import models.events.EPCISQueryDocument
-import org.intellij.markdown.lexer.push
 
 class EPCISQueryResults {
 
@@ -14,14 +11,14 @@ class EPCISQueryResults {
 
     var Errors: ArrayList<EPCISQueryError> = ArrayList<EPCISQueryError>()
 
-    fun Merge(results: EPCISQueryResults) {
+    fun merge(results: EPCISQueryResults) {
 
         results.StackTrace.forEach { el->
-            this.StackTrace.push(el)
+            this.StackTrace.add(el)
         }
 
         results.Errors.forEach { el->
-            this.Errors.push(el)
+            this.Errors.add(el)
         }
 
         if (this.Document == null)
@@ -30,7 +27,7 @@ class EPCISQueryResults {
         }
         else if (results.Document != null)
         {
-            this.Document!!.Merge(results.Document!!);
+            this.Document!!.merge(results.Document!!);
         }
     }
 }

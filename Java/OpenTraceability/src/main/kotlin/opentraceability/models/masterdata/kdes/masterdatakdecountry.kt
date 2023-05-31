@@ -1,11 +1,12 @@
 package models.masterdata.kdes
 
-
 import interfaces.IMasterDataKDE
+import org.json.*
+import org.w3c.dom.*
+import utility.Countries
 import utility.Country
-import org.jdom2.Element
 
-class MasterDataKDECountry : MasterDataKDEBase, IMasterDataKDE {
+class MasterDataKDECountry : MasterDataKDEBase(), IMasterDataKDE {
     var value: Country? = null
 
      val valueType: Class<*>
@@ -15,7 +16,7 @@ class MasterDataKDECountry : MasterDataKDEBase, IMasterDataKDE {
         return value?.let { country ->
             val x = Element("attribute")
             x.addAttribute(XAttribute("id", name))
-            x.value = country.alpha3
+            x.value = country.Alpha3
             x
         }
     }
@@ -25,7 +26,7 @@ class MasterDataKDECountry : MasterDataKDEBase, IMasterDataKDE {
     }
 
     fun getXml(): Element? {
-        return if (value == null) null else XmlElement((Namespace as XNamespace) + name, value.iso)
+        return if (value == null) null else Element((Namespace as XNamespace) + name, value.ISO)
     }
 
     fun setFromEPCISXml(xml: Element) {

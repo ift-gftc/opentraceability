@@ -56,8 +56,7 @@ class EPCISJsonMasterDataReader {
             // read the GLN from the id
             val id = xLocation.optString("id", "")
             val t = Setup.MasterDataTypes[type]
-            val loc = t?.createInstance() as? Location
-                ?: throw Exception("Failed to activate instance Location of $t")
+            val loc = (t!!::class.createInstance() as? Location) ?: throw Exception("Failed to activate instance Location of $t")
 
             loc.GLN = models.identifiers.GLN(id)
             loc.EPCISType = type

@@ -1,7 +1,7 @@
 package utility
 
-import com.intellij.json.psi.JsonObject
 import OTLogger
+import org.json.JSONObject
 
 
 import java.util.concurrent.locks.ReentrantLock
@@ -32,6 +32,32 @@ class UOM {
         this.B = uom.B
         this.C = uom.C
         this.D= uom.D
+    }
+
+
+    constructor(juom: JSONObject) {
+        this.A = 0.0
+        this.B = 1.0
+        this.C = 1.0
+        this.D = 0.0
+
+        this.Name = juom["name"]?.toString() ?: throw Exception("name not set on uom json. $juom")
+        this.UNCode = juom["UNCode"]?.toString() ?: throw Exception("UNCode not set on uom json. $juom")
+        this.Abbreviation = juom["symbol"]?.toString() ?: throw Exception("symbol not set on uom json. $juom")
+        this.UnitDimension = juom["type"]?.toString() ?: throw Exception("type not set on uom json. $juom")
+
+        this.Offset = juom["offset"]?.toString()!!.toDouble()
+
+        val multiplierString = juom["multiplier"]?.toString() ?: throw Exception("multiplier not set on uom json. $juom")
+        val (B, C) = if (multiplierString.contains("/")) {
+            val numerator = multiplierString.split('/').first().toInt()
+            val denominator = multiplierString.split('/').last().toInt()
+            numerator.toDouble() to denominator.toDouble()
+        } else {
+            val multiplier = juom["multiplier"]?.toString() ?: throw Exception("multiplier not set on uom json. $juom")
+            multiplier to 1.0
+        }
+
     }
 
 

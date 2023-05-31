@@ -10,23 +10,24 @@ import models.identifiers.*
 import models.events.kdes.CertificationList
 import models.identifiers.GLN
 import models.identifiers.PGLN
+import org.json.JSONObject
 import utility.attributes.OpenTraceabilityJsonAttribute
 import utility.attributes.OpenTraceabilityMasterDataAttribute
 import utility.attributes.OpenTraceabilityObjectAttribute
 
 class Location : IVocabularyElement {
 
-    var ID: String? = null
+    override var ID: String? = null
 
-    var EPCISType: String? = "urn:epcglobal:epcis:vtype:Location"
+    override var EPCISType: String? = "urn:epcglobal:epcis:vtype:Location"
 
 
     @OpenTraceabilityJsonAttribute("@type")
-    var JsonLDType: String? = "gs1:Place"
+    override var JsonLDType: String? = "gs1:Place"
 
-    var VocabularyType: VocabularyType? = null
+    override lateinit var VocabularyType: VocabularyType
 
-    var Context: JSONObject? = null
+    override var Context: JSONObject? = null
 
     @OpenTraceabilityJsonAttribute("globalLocationNumber")
     var GLN: GLN? = null
@@ -61,7 +62,7 @@ class Location : IVocabularyElement {
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#unloadingPort")
     var UnloadingPort: String? = null
 
-    var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
+    override var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
 
 
 }

@@ -5,7 +5,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 import org.xml.sax.InputSource
 import java.io.StringReader
 import org.w3c.dom.Document
-import org.jdom2.Element
+import org.w3c.dom.Element
 import org.w3c.dom.Node
 
 class Countries {
@@ -58,7 +58,7 @@ class Countries {
             }
 
 
-        fun FromAbbreviation(code: String): Country? {
+        fun fromAbbreviation(code: String): Country? {
             var country: Country? = null
 
             if (!code.isNullOrEmpty()){
@@ -72,7 +72,7 @@ class Countries {
             return country
         }
 
-        fun FromAlpha3(code: String): Country? {
+        fun fromAlpha3(code: String): Country? {
             var country: Country? = null
 
             if (!code.isNullOrEmpty()){
@@ -86,7 +86,7 @@ class Countries {
             return country
         }
 
-        fun FromCountryName(name: String): Country? {
+        fun fromCountryName(name: String): Country? {
             var country: Country? = null
 
             if (_dirCountries != null && !name.isNullOrEmpty()){
@@ -111,7 +111,7 @@ class Countries {
             return country
         }
 
-        fun FromCountryIso(iso: Int): Country? {
+        fun fromCountryIso(iso: Int): Country? {
             var country: Country? = null
 
             if (_dirCountries != null){
@@ -131,13 +131,13 @@ class Countries {
             return country
         }
 
-        fun Parse(strValue: String): Country? {
+        fun parse(strValue: String): Country? {
 
             val parsedInt = strValue.toIntOrNull()
             if (parsedInt != null) {
-                return FromCountryIso(parsedInt);
+                return fromCountryIso(parsedInt);
             } else {
-                return FromAbbreviation(strValue) ?: FromAlpha3(strValue) ?: FromCountryName(strValue)
+                return fromAbbreviation(strValue) ?: fromAlpha3(strValue) ?: fromCountryName(strValue)
             }
         }
     }

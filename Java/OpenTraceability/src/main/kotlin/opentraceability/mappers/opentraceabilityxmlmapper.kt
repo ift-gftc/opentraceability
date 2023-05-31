@@ -5,7 +5,7 @@ import models.common.LanguageString
 import models.identifiers.*
 import models.events.*
 import models.events.kdes.*
-import org.jdom2.Element
+import org.w3c.dom.Element
 import utility.attributes.OpenTraceabilityAttribute
 import java.lang.reflect.Type
 import utility.*

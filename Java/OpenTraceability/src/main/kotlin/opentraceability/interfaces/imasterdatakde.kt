@@ -1,7 +1,7 @@
 package interfaces
 
 
-import org.jdom2.Element
+import org.w3c.dom.Element
 import org.json.JSONObject
 
 interface IMasterDataKDE {

@@ -4,7 +4,7 @@ import interfaces.IEventKDE
 import org.json.JSONObject
 import java.lang.reflect.Type
 import java.time.OffsetDateTime
-import org.jdom2.Element
+import org.w3c.dom.Element
 
 class EventKDEDateTime: EventKDEBase, IEventKDE {
 
@@ -18,19 +18,19 @@ class EventKDEDateTime: EventKDEBase, IEventKDE {
     }
 
 
-    override fun GetJson(): JSONObject? {
+    override fun getJson(): JSONObject? {
         TODO("Not yet implemented")
     }
 
-    override fun GetXml(): Element? {
+    override fun getXml(): Element? {
         TODO("Not yet implemented")
     }
 
-    override fun SetFromJson(json: JSONObject) {
+    override fun setFromJson(json: JSONObject) {
         TODO("Not yet implemented")
     }
 
-    override fun SetFromXml(xml: Element) {
+    override fun setFromXml(xml: Element) {
         TODO("Not yet implemented")
     }
 

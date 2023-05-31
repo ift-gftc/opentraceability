@@ -1,7 +1,7 @@
 package interfaces
 
 import org.json.*
-import org.jdom2.Element
+import org.w3c.dom.Element
 import java.lang.reflect.Type
 
 interface IEventKDE {
@@ -9,7 +9,7 @@ interface IEventKDE {
     companion object {
         var RegisteredKDEs : MutableMap<String, Type> = mutableMapOf()
 
-        inline fun <reified T> RegisterKDE(ns: String, name: String) {
+        inline fun <reified T> registerKDE(ns: String, name: String) {
             val key: String = "$ns:$name"
 
             if (!RegisteredKDEs.contains(key)) {
@@ -20,7 +20,7 @@ interface IEventKDE {
             }
         }
 
-        fun InitializeKDE(ns: String, name: String): IEventKDE? {
+        fun initializeKDE(ns: String, name: String): IEventKDE? {
             var kde: IEventKDE? = null
 
             val key: String = "$ns:$name"
@@ -48,11 +48,11 @@ interface IEventKDE {
 
     var ValueType: Type
 
-    fun SetFromJson(json: JSONObject)
+    fun setFromJson(json: JSONObject)
 
-    fun GetJson(): Any?
+    fun getJson(): Any?
 
-    fun SetFromXml(xml: Element)
+    fun setFromXml(xml: Element)
 
-    fun GetXml(): Element?
+    fun getXml(): Element?
 }

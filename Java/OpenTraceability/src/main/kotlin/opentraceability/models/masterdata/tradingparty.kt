@@ -2,11 +2,13 @@ package models.masterdata
 
 
 import interfaces.IMasterDataKDE
+import interfaces.IVocabularyElement
 import interfaces.VocabularyType
 import models.common.LanguageString
 import java.util.*
 import models.identifiers.*
 import models.identifiers.PGLN
+import org.json.JSONObject
 import utility.attributes.OpenTraceabilityJsonAttribute
 import utility.attributes.OpenTraceabilityMasterDataAttribute
 import utility.attributes.OpenTraceabilityObjectAttribute
@@ -15,17 +17,17 @@ import java.lang.reflect.Type
 
 class TradingParty : IVocabularyElement {
 
-    var ID: String? = null
+    override var ID: String? = null
 
-    var EPCISType: String? = "urn:epcglobal:epcis:vtype:Party"
+    override  var EPCISType: String? = "urn:epcglobal:epcis:vtype:Party"
 
 
     @OpenTraceabilityJsonAttribute("@type")
-    var JsonLDType: String? = "gs1:Organization"
+    override  var JsonLDType: String? = "gs1:Organization"
 
-    var VocabularyType: VocabularyType? = null
+    override lateinit var VocabularyType: VocabularyType
 
-    var Context: JSONObject? = null
+    override  var Context: JSONObject? = null
 
 
     @OpenTraceabilityJsonAttribute("globalLocationNumber")
@@ -55,6 +57,6 @@ class TradingParty : IVocabularyElement {
     var IFTP: String? = null
 
 
-    var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
+    override  var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
 }
 

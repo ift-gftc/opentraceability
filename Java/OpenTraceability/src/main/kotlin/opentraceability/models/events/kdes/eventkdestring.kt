@@ -23,7 +23,7 @@ class EventKDEString: EventKDEBase, IEventKDE {
     }
 
 
-    override fun GetJson(): JSONObject? {
+    override fun getJson(): JSONObject? {
         if (this.Value.isNullOrBlank()) {
             return null
         } else {
@@ -33,7 +33,7 @@ class EventKDEString: EventKDEBase, IEventKDE {
         }
     }
 
-    override fun GetXml(): Element? {
+    override fun getXml(): Element? {
         if (this.Value.isNullOrBlank()) {
             return null
         } else {
@@ -55,11 +55,11 @@ class EventKDEString: EventKDEBase, IEventKDE {
         }
     }
 
-    fun setFromJson(json: JSONObject) {
+    override fun setFromJson(json: JSONObject) {
         this.Value = json.toString()
     }
 
-    fun setFromXml(xml: Element) {
+    override fun setFromXml(xml: Element) {
         this.Value = xml.value
 
         for (xatt in xml.attributes()) {

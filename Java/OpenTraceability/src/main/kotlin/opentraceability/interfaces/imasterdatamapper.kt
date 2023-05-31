@@ -1,10 +1,10 @@
 package interfaces
 
 import java.lang.reflect.Type
+import kotlin.reflect.KClass
 
 interface IMasterDataMapper {
-    fun Map(vocab: IVocabularyElement): String
-    fun Map(T: Type, value: String): IVocabularyElement
-    fun <T> Map(value: String): IVocabularyElement
-
+    fun map(vocab: IVocabularyElement): String
+    fun <T: IVocabularyElement> map(t: Class<T>, value: String): IVocabularyElement
+    fun <T: IVocabularyElement> map(value: String): IVocabularyElement
 }

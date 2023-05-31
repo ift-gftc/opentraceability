@@ -2,8 +2,7 @@ package utility
 
 import OTLogger
 import java.util.*
-import org.json.JSONArray
-import org.json.JSONObject
+import org.json.*
 
 object UOMS {
     private val uomsAbbrevDict = mutableMapOf<String, UOM>()

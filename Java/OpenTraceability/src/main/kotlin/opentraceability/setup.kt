@@ -1,19 +1,9 @@
-
 import com.google.gson.GsonBuilder
 import interfaces.IVocabularyElement
 import models.events.*
-import models.identifiers.EPC
-import models.identifiers.GLN
-import models.identifiers.GTIN
-import models.identifiers.PGLN
-import models.masterdata.Location
-import models.masterdata.Tradeitem
-import models.events.*
-import models.masterdata.TradingParty
-import utility.EPCConverter
-import utility.GLNConverter
-import utility.GTINConverter
-import utility.PGLNConverter
+import models.identifiers.*
+import models.masterdata.*
+import utility.*
 import java.lang.reflect.Type
 
 class Setup {
@@ -31,40 +21,40 @@ class Setup {
 
             if (!_isInitialized) {
 
-                RegisterEventProfile(
+                registerEventProfile(
                     OpenTraceabilityEventProfile(
                         ObjectEvent<EventILMD>()::class.java,
                         EventType.ObjectEvent
                     )
                 )
-                RegisterEventProfile(
+                registerEventProfile(
                     OpenTraceabilityEventProfile(
                         TransactionEvent::class.java,
                         EventType.TransactionEvent
                     )
                 )
-                RegisterEventProfile(
+                registerEventProfile(
                     OpenTraceabilityEventProfile(
                         TransformationEvent<EventILMD>()::class.java,
                         EventType.TransformationEvent
                     )
                 )
-                RegisterEventProfile(
+                registerEventProfile(
                     OpenTraceabilityEventProfile(
                         AggregationEvent<EventILMD>()::class.java,
                         EventType.AggregationEvent
                     )
                 )
-                RegisterEventProfile(
+                registerEventProfile(
                     OpenTraceabilityEventProfile(
                         AssociationEvent::class.java,
                         EventType.AssociationEvent
                     )
                 )
 
-                RegisterMasterDataType<Tradeitem>();
-                RegisterMasterDataType<Location>();
-                RegisterMasterDataType<TradingParty>();
+                registerMasterDataType<Tradeitem>();
+                registerMasterDataType<Location>();
+                registerMasterDataType<TradingParty>();
 
 
                 val gson = GsonBuilder()
@@ -81,7 +71,7 @@ class Setup {
         }
 
         @Synchronized
-        fun RegisterEventProfile(profile: OpenTraceabilityEventProfile) {
+        fun registerEventProfile(profile: OpenTraceabilityEventProfile) {
 
             Profiles.forEach { element ->
                 if (element.toString() == profile.toString()) {
@@ -92,7 +82,7 @@ class Setup {
             Profiles.add(profile)
         }
 
-        inline fun <reified T> RegisterMasterDataType(defaultFor: Type? = null) {
+        inline fun <reified T> registerMasterDataType(defaultFor: Type? = null) {
 
             var v: IVocabularyElement? = T::class.java.newInstance() as IVocabularyElement
 
@@ -124,11 +114,11 @@ class Setup {
         }
 
 
-        inline fun <reified T, reified TDefaultFor> RegisterMasterDataType() {
-            RegisterMasterDataType<T>(TDefaultFor::class.java);
+        inline fun <reified T, reified TDefaultFor> registerMasterDataType() {
+            registerMasterDataType<T>(TDefaultFor::class.java);
         }
 
-        fun GetMasterDataTypeDefault(type: Type): Type? {
+        fun getMasterDataTypeDefault(type: Type): Type? {
             return MasterDataTypeDefault.getValue(type)
         }
     }

@@ -7,6 +7,7 @@ import org.apache.http.client.utils.URIBuilder
 import java.net.URI
 import java.net.URLDecoder
 import java.net.URLEncoder
+import java.time.OffsetDateTime
 import kotlin.reflect.KMutableProperty
 
 class EPCISQueryParameters {
@@ -29,10 +30,8 @@ class EPCISQueryParameters {
         for (epc in epcs) {
             if (epc.Type == EPCType.Class) {
                 query.MATCH_anyEPCClass?.add(epc.toString())
-                    ?: run { query.MATCH_anyEPCClass = mutableListOf(epc.toString()) }
             } else {
                 query.MATCH_anyEPC?.add(epc.toString())
-                    ?: run { query.MATCH_anyEPC = mutableListOf(epc.toString()) }
             }
         }
     }

@@ -24,7 +24,7 @@ class EventKDEObject: EventKDEBase, IEventKDE {
     }
 
 
-    fun getJson(): JSONObject? {
+    override fun getJson(): JSONObject? {
         if (_xml != null) {
             val factory = DocumentBuilderFactory.newInstance()
             val builder = factory.newDocumentBuilder()
@@ -45,7 +45,7 @@ class EventKDEObject: EventKDEBase, IEventKDE {
 
 
 
-    override fun GetXml(): Element? {
+    override fun getXml(): Element? {
         if (_xml != null) {
             val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
             val doc: Document = docBuilder.parse(StringReader(_xml))
@@ -66,12 +66,12 @@ class EventKDEObject: EventKDEBase, IEventKDE {
         }
     }
 
-    override fun SetFromJson(json: JSONObject) {
+    override fun setFromJson(json: JSONObject) {
         _xml = null
         _json = json
     }
 
-    override fun SetFromXml(xml: Element) {
+    override fun setFromXml(xml: Element) {
         _xml = xml
         _json = null
     }

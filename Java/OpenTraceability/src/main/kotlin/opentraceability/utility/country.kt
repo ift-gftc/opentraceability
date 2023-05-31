@@ -1,8 +1,7 @@
 package utility
 
 import OTLogger
-import org.jdom2.Element
-import javax.xml.bind.annotation.XmlElement
+import org.w3c.dom.Element
 
 //[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)
 //[DataContract]

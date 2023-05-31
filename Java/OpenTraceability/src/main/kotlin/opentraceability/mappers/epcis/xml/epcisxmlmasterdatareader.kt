@@ -13,7 +13,7 @@ import utility.*
 import utility.attributes.*
 import java.lang.reflect.Type
 import java.net.URI
-import org.jdom2.Element
+import org.w3c.dom.Element
 
 class EPCISXmlMasterDataReader {
     companion object {

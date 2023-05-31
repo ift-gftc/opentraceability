@@ -2,6 +2,7 @@ package utility
 
 import com.google.gson.*
 import models.identifiers.GTIN
+import java.lang.reflect.Type
 
 class GTINConverter : JsonSerializer<GTIN>, JsonDeserializer<GTIN> {
     override fun serialize(src: GTIN?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {

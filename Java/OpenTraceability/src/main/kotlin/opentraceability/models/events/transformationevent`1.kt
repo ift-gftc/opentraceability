@@ -2,60 +2,50 @@ package models.events
 
 import interfaces.ITransformationEvent
 import java.util.*
-import models.identifiers.*
-import models.events.*
 import utility.attributes.*
 import java.net.URI
 
 
 class TransformationEvent<T> : EventBase(), ITransformationEvent {
 
-    @OpenTraceabilityProductsAttribute("inputQuantityList", EventProductType.Input, 8, OpenTraceabilityProductsListType.QuantityList)
-    @OpenTraceabilityProductsAttribute("inputEPCList", EventProductType.Input, 7, OpenTraceabilityProductsListType.EPCList)
+    @OpenTraceabilityProductsAttribute("inputQuantityList", EPCISVersion.V2, EventProductType.Input, 8, OpenTraceabilityProductsListType.QuantityList)
+    @OpenTraceabilityProductsAttribute("inputEPCList", EPCISVersion.V2, EventProductType.Input, 7, OpenTraceabilityProductsListType.EPCList)
     var Inputs: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
     var Outputs: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
-    var Action: EventAction? = null
+    override var Action: EventAction? = null
 
-    var TransformationID: String? = null
+    override var TransformationID: String? = null
 
-    var BusinessStep: URI? = null
+    override var BusinessStep: URI? = null
 
-    var Disposition: URI? = null
+    override var Disposition: URI? = null
 
-    var ReadPoint: EventReadPoint? = null
+    override lateinit var ReadPoint: EventReadPoint
 
-    var Location: EventLocation? = null
+    override lateinit var Location: EventLocation
 
 
-    var BizTransactionList: ArrayList<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
+    override var BizTransactionList: ArrayList<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
 
-    var SourceList: ArrayList<EventSource> = ArrayList<EventSource>()
+    override var SourceList: ArrayList<EventSource> = ArrayList<EventSource>()
 
-    var DestinationList: ArrayList<EventDestination> = ArrayList<EventDestination>()
+    override var DestinationList: ArrayList<EventDestination> = ArrayList<EventDestination>()
 
-    var SensorElementList: ArrayList<SensorElement> = ArrayList<SensorElement>()
+    override var SensorElementList: ArrayList<SensorElement> = ArrayList<SensorElement>()
 
-    var PersistentDisposition: PersistentDisposition? = null
+    override var PersistentDisposition: PersistentDisposition? = null
 
     var ILMD: T? = null
 
-    lateinit var EventType: EventType
-
-    //public EventILMD? GetILMD() => ILMD;
+    override lateinit var EventType: EventType
 
 
-    val Products: List<EventProduct>
-        get() {
-            val products = mutableListOf<EventProduct>()
-            products.addAll(Inputs)
-            products.addAll(Outputs)
-            return ReadOnlyCollection(products)
-        }
+    override var Products: ArrayList<EventProduct> = ArrayList<EventProduct>()
 
-    fun AddProduct(product: EventProduct) {
-        when (product.type) {
+    override fun AddProduct(product: EventProduct) {
+        when (product.Type) {
             EventProductType.Output -> Outputs.add(product)
             EventProductType.Input -> Inputs.add(product)
             else -> throw Exception("Transformation event only supports inputs and outputs.")

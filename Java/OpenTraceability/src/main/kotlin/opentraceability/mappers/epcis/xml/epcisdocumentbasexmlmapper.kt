@@ -6,6 +6,10 @@ import models.common.StandardBusinessDocumentHeader
 import models.events.*
 import utility.*
 import java.lang.reflect.Type
+import org.w3c.dom.*
+import opentraceability.mappers.epcis.*
+import utility.StringExtensions.tryConvertToDateTimeOffset
+import kotlin.reflect.full.createInstance
 
 class EPCISDocumentBaseXMLMapper {
     companion object {
@@ -13,29 +17,35 @@ class EPCISDocumentBaseXMLMapper {
         var _schemaChecker: XmlSchemaChecker = XmlSchemaChecker()
 
 
-        inline fun <reified T : EPCISBaseDocument> ReadXml(strValue: String): Pair<T, XDocument> {
-            val xDoc = XDocument.parse(strValue)
-            if (xDoc.root == null) {
+        inline fun <reified T : EPCISBaseDocument> readXml(strValue: String): Pair<T, Document > {
+
+            var xDoc = utils.parseXml(strValue)
+
+            if (xDoc.documentElement == null) {
                 throw Exception("Failed to parse EPCISBaseDocument from xml string because after parsing the XDocument the Root property was null.")
             }
             val document = T::class.createInstance()
-            for (xatt in xDoc.root.attributes()) {
-                if (xatt.name == "creationDate" || xatt.name == "schemaVersion") {
+
+            for (i in 0 until xDoc.documentElement.attributes.length) {
+                val attribute = xDoc.documentElement.attributes.item(i) as org.w3c.dom.Attr
+
+                if (attribute.name == "creationDate" || attribute.name == "schemaVersion") {
                     continue
                 } else {
-                    if (xatt.name.namespace == Constants.XMLNS_NAMEPSACE) {
-                        document.namespaces[xatt.name.localName] = xatt.value
+                    if (attribute?.namespaceURI == Constants.XMLNS_NAMEPSACE) {
+                        document.Namespaces[attribute.localName] = attribute.value
                     } else {
-                        document.attributes[xatt.name.toString()] = xatt.value
+                        document.Attributes[attribute.name.toString()] = attribute.value
                     }
                 }
             }
-            if (document.namespaces.values.contains(Constants.EPCIS_2_NAMESPACE) || document.namespaces.values.contains(
+
+            if (document.Namespaces.values.contains(Constants.EPCIS_2_NAMESPACE) || document.Namespaces.values.contains(
                     Constants.EPCISQUERY_2_NAMESPACE
                 )
             ) {
                 document.EPCISVersion = EPCISVersion.V2
-            } else if (document.namespaces.values.contains(Constants.EPCIS_1_NAMESPACE) || document.namespaces.values.contains(
+            } else if (document.Namespaces.values.contains(Constants.EPCIS_1_NAMESPACE) || document.Namespaces.values.contains(
                     Constants.EPCISQUERY_1_NAMESPACE
                 )
             ) {
@@ -44,17 +54,19 @@ class EPCISDocumentBaseXMLMapper {
             if (document.EPCISVersion == null) {
                 throw Exception("Failed to determine the EPCIS version of the XML document. Must contain a namespace with either '${Constants.EPCIS_2_NAMESPACE}' or '${Constants.EPCIS_1_NAMESPACE}' or '${Constants.EPCISQUERY_2_NAMESPACE}' or '${Constants.EPCISQUERY_1_NAMESPACE}'")
             }
-            val creationDateAttributeStr = xDoc.root.attribute("creationDate")?.value
+            val creationDateAttributeStr = xDoc.documentElement.getAttribute("creationDate")
             if (!creationDateAttributeStr.isNullOrBlank()) {
                 document.CreationDate = creationDateAttributeStr.tryConvertToDateTimeOffset()
             }
             val xHeader =
-                xDoc.root.element("EPCISHeader")?.element(Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader")
+                xDoc.documentElement.getElementsByTagName("EPCISHeader")?.element(Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader")
             if (xHeader != null) {
                 document.Header =
-                    OpenTraceabilityXmlMapper.FromXml<StandardBusinessDocumentHeader>(xHeader, document.EPCISVersion!!)
+                    OpenTraceabilityXmlMapper.fromXml<StandardBusinessDocumentHeader>(xHeader, document.EPCISVersion!!)
             }
-            val xMasterData = xDoc.root.element("EPCISHeader")?.element("extension")?.element("EPCISMasterData")
+
+
+            val xMasterData = xDoc.documentElement.getElementsByTagName("EPCISHeader")?.element("extension")?.element("EPCISMasterData")
             if (xMasterData != null) {
                 EPCISXmlMasterDataReader.ReadMasterData(document, xMasterData)
             }
@@ -62,8 +74,8 @@ class EPCISDocumentBaseXMLMapper {
         }
 
 
-        fun WriteXml(doc: EPCISBaseDocument, epcisNS: XNamespace, rootEleName: String): XDocument {
-            if (doc.EpcisVersion == null) {
+        fun writeXml(doc: EPCISBaseDocument, epcisNS: XNamespace, rootEleName: String): XDocument {
+            if (doc.EPCISVersion == null) {
                 throw Exception("doc.EPCISVersion is NULL. This must be set to a version.")
             }
 
@@ -94,7 +106,7 @@ class EPCISDocumentBaseXMLMapper {
                 xDoc.root.add(XAttribute("creationDate", doc.CreationDate.Value.toString("o")))
             }
 
-            if (doc.EpcisVersion == EPCISVersion.V2) {
+            if (doc.EPCISVersion == EPCISVersion.V2) {
                 xDoc.root.add(XAttribute("schemaVersion", "2.0"))
                 if (doc is EPCISQueryDocument) {
                     xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "epcisq", Constants.EPCISQUERY_2_NAMESPACE))
@@ -103,7 +115,7 @@ class EPCISDocumentBaseXMLMapper {
                     xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "epcis", Constants.EPCIS_2_NAMESPACE))
                     xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "cbvmda", Constants.CBVMDA_NAMESPACE))
                 }
-            } else if (doc.EpcisVersion == EPCISVersion.V1) {
+            } else if (doc.EPCISVersion == EPCISVersion.V1) {
                 xDoc.root.add(XAttribute("schemaVersion", "1.2"))
                 if (doc is EPCISQueryDocument) {
                     xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "epcisq", Constants.EPCISQUERY_1_NAMESPACE))
@@ -116,7 +128,7 @@ class EPCISDocumentBaseXMLMapper {
 
             if (doc.Header != null) {
                 val xname = (Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader").toString()
-                val xHeader = OpenTraceabilityXmlMapper.toXml(xname, doc.Header, doc.EpcisVersion!!)
+                val xHeader = OpenTraceabilityXmlMapper.toXml(xname, doc.Header, doc.EPCISVersion!!)
                 if (xHeader != null) {
                     xDoc.root.add(Element("EPCISHeader", xHeader))
                 }
@@ -148,7 +160,7 @@ class EPCISDocumentBaseXMLMapper {
                 throw Exception("Failed to create event from profile. Type=$eventType and BizStep=$bizStep and Action=$action")
             } else {
                 profiles.filter { it.KDEProfiles != null }.forEach { profile ->
-                    profile.KDEProfiles.forEach { kdeProfile ->
+                    profile.KDEProfiles!!.forEach { kdeProfile ->
                         if (xEvent.queryXPath(kdeProfile.XPath_V1) == null) {
                             profiles.remove(profile)
                         }
@@ -164,7 +176,7 @@ class EPCISDocumentBaseXMLMapper {
         }
 
 
-        internal fun GetEventXName(e: IEvent): String {
+        internal fun getEventXName(e: IEvent): String {
             return when (e.EventType) {
                 EventType.ObjectEvent -> "ObjectEvent"
                 EventType.TransformationEvent -> "TransformationEvent"
@@ -176,7 +188,7 @@ class EPCISDocumentBaseXMLMapper {
         }
 
 
-        fun ValidateEPCISDocumentSchema(xdoc: XDocument, version: EPCISVersion) {
+        fun validateEPCISDocumentSchema(xdoc: XDocument, version: EPCISVersion) {
             val schemaUrl = if (version == EPCISVersion.V1) {
                 "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-1_2.xsd"
             } else {
@@ -191,7 +203,7 @@ class EPCISDocumentBaseXMLMapper {
         }
 
 
-        fun ValidateEPCISQueryDocumentSchema(xdoc: XDocument, version: EPCISVersion) {
+        fun validateEPCISQueryDocumentSchema(xdoc: Document, version: EPCISVersion) {
             val schemaUrl = if (version == EPCISVersion.V1) {
                 "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-query-1_2.xsd"
             } else {

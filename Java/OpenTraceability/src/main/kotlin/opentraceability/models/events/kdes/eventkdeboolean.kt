@@ -2,7 +2,7 @@ package models.events.kdes
 
 import interfaces.IEventKDE
 import org.json.JSONObject
-import org.jdom2.Element
+import org.w3c.dom.Element
 import java.lang.reflect.Type
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -18,12 +18,12 @@ class EventKDEBoolean() : EventKDEBase(), IEventKDE {
         this.Name = name
     }
 
-    override fun GetJson(): Any? {
+    override fun getJson(): Any? {
         value?.let { return JSONObject().put("value", it) }
         return null
     }
 
-    override fun GetXml(): Element? {
+    override fun getXml(): Element? {
         value?.let {
             val documentBuilderFactory = DocumentBuilderFactory.newInstance()
             val documentBuilder = documentBuilderFactory.newDocumentBuilder()
@@ -36,11 +36,11 @@ class EventKDEBoolean() : EventKDEBase(), IEventKDE {
         return null
     }
 
-    override fun SetFromJson(json: JSONObject) {
+    override fun setFromJson(json: JSONObject) {
         this.value = json["value"] as Boolean
     }
 
-    override fun SetFromXml(xml: Element) {
+    override fun setFromXml(xml: Element) {
         this.value = xml.textContent.toBoolean()
     }
 

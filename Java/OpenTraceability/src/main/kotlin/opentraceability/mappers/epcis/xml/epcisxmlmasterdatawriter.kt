@@ -6,8 +6,8 @@ import models.common.LanguageString
 import models.identifiers.*
 import models.events.*
 import models.events.EPCISBaseDocument
+import org.w3c.dom.Element
 import utility.attributes.*
-import org.jdom2.Element
 
 class EPCISXmlMasterDataWriter {
     companion object {
@@ -122,7 +122,7 @@ class EPCISXmlMasterDataWriter {
             }
 
             for (kde in md.KDEs) {
-                val xKDE = kde.GetEPCISXml()
+                val xKDE = kde.getEPCISXml()
                 if (xKDE != null) {
                     xVocabEle.add(xKDE)
                 }

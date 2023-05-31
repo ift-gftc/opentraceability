@@ -1,7 +1,8 @@
 package models.masterdata.kdes
 
 import interfaces.IMasterDataKDE
-import org.jdom2.Element
+import org.json.JSONObject
+import org.w3c.dom.Element
 
 class MasterDataKDEObject : MasterDataKDEBase, IMasterDataKDE {
     private var _xml: Element? = null
@@ -18,8 +19,8 @@ class MasterDataKDEObject : MasterDataKDEBase, IMasterDataKDE {
     }
 
     constructor(ns: String, name: String) {
-        super.Namespace = ns
-        super.Name = name
+        super.namespace = ns
+        super.name = name
     }
 
     override fun setFromGS1WebVocabJson(json: JSONObject) {
