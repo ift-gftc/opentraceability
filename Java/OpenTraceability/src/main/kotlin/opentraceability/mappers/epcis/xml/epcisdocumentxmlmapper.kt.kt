@@ -4,12 +4,13 @@ import interfaces.IEPCISDocumentMapper
 import interfaces.IEvent
 import mappers.OpenTraceabilityXmlMapper
 import models.events.*
+import org.w3c.dom.Document
 
 class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
 
     fun Map(strValue: String, checkSchema: Boolean = true): EPCISQueryDocument {
         try {
-            val xDoc: XDocument
+            val xDoc: Document
             val document: EPCISQueryDocument
 
             // TODO: validate the schema depending on the version in the document
@@ -23,7 +24,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
             }
 
             if (checkSchema) {
-                EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.EPCISVersion!!)
+                EPCISDocumentBaseXMLMapper.validateEPCISQueryDocumentSchema(xDoc, document.EPCISVersion!!)
             }
 
             val epcisQueryXName = if (document.EPCISVersion == EPCISVersion.V1) {
@@ -46,7 +47,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
                 if (document.EPCISVersion == EPCISVersion.V1 && x.element("TransformationEvent") != null) {
                     x = xEvent.element("TransformationEvent")
                 }
-                val eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(x)
+                val eventType = EPCISDocumentBaseXMLMapper.getEventTypeFromProfile(x)
                 val e = OpenTraceabilityXmlMapper.fromXml(x, eventType, document.EPCISVersion!!)
                 document.Events.add(e as IEvent)
             }
@@ -72,7 +73,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
             Constants.EPCISQUERY_1_NAMESPACE
         }
 
-        val xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, epcisNS, "EPCISQueryDocument")
+        val xDoc = EPCISDocumentBaseXMLMapper.writeXml(doc, epcisNS, "EPCISQueryDocument")
         if (xDoc.root == null) {
             throw Exception("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.")
         }
@@ -113,7 +114,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
             }
         }
 
-        EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.EPCISVersion!!)
+        EPCISDocumentBaseXMLMapper.validateEPCISQueryDocumentSchema(xDoc, doc.EPCISVersion!!)
 
         return xDoc.toString()
     }

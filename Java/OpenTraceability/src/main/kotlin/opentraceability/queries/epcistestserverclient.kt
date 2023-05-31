@@ -1,14 +1,8 @@
 package queries
 
-import mappers.EPCISDataFormat
-import models.events.EPCISBaseDocument
-import models.events.EPCISDocument
-import models.events.EPCISVersion
+import mappers.*
+import models.events.*
 import models.identifiers.EPC
-
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import mappers.OpenTraceabilityMappers
 import java.net.URI
 import java.util.*
 

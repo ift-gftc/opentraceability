@@ -74,12 +74,12 @@ class EPCISDocumentBaseXMLMapper {
         }
 
 
-        fun writeXml(doc: EPCISBaseDocument, epcisNS: XNamespace, rootEleName: String): XDocument {
+        fun writeXml(doc: EPCISBaseDocument, epcisNS: Namespace, rootEleName: String): Document {
             if (doc.EPCISVersion == null) {
                 throw Exception("doc.EPCISVersion is NULL. This must be set to a version.")
             }
 
-            val xDoc = XDocument(
+            val xDoc = Document(
                 Element(
                     epcisNS + rootEleName,
                     doc.Attributes.map { XAttribute(it.key, it.value) }
@@ -154,7 +154,7 @@ class EPCISDocumentBaseXMLMapper {
                 it.EventType.toString() == eventType &&
                         (it.Action == null || it.Action == action) &&
                         (it.BusinessStep == null || it.BusinessStep.lowercase() == bizStep?.lowercase())
-            }.sortedByDescending { it.specificityScore }
+            }.sortedByDescending { it.SpecificityScore }
 
             if (profiles.isEmpty()) {
                 throw Exception("Failed to create event from profile. Type=$eventType and BizStep=$bizStep and Action=$action")
@@ -188,7 +188,7 @@ class EPCISDocumentBaseXMLMapper {
         }
 
 
-        fun validateEPCISDocumentSchema(xdoc: XDocument, version: EPCISVersion) {
+        fun validateEPCISDocumentSchema(xdoc: Document, version: EPCISVersion) {
             val schemaUrl = if (version == EPCISVersion.V1) {
                 "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-1_2.xsd"
             } else {

@@ -1,12 +1,13 @@
 package utility
 
+import org.w3c.dom.Document
 import javax.sql.rowset.spi.XmlReader
 
 
 class XmlSchemaChecker {
     private val cache: MutableMap<String, CachedXmlSchema> = mutableMapOf()
 
-    fun validate(xml: XDocument, schemaURL: String, error: AtomicReference<String?>): Boolean {
+    fun validate(xml: Document, schemaURL: String, error: AtomicReference<String?>): Boolean {
         val validationError = StringBuilder()
         error.set(null)
 

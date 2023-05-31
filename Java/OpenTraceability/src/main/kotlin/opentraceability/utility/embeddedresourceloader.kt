@@ -1,5 +1,6 @@
 package utility
 
+import org.w3c.dom.Document
 import java.util.stream.Stream
 
 import java.io.ByteArrayOutputStream
@@ -47,9 +48,9 @@ class EmbeddedResourceLoader {
         }
     }
 
-    fun readXML(assemblyName: String, resourceName: String): XDocument {
+    fun readXML(assemblyName: String, resourceName: String): Document {
         val xmlStr = readString(assemblyName, resourceName)
-        return XDocument.Parse(xmlStr)
+        return Document.Parse(xmlStr)
     }
 
     fun readStream(assemblyName: String, resourceName: String): Stream? {

@@ -1,6 +1,5 @@
 package mappers
 
-import com.sun.beans.introspect.PropertyInfo
 import utility.attributes.*
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock

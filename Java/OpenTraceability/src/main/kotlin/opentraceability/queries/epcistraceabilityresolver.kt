@@ -3,13 +3,8 @@ package queries
 import interfaces.IAggregationEvent
 import java.net.http.HttpClient
 import models.identifiers.*
-import models.identifiers.EPC
-import models.identifiers.PGLN
-
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import mappers.EPCISDataFormat
-import mappers.OpenTraceabilityMappers
+import mappers.*
+import models.events.EventAction
 import models.events.EventProductType
 import utility.OpenTraceabilitySchemaException
 import java.net.URI
@@ -89,11 +84,11 @@ object EPCISTraceabilityResolver {
 
         val results = queryEvents(options, parameters, client)
 
-        if (results.errors.isNotEmpty()) {
+        if (results.Errors.isNotEmpty()) {
             return@withContext results
         }
 
-        results.document ?: throw NullReferenceException("The results.document is NULL, and this should not happen.")
+        results.Document ?: throw NullReferenceException("The results.document is NULL, and this should not happen.")
 
         var epcsToQuery = results.document.events.asSequence()
             .flatMap { event ->
@@ -132,18 +127,18 @@ object EPCISTraceabilityResolver {
         }
 
         for (stack in 0 until 100) {
-            val aggEvents = results.document.events.filterIsInstance<IAggregationEvent>()
-                .filter { it.action == EventAction.ADD && it.parentID !in queriedEpcs }
+            val aggEvents = results.Document.Events.filterIsInstance<IAggregationEvent>()
+                .filter { it.Action == EventAction.ADD && it.ParentID !in queriedEpcs }
                 .toList()
 
             if (aggEvents.isNotEmpty()) {
                 for (aggEvent in aggEvents) {
-                    val parentID = aggEvent.parentID
-                    val childEpcs = aggEvent.products.filter { it.type == EventProductType.Child }.map { it.epc }
-                    val nextEvent = results.document.events
-                        .filter { it.eventTime > aggEvent.eventTime && it.products.any { it.epc in childEpcs } }
-                        .minByOrNull { it.eventTime }
-                    val nextEventTime = nextEvent?.eventTime ?: results.document.events.maxByOrNull { it.eventTime }?.eventTime
+                    val parentID = aggEvent.ParentID
+                    val childEpcs = aggEvent.Products.filter { it.Type == EventProductType.Child }.map { it.EPC }
+                    val nextEvent = results.Document.Events
+                        .filter { it.EventTime > aggEvent.EventTime && it.Products.any { it.EPC in childEpcs } }
+                        .minByOrNull { it.EventTime }
+                    val nextEventTime = nextEvent?.EventTime ?: results.Document.Events.maxByOrNull { it.EventTime }?.EventTime
 
                     val parameters = EPCISQueryParameters(parentID)
                     parameters.query.LE_eventTime = nextEventTime
@@ -163,7 +158,7 @@ object EPCISTraceabilityResolver {
 
     suspend fun queryEvents(options: EPCISQueryInterfaceOptions, parameters: EPCISQueryParameters, client: HttpClient): EPCISQueryResults =
         withContext(Dispatchers.IO) {
-            val mapper = if (options.format == EPCISDataFormat.JSON) {
+            val mapper = if (options.Format == EPCISDataFormat.JSON) {
                 OpenTraceabilityMappers.EPCISQueryDocument.JSON
             } else {
                 OpenTraceabilityMappers.EPCISQueryDocument.XML
@@ -171,11 +166,11 @@ object EPCISTraceabilityResolver {
 
             val request = HttpRequest.newBuilder()
                 .uri(options.URL?.resolve("/events" + parameters.toQueryParameters()))
-                .header("Accept", if (options.format == EPCISDataFormat.XML) "application/xml" else "application/json")
-                .header("GS1-EPCIS-Version", options.version.value)
-                .header("GS1-EPCIS-Min", options.version.value)
-                .header("GS1-EPCIS-Max", options.version.value)
-                .header("GS1-CBV-Version", options.version.value)
+                .header("Accept", if (options.Format == EPCISDataFormat.XML) "application/xml" else "application/json")
+                .header("GS1-EPCIS-Version", options.Version.value)
+                .header("GS1-EPCIS-Min", options.Version.value)
+                .header("GS1-EPCIS-Max", options.Version.value)
+                .header("GS1-CBV-Version", options.Version.value)
                 .header("GS1-CBV-XML-Format", "ALWAYS_URN")
                 .GET()
                 .build()
@@ -226,7 +221,7 @@ object EPCISTraceabilityResolver {
 
                 results.StackTrace.add(stackTraceItem)
 
-                results.Errors.forEach { it.stackTraceItemID = stackTraceItem.ID }
+                results.Errors.forEach { it.StackTraceItemID = stackTraceItem.ID }
             }
 
             results

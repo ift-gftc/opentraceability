@@ -27,7 +27,7 @@ object EPCISJsonMasterDataWriter {
             val jVocabList = jDoc["epcisHeader"]?.get("epcisMasterData")?.get("vocabularyList") as JSONArray?
                 ?: throw Exception("Failed to grab json object epcisHeader.epcisMasterData.vocabularyList")
 
-            for ((type, mdList) in doc.MasterData.groupBy { it.EpcisType }) {
+            for ((type, mdList) in doc.MasterData.groupBy { it.EPCISType }) {
                 if (type != null) {
                     writeMasterDataList(mdList.toMutableList(), jVocabList, type)
                 } else {

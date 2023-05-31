@@ -29,7 +29,7 @@ class MasterDataKDECountry : MasterDataKDEBase(), IMasterDataKDE {
         return if (value == null) null else Element((Namespace as XNamespace) + name, value.ISO)
     }
 
-    fun setFromEPCISXml(xml: Element) {
+    override fun setFromEPCISXml(xml: Element) {
         val country = Countries.parse(xml.value)
         value = country
         name = xml.getAttributeValue("id") ?: ""

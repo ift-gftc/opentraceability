@@ -36,11 +36,11 @@ class EventKDECountry: EventKDEBase, IEventKDE {
 
     override fun setFromJson(json: JSONObject) {
         val strValue = json.toString()
-        this.Value = Countries.Parse(strValue)
+        this.Value = Countries.parse(strValue)
     }
 
     override fun setFromXml(xml: Element) {
-        this.Value = Countries.Parse(xml.textContent)
+        this.Value = Countries.parse(xml.textContent)
     }
 
     override fun toString(): String {
