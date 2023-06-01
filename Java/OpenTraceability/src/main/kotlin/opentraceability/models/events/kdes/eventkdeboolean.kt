@@ -18,12 +18,12 @@ class EventKDEBoolean() : EventKDEBase(), IEventKDE {
         this.Name = name
     }
 
-    override fun getJson(): Any? {
+    override fun GetJson(): Any? {
         value?.let { return JSONObject().put("value", it) }
         return null
     }
 
-    override fun getXml(): Element? {
+    override fun GetXml(): Element? {
         value?.let {
             val documentBuilderFactory = DocumentBuilderFactory.newInstance()
             val documentBuilder = documentBuilderFactory.newDocumentBuilder()
@@ -36,11 +36,11 @@ class EventKDEBoolean() : EventKDEBase(), IEventKDE {
         return null
     }
 
-    override fun setFromJson(json: JSONObject) {
+    override fun SetFromJson(json: JSONObject) {
         this.value = json["value"] as Boolean
     }
 
-    override fun setFromXml(xml: Element) {
+    override fun SetFromXml(xml: Element) {
         this.value = xml.textContent.toBoolean()
     }
 

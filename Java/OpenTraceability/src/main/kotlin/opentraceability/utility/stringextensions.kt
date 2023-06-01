@@ -6,14 +6,14 @@ import java.time.format.DateTimeFormatter
 object StringExtensions {
     private val digitsOnlyRegex = Regex("^[0-9]+$")
 
-    fun String.isOnlyDigits(): Boolean {
-        return digitsOnlyRegex.matches(this)
+    fun String.IsOnlyDigits(): Boolean {
+        return digitsOnlyRegex.Matches(this)
     }
 
-    private val isURICompatibleCharsRegex = Regex("(.*[^._\\-:0-9A-Za-z])")
+    private val IsURICompatibleCharsRegex = Regex("(.*[^._\\-:0-9A-Za-z])")
 
-    fun String.isURICompatibleChars(): Boolean {
-        return !isURICompatibleCharsRegex.matches(this)
+    fun String.IsURICompatibleChars(): Boolean {
+        return !IsURICompatibleCharsRegex.Matches(this)
     }
 
     fun String.tryConvertToDateTimeOffset(): OffsetDateTime? {

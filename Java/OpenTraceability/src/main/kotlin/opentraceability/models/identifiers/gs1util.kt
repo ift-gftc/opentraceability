@@ -1,11 +1,11 @@
 package models.identifiers
 
 object GS1Util {
-    fun isEven(i: Int): Boolean {
+    fun IsEven(i: Int): Boolean {
         return i % 2 == 0
     }
 
-    fun charToInt32(charInt: Char): Int {
+    fun CharToInt32(charInt: Char): Int {
         return when (charInt) {
             '0' -> 0
             '1' -> 1
@@ -21,7 +21,7 @@ object GS1Util {
         }
     }
 
-    fun int32ToChar(charInt: Int): Char {
+    fun Int32ToChar(charInt: Int): Char {
         return when (charInt) {
             0 -> '0'
             1 -> '1'
@@ -37,24 +37,24 @@ object GS1Util {
         }
     }
 
-    fun breakIntoDigits(strInt: String): IntArray {
+    fun BreakIntoDigits(strInt: String): IntArray {
         val rtnInts = mutableListOf<Int>()
 
         for (i in 0 until strInt.length) {
-            rtnInts.add(charToInt32(strInt[i]))
+            rtnInts.add(CharToInt32(strInt[i]))
         }
 
         return rtnInts.toIntArray()
     }
 
-    fun calculateGTIN14CheckSum(strGS: String): Char {
+    fun CalculateGTIN14CheckSum(strGS: String): Char {
         requireNotNull(strGS) { "strGS cannot be null." }
 
-        val gsDigits = breakIntoDigits(strGS)
+        val gsDigits = BreakIntoDigits(strGS)
         var sum = 0
 
         for (i in gsDigits.indices) {
-            if (isEven(i)) {
+            if (IsEven(i)) {
                 sum += gsDigits[i] * 3
             } else {
                 sum += gsDigits[i]
@@ -70,18 +70,18 @@ object GS1Util {
         }
 
         val determinedCheckSum = higherMultipleOfTen - sum
-        val charCheckSum = int32ToChar(determinedCheckSum)
+        val charCheckSum = Int32ToChar(determinedCheckSum)
         return charCheckSum
     }
 
-    fun calculateGLN13CheckSum(strGS: String): Char {
+    fun CalculateGLN13CheckSum(strGS: String): Char {
         requireNotNull(strGS) { "strGS cannot be null." }
 
-        val gsDigits = breakIntoDigits(strGS)
+        val gsDigits = BreakIntoDigits(strGS)
         var sum = 0
 
         for (i in gsDigits.indices) {
-            if (isEven(i)) {
+            if (IsEven(i)) {
                 sum += gsDigits[i]
             } else {
                 sum += gsDigits[i] * 3
@@ -94,7 +94,7 @@ object GS1Util {
         }
 
         val determinedCheckSum = higherMultipleOfTen - sum
-        val charCheckSum = int32ToChar(determinedCheckSum)
+        val charCheckSum = Int32ToChar(determinedCheckSum)
         return charCheckSum
     }
 }

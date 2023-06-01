@@ -18,19 +18,19 @@ class EventKDEDateTime: EventKDEBase, IEventKDE {
     }
 
 
-    override fun getJson(): JSONObject? {
+    override fun GetJson(): JSONObject? {
         TODO("Not yet implemented")
     }
 
-    override fun getXml(): Element? {
+    override fun GetXml(): Element? {
         TODO("Not yet implemented")
     }
 
-    override fun setFromJson(json: JSONObject) {
+    override fun SetFromJson(json: JSONObject) {
         TODO("Not yet implemented")
     }
 
-    override fun setFromXml(xml: Element) {
+    override fun SetFromXml(xml: Element) {
         TODO("Not yet implemented")
     }
 

@@ -16,7 +16,7 @@ class OpenTraceabilityXmlMapper {
     companion object {
 
 
-        fun toXml(xname: String, value: Any?, version: EPCISVersion, required: Boolean = false): Element? {
+        fun ToXml(xname: String, value: Any?, version: EPCISVersion, required: Boolean = false): Element? {
             return if (value != null) {
                 var x: Element? = DocumentHelper.createElement(xname)
                 var xvalue = x
@@ -89,12 +89,12 @@ class OpenTraceabilityXmlMapper {
         }
 
 
-        fun <T> fromXml(x: Element, version: EPCISVersion): T {
+        fun <T> FromXml(x: Element, version: EPCISVersion): T {
             return fromXml(x, T::class.java, version) as T
         }
 
         @Throws(Exception::class)
-        fun fromXml(x: Element, type: Type, version: EPCISVersion): Any? {
+        fun FromXml(x: Element, type: Type, version: EPCISVersion): Any? {
             val kClass = type as KClass<*>
             val value: Any = kClass.createInstance()
 

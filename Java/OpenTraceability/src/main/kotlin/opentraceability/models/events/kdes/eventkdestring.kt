@@ -23,7 +23,7 @@ class EventKDEString: EventKDEBase, IEventKDE {
     }
 
 
-    override fun getJson(): JSONObject? {
+    override fun GetJson(): JSONObject? {
         if (this.Value.isNullOrBlank()) {
             return null
         } else {
@@ -33,7 +33,7 @@ class EventKDEString: EventKDEBase, IEventKDE {
         }
     }
 
-    override fun getXml(): Element? {
+    override fun GetXml(): Element? {
         if (this.Value.isNullOrBlank()) {
             return null
         } else {
@@ -55,15 +55,16 @@ class EventKDEString: EventKDEBase, IEventKDE {
         }
     }
 
-    override fun setFromJson(json: JSONObject) {
+    override fun SetFromJson(json: JSONObject) {
         this.Value = json.toString()
     }
 
-    override fun setFromXml(xml: Element) {
-        this.Value = xml.value
+    override fun SetFromXml(xml: Element) {
+        this.Value = xml.textContent
 
-        for (xatt in xml.attributes()) {
-            Attributes[xatt.name.toString()] = xatt.value
+        for (i in 0 until xml.attributes.length) {
+            val attr = xml.attributes.item(i) as Attr
+            Attributes.put( attr.nodeName, attr.nodeValue)
         }
     }
 

@@ -12,10 +12,10 @@ open class EPCISBaseDocument {
     var EPCISVersion: EPCISVersion? = null
     var CreationDate: OffsetDateTime? = null
     var Header: StandardBusinessDocumentHeader? = null
-    var Events: ArrayList<IEvent> = ArrayList<IEvent>()
-    var MasterData: ArrayList<IVocabularyElement> = ArrayList<IVocabularyElement>()
+    var Events: MutableList<IEvent> = mutableListOf()
+    var MasterData: MutableList<IVocabularyElement> =  mutableListOf()
     var Namespaces: MutableMap<String, String> = mutableMapOf()
-    var Contexts: ArrayList<String> = ArrayList<String>()
+    var Contexts: MutableList<String> = mutableListOf()
     var Attributes: MutableMap<String, String> = mutableMapOf()
 
     inline fun <reified T : IVocabularyElement> getMasterData(): List<T> {
@@ -91,7 +91,8 @@ open class EPCISBaseDocument {
 
             // filter: EQ_bizLocation
             if (parameters.query.EQ_bizLocation != null && parameters.query.EQ_bizLocation.isNotEmpty()) {
-                if (evt.Location?.GLN == null || !parameters.query.EQ_bizLocation.map { it.toString().toLowerCase() }.contains(evt.Location.GLN.toString().toLowerCase())) {
+                if (evt.Location?.GLN == null || !parameters.query.EQ_bizLocation.map { it.toString().toLowerCase() }.contains(
+                        evt.Location!!.GLN.toString().toLowerCase())) {
                     continue
                 }
             }
@@ -141,7 +142,7 @@ open class EPCISBaseDocument {
             val epcMatch = EPC(epcMatchStr)
             for (product in evt.Products) {
                 if (allowedTypes.isEmpty() || allowedTypes.contains(product.Type)) {
-                    if (epcMatch.matches(product.EPC)) {
+                    if (epcMatch.Matches(product.EPC)) {
                         return true
                     }
                 }

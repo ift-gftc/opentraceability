@@ -28,7 +28,7 @@ class MeasurementConverter : JsonDeserializer<Measurement>(), JsonSerializer<Mea
         return if (p.currentToken == JSONObject.VALUE_STRING) {
             val strValue = p.valueAsString
             if (strValue != null) {
-                Measurement.tryParse(strValue)
+                Measurement.TryParse(strValue)
             } else {
                 null
             }
