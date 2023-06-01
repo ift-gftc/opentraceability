@@ -18,18 +18,18 @@ interface IEvent {
     var Disposition: URI?
     var PersistentDisposition: PersistentDisposition?
     var ErrorDeclaration: ErrorDeclaration?
-    var Location: EventLocation
-    var ReadPoint: EventReadPoint
-    var BizTransactionList: ArrayList<EventBusinessTransaction>
-    var SourceList: ArrayList<EventSource>
-    var DestinationList: ArrayList<EventDestination>
-    var KDEs: ArrayList<IEventKDE>
-    var SensorElementList: ArrayList<SensorElement>
-    var Products: ArrayList<EventProduct>
+    var Location: EventLocation?
+    var ReadPoint: EventReadPoint?
+    var BizTransactionList: MutableList<EventBusinessTransaction>
+    var SourceList: MutableList<EventSource>
+    var DestinationList: MutableList<EventDestination>
+    var KDEs: MutableList<IEventKDE>
+    var SensorElementList: MutableList<SensorElement>
+    var Products: MutableList<EventProduct>
     var CertificationList: CertificationList?
 
-    fun <T> GetKDE(ns: String, name: String): T
-    fun <T> GetKDE(): T
+    fun <T: IEventKDE> GetKDE(clazz: Class<T>, ns: String, name: String): T?
+    fun <T: IEventKDE> GetKDE(clazz: Class<T>): T?
     fun AddProduct(product: EventProduct)
     fun GetILMD(): EventILMD?
 }

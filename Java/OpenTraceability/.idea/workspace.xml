@@ -5,19 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="97ebc57f-a43a-45e7-8bab-7900e03de93a" name="Changes" comment="working on convert to kotlin">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatawriter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatawriter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisdocumentbasexmlmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisdocumentbasexmlmapper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisdocumentxmlmapper.kt.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisdocumentxmlmapper.kt.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformation.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdecountry.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdecountry.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/kdes/masterdatakdecountry.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/kdes/masterdatakdecountry.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/epcisquerystacktraceitem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/epcisquerystacktraceitem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/epcistestserverclient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/epcistestserverclient.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/epcistraceabilityresolver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/epcistraceabilityresolver.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/embeddedresourceloader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/embeddedresourceloader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/jsonschemachecker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/jsonschemachecker.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/xmlschemachecker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/xmlschemachecker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/interfaces/ievent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/interfaces/ievent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/aggregationevent`1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/aggregationevent`1.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/eventbase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/eventbase.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,23 +60,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Projects/Philip/opentraceability/Java/OpenTraceability&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Projects/Philip/opentraceability/Java/OpenTraceability",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Temp\Philip\untitled\src\main\kotlin" />
@@ -108,6 +101,7 @@
       <workItem from="1685531920088" duration="2052000" />
       <workItem from="1685537187708" duration="215000" />
       <workItem from="1685537415862" duration="12638000" />
+      <workItem from="1685605560843" duration="2419000" />
     </task>
     <task id="LOCAL-00001" summary="add gradle">
       <created>1685532130376</created>
