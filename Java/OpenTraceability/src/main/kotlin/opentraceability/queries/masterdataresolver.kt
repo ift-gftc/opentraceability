@@ -1,5 +1,8 @@
 package queries
 
+import interfaces.IVocabularyElement
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import models.identifiers.*
 import models.events.*
 import models.masterdata.Location
@@ -12,18 +15,18 @@ import models.masterdata.TradingParty
 import java.lang.reflect.Type
 import mappers.OpenTraceabilityMappers
 import models.masterdata.DigitalLink
+import okhttp3.OkHttpClient
 import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-import java.net.http.HttpResponse.BodyHandlers
+import okhttp3.Request
+import okhttp3.Response
+
 
 class MasterDataResolver {
     companion object {
         suspend fun resolveMasterData(
             options: DigitalLinkQueryOptions,
             doc: EPCISBaseDocument,
-            client: HttpClient
+            client: OkHttpClient
         ) {
             for (evt in doc.Events) {
                 for (p in evt.Products) {
@@ -35,7 +38,7 @@ class MasterDataResolver {
                 resolveLocation(options, evt.Location?.GLN, doc, client)
 
                 for (source in evt.SourceList) {
-                    if (source.parsedType == EventSourceType.Owner) {
+                    if (source.ParsedType == EventSourceType.Owner) {
                         val pgln = PGLN(source.Value ?: throw Exception("source in event source list has NULL value."))
                         if (pgln != null) {
                             resolveTradingParty(options, pgln, doc, client)
@@ -44,7 +47,7 @@ class MasterDataResolver {
                 }
 
                 for (dest in evt.DestinationList) {
-                    if (dest.parsedType == EventDestinationType.Owner) {
+                    if (dest.ParsedType == EventDestinationType.Owner) {
                         val pgln = PGLN(dest.Value ?: throw Exception("source in event source list has NULL value."))
                         if (pgln != null) {
                             resolveTradingParty(options, pgln, doc, client)
@@ -92,7 +95,7 @@ class MasterDataResolver {
             options: DigitalLinkQueryOptions,
             gtin: GTIN?,
             doc: EPCISBaseDocument,
-            client: HttpClient
+            client: OkHttpClient
         ) {
             if (gtin != null) {
                 if (doc.getMasterData<Tradeitem>(gtin.toString()) == null) {
@@ -109,7 +112,7 @@ class MasterDataResolver {
             options: DigitalLinkQueryOptions,
             gln: GLN?,
             doc: EPCISBaseDocument,
-            client: HttpClient
+            client: OkHttpClient
         ) {
             if (gln != null) {
                 if (doc.getMasterData<Location>(gln.toString()) == null) {
@@ -126,7 +129,7 @@ class MasterDataResolver {
             options: DigitalLinkQueryOptions,
             pgln: PGLN?,
             doc: EPCISBaseDocument,
-            client: HttpClient
+            client: OkHttpClient
         ) {
             if (pgln != null) {
                 if (doc.getMasterData<TradingParty>(pgln.toString()) == null) {
@@ -143,7 +146,7 @@ class MasterDataResolver {
             options: DigitalLinkQueryOptions,
             gtin: GTIN?,
             doc: EPCISBaseDocument,
-            client: HttpClient
+            client: OkHttpClient
         ) {
             if (gtin != null) {
                 if (doc.getMasterData<Tradeitem>(gtin.toString()) == null) {
@@ -159,7 +162,7 @@ class MasterDataResolver {
             options: DigitalLinkQueryOptions,
             gln: GLN?,
             doc: EPCISBaseDocument,
-            client: HttpClient
+            client: OkHttpClient
         ) {
             if (gln != null) {
                 if (doc.getMasterData<Location>(gln.toString()) == null) {
@@ -175,7 +178,7 @@ class MasterDataResolver {
             options: DigitalLinkQueryOptions,
             pgln: PGLN?,
             doc: EPCISBaseDocument,
-            client: HttpClient
+            client: OkHttpClient
         ) {
             if (pgln != null) {
                 if (doc.getMasterData<TradingParty>(pgln.toString()) == null) {
@@ -190,7 +193,7 @@ class MasterDataResolver {
         suspend inline fun <reified T : IVocabularyElement> ResolverMasterDataItem(
             options: DigitalLinkQueryOptions,
             relativeURL: String,
-            client: HttpClient
+            client: OkHttpClient
         ): T? {
             val response = resolveMasterDataItem(T::class.java, options, relativeURL, client)
             return response as? T
@@ -200,21 +203,24 @@ class MasterDataResolver {
             type: Class<*>,
             options: DigitalLinkQueryOptions,
             relativeURL: String,
-            client: HttpClient
+            client: OkHttpClient
         ): Any? = withContext(Dispatchers.IO) {
             if (options.URL == null) {
                 throw Exception("options.Uri is null on the DigitalLinkQueryOptions")
             }
 
-            val request = HttpRequest.newBuilder()
-                .uri(URI(options.URL.toString().trimEnd('/') + "/" + relativeURL.trimStart('/')))
-                .GET()
+            val client = OkHttpClient()
+
+            val request = Request.Builder()
+                .url(URI(options.URL.toString().trimEnd('/') + "/" + relativeURL.trimStart('/')).toURL())
+                .get()
                 .build()
 
-            val response = client.send(request, BodyHandlers.ofString())
+            val response: Response = client.newCall(request).execute()
+            val responseStr = response.body?.string()
 
-            if (response.statusCode() == 200) {
-                val responseStr = response.body()
+
+            if (response.code == 200) {
                 val links = mutableListOf<DigitalLink>()
                 val json = JsonParser().parse(responseStr).asJsonArray
                 for (element in json) {
@@ -250,7 +256,7 @@ class MasterDataResolver {
                 }
             } else {
                 val contentStr = response.body()
-                throw HttpRequestException("There was an error trying to fetch digital links from $relativeURL - $contentStr - ${response.toString()}")
+                throw Exception("There was an error trying to fetch digital links from $relativeURL - $contentStr - ${response.toString()}")
             }
 
             null

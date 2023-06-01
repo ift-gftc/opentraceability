@@ -13,6 +13,7 @@ import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
 import kotlin.reflect.KClass
+import kotlin.time.Duration
 
 class OpenTraceabilityJsonLDMapper {
     companion object {
@@ -24,7 +25,7 @@ class OpenTraceabilityJsonLDMapper {
             try {
                 value?.let {
                     var json: JSONObject? = JSONObject()
-                    var jpointer: JSONObject = json
+                    var jpointer: JSONObject = json!!
 
                     val t: Type = value::class.java
                     val typeInfo: OTMappingTypeInformation = OTMappingTypeInformation.getJsonTypeInfo(t)
@@ -194,7 +195,7 @@ class OpenTraceabilityJsonLDMapper {
 
                 val jobj: JSONObject? = json as? JSONObject
                 if (jobj != null) {
-                    for (jprop in jobj.properties()) {
+                    for (jprop in jobj.Properties()) {
                         mappingProp = typeInfo[jprop.Name]
 
                         if (mappingProp != null && mappingProp.Property.setMethod == null) {
@@ -270,11 +271,11 @@ class OpenTraceabilityJsonLDMapper {
                         val epc = EPC(jQuantity["epcClass"]?.value<String>() ?: "")
 
                         val product = EventProduct(epc).apply {
-                            Type = mappingProp.ProductType
+                            Type = mappingProp.ProductType!!
                             Quantity = Measurement(jQuantity.value<Double>("quantity"), jQuantity.value<String>("uom") ?: "EA")
                         }
 
-                        e.addProduct(product)
+                        e.AddProduct(product)
                     }
                 }
                 mappingProp.IsEPCList -> {
@@ -283,9 +284,9 @@ class OpenTraceabilityJsonLDMapper {
                     jEPCList?.forEach {
                         val epc = EPC(it.toString())
                         val product = EventProduct(epc).apply {
-                            Type = mappingProp.ProductType
+                            Type = mappingProp.ProductType!!
                         }
-                        e.addProduct(product)
+                        e.AddProduct(product)
                     }
                 }
                 mappingProp.IsArray -> {
@@ -339,9 +340,9 @@ class OpenTraceabilityJsonLDMapper {
 
 
 
-        fun readObjectFromString(value: String, t: KClass<*>): Any {
+        fun readObjectFromString(value: String, t: KClass<*>): Any? {
             return try {
-                when(t) {
+                when (t) {
                     OffsetDateTime::class -> {
                         val dt = value.tryConvertToDateTimeOffset() ?: throw Exception("Failed to convert string to datetimeoffset where value = $value")
                         dt
@@ -362,8 +363,8 @@ class OpenTraceabilityJsonLDMapper {
                         val v = URI(value)
                         v
                     }
-                    TimeSpan::class -> {
-                        val ts = if (value.startsWith("+")) TimeSpan.parse(value.drop(1)) else TimeSpan.parse(value)
+                    Duration::class -> {
+                        val ts = if (value.startsWith("+")) value.drop(1).toDuration() else value.toDuration()
                         ts
                     }
                     EventAction::class -> {
@@ -399,6 +400,7 @@ class OpenTraceabilityJsonLDMapper {
             }
         }
 
+
         fun readKDE(name: String, json: JSONObject, namespaces: Map<String, String>): IEventKDE {
             var kde: IEventKDE? = null
             var ns = ""
@@ -421,7 +423,7 @@ class OpenTraceabilityJsonLDMapper {
                 kde = EventKDEString(ns, realName)
             }
 
-            kde?.setFromJson(json) ?: throw Exception("Failed to initialize KDE from JSON = ${json.toString()}")
+            kde?.SetFromJson(json) ?: throw Exception("Failed to initialize KDE from JSON = ${json.toString()}")
 
             return kde
         }

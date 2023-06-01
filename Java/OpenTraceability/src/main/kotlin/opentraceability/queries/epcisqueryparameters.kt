@@ -1,14 +1,17 @@
 package queries
 
 import models.identifiers.*
-import models.identifiers.EPC
-import models.identifiers.EPCType
 import org.apache.http.client.utils.URIBuilder
-import java.net.URI
-import java.net.URLDecoder
-import java.net.URLEncoder
+import java.net.*
 import java.time.OffsetDateTime
 import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.full.memberProperties
+import java.net.URLEncoder
+import java.time.format.DateTimeFormatter
+
 
 class EPCISQueryParameters {
     private val propMapping = mutableMapOf<String, KMutableProperty<*>>()
@@ -37,24 +40,25 @@ class EPCISQueryParameters {
     }
 
     constructor(uri: URI) {
-        val queryParameters = URIBuilder(uri).parameters
+        val uriBuilder = URIBuilder(uri)
+        val queryParameters = uriBuilder.queryParams
         for (param in queryParameters) {
             val key = param.name
             val value = URLDecoder.decode(param.value, "UTF-8")
 
             val prop = propMapping[key]
             if (prop != null) {
-                when (prop.returnType) {
-                    KType.Companion.typeOf<OffsetDateTime?>() -> {
+                when {
+                    prop.returnType.isSubtypeOf(OffsetDateTime::class.createType(nullable = true)) -> {
                         val dt = OffsetDateTime.parse(value)
                         prop.setter.call(query, dt)
                     }
-                    KType.Companion.typeOf<MutableList<String>?>() -> {
+                    prop.returnType.isSubtypeOf(List::class.createType(arguments = listOf(String::class.createType())).withNullability(true)) -> {
                         val values = value.split("|")
                         prop.setter.call(query, values.toMutableList())
                     }
-                    KType.Companion.typeOf<MutableList<URI>?>() -> {
-                        val values = value.split("|").map { URI(it) }
+                    prop.returnType.isSubtypeOf(List::class.createType(arguments = listOf(URI::class.createType())).withNullability(true)) -> {
+                        val values = value.split("|").map { URI.create(it) }
                         prop.setter.call(query, values.toMutableList())
                     }
                 }
@@ -132,4 +136,49 @@ class EPCISQueryParameters {
             }
         }
     }
+
+    fun toQueryParameters(): String {
+        val queryParameters = mutableListOf<String>()
+
+        // Go through each property on the query
+        for (prop in EPCISQueryParameters::class.memberProperties) {
+            when (val value = prop.get(this)) {
+                is String -> {
+                    if (value.isNotBlank()) {
+                        val encodedValue = URLEncoder.encode(value.toString(), "UTF-8")
+                        val queryParam = "${prop.name}=${encodedValue}"
+                        queryParameters.add(queryParam)
+                    }
+                }
+                is List<*> -> {
+                    if (value.isNotEmpty()) {
+                        val encodedValues = value.filterIsInstance<String>()
+                            .map { URLEncoder.encode(it, "UTF-8") }
+                            .joinToString("|")
+                        val queryParam = "${prop.name}=$encodedValues"
+                        queryParameters.add(queryParam)
+                    }
+                }
+                is URI -> {
+                    val queryParam = "${prop.name}=${URLEncoder.encode(value.toString(), "UTF-8")}"
+                    queryParameters.add(queryParam)
+                }
+                is OffsetDateTime? -> {
+                    if (value != null) {
+                        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+                        val isoString = value.format(formatter)
+
+                        val queryParam = "${prop.name}=${URLEncoder.encode(isoString, "UTF-8")}"
+                        queryParameters.add(queryParam)
+                    }
+                }
+            }
+        }
+
+        val queryString = queryParameters.joinToString("&")
+        return "?$queryString"
+    }
+
+
+
 }

@@ -16,7 +16,7 @@ class VocabularyElement : IVocabularyElement {
     override var JsonLDType: String? = null
     override var Context: JSONObject? = null
 
-    var VocabularyType: VocabularyType
+    var VocabularyType: VocabularyType = VocabularyType.Unknown
         get() {
             var type = VocabularyType.Unknown
             for (t in VocabularyType.values()) {

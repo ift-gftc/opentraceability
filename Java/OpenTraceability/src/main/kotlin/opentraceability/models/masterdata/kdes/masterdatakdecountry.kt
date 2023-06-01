@@ -9,13 +9,13 @@ import utility.Country
 class MasterDataKDECountry : MasterDataKDEBase(), IMasterDataKDE {
     var value: Country? = null
 
-     val valueType: Class<*>
-        get() = Country::class.java
+     val valueType: Class<*> = Country::class.java
 
-    fun getEPCISXml(): Element? {
+
+    override fun getEPCISXml(): Element? {
         return value?.let { country ->
             val x = Element("attribute")
-            x.addAttribute(XAttribute("id", name))
+            x.addAttribute(XAttribute("id", Name))
             x.value = country.Alpha3
             x
         }
@@ -32,7 +32,7 @@ class MasterDataKDECountry : MasterDataKDEBase(), IMasterDataKDE {
     override fun setFromEPCISXml(xml: Element) {
         val country = Countries.parse(xml.value)
         value = country
-        name = xml.getAttributeValue("id") ?: ""
+        Name = xml.getAttributeValue("id") ?: ""
     }
 
     override fun setFromGS1WebVocabJson(json: JSONObject) {

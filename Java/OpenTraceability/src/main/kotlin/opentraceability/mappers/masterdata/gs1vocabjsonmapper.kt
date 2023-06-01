@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import kotlin.reflect.KClass
 
 class GS1VocabJsonMapper : IMasterDataMapper {
-    override fun map(vocab: IVocabularyElement): String {
+    override fun Map(vocab: IVocabularyElement): String {
         if (vocab.Context == null) {
             vocab.Context = JSONObject("""{
                                     "cbvmda": "urn:epcglobal:cbvmda:mda",
@@ -31,7 +31,7 @@ class GS1VocabJsonMapper : IMasterDataMapper {
         return json.toString()
     }
 
-    override fun <T : IVocabularyElement> map(type: Class<T>, value: String): IVocabularyElement {
+    override fun <T : IVocabularyElement> Map(type: Class<T>, value: String): IVocabularyElement {
         val json = JSONObject(value)
         val namespaces = getNamespaces(json["@context"] ?: throw Exception("@context is null on the JSON-LD when deserializing GS1 Web Vocab. $value"))
         val obj = OpenTraceabilityJsonLDMapper.fromJson(json, type, namespaces) as IVocabularyElement
@@ -39,8 +39,8 @@ class GS1VocabJsonMapper : IMasterDataMapper {
         return obj
     }
 
-    override inline fun <reified T : IVocabularyElement> map(value: String): IVocabularyElement {
-        return map(T::class.java, value)
+    override fun <T : IVocabularyElement> Map(value: String): IVocabularyElement {
+        return Map(T::class.java, value)
     }
 
 

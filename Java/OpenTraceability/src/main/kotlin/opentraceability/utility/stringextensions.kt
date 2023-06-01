@@ -7,13 +7,13 @@ object StringExtensions {
     private val digitsOnlyRegex = Regex("^[0-9]+$")
 
     fun String.IsOnlyDigits(): Boolean {
-        return digitsOnlyRegex.Matches(this)
+        return digitsOnlyRegex.matches(this)
     }
 
     private val IsURICompatibleCharsRegex = Regex("(.*[^._\\-:0-9A-Za-z])")
 
     fun String.IsURICompatibleChars(): Boolean {
-        return !IsURICompatibleCharsRegex.Matches(this)
+        return !IsURICompatibleCharsRegex.matches(this)
     }
 
     fun String.tryConvertToDateTimeOffset(): OffsetDateTime? {

@@ -6,7 +6,7 @@ import kotlin.reflect.KProperty
 
 class OTMappingTypeInformationProperty {
 
-    lateinit var Property: PropertyInfo
+    var Property: KProperty<*>? = null
     var Required: Boolean = false
     var IsObject: Boolean = false
     var IsArray: Boolean = false

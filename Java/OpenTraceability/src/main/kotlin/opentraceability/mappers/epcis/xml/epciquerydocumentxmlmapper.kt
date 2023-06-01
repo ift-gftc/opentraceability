@@ -111,5 +111,6 @@ class EPCISQueryDocumentXMLMapper : IEPCISQueryDocumentMapper {
         val transformer = transformerFactory.newTransformer()
         val writer = StringWriter()
         transformer.transform(DOMSource(doc), StreamResult(writer))
+        return writer.toString()
     }
 }

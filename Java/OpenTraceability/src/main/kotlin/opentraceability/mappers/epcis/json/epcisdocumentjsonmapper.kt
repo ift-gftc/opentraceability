@@ -7,7 +7,7 @@ import org.json.*
 
 class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
 
-    override fun map(strValue: String): EPCISDocument {
+    override fun Map(strValue: String): EPCISDocument {
         try {
             val dic = EPCISDocumentBaseJsonMapper.readJSON<EPCISDocument>(strValue)
 
@@ -46,7 +46,7 @@ class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
 
 
 
-    override fun map(doc: EPCISDocument): String {
+    override fun Map(doc: EPCISDocument): String {
         if (doc.EPCISVersion != EPCISVersion.V2) {
             throw Exception("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
         }

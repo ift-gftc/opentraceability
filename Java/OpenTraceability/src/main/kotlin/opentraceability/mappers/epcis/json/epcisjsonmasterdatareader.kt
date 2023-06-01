@@ -12,7 +12,6 @@ import utility.*
 import utility.attributes.*
 import java.lang.reflect.Type
 import java.net.URI
-import kotlin.reflect.KProperty
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.isSubtypeOf
@@ -21,7 +20,6 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.full.createType
 import org.json.JSONArray
 import org.json.JSONObject
-import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 
 class EPCISJsonMasterDataReader {

@@ -1,85 +1,100 @@
 package queries
 
+import interfaces.IEPCISDocumentMapper
 import mappers.*
 import models.events.*
 import models.identifiers.EPC
+import okhttp3.*
+import java.net.URL
+import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import utility.HttpClientPool
 import java.net.URI
 import java.util.*
 
-class EPCISTestServerClient(
-    private val baseURL: String,
-    private val format: EPCISDataFormat,
-    private val version: EPCISVersion
-) {
-    private val httpClientPool = HttpClientPool()
+class EPCISTestServerClient(val _baseURL: String, val _format: EPCISDataFormat, val _version: EPCISVersion) {
 
-    suspend fun post(doc: EPCISDocument, blobId: String? = null): String = withContext(Dispatchers.IO) {
+    private val client = OkHttpClient()
+
+
+    suspend fun postEPCISDocument(doc: EPCISDocument, blobId: String? = null): String = withContext(Dispatchers.IO) {
+        val baseUrl = _baseURL.trimEnd('/')
         val actualBlobId = blobId ?: UUID.randomUUID().toString()
-        val url = "$baseURL/epcis/$actualBlobId/events"
+        val url = "$baseUrl/epcis/$actualBlobId/events"
 
-        val mapper = if (format == EPCISDataFormat.JSON) {
+        val mapper: IEPCISDocumentMapper = if (_format == EPCISDataFormat.JSON) {
             OpenTraceabilityMappers.EPCISDocument.JSON
         } else {
             OpenTraceabilityMappers.EPCISDocument.XML
         }
-        val contentType = if (format == EPCISDataFormat.JSON) {
+
+        val contentType = if (_format == EPCISDataFormat.JSON) {
             "application/json"
         } else {
             "application/xml"
         }
 
-        val client = httpClientPool.getClient()
+        val clientItem = HttpClientPool.getClient()
+        val client = clientItem.value
 
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create(url))
-            .header("Content-Type", contentType)
-            .method("POST", BodyPublishers.ofString(mapper.map(doc)))
+        val request = Request.Builder()
+            .url(url)
+            .header("Accept", if (_format == EPCISDataFormat.XML) "application/xml" else "application/json")
+            .header("GS1-EPCIS-Version", if (_version == EPCISVersion.V1) "1.2" else "2.0")
+            .header("GS1-EPCIS-Min", if (_version == EPCISVersion.V1) "1.2" else "2.0")
+            .header("GS1-EPCIS-Max", if (_version == EPCISVersion.V1) "1.2" else "2.0")
+            .header("GS1-CBV-Version", if (_version == EPCISVersion.V1) "1.2" else "2.0")
+            .header("GS1-CBV-XML-Format", "ALWAYS_URN")
+            .post(RequestBody.create(contentType.toMediaTypeOrNull(), mapper.Map(doc)))
             .build()
 
-        val response = client.send(request, BodyHandlers.ofString())
-        if (!response.statusCode().isSuccess) {
-            val contentStr = response.body()
-            throw Exception("${response.statusCode()} - ${response.statusCode()} - $contentStr")
+        val response = client.newCall(request).execute()
+        if (!response.isSuccessful) {
+            val contentStr = response.body?.string()
+            throw Exception("${response.code} - ${response.message} - $contentStr")
         }
 
         actualBlobId
     }
 
-    suspend fun queryEvents(blobId: String, parameters: EPCISQueryParameters): EPCISQueryResults =
-        withContext(Dispatchers.IO) {
-            val client = httpClientPool.getClient()
-            val url = "$baseURL/epcis/$blobId"
-            val options = EPCISQueryInterfaceOptions(
-                URL = URI.create(url),
-                Format = format,
-                Version = version,
-                EnableStackTrace = true
-            )
 
-            EPCISTraceabilityResolver.queryEvents(options, parameters, client)
+    suspend fun queryEvents(blobId: String, parameters: EPCISQueryParameters): EPCISQueryResults {
+        val url = "${_baseURL.trimEnd('/')}/epcis/$blobId"
+
+        val options = EPCISQueryInterfaceOptions().apply {
+            this.URL = URL(url).toURI()
+            this.Format = _format
+            this.Version = _version
+            this.EnableStackTrace = true
         }
 
-    suspend fun traceback(blobId: String, epc: EPC): EPCISQueryResults = withContext(Dispatchers.IO) {
-        val client = httpClientPool.getClient()
-        val url = "$baseURL/epcis/$blobId"
-        val options = EPCISQueryInterfaceOptions(
-            URL = URI.create(url),
-            Format = format,
-            Version = version,
-            EnableStackTrace = true
-        )
-
-        EPCISTraceabilityResolver.traceback(options, epc, client)
+        return EPCISTraceabilityResolver.queryEvents(options, parameters, client)
     }
 
-    suspend fun resolveMasterData(blobId: String, doc: EPCISBaseDocument) = withContext(Dispatchers.IO) {
-        val client = httpClientPool.getClient()
-        val url = "$baseURL/digitallink/$blobId"
-        val options = DigitalLinkQueryOptions(
-            URL = URI.create(url),
-            EnableStackTrace = true
-        )
+    suspend fun traceback(blobId: String, epc: EPC): EPCISQueryResults {
+        val url = "${_baseURL.trimEnd('/')}/epcis/$blobId"
+
+        val options = EPCISQueryInterfaceOptions().apply {
+            this.URL = URL(url).toURI()
+            this.Format = _format
+            this.Version = _version
+            this.EnableStackTrace = true
+        }
+
+        return EPCISTraceabilityResolver.traceback(options, epc, client)
+    }
+
+    suspend fun resolveMasterData(blobId: String, doc: EPCISBaseDocument) {
+        val url = "${_baseURL.trimEnd('/')}/digitallink/$blobId"
+
+        val options = DigitalLinkQueryOptions().apply {
+            this.URL = URL(url).toURI()
+            this.EnableStackTrace = true
+        }
 
         MasterDataResolver.resolveMasterData(options, doc, client)
     }
 }
+

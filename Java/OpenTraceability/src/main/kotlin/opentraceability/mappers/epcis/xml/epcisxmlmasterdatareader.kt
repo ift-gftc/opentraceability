@@ -3,7 +3,6 @@ package mappers.epcis.xml
 import interfaces.IVocabularyElement
 import mappers.OTMappingTypeInformation
 import models.common.LanguageString
-import javax.xml.bind.annotation.*
 import models.events.*
 import models.events.EPCISBaseDocument
 import models.identifiers.PGLN
@@ -14,6 +13,7 @@ import utility.attributes.*
 import java.lang.reflect.Type
 import java.net.URI
 import org.w3c.dom.Element
+import kotlin.reflect.KProperty
 
 class EPCISXmlMasterDataReader {
     companion object {
@@ -189,7 +189,7 @@ class EPCISXmlMasterDataReader {
         }
 
 
-        fun TrySetValueType(`val`: String, p: PropertyInfo, o: Any): Boolean {
+        fun TrySetValueType(`val`: String, p: KProperty<*>, o: Any): Boolean {
             when {
                 p.propertyType == String::class.java -> {
                     p.setValue(o, `val`)

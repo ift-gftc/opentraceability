@@ -16,7 +16,10 @@ dependencies {
     implementation("org.json:json:20211205")
     implementation("org.wso2.orbit.org.everit.json:org.everit.json.schema:1.5.0.wso2.v2")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.21")
-
+    implementation("org.apache.httpcomponents:httpclient:4.5.13")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0") // or whichever is the latest version
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
     testImplementation(kotlin("test"))
 }

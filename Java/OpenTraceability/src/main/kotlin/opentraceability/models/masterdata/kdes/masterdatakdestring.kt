@@ -2,11 +2,13 @@ package models.masterdata.kdes
 
 import interfaces.IMasterDataKDE
 import org.json.JSONObject
+import org.w3c.dom.Document
 import org.w3c.dom.Element
+import javax.xml.parsers.DocumentBuilderFactory
 
 class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
-    override var ValueType: Class<*>
-        get() = String::class.java
+
+    override var ValueType: Class<*>? = String::class.java
 
     var value: String? = null
     var type: String? = null
@@ -30,14 +32,18 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
         }
     }
 
+
+
     fun getXml(): Element? {
         return if (value.isNullOrBlank()) {
             null
         } else {
-            val xname = "$namespace$name"
-            val element = Element(xname).setText(value)
+            val xname = "$Namespace$Name"
+            val document: Document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
+            val element: Element = document.createElement(xname)
+            element.textContent = value
 
-            // set the xsi type...
+            // Set the xsi type...
             attributes.forEach { (key, value) ->
                 element.setAttribute(key, value)
             }
@@ -46,17 +52,22 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
         }
     }
 
+
+
+
     fun setFromJson(json: JSONObject) {
         value = json.toString()
     }
 
     fun setFromXml(xml: Element) {
-        value = xml.text
+        value = xml.textContent
 
-        xml.attributes.forEach { xatt ->
-            attributes[xatt.name] = xatt.value
+        for (i in 0 until xml.attributes.length) {
+            val attribute = xml.attributes.item(i)
+            attributes[attribute.nodeName] = attribute.nodeValue
         }
     }
+
 
     override fun toString(): String {
         return value ?: ""
@@ -75,18 +86,23 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
     }
 
     override fun setFromEPCISXml(xml: Element) {
-        name = xml.getAttributeValue("id") ?: ""
-        value = xml.value
+        Name = xml.getAttribute("id") ?: ""
+        value = xml.textContent
     }
 
-    override fun getEPCISXml(): Element? {
+
+
+    override  fun getEPCISXml(): Element? {
         return if (value != null) {
-            val element = Element("attribute")
-            element.setAttribute("id", name)
-            element.text = value
+            val document: Document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
+            val element: Element = document.createElement("attribute")
+            element.setAttribute("id", Name)
+            element.textContent = value
             element
         } else {
             null
         }
     }
+
+
 }

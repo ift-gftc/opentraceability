@@ -8,10 +8,10 @@ interface IMasterDataKDE {
 
     var Namespace: String
     var Name: String
-    var ValueType: Class<*>
+    var ValueType: Class<*>?
 
-    fun SetFromGS1WebVocabJson(json: JSONObject)
-    fun GetGS1WebVocabJson(): JSONObject?
-    fun SetFromEPCISXml(xml: Element)
-    fun GetEPCISXml(): Element?
+    fun setFromGS1WebVocabJson(json: JSONObject)
+    fun getGS1WebVocabJson(): JSONObject?
+    fun setFromEPCISXml(xml: Element)
+    fun getEPCISXml(): Element?
 }

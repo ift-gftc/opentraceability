@@ -5,18 +5,20 @@ import interfaces.IEvent
 import mappers.OpenTraceabilityXmlMapper
 import models.events.*
 import org.w3c.dom.Document
+import org.w3c.dom.Element
 
 class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
 
     fun Map(strValue: String, checkSchema: Boolean = true): EPCISQueryDocument {
         try {
-            val xDoc: Document
-            val document: EPCISQueryDocument
+            //val xDoc: Document
+            //val document: EPCISQueryDocument
 
             // TODO: validate the schema depending on the version in the document
 
-            document = EPCISDocumentBaseXMLMapper.readXml<EPCISQueryDocument>(strValue, xDoc)
-            if (xDoc.root == null) {
+            var (document, xDoc)  = EPCISDocumentBaseXMLMapper.readXml<EPCISQueryDocument>(strValue)
+
+            if (xDoc.documentElement == null) {
                 throw Exception("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.")
             }
             if (document.EPCISVersion == null) {
@@ -74,7 +76,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
         }
 
         val xDoc = EPCISDocumentBaseXMLMapper.writeXml(doc, epcisNS, "EPCISQueryDocument")
-        if (xDoc.root == null) {
+        if (xDoc.documentElement == null) {
             throw Exception("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.")
         }
 
@@ -105,7 +107,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
             ?: throw Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root")
         for (e in doc.Events) {
             val xname = EPCISDocumentBaseXMLMapper.getEventXName(e)
-            var xEvent = OpenTraceabilityXmlMapper.toXml(xname, e, doc.EPCISVersion!!)
+            var xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.EPCISVersion!!)
             if (e.EventType == EventType.TransformationEvent && doc.EPCISVersion == EPCISVersion.V1) {
                 xEvent = Element("extension", xEvent)
             }

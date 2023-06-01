@@ -1,7 +1,7 @@
 package utility
 
-import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 
 object HttpClientPool {
     private val clientPool = LimitedPool<OkHttpClient>({

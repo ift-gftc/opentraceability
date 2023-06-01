@@ -9,7 +9,8 @@ class EPCISQueryStackTraceItem {
 
     var ID: String = UUID.randomUUID().toString()
     var Created: LocalDateTime = LocalDateTime.now()
-    var ResponseStatusCode: HttpStatusCode? = null
+    //var ResponseStatusCode: HttpStatusCode? = null
+    var ResponseStatusCode: Int? = null
     var RelativeURL: URI? = null
     var RequestHeaders: ArrayList<MutableMap<String, ArrayList<String>>>? = null
     var ResponseHeaders: ArrayList<MutableMap<String, ArrayList<String>>>? = null

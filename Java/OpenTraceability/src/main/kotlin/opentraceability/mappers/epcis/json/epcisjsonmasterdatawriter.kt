@@ -123,7 +123,7 @@ object EPCISJsonMasterDataWriter {
         }
 
         for (kde in md.KDEs) {
-            val jKDE = kde.GetGS1WebVocabJson()
+            val jKDE = kde.getGS1WebVocabJson()
             if (jKDE != null) {
                 val jAttribute = JSONObject()
                 jAttribute.put("id", kde.Name)

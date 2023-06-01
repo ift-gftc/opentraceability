@@ -3,12 +3,13 @@ package mappers
 import utility.attributes.*
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.reflect.KProperty
 
 class OTMappingTypeInformation private constructor(
     val type: Class<*>,
     val properties: List<OTMappingTypeInformationProperty>,
-    val extensionKDEs: PropertyInfo?,
-    val extensionAttributes: PropertyInfo?
+    val extensionKDEs: KProperty<*>?,
+    val extensionAttributes: KProperty<*>?
 ) {
     companion object {
         private val locker = ReentrantLock()
