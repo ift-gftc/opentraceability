@@ -163,3 +163,6 @@ DigitalLinkQueryOptions options = new DigitalLinkQueryOptions()
 
 await MasterDataResolver.ResolveMasterData(options, doc, client);
 ```
+
+## Finally
+You can always look in our unit tests for more examples of how to use the library.
