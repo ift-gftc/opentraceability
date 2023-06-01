@@ -12,50 +12,43 @@ import utility.attributes.*
 object EPCISJsonMasterDataWriter {
     fun writeMasterData(jDoc: JSONObject, doc: EPCISBaseDocument) {
         if (doc.MasterData.isNotEmpty()) {
-            val xEPCISHeader = jDoc["epcisHeader"] as JSONObject?
-            if (xEPCISHeader == null) {
-
-                jDoc.put(
-                    "epcisHeader",
-                    JSONObject(JsonProperty("epcisMasterData", JSONObject(JsonProperty("vocabularyList", JSONArray()))))
-                )
-
-
-            } else {
-                xEPCISHeader.put("epcisMasterData", JSONObject(JsonProperty("vocabularyList", JSONArray())))
-            }
-            val jVocabList = jDoc["epcisHeader"]?.get("epcisMasterData")?.get("vocabularyList") as JSONArray?
-                ?: throw Exception("Failed to grab json object epcisHeader.epcisMasterData.vocabularyList")
+            val xEPCISHeader = jDoc.optJSONObject("epcisHeader") ?: JSONObject()
+            val epcisMasterData = xEPCISHeader.optJSONObject("epcisMasterData") ?: JSONObject()
+            val vocabularyList = epcisMasterData.optJSONArray("vocabularyList") ?: JSONArray()
 
             for ((type, mdList) in doc.MasterData.groupBy { it.EPCISType }) {
                 if (type != null) {
-                    writeMasterDataList(mdList.toMutableList(), jVocabList, type)
+                    val jVocabList = writeMasterDataList(mdList.toMutableList(), type)
+                    vocabularyList.put(jVocabList)
                 } else {
                     throw Exception("There are master data vocabulary elements where the Type is NULL.")
                 }
             }
+
+            epcisMasterData.put("vocabularyList", vocabularyList)
+            xEPCISHeader.put("epcisMasterData", epcisMasterData)
+            jDoc.put("epcisHeader", xEPCISHeader)
         }
     }
 
-    fun writeMasterDataList(data: MutableList<IVocabularyElement>, xVocabList: JSONArray, type: String) {
-        if (data.isNotEmpty()) {
-            val jVocab = JSONObject(JsonProperty("type", type), JsonProperty("vocabularyElementList", JSONArray()))
-            val xVocabEleList = jVocab["vocabularyElementList"] as JSONArray?
-                ?: throw Exception("Failed to grab the array vocabularyElementList")
+    private fun writeMasterDataList(data: MutableList<IVocabularyElement>, type: String): JSONObject {
+        val jVocab = JSONObject()
+        val vocabularyElementList = JSONArray()
 
-            for (md in data) {
-                val xMD = writeMasterDataObject(md)
-                xVocabEleList.put(xMD)
-            }
-
-            xVocabList.put(jVocab)
+        for (md in data) {
+            val xMD = writeMasterDataObject(md)
+            vocabularyElementList.put(xMD)
         }
+
+        jVocab.put("type", type)
+        jVocab.put("vocabularyElementList", vocabularyElementList)
+
+        return jVocab
     }
 
-    fun writeMasterDataObject(md: IVocabularyElement): JSONObject {
-        val jVocabElement = JSONObject(JsonProperty("id", md.ID ?: ""), JsonProperty("attributes", JSONArray()))
-        val jAttributes = jVocabElement["attributes"] as JSONArray?
-            ?: throw Exception("Failed to grab attributes array.")
+    private fun writeMasterDataObject(md: IVocabularyElement): JSONObject {
+        val jVocabElement = JSONObject()
+        val attributes = JSONArray()
 
         val mappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md.javaClass)
 
@@ -65,73 +58,87 @@ object EPCISJsonMasterDataWriter {
 
             val o = p.get(md)
             if (o != null) {
-                if (id == "") {
+                if (id.isBlank()) {
                     val subMappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(o.javaClass)
                     for (subMapping in subMappings.properties) {
                         val subID = subMapping.Name
                         val subProperty = subMapping.Property
                         val subObj = subProperty.get(o)
                         if (subObj != null) {
-                            if (subObj.javaClass == List::class.java) {
+                            if (subObj is List<*>) {
                                 val l = subObj as List<LanguageString>
                                 val str = l.firstOrNull()?.value
                                 if (str != null) {
-                                    val jAttribute =
-                                        JSONObject(JsonProperty("id", subID), JsonProperty("attribute", str))
-                                    jAttributes.put(jAttribute)
+                                    val jAttribute = JSONObject()
+                                    jAttribute.put("id", subID)
+                                    jAttribute.put("attribute", str)
+                                    attributes.put(jAttribute)
                                 }
                             } else {
-                                val str = subObj.toString()
-                                if (str != null) {
-                                    val jAttribute =
-                                        JSONObject(JsonProperty("id", subID), JsonProperty("attribute", str))
-                                    jAttributes.put(jAttribute)
+                                val str: String = subObj.toString()
+                                if (str.isNotBlank()) {
+                                    val jAttribute = JSONObject()
+                                    jAttribute.put("id", subID)
+                                    jAttribute.put("attribute", str)
+                                    attributes.put(jAttribute)
                                 }
                             }
                         }
                     }
                 } else if (p.getAnnotation(OpenTraceabilityObjectAttribute::class.java) != null) {
-                    val jAttribute =
-                        JSONObject(JsonProperty("id", id), JsonProperty("attribute", writeObject(p.type, o)))
-                    jAttributes.put(jAttribute)
+                    val jAttribute = JSONObject()
+                    jAttribute.put("id", id)
+                    jAttribute.put("attribute", writeObject(p.type, o))
+                    attributes.put(jAttribute)
                 } else if (p.getAnnotation(OpenTraceabilityArrayAttribute::class.java) != null) {
                     val l = o as List<*>
                     for (i in l) {
                         val str = i.toString()
-                        if (str != null) {
-                            val jAttribute = JSONObject(JsonProperty("id", id), JsonProperty("attribute", str))
-                            jAttributes.put(jAttribute)
+                        if (str.isNotBlank()) {
+                            val jAttribute = JSONObject()
+                            jAttribute.put("id", id)
+                            jAttribute.put("attribute", str)
+                            attributes.put(jAttribute)
                         }
                     }
-                } else if (o.javaClass == List::class.java) {
+                } else if (o is List<*>) {
                     val l = o as List<LanguageString>
                     val str = l.firstOrNull()?.value
                     if (str != null) {
-                        val jAttribute = JSONObject(JsonProperty("id", id), JsonProperty("attribute", str))
-                        jAttributes.put(jAttribute)
+                        val jAttribute = JSONObject()
+                        jAttribute.put("id", id)
+                        jAttribute.put("attribute", str)
+                        attributes.put(jAttribute)
                     }
                 } else {
-                    val str = o.toString()
-                    if (str != null) {
-                        val jAttribute = JSONObject(JsonProperty("id", id), JsonProperty("attribute", str))
-                        jAttributes.put(jAttribute)
+                    val str: String = o.toString()
+                    if (str.isNotBlank()) {
+                        val jAttribute = JSONObject()
+                        jAttribute.put("id", id)
+                        jAttribute.put("attribute", str)
+                        attributes.put(jAttribute)
                     }
                 }
             }
         }
 
         for (kde in md.KDEs) {
-            val jKDE = kde.getGS1WebVocabJson()
+            val jKDE = kde.GetGS1WebVocabJson()
             if (jKDE != null) {
-                val jAttribute = JSONObject(JsonProperty("id", kde.name), JsonProperty("attribute", jKDE))
-                jAttributes.put(jAttribute)
+                val jAttribute = JSONObject()
+                jAttribute.put("id", kde.Name)
+                jAttribute.put("attribute", jKDE)
+                attributes.put(jAttribute)
             }
         }
+
+        jVocabElement.put("id", md.ID ?: "")
+        jVocabElement.put("attributes", attributes)
 
         return jVocabElement
     }
 
-    fun writeObject(t: Class<*>, o: Any): JSONObject {
+    private fun writeObject(t: Class<*>, o: Any): JSONObject {
         val j = JSONObject()
         for (property in t.declaredFields) {
             val value = property.get(o)
@@ -142,7 +149,7 @@ object EPCISJsonMasterDataWriter {
                         j.put(xmlAtt.name, writeObject(property.type, value))
                     } else {
                         val str = value.toString()
-                        if (str != null) {
+                        if (str.isNotBlank()) {
                             j.put(xmlAtt.name, str)
                         }
                     }
@@ -152,3 +159,4 @@ object EPCISJsonMasterDataWriter {
         return j
     }
 }
+

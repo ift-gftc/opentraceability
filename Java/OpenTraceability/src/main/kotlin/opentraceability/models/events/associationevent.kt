@@ -7,6 +7,8 @@ import models.identifiers.*
 import utility.attributes.*
 import java.net.URI
 
+
+@Suppress("LocalVariableName", "PropertyName")
 class AssociationEvent : EventBase(), IEvent {
 
     @OpenTraceabilityAttribute("","parentID", 7)

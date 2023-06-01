@@ -13,7 +13,16 @@ import utility.attributes.*
 import java.lang.reflect.Type
 import java.net.URI
 import kotlin.reflect.KProperty
+import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.full.createType
+import org.json.JSONArray
+import org.json.JSONObject
+import java.lang.reflect.Field
+import java.lang.reflect.ParameterizedType
 
 class EPCISJsonMasterDataReader {
     companion object {
@@ -166,28 +175,30 @@ class EPCISJsonMasterDataReader {
 
 
         fun readKDEObject(j: JSONObject, t: Type): Any {
-            val value = t.getDeclaredConstructor().newInstance() ?: throw Exception("Failed to create instance of ${t.name}")
+            val value = (t as Class<*>).getDeclaredConstructor().newInstance() ?: throw Exception("Failed to create instance of ${t.name}")
 
             if (value is List<*>) {
-                val list = value as List<Any>
+                val list = value as MutableList<Any>
                 if (j is JSONArray) {
                     for (xchild in j) {
-                        val child = readKDEObject(xchild, t.genericTypeArguments[0])
+                        val child = readKDEObject(xchild as JSONObject, getListGenericType(t))
                         list.add(child)
                     }
                 }
             } else {
                 // go through each property...
-                for (p in t.DeclaredFields) {
+                for (p in t.declaredFields) {
                     val xmlAtt = p.getAnnotation(OpenTraceabilityAttribute::class.java)
                     if (xmlAtt != null) {
                         val x = j[xmlAtt.name]
                         if (x != null) {
                             val objAtt = p.getAnnotation(OpenTraceabilityObjectAttribute::class.java)
                             if (objAtt != null) {
-                                val o = readKDEObject(x, p.type)
+                                val o = readKDEObject(x as JSONObject, p.type)
+                                p.isAccessible = true
+                                p.set(value, o)
                             } else if (!trySetValueType(x.toString(), p, value)) {
-                                throw Exception("Failed to set value type while reading KDE object. property = ${p.name}, type = ${t.Name}, json = ${x.toString()}")
+                                throw Exception("Failed to set value type while reading KDE object. property = ${p.name}, type = ${t.simpleName}, json = ${x.toString()}")
                             }
                         }
                     }
@@ -197,15 +208,26 @@ class EPCISJsonMasterDataReader {
             return value
         }
 
+        private fun getListGenericType(type: Type): Type {
+            if (type is ParameterizedType) {
+                val typeArgs = type.actualTypeArguments
+                if (typeArgs.isNotEmpty()) {
+                    return typeArgs[0]
+                }
+            }
+            throw IllegalArgumentException("Failed to get generic type argument for List")
+        }
 
 
-        fun trySetValueType(value: String, property: KProperty<*>, obj: Any): Boolean {
-            when (property.returnType.classifier) {
-                String::class -> {
+        fun trySetValueType(value: String, property: KMutableProperty<*>, obj: Any): Boolean {
+            val returnType = property.returnType
+
+            when {
+                returnType.isSubtypeOf(String::class.starProjectedType) -> {
                     property.setter.call(obj, value)
                     return true
                 }
-                List::class -> {
+                returnType.isSubtypeOf(List::class.starProjectedType) -> {
                     val current = property.getter.call(obj) as MutableList<String>?
                     if (current == null) {
                         val newList = mutableListOf<String>()
@@ -216,33 +238,33 @@ class EPCISJsonMasterDataReader {
                     }
                     return true
                 }
-                Boolean::class, Boolean::class.nullable -> {
+                returnType.isSubtypeOf(Boolean::class.starProjectedType.withNullability(true)) -> {
                     val v = value.toBoolean()
                     property.setter.call(obj, v)
                     return true
                 }
-                Double::class, Double::class.nullable -> {
+                returnType.isSubtypeOf(Double::class.starProjectedType.withNullability(true)) -> {
                     val v = value.toDouble()
                     property.setter.call(obj, v)
                     return true
                 }
-                URI::class -> {
+                returnType.isSubtypeOf(URI::class.starProjectedType) -> {
                     val v = URI.create(value)
                     property.setter.call(obj, v)
                     return true
                 }
-                List::class -> {
+                returnType.isSubtypeOf(List::class.createType(listOf(LanguageString::class.starProjectedType))) -> {
                     val l = mutableListOf<LanguageString>()
                     l.add(LanguageString("en-US", value))
                     property.setter.call(obj, l)
                     return true
                 }
-                Country::class -> {
-                    val v = Countries.Parse(value)
+                returnType.isSubtypeOf(Country::class.starProjectedType) -> {
+                    val v = Countries.parse(value)
                     property.setter.call(obj, v)
                     return true
                 }
-                PGLN::class -> {
+                returnType.isSubtypeOf(PGLN::class.starProjectedType) -> {
                     val v = PGLN(value)
                     property.setter.call(obj, v)
                     return true
@@ -250,6 +272,5 @@ class EPCISJsonMasterDataReader {
                 else -> return false
             }
         }
-
     }
 }

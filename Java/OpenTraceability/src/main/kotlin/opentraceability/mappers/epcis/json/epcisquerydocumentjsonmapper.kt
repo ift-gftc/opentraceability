@@ -14,11 +14,13 @@ class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
                 throw Exception("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
             }
 
-            doc.QueryName = json["epcisBody"]?.get("queryResults")?.get("queryName")?.toString() ?: ""
-            doc.SubscriptionID = json["epcisBody"]?.get("queryResults")?.get("subscriptionID")?.toString() ?: ""
-            val jEventsList = json["epcisBody"]?.get("queryResults")?.get("resultsBody")?.get("eventList") as JSONArray?
+            doc.QueryName = json?.getJSONObject("epcisBody")?.getJSONObject("queryResults")?.getString("queryName") ?: ""
+            doc.SubscriptionID = json?.getJSONObject("epcisBody")?.getJSONObject("queryResults")?.getString("subscriptionID") ?: ""
+
+            val jEventsList = json?.getJSONObject("epcisBody")?.getJSONObject("queryResults")?.getJSONObject("resultsBody")?.getJSONArray("eventList")
             if (jEventsList != null) {
-                for (jEvent in jEventsList) {
+                for (i in 0 until jEventsList.length()) {
+                    val jEvent = jEventsList.getJSONObject(i)
                     val eventType = EPCISDocumentBaseJsonMapper.getEventTypeFromProfile(jEvent)
                     val e = OpenTraceabilityJsonLDMapper.fromJson(jEvent, eventType, doc.Namespaces) as IEvent
                     doc.Events.add(e)
@@ -31,6 +33,7 @@ class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
             throw exception
         }
     }
+
 
     override fun map(doc: EPCISQueryDocument): String {
         if (doc.EPCISVersion != EPCISVersion.V2) {

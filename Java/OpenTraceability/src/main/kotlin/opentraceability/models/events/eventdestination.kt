@@ -1,6 +1,7 @@
 package models.events
 
 import utility.CBVAttribute
+import utility.EnumUtil
 import utility.attributes.*
 import java.net.URI
 
@@ -14,13 +15,14 @@ class EventDestination {
     @OpenTraceabilityAttribute("","text()")
     var Value: String? = null
 
-    var parsedType: EventDestinationType
+    var ParsedType: EventDestinationType
         get() {
             var type = EventDestinationType.Unknown
 
-            for (e in EventDestinationType.values()) {
-                val annotation = e::class.java.getAnnotation(CBVAttribute::class.java)
-                if (annotation != null && annotation.value.equals(type.toString(), ignoreCase = true)) {
+            for (e in enumValues<EventDestinationType>()) {
+                if (EnumUtil.GetEnumAttributes<EventDestinationType, CBVAttribute>(e)
+                        .any { it.value.toLowerCase() == type?.toString()?.toLowerCase() }
+                ) {
                     return e
                 }
             }
@@ -28,9 +30,9 @@ class EventDestination {
             return type
         }
         set(value) {
-            val annotation = value::class.java.getAnnotation(CBVAttribute::class.java)
-            if (annotation != null && annotation.value.isNotBlank() && annotation.value.startsWith("urn")) {
-                this.Type = URI.create(annotation.value)
+            val t = EnumUtil.GetEnumAttributes<EventDestinationType, CBVAttribute>(value).firstOrNull { it.value.startsWith("urn") }?.value
+            if (!t.isNullOrBlank()) {
+                this.Type = URI(t)
             }
         }
 

@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97ebc57f-a43a-45e7-8bab-7900e03de93a" name="Changes" comment="working on convert to kotlin" />
+    <list default="true" id="97ebc57f-a43a-45e7-8bab-7900e03de93a" name="Changes" comment="working on convert to kotlin">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/attributes/descriptionAnnotation.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/attributes/displayAnnotation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/interfaces/iepcisquerydocumentmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/interfaces/iepcisquerydocumentmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatareader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatareader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatawriter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatawriter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisquerydocumentjsonmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisquerydocumentjsonmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epciquerydocumentxmlmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epciquerydocumentxmlmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/aggregationevent`1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/aggregationevent`1.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/associationevent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/associationevent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/epcisbasedocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/epcisbasedocument.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/eventdestination.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/eventdestination.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/eventsource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/eventsource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/embeddedresourceloader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/embeddedresourceloader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/enumutil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/enumutil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/xelementextensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/xmlextensions.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,7 +78,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Projects/Philip/opentraceability/Java/OpenTraceability",
+    "last_opened_file_path": "C:/GitHub/DuckScapePhilip/opentraceability/Java/OpenTraceability/src/main/kotlin/opentraceability/utility/attributes",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -74,6 +92,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\GitHub\DuckScapePhilip\opentraceability\Java\OpenTraceability\src\main\kotlin\opentraceability\utility\attributes" />
       <recent name="C:\Temp\Philip\untitled\src\main\kotlin" />
     </key>
   </component>
@@ -95,7 +114,7 @@
       <workItem from="1685531920088" duration="2052000" />
       <workItem from="1685537187708" duration="215000" />
       <workItem from="1685537415862" duration="12638000" />
-      <workItem from="1685605560843" duration="3152000" />
+      <workItem from="1685605560843" duration="6381000" />
     </task>
     <task id="LOCAL-00001" summary="add gradle">
       <created>1685532130376</created>

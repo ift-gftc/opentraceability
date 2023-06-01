@@ -96,13 +96,13 @@ class EPC {
                 this.Type = EPCType.SSCC
             } else if (epcStr.startsWith("urn:epc:id:bic:")) {
                 this.Type = EPCType.SSCC
-            } else if (IsWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
+            } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
                 this.Type = EPCType.Instance
                 this.SerialLotNumber = epcStr.split('/').lastOrNull()
-            } else if (IsWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
+            } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
                 this.Type = EPCType.Class
                 this.SerialLotNumber = epcStr.split('/').lastOrNull()
-            } else if (IsWellFormedUriString(epcStr)) {
+            } else if (isWellFormedUriString(epcStr)) {
                 this.Type = EPCType.URI
             }
         } catch (ex: Exception) {
@@ -230,11 +230,11 @@ class EPC {
                     }
 
                     return null
-                } else if (IsWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
+                } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
                     return null
-                } else if (IsWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
+                } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
                     return null
-                } else if (IsWellFormedUriString(epcStr)) {
+                } else if (isWellFormedUriString(epcStr)) {
                     return null
                 } else {
                     return "This EPC does not fit any of the allowed formats."
@@ -245,7 +245,7 @@ class EPC {
             }
         }
 
-        fun IsWellFormedUriString(uriString: String): Boolean {
+        fun isWellFormedUriString(uriString: String): Boolean {
             try {
                 URI(uriString).toURL()
                 return true
@@ -255,7 +255,7 @@ class EPC {
         }
 
 
-        fun TryParse(epcStr: String?, epc: EPC?, error: String?): Boolean {
+        fun tryParse(epcStr: String?, epc: EPC?, error: String?): Boolean {
 
             var error: String? = error
             var epc: EPC? = epc
@@ -277,7 +277,7 @@ class EPC {
 
     }
 
-    fun Matches(targetEPC: EPC): Boolean {
+    fun matches(targetEPC: EPC): Boolean {
         if (this.equals(targetEPC)) {
             return true
         } else if (this.SerialLotNumber == "*" && this.GTIN == targetEPC.GTIN) {

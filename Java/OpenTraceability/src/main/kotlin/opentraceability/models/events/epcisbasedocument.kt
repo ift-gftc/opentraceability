@@ -2,12 +2,12 @@ package models.events
 
 import interfaces.*
 import models.common.StandardBusinessDocumentHeader
-import java.util.*
 import models.identifiers.*
 import queries.EPCISQueryParameters
 import java.net.*
 import java.time.OffsetDateTime
 
+@Suppress("LocalVariableName", "PropertyName", "FunctionName")
 open class EPCISBaseDocument {
     var EPCISVersion: EPCISVersion? = null
     var CreationDate: OffsetDateTime? = null
@@ -131,18 +131,12 @@ open class EPCISBaseDocument {
         return events
     }
 
-
-
-
-
-
-
     fun HasMatch(evt: IEvent, epcs: List<String>, vararg allowedTypes: EventProductType): Boolean {
         for (epcMatchStr in epcs) {
             val epcMatch = EPC(epcMatchStr)
             for (product in evt.Products) {
                 if (allowedTypes.isEmpty() || allowedTypes.contains(product.Type)) {
-                    if (epcMatch.Matches(product.EPC)) {
+                    if (epcMatch.matches(product.EPC)) {
                         return true
                     }
                 }
@@ -180,5 +174,4 @@ open class EPCISBaseDocument {
 
         return true
     }
-
 }

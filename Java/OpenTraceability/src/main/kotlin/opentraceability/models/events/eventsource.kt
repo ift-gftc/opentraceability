@@ -15,12 +15,12 @@ class EventSource {
     @OpenTraceabilityAttribute("", "text()")
     var Value: String? = null
 
-    val ParsedType: EventSourceType
+    var ParsedType: EventSourceType
         get() {
             var type = EventSourceType.Unknown
 
             for (e in enumValues<EventSourceType>()) {
-                if (EnumUtil.GetEnumAttributes<CBVAttribute>(e)
+                if (EnumUtil.GetEnumAttributes<EventSourceType, CBVAttribute>(e)
                         .any { it.value.toLowerCase() == type?.toString()?.toLowerCase() }
                 ) {
                     return e
@@ -30,10 +30,9 @@ class EventSource {
             return type
         }
         set(value) {
-            val t = EnumUtil.GetEnumAttributes<CBVAttribute>(value).firstOrNull { it.value.startsWith("urn") }?.value
+            val t = EnumUtil.GetEnumAttributes<EventSourceType, CBVAttribute>(value).firstOrNull { it.value.startsWith("urn") }?.value
             if (!t.isNullOrBlank()) {
                 this.Type = URI(t)
             }
         }
-
 }
