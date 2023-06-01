@@ -1,7 +1,7 @@
 package models.identifiers
 
 import utility.ObjectExtensions.getInt64HashCode
-import utility.StringExtensions.isURICompatibleChars
+import utility.StringExtensions.IsURICompatibleChars
 import java.net.URI
 
 //@JsonDeserialize(using = EPCDeserializer::class)
@@ -17,7 +17,7 @@ class EPC {
 
     constructor(epcStr: String?) {
         try {
-            val error = EPC.detectEPCIssue(epcStr)
+            val error = EPC.DetectEPCIssue(epcStr)
 
             if (!error.isNullOrBlank()) {
                 throw Exception("The EPC $epcStr is invalid. $error")
@@ -96,13 +96,13 @@ class EPC {
                 this.Type = EPCType.SSCC
             } else if (epcStr.startsWith("urn:epc:id:bic:")) {
                 this.Type = EPCType.SSCC
-            } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
+            } else if (IsWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
                 this.Type = EPCType.Instance
                 this.SerialLotNumber = epcStr.split('/').lastOrNull()
-            } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
+            } else if (IsWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
                 this.Type = EPCType.Class
                 this.SerialLotNumber = epcStr.split('/').lastOrNull()
-            } else if (isWellFormedUriString(epcStr)) {
+            } else if (IsWellFormedUriString(epcStr)) {
                 this.Type = EPCType.URI
             }
         } catch (ex: Exception) {
@@ -147,7 +147,7 @@ class EPC {
     }
 
     companion object {
-        fun detectEPCIssue(epcStr: String?): String? {
+        fun DetectEPCIssue(epcStr: String?): String? {
             try {
                 if (epcStr.isNullOrBlank()) {
                     return "The EPC is a NULL or White Space string."
@@ -155,7 +155,7 @@ class EPC {
 
                 // if this is a GS1 class level epc (GS1 GTIN + Lot Number)
                 if (epcStr.startsWith("urn:epc:class:lgtin:")) {
-                    if (!epcStr.isURICompatibleChars()) {
+                    if (!epcStr.IsURICompatibleChars()) {
                         return "The EPC contains non-compatible characters for a URN format."
                     }
 
@@ -170,7 +170,7 @@ class EPC {
                 }
                 // else if this is a GS1 instance level epc (GS1 GTIN + Serial Number)
                 else if (epcStr.startsWith("urn:epc:id:sgtin:")) {
-                    if (!epcStr.isURICompatibleChars()) {
+                    if (!epcStr.IsURICompatibleChars()) {
                         return "The EPC contains non-compatible characters for a URN format."
                     }
 
@@ -185,7 +185,7 @@ class EPC {
                 }
                 // else if this is a GDST / IBM private class level identifier (GTIN + Lot Number)
                 else if (epcStr.startsWith("urn:") && epcStr.contains(":product:lot:class:")) {
-                    if (!epcStr.isURICompatibleChars()) {
+                    if (!epcStr.IsURICompatibleChars()) {
                         return "The EPC contains non-compatible characters for a URN format."
                     }
 
@@ -200,7 +200,7 @@ class EPC {
                 }
                 // else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
                 else if (epcStr.startsWith("urn:") && epcStr.contains(":product:serial:obj:")) {
-                    if (!epcStr.isURICompatibleChars()) {
+                    if (!epcStr.IsURICompatibleChars()) {
                         return "The EPC contains non-compatible characters for a URN format."
                     }
 
@@ -213,28 +213,28 @@ class EPC {
                         return null
                     }
                 } else if (epcStr.startsWith("urn:epc:id:sscc:")) {
-                    if (!epcStr.isURICompatibleChars()) {
+                    if (!epcStr.IsURICompatibleChars()) {
                         return "The EPC contains non-compatible characters for a URN format."
                     }
 
                     return null
                 } else if (epcStr.startsWith("urn:epc:id:bic:")) {
-                    if (!epcStr.isURICompatibleChars()) {
+                    if (!epcStr.IsURICompatibleChars()) {
                         return "The EPC contains non-compatible characters for a URN format."
                     }
 
                     return null
                 } else if (epcStr.startsWith("urn:") && epcStr.contains(":lpn:obj:")) {
-                    if (!epcStr.isURICompatibleChars()) {
+                    if (!epcStr.IsURICompatibleChars()) {
                         return "The EPC contains non-compatible characters for a URN format."
                     }
 
                     return null
-                } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
+                } else if (IsWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/")) {
                     return null
-                } else if (isWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
+                } else if (IsWellFormedUriString(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/")) {
                     return null
-                } else if (isWellFormedUriString(epcStr)) {
+                } else if (IsWellFormedUriString(epcStr)) {
                     return null
                 } else {
                     return "This EPC does not fit any of the allowed formats."
@@ -245,7 +245,7 @@ class EPC {
             }
         }
 
-        fun isWellFormedUriString(uriString: String): Boolean {
+        fun IsWellFormedUriString(uriString: String): Boolean {
             try {
                 URI(uriString).toURL()
                 return true
@@ -255,13 +255,13 @@ class EPC {
         }
 
 
-        fun tryParse(epcStr: String?, epc: EPC?, error: String?): Boolean {
+        fun TryParse(epcStr: String?, epc: EPC?, error: String?): Boolean {
 
             var error: String? = error
             var epc: EPC? = epc
 
             try {
-                error = EPC.detectEPCIssue(epcStr)
+                error = EPC.DetectEPCIssue(epcStr)
                 if (error.isNullOrBlank()) {
                     epc = EPC(epcStr)
                     return true
@@ -277,7 +277,7 @@ class EPC {
 
     }
 
-    fun matches(targetEPC: EPC): Boolean {
+    fun Matches(targetEPC: EPC): Boolean {
         if (this.equals(targetEPC)) {
             return true
         } else if (this.SerialLotNumber == "*" && this.GTIN == targetEPC.GTIN) {

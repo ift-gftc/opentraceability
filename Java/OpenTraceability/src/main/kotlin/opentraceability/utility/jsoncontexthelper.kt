@@ -48,9 +48,9 @@ object JsonContextHelper {
 
     fun isNamespace(value: String): Boolean {
         val reg: Pattern = Pattern.compile("^urn:[a-z0-9][a-z0-9-]{0,31}:[a-z0-9()+,\\-.:=@;$_!*'%\\/?#]+$")
-        return if (value.matches(Regex("^https?://.*$"))) {
+        return if (value.Matches(Regex("^https?://.*$"))) {
             true
-        } else reg.matcher(value).matches()
+        } else reg.matcher(value).Matches()
     }
 
     fun expandVocab(json: Any, jContext: JSONObject, namespaces: Map<String, String>, jVocabContext: JSONObject? = null): Any? {

@@ -9,7 +9,7 @@ interface IEventKDE {
     companion object {
         var RegisteredKDEs : MutableMap<String, Type> = mutableMapOf()
 
-        inline fun <reified T> registerKDE(ns: String, name: String) {
+        inline fun <reified T> RegisterKDE(ns: String, name: String) {
             val key: String = "$ns:$name"
 
             if (!RegisteredKDEs.contains(key)) {
@@ -20,7 +20,7 @@ interface IEventKDE {
             }
         }
 
-        fun initializeKDE(ns: String, name: String): IEventKDE? {
+        fun InitializeKDE(ns: String, name: String): IEventKDE? {
             var kde: IEventKDE? = null
 
             val key: String = "$ns:$name"
@@ -48,11 +48,11 @@ interface IEventKDE {
 
     var ValueType: Type
 
-    fun setFromJson(json: JSONObject)
+    fun SetFromJson(json: JSONObject)
 
-    fun getJson(): Any?
+    fun GetJson(): Any?
 
-    fun setFromXml(xml: Element)
+    fun SetFromXml(xml: Element)
 
-    fun getXml(): Element?
+    fun GetXml(): Element?
 }

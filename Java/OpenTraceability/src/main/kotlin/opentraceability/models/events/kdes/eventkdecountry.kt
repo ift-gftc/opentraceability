@@ -21,11 +21,11 @@ class EventKDECountry: EventKDEBase, IEventKDE {
     }
 
 
-    override fun getJson(): JSONObject? {
+    override fun GetJson(): JSONObject? {
         TODO("Not yet implemented")
     }
 
-    override fun getXml(): Element? {
+    override fun GetXml(): Element? {
         val value = this.Value ?: return null
         // you would typically use a XML parser here
         val document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
@@ -34,12 +34,12 @@ class EventKDECountry: EventKDEBase, IEventKDE {
         return element
     }
 
-    override fun setFromJson(json: JSONObject) {
+    override fun SetFromJson(json: JSONObject) {
         val strValue = json.toString()
         this.Value = Countries.parse(strValue)
     }
 
-    override fun setFromXml(xml: Element) {
+    override fun SetFromXml(xml: Element) {
         this.Value = Countries.parse(xml.textContent)
     }
 

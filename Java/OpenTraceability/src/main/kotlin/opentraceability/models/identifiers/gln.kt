@@ -15,7 +15,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
     constructor(glnStr: String) {
         try {
-            val error = GLN.detectGLNIssue(glnStr)
+            val error = GLN.DetectGLNIssue(glnStr)
             if (!error.isNullOrBlank()) {
                 throw Exception("The GLN $glnStr is invalid. $error")
             }
@@ -27,11 +27,11 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
     }
 
-    fun toDigitalLinkURL(): String {
+    fun ToDigitalLinkURL(): String {
         return try {
-            if (isGS1PGLN()) {
+            if (IsGS1PGLN()) {
                 val gtinParts = _glnStr.split(':').last().split('.')
-                val pgln = gtinParts[0] + gtinParts[1] + GS1Util.calculateGLN13CheckSum(gtinParts[0] + gtinParts[1])
+                val pgln = gtinParts[0] + gtinParts[1] + GS1Util.CalculateGLN13CheckSum(gtinParts[0] + gtinParts[1])
                 "414/$pgln"
             } else {
                 "414/$_glnStr"
@@ -47,37 +47,38 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
     companion object {
         fun isGLN(glnStr: String): Boolean {
             return try {
-                detectGLNIssue(glnStr) == null
+                DetectGLNIssue(glnStr) == null
             } catch (ex: Exception) {
                 OTLogger.error(ex)
                 throw ex
             }
         }
 
-        fun isURICompatibleChars(input: String): Boolean {
+        fun IsURICompatibleChars(input: String): Boolean {
             val reservedChars = ":/?#[]@!$&'()*+,;="
             val unreservedChars = "-._~"
             val allowedChars = reservedChars + unreservedChars + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
             return input.all { allowedChars.contains(it) }
         }
-        fun isOnlyDigits(input: String): Boolean {
+
+        fun IsOnlyDigits(input: String): Boolean {
             val regex = Regex("\\d+")
             return regex.matches(input)
         }
 
 
 
-        fun detectGLNIssue(glnStr: String): String? {
+        fun DetectGLNIssue(glnStr: String): String? {
             return try {
                 if (glnStr.isNullOrEmpty()) {
                     return "The GLN is NULL or EMPTY."
-                } else if (!isURICompatibleChars(glnStr)) {
+                } else if (!IsURICompatibleChars(glnStr)) {
                     return "The GLN contains non-compatiable characters for a URI."
                 } else if (glnStr.contains(" ")) {
                     return "GLN cannot contain spaces."
-                } else if (glnStr.length == 13 && isOnlyDigits(glnStr)) {
-                    val checksum = GS1Util.calculateGLN13CheckSum(glnStr)
+                } else if (glnStr.length == 13 && IsOnlyDigits(glnStr)) {
+                    val checksum = GS1Util.CalculateGLN13CheckSum(glnStr)
                     if (checksum != glnStr.last()) {
                         return "The check sum did not calculate correctly. The expected check sum was $checksum. " +
                                 "Please make sure to validate that you typed the GLN correctly. It's possible the check sum " +
@@ -94,7 +95,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
                         throw Exception("The GLN $glnStr is not valid.")
                     }
                     val lastPiece = pieces[0] + pieces[1]
-                    if (!isOnlyDigits(lastPiece)) {
+                    if (!IsOnlyDigits(lastPiece)) {
                         return "This is supposed to be a GS1 GLN based on the System Prefix and " +
                                 "Data Type Prefix. That means the Company Prefix and Serial Numbers " +
                                 "should only be digits. Found non-digit characters in the Company Prefix " +
@@ -115,13 +116,13 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
             }
         }
 
-        fun tryParse(glnStr: String, gln: GLN?, error: String?): Boolean {
+        fun TryParse(glnStr: String, gln: GLN?, error: String?): Boolean {
 
             var gln: GLN? = gln
             var error: String? = error
 
             return try {
-                error = detectGLNIssue(glnStr)
+                error = DetectGLNIssue(glnStr)
                 if (error.isNullOrEmpty()) {
                     gln = GLN(glnStr)
                     true
@@ -136,11 +137,11 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
         }
     }
 
-    fun isGS1PGLN(): Boolean {
+    fun IsGS1PGLN(): Boolean {
         return _glnStr.contains(":id:sgln:")
     }
 
-    fun clone(): Any {
+    fun Clone(): Any {
         val gln = GLN(toString())
         return gln
     }

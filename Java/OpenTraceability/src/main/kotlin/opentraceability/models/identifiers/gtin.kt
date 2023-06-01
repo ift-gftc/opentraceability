@@ -1,8 +1,8 @@
 package models.identifiers
 
 import utility.ObjectExtensions.getInt64HashCode
-import utility.StringExtensions.isOnlyDigits
-import utility.StringExtensions.isURICompatibleChars
+import utility.StringExtensions.IsOnlyDigits
+import utility.StringExtensions.IsURICompatibleChars
 import java.lang.Exception
 
 class GTIN : Comparable<GTIN> {
@@ -14,7 +14,7 @@ class GTIN : Comparable<GTIN> {
 
     constructor(gtinStr: String?) {
         try {
-            val error = GTIN.detectGTINIssue(gtinStr)
+            val error = GTIN.DetectGTINIssue(gtinStr)
             if (!error.isNullOrEmpty()) {
                 throw Exception("The GTIN $gtinStr is invalid. $error")
             }
@@ -27,9 +27,9 @@ class GTIN : Comparable<GTIN> {
     }
 
     companion object {
-        fun tryParse(gtinStr: String?): Pair<GTIN?, String?> {
+        fun TryParse(gtinStr: String?): Pair<GTIN?, String?> {
             try {
-                val error = detectGTINIssue(gtinStr)
+                val error = DetectGTINIssue(gtinStr)
                 return if (error.isNullOrBlank()) Pair(GTIN(gtinStr), null) else Pair(null, error)
             } catch (ex: Exception) {
                 OTLogger.error(ex)
@@ -37,25 +37,25 @@ class GTIN : Comparable<GTIN> {
             }
         }
 
-        fun isGTIN(gtinStr: String): Boolean {
+        fun IsGTIN(gtinStr: String): Boolean {
             try {
-                return detectGTINIssue(gtinStr) == null
+                return DetectGTINIssue(gtinStr) == null
             } catch (ex: Exception) {
                 OTLogger.error(ex)
                 throw ex
             }
         }
 
-        fun detectGTINIssue(gtinStr: String?): String? {
+        fun DetectGTINIssue(gtinStr: String?): String? {
             try {
                 if (gtinStr.isNullOrEmpty()) {
                     return "GTIN is NULL or EMPTY."
-                } else if (!gtinStr.isURICompatibleChars()) {
+                } else if (!gtinStr.IsURICompatibleChars()) {
                     return "The GTIN contains non-compatible characters for a URI."
                 } else if (gtinStr.contains(" ")) {
                     return "GTIN cannot contain spaces."
-                } else if (gtinStr.length == 14 && gtinStr.isOnlyDigits()) {
-                    val checksum = GS1Util.calculateGTIN14CheckSum(gtinStr)
+                } else if (gtinStr.length == 14 && gtinStr.IsOnlyDigits()) {
+                    val checksum = GS1Util.CalculateGTIN14CheckSum(gtinStr)
                     if (checksum != gtinStr.last()) {
                         return "The check sum did not calculate correctly. The expected check sum was $checksum. " +
                                 "Please make sure to validate that you typed the GTIN correctly. It's possible the check sum " +
@@ -66,7 +66,7 @@ class GTIN : Comparable<GTIN> {
                     return null
                 } else if (gtinStr.startsWith("urn:") && gtinStr.contains(":idpat:sgtin:")) {
                     val lastPiece = gtinStr.split(':').last().replace(".", "")
-                    if (!lastPiece.isOnlyDigits()) {
+                    if (!lastPiece.IsOnlyDigits()) {
                         return "This is supposed to be a GS1 GTIN based on the System Prefix and " +
                                 "Data Type Prefix. That means the Company Prefix and Serial Numbers " +
                                 "should only be digits. Found non-digit characters in the Company Prefix " +
@@ -89,18 +89,18 @@ class GTIN : Comparable<GTIN> {
         }
     }
 
-    fun isGS1GTIN(): Boolean {
+    fun IsGS1GTIN(): Boolean {
         return _gtinStr?.contains(":idpat:sgtin:") ?: false
     }
 
-    fun toDigitalLinkURL(): String {
+    fun ToDigitalLinkURL(): String {
         try {
             if (_gtinStr == null) {
                 return ""
-            } else if (isGS1GTIN()) {
+            } else if (IsGS1GTIN()) {
                 val gtinParts = _gtinStr.split(':').last().split('.')
                 val gtin14 = gtinParts[1][0] + gtinParts[0] + gtinParts[1].drop(1)
-                val gtinWithChecksum = gtin14 + GS1Util.calculateGTIN14CheckSum(gtin14)
+                val gtinWithChecksum = gtin14 + GS1Util.CalculateGTIN14CheckSum(gtin14)
                 return "01/$gtinWithChecksum"
             } else {
                 return "01/$_gtinStr"

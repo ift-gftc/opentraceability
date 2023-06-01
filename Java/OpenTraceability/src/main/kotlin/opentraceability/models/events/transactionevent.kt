@@ -27,34 +27,34 @@ abstract class TransactionEvent : EventBase(), IEvent {
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","readPoint", 13)
-    override var ReadPoint: EventReadPoint = EventReadPoint()
+    override var ReadPoint: EventReadPoint? = null
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","bizLocation", 14)
-    lateinit override var Location: EventLocation
+    override var Location: EventLocation? = null
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("bizTransaction")
     @OpenTraceabilityAttribute("","bizTransactionList", 7)
-    override var BizTransactionList: ArrayList<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
+    override var BizTransactionList: MutableList<EventBusinessTransaction> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("source")
     @OpenTraceabilityAttribute("","sourceList", 16, EPCISVersion.V2)
     @OpenTraceabilityAttribute("","extension/sourceList", 21, EPCISVersion.V1)
-    override var SourceList: ArrayList<EventSource> = ArrayList<EventSource>()
+    override var SourceList: MutableList<EventSource> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("destination")
     @OpenTraceabilityAttribute("","destinationList", 17, EPCISVersion.V2)
     @OpenTraceabilityAttribute("","extension/destinationList", 22, EPCISVersion.V1)
-    override var DestinationList: ArrayList<EventDestination> = ArrayList<EventDestination>()
+    override var DestinationList: MutableList<EventDestination> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("sensorElement")
     @OpenTraceabilityAttribute("","sensorElementList", 18, EPCISVersion.V2)
     @OpenTraceabilityAttribute("","extension/sensorElementList",18, EPCISVersion.V1)
-    override var SensorElementList: ArrayList<SensorElement> = ArrayList<SensorElement>()
+    override var SensorElementList: MutableList<SensorElement> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","persistentDisposition", 19, EPCISVersion.V2)
@@ -68,7 +68,7 @@ abstract class TransactionEvent : EventBase(), IEvent {
     @OpenTraceabilityAttribute("","type", 0)
     override lateinit var EventType: EventType
 
-    override var Products: ArrayList<EventProduct> = ArrayList<EventProduct>()
+    override var Products: MutableList<EventProduct> = mutableListOf()
 
     override fun AddProduct(product: EventProduct){
         if (product.Type == EventProductType.Parent)

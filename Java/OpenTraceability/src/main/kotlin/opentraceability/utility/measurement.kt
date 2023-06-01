@@ -181,7 +181,7 @@ class Measurement : Comparable<Measurement?> {
             }
         }
 
-        fun tryParse(strValue: String): Measurement? {
+        fun TryParse(strValue: String): Measurement? {
             var measure: Measurement? = null
             try {
                 if (!strValue.isNullOrEmpty()) {

@@ -1,5 +1,6 @@
 package models.events
 
+import interfaces.IEventKDE
 import interfaces.ITransformationEvent
 import java.util.*
 import utility.attributes.*
@@ -16,33 +17,64 @@ class TransformationEvent<T> : EventBase(), ITransformationEvent {
 
     override var Action: EventAction? = null
 
+    @OpenTraceabilityAttribute("", "transformationID", 11)
     override var TransformationID: String? = null
 
+    @OpenTraceabilityAttribute("", "bizStep", 12)
     override var BusinessStep: URI? = null
 
+    @OpenTraceabilityAttribute("", "disposition", 13)
     override var Disposition: URI? = null
 
-    override lateinit var ReadPoint: EventReadPoint
+    @OpenTraceabilityObjectAttribute
+    @OpenTraceabilityAttribute("", "readPoint", 14)
+    override var ReadPoint: EventReadPoint?= null
 
-    override lateinit var Location: EventLocation
+    @OpenTraceabilityObjectAttribute
+    @OpenTraceabilityAttribute("", "bizLocation", 15)
+    override var Location: EventLocation? = null
+
+    @OpenTraceabilityObjectAttribute
+    @OpenTraceabilityArrayAttribute( "bizTransaction")
+    @OpenTraceabilityAttribute("", "bizTransactionList", 16)
+    override var BizTransactionList: MutableList<EventBusinessTransaction> = mutableListOf()
+
+    @OpenTraceabilityObjectAttribute
+    @OpenTraceabilityArrayAttribute( "source")
+    @OpenTraceabilityAttribute("", "sourceList", 17)
+    override var SourceList: MutableList<EventSource> = mutableListOf()
+
+    @OpenTraceabilityObjectAttribute
+    @OpenTraceabilityArrayAttribute( "destination")
+    @OpenTraceabilityAttribute("", "destinationList", 18)
+    override var DestinationList: MutableList<EventDestination> = mutableListOf()
 
 
-    override var BizTransactionList: ArrayList<EventBusinessTransaction> = ArrayList<EventBusinessTransaction>()
+    @OpenTraceabilityObjectAttribute
+    @OpenTraceabilityArrayAttribute( "sensorElement")
+    @OpenTraceabilityAttribute("", "sensorElementList", 19)
+    override var SensorElementList: MutableList<SensorElement> = mutableListOf()
 
-    override var SourceList: ArrayList<EventSource> = ArrayList<EventSource>()
-
-    override var DestinationList: ArrayList<EventDestination> = ArrayList<EventDestination>()
-
-    override var SensorElementList: ArrayList<SensorElement> = ArrayList<SensorElement>()
-
+    @OpenTraceabilityObjectAttribute
+    @OpenTraceabilityAttribute("", "persistentDisposition", 20)
     override var PersistentDisposition: PersistentDisposition? = null
 
+    @OpenTraceabilityObjectAttribute
+    @OpenTraceabilityAttribute("", "ilmd", 21)
     var ILMD: T? = null
 
-    override lateinit var EventType: EventType
+    @OpenTraceabilityXmlIgnoreAttribute
+    @OpenTraceabilityAttribute("", "type", 0)
+    override var EventType: EventType = models.events.EventType.TransformationEvent
 
 
-    override var Products: ArrayList<EventProduct> = ArrayList<EventProduct>()
+    override var Products: MutableList<EventProduct> = mutableListOf()
+        get() {
+            val products = mutableListOf<EventProduct>()
+            products.addAll(Inputs)
+            products.addAll(Outputs)
+            return products
+        }
 
     override fun AddProduct(product: EventProduct) {
         when (product.Type) {
@@ -52,4 +84,16 @@ class TransformationEvent<T> : EventBase(), ITransformationEvent {
         }
     }
 
+    override fun <T: IEventKDE> GetKDE(clazz: Class<T>, ns: String, name: String): T? {
+        return super.GetKDE<T>(clazz, ns, name)
+    }
+
+    override fun <T: IEventKDE> GetKDE(clazz: Class<T>): T? {
+        return super.GetKDE<T>(clazz)
+    }
+
+
+    override fun GetILMD(): EventILMD? {
+        return ILMD as EventILMD
+    }
 }

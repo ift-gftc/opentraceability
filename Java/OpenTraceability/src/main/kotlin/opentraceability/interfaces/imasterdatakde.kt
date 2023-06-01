@@ -6,12 +6,12 @@ import org.json.JSONObject
 
 interface IMasterDataKDE {
 
-    var namespace: String
-    var name: String
-    var valueType: Class<*>
+    var Namespace: String
+    var Name: String
+    var ValueType: Class<*>
 
-    fun setFromGS1WebVocabJson(json: JSONObject)
-    fun getGS1WebVocabJson(): JSONObject?
-    fun setFromEPCISXml(xml: Element)
-    fun getEPCISXml(): Element?
+    fun SetFromGS1WebVocabJson(json: JSONObject)
+    fun GetGS1WebVocabJson(): JSONObject?
+    fun SetFromEPCISXml(xml: Element)
+    fun GetEPCISXml(): Element?
 }
