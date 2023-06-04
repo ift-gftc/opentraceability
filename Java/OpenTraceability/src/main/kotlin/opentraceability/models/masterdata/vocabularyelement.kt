@@ -1,26 +1,24 @@
-package models.masterdata
+package opentraceability.models.masterdata
 
-
-import interfaces.IMasterDataKDE
-import interfaces.IVocabularyElement
-import interfaces.VocabularyType
+import opentraceability.interfaces.IMasterDataKDE
+import opentraceability.interfaces.IVocabularyElement
+import opentraceability.interfaces.VocabularyType
+import opentraceability.models.identifiers.*
+import opentraceability.utility.EnumUtil
 import java.util.*
-import models.identifiers.*
 import org.json.JSONObject
-import utility.EnumUtil
-import java.lang.reflect.Type
 
 class VocabularyElement : IVocabularyElement {
-    override var ID: String? = null
-    override var EPCISType: String? = ""
-    override var JsonLDType: String? = null
-    override var Context: JSONObject? = null
+    override var id: String? = null
+    override var epcisType: String? = ""
+    override var jsonLDType: String? = null
+    override var context: JSONObject? = null
 
-    var VocabularyType: VocabularyType = VocabularyType.Unknown
+    override var vocabularyType: VocabularyType = VocabularyType.Unknown
         get() {
             var type = VocabularyType.Unknown
             for (t in VocabularyType.values()) {
-                if (EnumUtil.getEnumDescription(t).trim().toLowerCase() == EPCISType?.trim().toLowerCase()) {
+                if (EnumUtil.GetEnumDescription<VocabularyType>(t)?.trim() == epcisType?.trim()) {
                     type = t
                 }
             }
@@ -31,6 +29,6 @@ class VocabularyElement : IVocabularyElement {
         }
 
 
-    override var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
+    override var kdes: MutableList<IMasterDataKDE> = mutableListOf()
 
 }

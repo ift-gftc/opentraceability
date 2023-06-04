@@ -4,30 +4,26 @@ import opentraceability.interfaces.IEPCISDocumentMapper
 import opentraceability.interfaces.IEvent
 import opentraceability.mappers.OpenTraceabilityXmlMapper
 import opentraceability.models.events.*
-import org.w3c.dom.Document
+import opentraceability.utility.*
 import org.w3c.dom.Element
 
 class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
 
-    fun Map(strValue: String, checkSchema: Boolean = true): EPCISQueryDocument {
+    override fun map(strValue: String): EPCISDocument {
         try {
             //val xDoc: Document
             //val document: EPCISQueryDocument
 
             // TODO: validate the schema depending on the version in the document
 
-            var (document, xDoc)  = EPCISDocumentBaseXMLMapper.readXml<EPCISQueryDocument>(strValue)
+            var (document, d)  = EPCISDocumentBaseXMLMapper.readXml<EPCISDocument>(strValue)
+            var xDoc = d.documentElement
 
-            if (xDoc.documentElement == null) {
-                throw Exception("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.")
-            }
             if (document.epcisVersion == null) {
                 throw Exception("doc.epcisVersion is NULL. This must be set to a version.")
             }
 
-            if (checkSchema) {
-                EPCISDocumentBaseXMLMapper.validateEPCISQueryDocumentSchema(xDoc, document.epcisVersion!!)
-            }
+            EPCISDocumentBaseXMLMapper.validateEPCISQueryDocumentSchema(xDoc.ownerDocument, document.epcisVersion!!)
 
             val epcisQueryXName = if (document.epcisVersion == EPCISVersion.V1) {
                 opentraceability.Constants.EPCISQUERY_1_XNAMESPACE
@@ -35,23 +31,18 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
                 opentraceability.Constants.EPCISQUERY_2_XNAMESPACE
             }
 
-            // read the query name
-            val xQueryName = xDoc.root?.element("EPCISBody")?.element(epcisQueryXName + "QueryResults")?.element("queryName")
-            if (xQueryName != null) {
-                document.QueryName = xQueryName.value
-            }
-
             // read the events
-            val xEventList = xDoc.root?.element("EPCISBody")?.element(epcisQueryXName + "QueryResults")?.element("resultsBody")?.element("EventList")
+            val xEventList = xDoc.element("EPCISBody")?.element(epcisQueryXName + "QueryResults")?.element("resultsBody")?.element("EventList")
                 ?: throw Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root")
-            xEventList.elements().forEach { xEvent ->
+            xEventList.childNodes.forEachIndex { xEvent, _ ->
                 var x = xEvent
-                if (document.epcisVersion == EPCISVersion.V1 && x.element("TransformationEvent") != null) {
-                    x = xEvent.element("TransformationEvent")
+                if (xEvent != null && document.epcisVersion == EPCISVersion.V1 && x.element("TransformationEvent") != null)
+                {
+                    x = xEvent.element("TransformationEvent")!!
                 }
                 val eventType = EPCISDocumentBaseXMLMapper.getEventTypeFromProfile(x)
                 val e = OpenTraceabilityXmlMapper.fromXml(x, eventType, document.epcisVersion!!)
-                document.Events.add(e as IEvent)
+                document.events.add(e as IEvent)
             }
 
             return document
@@ -62,9 +53,7 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
         }
     }
 
-
-
-    fun Map(doc: EPCISQueryDocument): String {
+    override fun map(doc: EPCISDocument): String {
         if (doc.epcisVersion == null) {
             throw Exception("doc.epcisVersion is NULL. This must be set to a version.")
         }
@@ -75,48 +64,38 @@ class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
             opentraceability.Constants.EPCISQUERY_1_NAMESPACE
         }
 
-        val xDoc = EPCISDocumentBaseXMLMapper.writeXml(doc, epcisNS, "EPCISQueryDocument")
-        if (xDoc.documentElement == null) {
-            throw Exception("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.")
-        }
+        val xDoc = EPCISDocumentBaseXMLMapper.writeXml(doc, epcisNS, "EPCISQueryDocument").documentElement!!
 
-        val epcisQueryXName = if (doc.epcisVersion == EPCISVersion.V1) {
+        val epcisQueryXName = if (doc.epcisVersion == EPCISVersion.V1)
+        {
             opentraceability.Constants.EPCISQUERY_1_XNAMESPACE
-        } else {
+        }
+        else
+        {
             opentraceability.Constants.EPCISQUERY_2_XNAMESPACE
         }
 
         // write the query name
-        xDoc.root!!.add(
-            Element("EPCISBody",
-                Element(epcisQueryXName + "QueryResults",
-                    Element("queryName"),
-                    Element("resultsBody",
-                        Element("EventList"))
-                )
-            )
-        )
+        var xQueryResults = xDoc.addElement("EPCISBody").addElementNS(epcisQueryXName, "QueryResults")
+        xQueryResults.addElement("queryName")
+        var xEventList = xQueryResults.addElement("resultsBody").addElement("EventList")
 
-        val xQueryName = xDoc.root?.element("EPCISBody")?.element(epcisQueryXName + "QueryResults")?.element("queryName")
-        if (xQueryName != null) {
-            xQueryName.Value = doc.QueryName
-        }
-
-        // write the events
-        val xEventList = xDoc.root?.element("EPCISBody")?.element(epcisQueryXName + "QueryResults")?.element("resultsBody")?.element("EventList")
-            ?: throw Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root")
-        for (e in doc.Events) {
+        for (e in doc.events)
+        {
             val xname = EPCISDocumentBaseXMLMapper.getEventXName(e)
-            var xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.epcisVersion!!)
-            if (e.EventType == EventType.TransformationEvent && doc.epcisVersion == EPCISVersion.V1) {
-                xEvent = Element("extension", xEvent)
+            var xEvent = OpenTraceabilityXmlMapper.toXml(xname, e, doc.epcisVersion!!) ?: throw Exception("Failed to deserialize event from XML.")
+            if (e.eventType == EventType.TransformationEvent && doc.epcisVersion == EPCISVersion.V1) {
+                var outerExtensionXml = createXmlElement("extension")
+                outerExtensionXml.addElement(xEvent)
+                xEvent = outerExtensionXml
             }
-            if (xEvent != null) {
-                xEventList.add(xEvent)
+            if (xEvent != null)
+            {
+                xEventList.addElement(xEvent)
             }
         }
 
-        EPCISDocumentBaseXMLMapper.validateEPCISQueryDocumentSchema(xDoc, doc.epcisVersion!!)
+        EPCISDocumentBaseXMLMapper.validateEPCISQueryDocumentSchema(xDoc.ownerDocument, doc.epcisVersion!!)
 
         return xDoc.toString()
     }

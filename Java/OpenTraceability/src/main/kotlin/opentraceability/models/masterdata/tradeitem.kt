@@ -1,67 +1,57 @@
-package models.masterdata
+package opentraceability.models.masterdata
 
-
-import interfaces.IMasterDataKDE
-import interfaces.IVocabularyElement
-import interfaces.VocabularyType
-import models.common.LanguageString
-import models.events.kdes.CertificationList
+import opentraceability.interfaces.IMasterDataKDE
+import opentraceability.interfaces.IVocabularyElement
+import opentraceability.interfaces.VocabularyType
+import opentraceability.models.common.LanguageString
+import opentraceability.models.identifiers.GTIN
+import opentraceability.models.identifiers.PGLN
+import opentraceability.utility.attributes.OpenTraceabilityArrayAttribute
+import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute
+import opentraceability.utility.attributes.OpenTraceabilityMasterDataAttribute
 import java.util.*
-import models.identifiers.*
-import models.identifiers.GTIN
-import models.identifiers.PGLN
 import org.json.JSONObject
-import utility.attributes.OpenTraceabilityArrayAttribute
-import utility.attributes.OpenTraceabilityJsonAttribute
-import utility.attributes.OpenTraceabilityMasterDataAttribute
-import java.lang.reflect.Type
 
-class Tradeitem : IVocabularyElement {
+class TradeItem : IVocabularyElement {
+    override var id: String? = null
 
-    override var ID: String? = null
-
-    override  var EPCISType: String? = "urn:epcglobal:epcis:vtype:EPCClass"
-
+    override  var epcisType: String? = "urn:epcglobal:epcis:vtype:EPCClass"
 
     @OpenTraceabilityJsonAttribute("@type")
-    override  var JsonLDType: String? = "gs1:Product"
+    override  var jsonLDType: String? = "gs1:Product"
 
-    override lateinit var VocabularyType: VocabularyType
+    override lateinit var vocabularyType: VocabularyType
 
-    override  var Context: JSONObject? = null
+    override  var context: JSONObject? = null
 
     @OpenTraceabilityJsonAttribute("gtin")
-    var GTIN: GTIN? = null
+    var gtin: GTIN? = null
 
     @OpenTraceabilityJsonAttribute("productName")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#descriptionShort")
-    var ShortDescription: ArrayList<LanguageString>? = null
+    var shortDescription: MutableList<LanguageString>? = null
 
     @OpenTraceabilityJsonAttribute("cbvmda:tradeItemConditionCode")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#tradeItemConditionCode")
-    var TradeItemConditionCode: String? = null
+    var tradeItemConditionCode: String? = null
 
     @OpenTraceabilityJsonAttribute("cbvmda:owning_party")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:owning_Party")
-    var OwningParty: PGLN? = null
-
+    var owningParty: PGLN? = null
 
     @OpenTraceabilityJsonAttribute("cbvmda:informationProvider")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#informationProvider")
-    var InformationProvider: PGLN? = null
-
+    var informationProvider: PGLN? = null
 
     @OpenTraceabilityArrayAttribute
     @OpenTraceabilityJsonAttribute("cbvmda:speciesForFisheryStatisticsPurposesName")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName")
-    var FisherySpeciesScientificName: ArrayList<String>? = null
-
+    var fisherySpeciesScientificName: MutableList<String>? = null
 
     @OpenTraceabilityArrayAttribute
     @OpenTraceabilityJsonAttribute("cbvmda:speciesForFisheryStatisticsPurposesCode")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode")
-    var FisherySpeciesCode: ArrayList<String>? = null
+    var fisherySpeciesCode: MutableList<String>? = null
 
-
-    override  var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
+    override  var kdes: MutableList<IMasterDataKDE> = mutableListOf()
 }

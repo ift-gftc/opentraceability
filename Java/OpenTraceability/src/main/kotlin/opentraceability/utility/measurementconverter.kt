@@ -1,39 +1,23 @@
-package utility
+package opentraceability.utility
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
+import com.google.gson.JsonSerializer
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
+import opentraceability.models.identifiers.GLN
+import java.lang.reflect.Type
+import com.google.gson.*
 
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.JsonSerializer
-import com.fasterxml.jackson.databind.SerializerProvider
-import org.json.JSONObject
-import java.io.IOException
-
-class MeasurementConverter : JsonDeserializer<Measurement>(), JsonSerializer<Measurement>() {
-    @Throws(IOException::class)
-    override fun serialize(
-        value: Measurement?,
-        gen: JsonGenerator,
-        serializers: SerializerProvider
-    ) {
-        val strValue = value?.toString()
-        if (strValue != null) {
-            gen.writeString(strValue)
-        }
+class MeasurementConverter : JsonDeserializer<Measurement>, JsonSerializer<Measurement>
+{
+    override fun serialize(src: Measurement?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement
+    {
+        val strValue = src?.toString()
+        return JsonPrimitive(strValue)
     }
 
-    @Throws(IOException::class)
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Measurement? {
-        return if (p.currentToken == JSONObject.VALUE_STRING) {
-            val strValue = p.valueAsString
-            if (strValue != null) {
-                Measurement.TryParse(strValue)
-            } else {
-                null
-            }
-        } else {
-            null
-        }
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Measurement?
+    {
+        val strValue = json?.asString
+        return if (strValue != null) Measurement.TryParse(strValue) else null
     }
 }

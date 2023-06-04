@@ -1,22 +1,27 @@
-package models.masterdata.kdes
+package opentraceability.models.masterdata.kdes
 
-import interfaces.IMasterDataKDE
+import opentraceability.interfaces.IMasterDataKDE
 import org.json.*
 import org.w3c.dom.*
-import utility.Countries
-import utility.Country
+import opentraceability.utility.Countries
+import opentraceability.utility.Country
+import opentraceability.utility.createXmlElement
+import opentraceability.utility.createXmlElementNS
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 class MasterDataKDECountry : MasterDataKDEBase(), IMasterDataKDE {
     var value: Country? = null
 
-     val valueType: Class<*> = Country::class.java
+    override var valueType: KType = typeOf<Country>()
 
 
     override fun getEPCISXml(): Element? {
         return value?.let { country ->
-            val x = Element("attribute")
-            x.addAttribute(XAttribute("id", Name))
-            x.value = country.Alpha3
+            val x = createXmlElement("attribute")
+            x.setAttribute("id", name)
+            x.nodeValue = country.alpha3
             x
         }
     }
@@ -26,13 +31,29 @@ class MasterDataKDECountry : MasterDataKDEBase(), IMasterDataKDE {
     }
 
     fun getXml(): Element? {
-        return if (value == null) null else Element((Namespace as XNamespace) + name, value.ISO)
+        if (value == null)
+        {
+            return null
+        }
+        else {
+            if (this.namespace != null && this.namespace.isNotEmpty())
+            {
+                var x = createXmlElementNS(this.namespace, this.name)
+                x.nodeValue = this.value!!.alpha3
+                return x
+            }
+            else {
+                var x = createXmlElement(this.name)
+                x.nodeValue = this.value!!.alpha3
+                return x
+            }
+        }
     }
 
     override fun setFromEPCISXml(xml: Element) {
-        val country = Countries.parse(xml.value)
+        val country = Countries.parse(xml.nodeValue)
         value = country
-        Name = xml.getAttributeValue("id") ?: ""
+        name = xml.getAttribute("id") ?: ""
     }
 
     override fun setFromGS1WebVocabJson(json: JSONObject) {
@@ -40,6 +61,6 @@ class MasterDataKDECountry : MasterDataKDEBase(), IMasterDataKDE {
     }
 
     override fun toString(): String {
-        return value?.Name ?: ""
+        return value?.name ?: ""
     }
 }

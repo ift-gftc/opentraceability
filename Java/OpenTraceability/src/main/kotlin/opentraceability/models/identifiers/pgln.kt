@@ -1,6 +1,6 @@
-package models.identifiers
+package opentraceability.models.identifiers
 
-import utility.ObjectExtensions.getInt64HashCode
+import opentraceability.utility.*
 
 class PGLN {
 
@@ -41,7 +41,7 @@ class PGLN {
                 return digitalLinkURL
             }
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -56,7 +56,7 @@ class PGLN {
                     return false
                 }
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
         }
@@ -101,7 +101,7 @@ class PGLN {
                     return "The PGLN is not in a valid EPCIS URI format or in GS1 (P)GLN-13 format. PGLN = $pglnStr"
                 }
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
         }
@@ -130,7 +130,7 @@ class PGLN {
                     return Pair(false, null)
                 }
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
         }

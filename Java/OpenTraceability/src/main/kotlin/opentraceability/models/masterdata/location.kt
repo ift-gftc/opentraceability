@@ -1,68 +1,68 @@
-package models.masterdata
+package opentraceability.models.masterdata
 
 
-import interfaces.IMasterDataKDE
-import interfaces.IVocabularyElement
-import interfaces.VocabularyType
-import models.common.LanguageString
+import opentraceability.interfaces.IMasterDataKDE
+import opentraceability.interfaces.IVocabularyElement
+import opentraceability.interfaces.VocabularyType
+import opentraceability.models.common.LanguageString
+import opentraceability.models.identifiers.*
+import opentraceability.models.events.kdes.CertificationList
+import opentraceability.models.identifiers.GLN
+import opentraceability.models.identifiers.PGLN
+import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute
+import opentraceability.utility.attributes.OpenTraceabilityMasterDataAttribute
+import opentraceability.utility.attributes.OpenTraceabilityObjectAttribute
 import java.util.*
-import models.identifiers.*
-import models.events.kdes.CertificationList
-import models.identifiers.GLN
-import models.identifiers.PGLN
 import org.json.JSONObject
-import utility.attributes.OpenTraceabilityJsonAttribute
-import utility.attributes.OpenTraceabilityMasterDataAttribute
-import utility.attributes.OpenTraceabilityObjectAttribute
 
 class Location : IVocabularyElement {
 
-    override var ID: String? = null
+    override var id: String? = null
 
-    override var EPCISType: String? = "urn:epcglobal:epcis:vtype:Location"
+    override var epcisType: String? = "urn:epcglobal:epcis:vtype:Location"
 
 
     @OpenTraceabilityJsonAttribute("@type")
-    override var JsonLDType: String? = "gs1:Place"
+    override var jsonLDType: String? = "gs1:Place"
 
-    override lateinit var VocabularyType: VocabularyType
+    override lateinit var vocabularyType: VocabularyType
 
-    override var Context: JSONObject? = null
+    override var context: JSONObject? = null
 
     @OpenTraceabilityJsonAttribute("globalLocationNumber")
-    var GLN: GLN? = null
+    var gln: GLN? = null
 
 
     @OpenTraceabilityJsonAttribute("cbvmda:owning_party")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:owning_party")
-    var OwningParty: PGLN? = null
+    var owningParty: PGLN? = null
 
 
     @OpenTraceabilityJsonAttribute("cbvmda:informationProvider")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#informationProvider")
-    var InformationProvider: PGLN? = null
+    var informationProvider: PGLN? = null
 
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityMasterDataAttribute("https://gs1.org/cbv/cbvmda:certificationList")
-    var CertificationList: CertificationList? = null
+    var certificationList: CertificationList? = null
 
 
     @OpenTraceabilityJsonAttribute("name")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#name")
-    var Name: ArrayList<LanguageString>? = null
+    var name: MutableList<LanguageString>? = null
 
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityJsonAttribute("address")
     @OpenTraceabilityMasterDataAttribute
-    var Address: Address? = null
+    var address: Address? = null
 
     @OpenTraceabilityJsonAttribute("cbvmda:unloadingPort")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#unloadingPort")
-    var UnloadingPort: String? = null
+    var unloadingPort: String? = null
 
-    override var KDEs: ArrayList<IMasterDataKDE> = ArrayList<IMasterDataKDE>()
+    override var kdes: MutableList<IMasterDataKDE> = mutableListOf()
 
 
 }

@@ -1,27 +1,29 @@
-package models.masterdata.kdes
+package opentraceability.models.masterdata.kdes
 
-import interfaces.IMasterDataKDE
+import opentraceability.interfaces.IMasterDataKDE
 import org.json.JSONObject
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import javax.xml.parsers.DocumentBuilderFactory
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
 
-    override var ValueType: Class<*>? = String::class.java
+    override var valueType: KType = typeOf<String>()
 
     var value: String? = null
     var type: String? = null
     val attributes: MutableMap<String, String> = mutableMapOf()
 
-    constructor(ValueType: Class<*>) {
+    constructor(ValueType: KType) {
         // Default constructor
-        this.ValueType = ValueType
+        this.valueType = ValueType
     }
 
     constructor(ns: String, name: String) {
-        super.Namespace = ns
-        super.Name = name
+        super.namespace = ns
+        super.name = name
     }
 
     fun getJson(): JSONObject? {
@@ -38,7 +40,7 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
         return if (value.isNullOrBlank()) {
             null
         } else {
-            val xname = "$Namespace$Name"
+            val xname = "$namespace$name"
             val document: Document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
             val element: Element = document.createElement(xname)
             element.textContent = value
@@ -86,7 +88,7 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
     }
 
     override fun setFromEPCISXml(xml: Element) {
-        Name = xml.getAttribute("id") ?: ""
+        name = xml.getAttribute("id") ?: ""
         value = xml.textContent
     }
 
@@ -96,7 +98,7 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
         return if (value != null) {
             val document: Document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
             val element: Element = document.createElement("attribute")
-            element.setAttribute("id", Name)
+            element.setAttribute("id", name)
             element.textContent = value
             element
         } else {

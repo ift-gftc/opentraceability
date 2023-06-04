@@ -1,4 +1,4 @@
-package models.identifiers
+package opentraceability.models.identifiers
 
 enum class EPCType(val value: Int) {
     Class(0),

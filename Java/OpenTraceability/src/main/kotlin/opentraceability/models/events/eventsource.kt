@@ -1,7 +1,7 @@
-package models.events
+package opentraceability.models.events
 
-import utility.*
-import utility.attributes.*
+import opentraceability.utility.*
+import opentraceability.utility.attributes.*
 import java.net.URI
 
 class EventSource {

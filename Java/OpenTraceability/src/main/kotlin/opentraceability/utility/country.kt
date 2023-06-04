@@ -1,35 +1,35 @@
-package utility
+package opentraceability.utility
 
-import OTLogger
+import opentraceability.OTLogger
 import org.w3c.dom.Element
 
 //[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)
 //[DataContract]
 class Country :  Comparable<Country> {
-    var CultureInfoCode: String = ""
-    var Name: String = ""
-    var AlternativeName: String = ""
-    var Abbreviation: String = ""
-    var Alpha3: String = ""
-    var ISO: Int = 0
+    var cultureInfoCode: String = ""
+    var name: String = ""
+    var alternativeName: String = ""
+    var abbreviation: String = ""
+    var alpha3: String = ""
+    var iso: Int = 0
 
     constructor(other: Country) {
-        this.Abbreviation = other.Abbreviation
-        this.Alpha3 = other.Alpha3
-        this.ISO = other.ISO
-        this.Name = other.Name
-        this.AlternativeName = other.AlternativeName
-        this.CultureInfoCode = other.CultureInfoCode
+        this.abbreviation = other.abbreviation
+        this.alpha3 = other.alpha3
+        this.iso = other.iso
+        this.name = other.name
+        this.alternativeName = other.alternativeName
+        this.cultureInfoCode = other.cultureInfoCode
     }
 
     constructor(xmlCountry: Element) {
-        this.Name = xmlCountry.getAttribute("Name") ?: ""
-        this.AlternativeName = xmlCountry.getAttribute("AlternativeName") ?: ""
-        this.Abbreviation = xmlCountry.getAttribute("Abbreviation") ?: ""
-        this.Alpha3 = xmlCountry.getAttribute("Alpha3") ?: ""
-        val isoValue = xmlCountry.getAttribute("ISO")
-        this.ISO = isoValue?.toIntOrNull() ?: 0
-        this.CultureInfoCode = xmlCountry.getAttribute("CultureInfoCode") ?: ""
+        this.name = xmlCountry.getAttribute("name") ?: ""
+        this.alternativeName = xmlCountry.getAttribute("alternativeName") ?: ""
+        this.abbreviation = xmlCountry.getAttribute("abbreviation") ?: ""
+        this.alpha3 = xmlCountry.getAttribute("alpha3") ?: ""
+        val isoValue = xmlCountry.getAttribute("iso")
+        this.iso = isoValue?.toIntOrNull() ?: 0
+        this.cultureInfoCode = xmlCountry.getAttribute("cultureInfoCode") ?: ""
     }
 
     fun clone(): Country {
@@ -37,14 +37,14 @@ class Country :  Comparable<Country> {
             var c: Country = this
             return c
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
 
 
     override fun toString(): String {
-        return this.Abbreviation.toString()
+        return this.abbreviation.toString()
     }
 
 
@@ -62,16 +62,16 @@ class Country :  Comparable<Country> {
     }
 
     override fun hashCode(): Int {
-        return this.ISO.hashCode()
+        return this.iso.hashCode()
     }
 
     fun equals(other: Country?): Boolean {
         if (other == null) return false
-        return (ISO == other.ISO)
+        return (iso == other.iso)
     }
     override fun compareTo(other: Country): Int {
         if (other == null) return 1;
-        return (ISO.compareTo(other.ISO));
+        return (iso.compareTo(other.iso));
     }
 
 

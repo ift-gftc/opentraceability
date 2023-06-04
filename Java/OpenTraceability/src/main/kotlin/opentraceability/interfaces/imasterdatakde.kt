@@ -1,14 +1,15 @@
-package interfaces
+package opentraceability.interfaces
 
 
 import org.w3c.dom.Element
 import org.json.JSONObject
+import kotlin.reflect.KType
 
 interface IMasterDataKDE {
 
-    var Namespace: String
-    var Name: String
-    var ValueType: Class<*>?
+    var namespace: String
+    var name: String
+    var valueType: KType
 
     fun setFromGS1WebVocabJson(json: JSONObject)
     fun getGS1WebVocabJson(): JSONObject?

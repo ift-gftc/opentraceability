@@ -1,7 +1,7 @@
-package models.events
+package opentraceability.models.events
 
-import models.identifiers.*
-import utility.Measurement
+import opentraceability.models.identifiers.*
+import opentraceability.utility.Measurement
 
 class EventProduct {
 

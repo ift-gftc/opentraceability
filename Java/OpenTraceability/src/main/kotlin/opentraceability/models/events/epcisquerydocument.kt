@@ -1,4 +1,4 @@
-package models.events
+package opentraceability.models.events
 
 class EPCISQueryDocument : EPCISBaseDocument() {
     var QueryName: String = ""

@@ -1,8 +1,8 @@
-package utility
+package opentraceability.utility
 
 class DictionaryExtensions {
     companion object {
-        fun<TValue, TKey> Reverse(source: MutableMap<TKey, TValue>): MutableMap<TValue, TKey>{
+        fun<TValue, TKey> reverse(source: MutableMap<TKey, TValue>): MutableMap<TValue, TKey>{
             var dictionary: MutableMap<TValue, TKey> = mutableMapOf()
 
             source.forEach { entry ->
@@ -14,4 +14,8 @@ class DictionaryExtensions {
             return dictionary
         }
     }
+}
+
+public fun <K, V> MutableMap<K, V>.reverse(): MutableMap<V, K> {
+    return DictionaryExtensions.reverse(this)
 }

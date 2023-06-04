@@ -1,7 +1,7 @@
-package models.events
+package opentraceability.models.events
 
-import interfaces.IEventKDE
-import utility.attributes.*
+import opentraceability.interfaces.IEventKDE
+import opentraceability.utility.attributes.*
 import java.util.*
 import java.net.URI
 import java.time.OffsetDateTime
@@ -17,9 +17,9 @@ class ErrorDeclaration {
 
     @OpenTraceabilityArrayAttribute("correctiveEventID")
     @OpenTraceabilityAttribute("", "correctiveEventIDs")
-    var CorrectingEventIDs: ArrayList<String>? = null
+    var CorrectingEventIDs: MutableList<String>? = null
 
     @OpenTraceabilityExtensionElementsAttribute
-    var ExtensionKDEs: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
+    var ExtensionKDEs: MutableList<IEventKDE> = mutableListOf()
 
 }

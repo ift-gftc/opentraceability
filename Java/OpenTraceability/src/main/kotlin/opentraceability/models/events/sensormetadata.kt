@@ -1,7 +1,7 @@
-package models.events
+package opentraceability.models.events
 
-import interfaces.IEventKDE
-import utility.attributes.*
+import opentraceability.interfaces.IEventKDE
+import opentraceability.utility.attributes.*
 import java.util.*
 import java.net.URI
 import java.time.OffsetDateTime
@@ -10,36 +10,36 @@ class SensorMetaData {
 
     @OpenTraceabilityJsonAttribute("time")
     @OpenTraceabilityAttribute("","@time")
-    var TimeStamp: OffsetDateTime? = null
+    var timeStamp: OffsetDateTime? = null
 
     @OpenTraceabilityJsonAttribute("deviceID")
     @OpenTraceabilityAttribute("","@deviceID")
-    var DeviceID: URI? = null
+    var deviceID: URI? = null
 
     @OpenTraceabilityJsonAttribute("deviceMetadata")
     @OpenTraceabilityAttribute("","@deviceMetadata")
-    var DeviceMetaData: URI? = null
+    var deviceMetaData: URI? = null
 
     @OpenTraceabilityJsonAttribute("rawData")
     @OpenTraceabilityAttribute("","@rawData")
-    var RawData: URI? = null
+    var rawData: URI? = null
 
     @OpenTraceabilityJsonAttribute("startTime")
     @OpenTraceabilityAttribute("","@startTime")
-    var StartTime: OffsetDateTime? = null
+    var startTime: OffsetDateTime? = null
 
     @OpenTraceabilityJsonAttribute("bizRules")
     @OpenTraceabilityAttribute("","@bizRules")
-    var BizRules: URI? = null
+    var bizRules: URI? = null
 
     @OpenTraceabilityJsonAttribute("dataProcessingMethod")
     @OpenTraceabilityAttribute("","@dataProcessingMethod")
-    var DataProcessingMethod: URI? = null
+    var dataProcessingMethod: URI? = null
 
     @OpenTraceabilityJsonAttribute("endTime")
     @OpenTraceabilityAttribute("","@endTime")
-    var EndTime: OffsetDateTime? = null
+    var endTime: OffsetDateTime? = null
 
     @OpenTraceabilityExtensionAttributesAttribute
-    var ExtensionAttributes: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
+    var extensionAttributes: MutableList<IEventKDE> = mutableListOf()
 }

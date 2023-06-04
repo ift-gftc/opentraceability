@@ -1,5 +1,5 @@
-package interfaces
+package opentraceability.interfaces
 
 interface ITransformationEvent : IEvent {
-    var TransformationID: String?
+    var transformationID: String?
 }

@@ -1,16 +1,16 @@
-package queries
+package opentraceability.queries
 
-import models.identifiers.*
+import opentraceability.models.identifiers.*
 import org.apache.http.client.utils.URIBuilder
 import java.net.*
 import java.time.OffsetDateTime
 import kotlin.reflect.KMutableProperty
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.full.memberProperties
 import java.net.URLEncoder
 import java.time.format.DateTimeFormatter
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.*
+import kotlin.reflect.typeOf
 
 
 class EPCISQueryParameters {
@@ -48,16 +48,16 @@ class EPCISQueryParameters {
 
             val prop = propMapping[key]
             if (prop != null) {
-                when {
-                    prop.returnType.isSubtypeOf(OffsetDateTime::class.createType(nullable = true)) -> {
+                when (prop.returnType) {
+                    typeOf<OffsetDateTime>() -> {
                         val dt = OffsetDateTime.parse(value)
                         prop.setter.call(query, dt)
                     }
-                    prop.returnType.isSubtypeOf(List::class.createType(arguments = listOf(String::class.createType())).withNullability(true)) -> {
+                    typeOf<MutableList<String>>() -> {
                         val values = value.split("|")
                         prop.setter.call(query, values.toMutableList())
                     }
-                    prop.returnType.isSubtypeOf(List::class.createType(arguments = listOf(URI::class.createType())).withNullability(true)) -> {
+                    typeOf<MutableList<URI>>() -> {
                         val values = value.split("|").map { URI.create(it) }
                         prop.setter.call(query, values.toMutableList())
                     }
@@ -80,14 +80,6 @@ class EPCISQueryParameters {
                         value?.let { queryParameters.add("${prop.name}=${URLEncoder.encode(it.toString(), "UTF-8")}") }
                     }
                     is MutableList<*> -> {
-                        value.let {
-                            if (it.isNotEmpty()) {
-                                val encodedValues = it.map { URLEncoder.encode(it.toString(), "UTF-8") }
-                                queryParameters.add("${prop.name}=${encodedValues.joinToString("|")}")
-                            }
-                        }
-                    }
-                    is MutableList<URI> -> {
                         value.let {
                             if (it.isNotEmpty()) {
                                 val encodedValues = it.map { URLEncoder.encode(it.toString(), "UTF-8") }
@@ -122,16 +114,6 @@ class EPCISQueryParameters {
                             }
                         }
                     }
-                    is MutableList<URI> -> {
-                        if (otherValue.isNotEmpty()) {
-                            val list = prop.getter.call(this.query) as? MutableList<URI>
-                            if (list == null) {
-                                prop.setter.call(this.query, otherValue.toMutableList())
-                            } else {
-                                list.addAll(otherValue as Collection<URI>)
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -150,7 +132,7 @@ class EPCISQueryParameters {
                         queryParameters.add(queryParam)
                     }
                 }
-                is List<*> -> {
+                is MutableList<*> -> {
                     if (value.isNotEmpty()) {
                         val encodedValues = value.filterIsInstance<String>()
                             .map { URLEncoder.encode(it, "UTF-8") }

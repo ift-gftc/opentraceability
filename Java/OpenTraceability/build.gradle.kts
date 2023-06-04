@@ -20,6 +20,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.0") // or whichever is the latest version
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation("com.worldturner.medeia:medeia-validator-jackson:1.1.1")
+    implementation("com.liferay:com.github.fge.json.schema.validator:2.2.3.LIFERAY-PATCHED-2")
 
     testImplementation(kotlin("test"))
 }

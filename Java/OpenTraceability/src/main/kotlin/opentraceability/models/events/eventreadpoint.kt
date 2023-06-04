@@ -1,6 +1,6 @@
-package models.events
+package opentraceability.models.events
 
-import utility.attributes.OpenTraceabilityAttribute
+import opentraceability.utility.attributes.OpenTraceabilityAttribute
 import java.net.URI
 
 class EventReadPoint {

@@ -1,35 +1,35 @@
-package interfaces
+package opentraceability.interfaces
 
-import models.events.kdes.CertificationList
-import models.events.*
+import opentraceability.models.events.kdes.CertificationList
+import opentraceability.models.events.*
 import java.time.*
 import java.net.URI
 
 interface IEvent {
 
-    var EventID: URI?
-    var CertificationInfo: String?
-    var EventTime: OffsetDateTime?
-    var EventTimeZoneOffset: Duration?
-    var RecordTime: OffsetDateTime?
-    var EventType: EventType
-    var Action: EventAction?
-    var BusinessStep: URI?
-    var Disposition: URI?
-    var PersistentDisposition: PersistentDisposition?
-    var ErrorDeclaration: ErrorDeclaration?
-    var Location: EventLocation?
-    var ReadPoint: EventReadPoint?
-    var BizTransactionList: MutableList<EventBusinessTransaction>
-    var SourceList: MutableList<EventSource>
-    var DestinationList: MutableList<EventDestination>
-    var KDEs: MutableList<IEventKDE>
-    var SensorElementList: MutableList<SensorElement>
-    var Products: MutableList<EventProduct>
-    var CertificationList: CertificationList?
+    var eventID: URI?
+    var certificationInfo: String?
+    var eventTime: OffsetDateTime?
+    var eventTimeZoneOffset: Duration?
+    var recordTime: OffsetDateTime?
+    var eventType: EventType
+    var action: EventAction?
+    var businessStep: URI?
+    var disposition: URI?
+    var persistentDisposition: PersistentDisposition?
+    var errorDeclaration: ErrorDeclaration?
+    var location: EventLocation?
+    var readPoint: EventReadPoint?
+    var bizTransactionList: MutableList<EventBusinessTransaction>
+    var sourceList: MutableList<EventSource>
+    var destinationList: MutableList<EventDestination>
+    var kdes: MutableList<IEventKDE>
+    var sensorElementList: MutableList<SensorElement>
+    var products: MutableList<EventProduct>
+    var certificationList: CertificationList?
 
-    fun <T: IEventKDE> GetKDE(clazz: Class<T>, ns: String, name: String): T?
-    fun <T: IEventKDE> GetKDE(clazz: Class<T>): T?
-    fun AddProduct(product: EventProduct)
-    fun GetILMD(): EventILMD?
+    fun <T: IEventKDE> getKDE(clazz: Class<T>, ns: String, name: String): T?
+    fun <T: IEventKDE> getKDE(clazz: Class<T>): T?
+    fun addProduct(product: EventProduct)
+    fun grabILMD(): EventILMD?
 }

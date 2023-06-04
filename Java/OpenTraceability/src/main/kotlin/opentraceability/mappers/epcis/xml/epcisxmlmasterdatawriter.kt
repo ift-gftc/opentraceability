@@ -1,32 +1,39 @@
-package mappers.epcis.xml
+package opentraceability.mappers.epcis.xml
 
-import interfaces.IVocabularyElement
-import mappers.OTMappingTypeInformation
-import models.common.LanguageString
-import models.identifiers.*
-import models.events.*
-import models.events.EPCISBaseDocument
+import opentraceability.interfaces.IVocabularyElement
+import opentraceability.mappers.OTMappingTypeInformation
+import opentraceability.models.common.LanguageString
+import opentraceability.models.identifiers.*
+import opentraceability.models.events.*
+import opentraceability.models.events.EPCISBaseDocument
+import opentraceability.utility.*
 import org.w3c.dom.Element
-import utility.attributes.*
+import opentraceability.utility.attributes.*
+import org.apache.commons.codec.language.bm.Lang
+import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.typeOf
 
 class EPCISXmlMasterDataWriter {
     companion object {
 
         fun WriteMasterData(xDocument: Element, doc: EPCISBaseDocument) {
-            if (doc.MasterData.size > 0) {
+            if (doc.masterData.size > 0) {
                 var xEPCISHeader = xDocument.element("EPCISHeader")
                 if (xEPCISHeader == null) {
-                    xDocument.add(Element("EPCISHeader", Element("extension", Element("EPCISMasterData", Element("VocabularyList")))))
+                    xDocument.addElement("EPCISHeader").addElement("extension").addElement("EPCISMasterData").addElement("VocabularyList")
                 } else {
-                    xEPCISHeader.add(Element("extension", Element("EPCISMasterData", Element("VocabularyList"))))
+                    xEPCISHeader.addElement("extension").addElement("EPCISMasterData").addElement("VocabularyList")
                 }
 
-                val xVocabList = xDocument.xpathSelectElement("EPCISHeader/extension/EPCISMasterData/VocabularyList")
+                val xVocabList = xDocument.getFirstElementByXPath("EPCISHeader/extension/EPCISMasterData/VocabularyList")
                     ?: throw Exception("Failed to grab the element EPCISHeader/extension/EPCISMasterData/VocabularyList.")
 
-                for (mdList in doc.MasterData.groupBy { it.EPCISType }) {
+                for (mdList in doc.masterData.groupBy { it.epcisType }) {
                     if (mdList.key != null) {
-                        WriteMasterDataList(mdList.value, xVocabList, mdList.key)
+                        WriteMasterDataList(mdList.value.toMutableList(), xVocabList, mdList.key!!)
                     } else {
                         throw Exception("There are master data vocabulary elements where the Type is NULL.")
                     }
@@ -36,117 +43,117 @@ class EPCISXmlMasterDataWriter {
 
         fun WriteMasterDataList(data: MutableList<IVocabularyElement>, xVocabList: Element, type: String) {
             if (data.isNotEmpty()) {
-                val xVocab = Element("Vocabulary", XAttribute("type", type), Element("VocabularyElementList"))
-                val xVocabEleList = xVocab.element("VocabularyElementList") ?: throw Exception("Failed to grab the element VocabularyElementList")
+                val xVocab = createXmlElement(("Vocabulary"))
+                xVocab.setAttribute("type", type)
+                val xVocabEleList = xVocab.addElement("VocabularyElementList")
 
                 for (md in data) {
                     val xMD = WriteMasterDataObject(md)
-                    xVocabEleList.add(xMD)
+                    xVocabEleList.addElement(xMD)
                 }
 
-                xVocabList.add(xVocab)
+                xVocabList.addElement(xVocab)
             }
         }
 
         fun WriteMasterDataObject(md: IVocabularyElement): Element {
-            val xVocabEle = Element("VocabularyElement")
-            xVocabEle.add(XAttribute("id", md.ID ?: ""))
+            val xVocabEle = createXmlElement("VocabularyElement")
+            xVocabEle.setAttribute("id", md.id)
 
-            val mappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md::class.java)
+            val mappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md::class.starProjectedType as KClass<*>)
 
-            for (mapping in mappings.Properties) {
+            for (mapping in mappings.properties) {
                 val id = mapping.Name
                 val p = mapping.Property
 
-                val o = p.get(md)
-
+                val o = p.getter.call(md)
 
                 if (o != null) {
                     if (id.isEmpty()) {
-                        val subMappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(o::class.java)
-                        for (subMapping in subMappings.Properties) {
+                        val subMappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(o::class.starProjectedType as KClass<*>)
+                        for (subMapping in subMappings.properties) {
                             val subID = subMapping.Name
                             val subProperty = subMapping.Property
-                            val subObj = subProperty.get(o)
+                            val subObj = subProperty.getter.call(o)
                             if (subObj != null) {
-                                if (subObj is MutableList<LanguageString>) {
-                                    val l = subObj
-                                    val str = l.firstOrNull()?.Value
+                                if (subObj::class.starProjectedType == typeOf<MutableList<LanguageString>>()) {
+                                    val l = subObj as MutableList<LanguageString>
+                                    val str = l.firstOrNull()?.value
                                     if (str != null) {
-                                        val xAtt = Element("attribute", XAttribute("id", subID))
-                                        xAtt.value = str
-                                        xVocabEle.add(xAtt)
+                                        val xAtt = xVocabEle.addElement("attribute")
+                                        xAtt.nodeValue = str
+                                        xAtt.setAttribute("id", subID)
                                     }
                                 } else {
                                     val str = subObj.toString()
                                     if (str.isNotEmpty()) {
-                                        val xAtt = Element("attribute", XAttribute("id", subID))
-                                        xAtt.value = str
-                                        xVocabEle.add(xAtt)
+                                        val xAtt = xVocabEle.addElement("attribute")
+                                        xAtt.nodeValue = str
+                                        xAtt.setAttribute("id", subID)
                                     }
                                 }
                             }
                         }
-                    } else if (p.getAnnotation(OpenTraceabilityObjectAttribute::class.java) != null) {
-                        val xAtt = Element("attribute", XAttribute("id", id))
-                        WriteObject(xAtt, p.type, o)
-                        xVocabEle.add(xAtt)
-                    } else if (p.getAnnotation(OpenTraceabilityArrayAttribute::class.java) != null) {
-                        val l = o as List<*>
+                    } else if (p.annotations.filterIsInstance<OpenTraceabilityObjectAttribute>().isNotEmpty()) {
+                        val xAtt = xVocabEle.addElement("attribute")
+                        xAtt.setAttribute("id", id)
+                        WriteObject(xAtt, p.returnType as KClass<*>, o)
+                    } else if (p.annotations.filterIsInstance<OpenTraceabilityArrayAttribute>().isNotEmpty()) {
+                        val l = o as MutableList<*>
                         for (i in l) {
                             val str = i?.toString()
                             if (!str.isNullOrEmpty()) {
-                                val xAtt = Element("attribute", XAttribute("id", id))
-                                xAtt.value = str
-                                xVocabEle.add(xAtt)
+                                val xAtt = xVocabEle.addElement("attribute")
+                                xAtt.setAttribute("id", id)
+                                xAtt.nodeValue = str
                             }
                         }
-                    } else if (o is MutableList<LanguageString>) {
-                        val l = o
-                        val str = l.firstOrNull()?.Value
+                    } else if (o::class.starProjectedType == typeOf<MutableList<LanguageString>>()) {
+                        val l = o as MutableList<LanguageString>
+                        val str = l.firstOrNull()?.value
                         if (str != null) {
-                            val xAtt = Element("attribute", XAttribute("id", id))
-                            xAtt.value = str
-                            xVocabEle.add(xAtt)
+                            val xAtt = xVocabEle.addElement("attribute")
+                            xAtt.setAttribute("id", id)
+                            xAtt.nodeValue = str
                         }
                     } else {
                         val str = o.toString()
                         if (str.isNotEmpty()) {
-                            val xAtt = Element("attribute", XAttribute("id", id))
-                            xAtt.value = str
-                            xVocabEle.add(xAtt)
+                            val xAtt = xVocabEle.addElement("attribute")
+                            xAtt.setAttribute("id", id)
+                            xAtt.nodeValue = str
                         }
                     }
                 }
 
             }
 
-            for (kde in md.KDEs) {
+            for (kde in md.kdes) {
                 val xKDE = kde.getEPCISXml()
                 if (xKDE != null) {
-                    xVocabEle.add(xKDE)
+                    xVocabEle.addElement(xKDE)
                 }
             }
 
             return xVocabEle
         }
 
-        fun WriteObject(x: Element, t: Class<*>, o: Any) {
-            for (property in t.declaredFields) {
-                val value = property.get(o)
+        fun WriteObject(x: Element, t: KClass<*>, o: Any) {
+            for (property in t.memberProperties) {
+                val value = property.getter.call(o)
                 if (value != null) {
-                    val xmlAtt = property.getAnnotation(OpenTraceabilityAttribute::class.java)
+                    val xmlAtt = property.annotations.filterIsInstance<OpenTraceabilityAttribute>().firstOrNull()
                     if (xmlAtt != null) {
-                        val xChild = Element(xmlAtt.Name)
-                        if (property.getAnnotation(OpenTraceabilityObjectAttribute::class.java) != null) {
-                            WriteObject(xChild, property.type, value)
+                        val xChild = x.addElementNS(xmlAtt.ns, xmlAtt.name)
+                        if (property.annotations.filterIsInstance<OpenTraceabilityObjectAttribute>().isNotEmpty())
+                        {
+                            WriteObject(xChild, property.returnType as KClass<*>, value)
                         } else {
                             val str = value.toString()
                             if (str != null) {
-                                xChild.value = str
+                                xChild.nodeValue = str
                             }
                         }
-                        x.add(xChild)
                     }
                 }
             }

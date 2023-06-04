@@ -1,8 +1,8 @@
-package interfaces
+package opentraceability.interfaces
 
-import models.identifiers.*
+import opentraceability.models.identifiers.*
 
 interface IAggregationEvent : IEvent {
 
-    var ParentID: EPC?
+    var parentID: EPC?
 }

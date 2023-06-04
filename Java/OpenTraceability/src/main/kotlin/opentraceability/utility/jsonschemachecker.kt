@@ -1,43 +1,41 @@
-package utility
+package opentraceability.utility
 
-import com.fasterxml.jackson.databind.jsonschema.JsonSchema
-import java.io.IOException
-import java.net.URI
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.fge.jackson.JsonLoader
+import com.github.fge.jsonschema.core.exceptions.ProcessingException
+import com.github.fge.jsonschema.main.JsonSchema
+import com.github.fge.jsonschema.main.JsonSchemaFactory
+import com.worldturner.medeia.schema.validation.SchemaValidator
+import kotlinx.coroutines.runBlocking
+import org.everit.json.schema.Validator
+import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 
 object JsonSchemaChecker {
-    private val schemaCache: MutableMap<String, JsonSchema> = ConcurrentHashMap()
+    private val schemaCache: MutableMap<String, JsonNode> = mutableMapOf()
 
-    @Throws(IOException::class, ProcessingException::class)
-    fun isValid(jsonStr: String, schemaURL: String): Pair<Boolean, List<String>> {
-        val schema: JsonSchema = schemaCache.computeIfAbsent(schemaURL) { loadSchema(schemaURL) }
-        val processingReport: ProcessingReport = schema.validate(URI.create(schemaURL), jsonStr)
-        return if (processingReport.isSuccess) {
-            Pair(true, emptyList())
-        } else {
-            Pair(false, extractErrors(processingReport))
+    fun isValid(jsonStr: String, schemaURL: String, errors: MutableList<String>): Boolean {
+        val schemaNode: JsonNode = getSchema(schemaURL)
+        val objectMapper = ObjectMapper()
+        val jsonNode: JsonNode = objectMapper.readTree(jsonStr)
+        val schema: JsonSchema = JsonSchemaFactory.byDefault().getJsonSchema(schemaNode)
+
+        return try {
+            schema.validate(jsonNode)
+            return true
+        } catch (e: ProcessingException) {
+            errors.add(e.message ?: "")
+            return false
         }
     }
 
-    @Throws(ProcessingMessageException::class)
-    fun extractErrors(processingReport: ProcessingReport): List<String> {
-        val errorMessages: MutableList<String> = mutableListOf()
-        val iterator: ProcessingReportIterator = toIterable(processingReport).iterator()
-        while (iterator.hasNext()) {
-            val processingMessage: ProcessingMessage = iterator.next()
-            val logLevel: LogLevel = processingMessage.logLevel
-            if (logLevel == LogLevel.ERROR || logLevel == LogLevel.FATAL) {
-                val exception: ProcessingReportException = ProcessingReportException.from(processingMessage)
-                val errorMessage: String = exception.message ?: ""
-                errorMessages.add(errorMessage)
-            }
-        }
-        return errorMessages
-    }
 
-    @Throws(IOException::class, ProcessingException::class)
-    fun loadSchema(schemaURL: String): JsonSchema {
-        val schemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
-        return schemaFactory.getJsonSchema(URI(schemaURL))
+    private fun getSchema(schemaUrl: String): JsonNode {
+        return schemaCache.getOrPut(schemaUrl) {
+            val schemaJson: String = URL(schemaUrl).readText()
+            JsonLoader.fromString(schemaJson)
+        }
     }
 }
+

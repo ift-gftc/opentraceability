@@ -1,15 +1,15 @@
-package queries
+package opentraceability.queries
 
 import java.util.*
-import models.events.EPCISQueryDocument
+import opentraceability.models.events.EPCISQueryDocument
 
 class EPCISQueryResults {
 
     var Document: EPCISQueryDocument? = null
 
-    var StackTrace: ArrayList<EPCISQueryStackTraceItem> = ArrayList<EPCISQueryStackTraceItem>()
+    var StackTrace: MutableList<EPCISQueryStackTraceItem> = mutableListOf()
 
-    var Errors: ArrayList<EPCISQueryError> = ArrayList<EPCISQueryError>()
+    var Errors: MutableList<EPCISQueryError> = mutableListOf()
 
     fun merge(results: EPCISQueryResults) {
 

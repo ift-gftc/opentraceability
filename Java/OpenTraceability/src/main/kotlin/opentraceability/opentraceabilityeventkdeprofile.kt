@@ -1,3 +1,5 @@
+package opentraceability
+
 class OpenTraceabilityEventKDEProfile {
     var XPath_V1: String = ""
     var XPath_V2: String = ""

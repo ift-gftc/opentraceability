@@ -1,24 +1,24 @@
-package models.common
+package opentraceability.models.common
 
-import Constants
-import utility.attributes.*
+import opentraceability.Constants
+import opentraceability.utility.attributes.*
 import java.time.OffsetDateTime
 
 class StandardBusinessDocumentHeader {
 
-    @OpenTraceabilityAttribute(Constants.SBDH_NAMESPACE, "HeaderVersion")
+    @OpenTraceabilityAttribute(opentraceability.Constants.SBDH_NAMESPACE, "HeaderVersion")
     var HeaderVersion: String = ""
 
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityAttribute(Constants.SBDH_NAMESPACE, "Sender")
+    @OpenTraceabilityAttribute(opentraceability.Constants.SBDH_NAMESPACE, "Sender")
     var Sender: SBDHOrganization? = null
 
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityAttribute(Constants.SBDH_NAMESPACE, "Receiver")
+    @OpenTraceabilityAttribute(opentraceability.Constants.SBDH_NAMESPACE, "Receiver")
     var Receiver: SBDHOrganization? = null
 
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityAttribute(Constants.SBDH_NAMESPACE, "DocumentIdentification")
+    @OpenTraceabilityAttribute(opentraceability.Constants.SBDH_NAMESPACE, "DocumentIdentification")
     var DocumentIdentification: SBDHDocumentIdentification? = null
 
     companion object {

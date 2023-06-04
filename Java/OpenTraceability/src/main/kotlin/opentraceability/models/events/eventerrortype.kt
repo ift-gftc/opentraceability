@@ -1,4 +1,4 @@
-package models.events
+package opentraceability.models.events
 
 enum class EventErrorType(val value: Int) {
     Unknown(0),

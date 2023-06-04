@@ -1,4 +1,4 @@
-package utility
+package opentraceability.utility
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -13,7 +13,7 @@ object StaticData {
      */
     fun readData(path: String): String {
         val result = StringBuilder()
-        val inputStream = javaClass.classLoader.getResourceAsStream("OpenTraceability.Utility.Data.$path")
+        val inputStream = javaClass.classLoader.getResourceAsStream("opentraceability.utility.data.$path")
             ?: throw Exception("Failed to read static data from embedded resource at path $path")
 
         BufferedReader(InputStreamReader(inputStream)).use { reader ->

@@ -1,19 +1,19 @@
-package models.events
+package opentraceability.models.events
 
-import utility.CBVAttribute
-import utility.EnumUtil
-import utility.attributes.*
+import opentraceability.utility.CBVAttribute
+import opentraceability.utility.EnumUtil
+import opentraceability.utility.attributes.*
 import java.net.URI
 
 class EventDestination {
 
     @OpenTraceabilityJsonAttribute("type")
     @OpenTraceabilityAttribute("","@type")
-    var Type: URI? = null
+    var type: URI? = null
 
     @OpenTraceabilityJsonAttribute("destination")
     @OpenTraceabilityAttribute("","text()")
-    var Value: String? = null
+    var value: String? = null
 
     var ParsedType: EventDestinationType
         get() {
@@ -32,7 +32,7 @@ class EventDestination {
         set(value) {
             val t = EnumUtil.GetEnumAttributes<EventDestinationType, CBVAttribute>(value).firstOrNull { it.value.startsWith("urn") }?.value
             if (!t.isNullOrBlank()) {
-                this.Type = URI(t)
+                this.type = URI(t)
             }
         }
 

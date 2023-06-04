@@ -1,91 +1,62 @@
-package utility
+package opentraceability.utility
 
 import org.w3c.dom.Document
+import java.net.URL
+import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.locks.ReentrantLock
 import javax.sql.rowset.spi.XmlReader
+import javax.xml.XMLConstants
+import javax.xml.transform.dom.DOMSource
+import javax.xml.validation.Schema
+import javax.xml.validation.SchemaFactory
+import javax.xml.validation.Validator
 
 
 class XmlSchemaChecker {
-    private val cache: MutableMap<String, CachedXmlSchema> = mutableMapOf()
 
-    fun validate(xml: Document, schemaURL: String, error: AtomicReference<String?>): Boolean {
-        val validationError = StringBuilder()
-        error.set(null)
+    companion object {
+        private val cache: MutableMap<String, Schema> = mutableMapOf()
+        private val lock = Object()
 
-        var bFileOk = false
-        var stringReader: TextReader? = null
-        var reader: XmlReader? = null
+        fun validate(xml: Document, schemaURL: String, error: AtomicReference<String?>): Boolean
+        {
+            error.set(null);
+            try
+            {
+                // Create a validator from the schema
+                val validator = getSchemaValidator(schemaURL)
+                    ?: throw Exception("Failed to get validator for schema URL: $schemaURL")
 
-        try {
-            val settings = XmlReaderSettings()
-            settings.validationType = ValidationType.None
-            settings.validationEventHandler = ValidationEventHandler { _, args ->
-                if (args.severity == XmlSeverityType.Warning) {
-                    validationError.appendLine("Warning: Matching schema not found. No validation occurred. ${args.message}")
-                } else {
-                    validationError.appendLine("Validation error: ${args.message}")
+                // Validate the XML document using the validator
+                validator.validate(DOMSource(xml))
+
+                // The XML document is valid against the schema
+                return true
+            }
+            catch (e: Exception)
+            {
+                // The XML document is not valid against the schema
+                error.set(e.stackTraceToString())
+                return false
+            }
+        }
+
+        private fun getSchemaValidator(url: String): Validator?
+        {
+            synchronized(lock)
+            {
+                if (!cache.containsKey(url)) {
+                    // Create a SchemaFactory for XML schema (XSD)
+                    val schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+
+                    // Load the XML schema from the URL
+                    val schema = schemaFactory.newSchema(URL(url))
+
+                    cache[url] = schema;
                 }
             }
 
-            settings.validationType = ValidationType.Schema
-            settings.schemas = getSchema(schemaURL) ?: throw Exception("Failed to load schema with URL $schemaURL")
-
-            var bOk = true
-
-            stringReader = stringReader(xml.toString())
-            reader = XmlReader.create(stringReader, settings)
-
-            do {
-                bOk = reader.read()
-            } while (bOk)
-
-            reader.close()
-            reader.dispose()
-            reader = null
-
-            bFileOk = true
-        } catch (ex: OperationCanceledException) {
-            throw ex
-        } catch (notFoundException: FileNotFoundException) {
-            OTLogger.error(notFoundException)
-        } catch (ex: Exception) {
-            OTLogger.error(ex)
-        } finally {
-            if (reader != null) {
-                reader.close()
-                reader.dispose()
-                reader = null
-            }
-
-            if (stringReader != null) {
-                stringReader.close()
-                stringReader.dispose()
-                stringReader = null
-            }
-
-            error.set(validationError.toString())
-            bFileOk = error.get()?.isNullOrBlank() ?: false
+            return cache[url]?.newValidator()
         }
-
-        return bFileOk
-    }
-
-    fun getSchema(url: String): XmlSchemaSet? {
-        if (!cache.containsKey(url) || (DateTime.UtcNow - cache[url]?.lastUpdated).totalHours > 1) {
-            val sc = XmlSchemaSet()
-            sc.xmlResolver = XmlUrlResolver()
-
-            val schema = XmlSchema.read(XmlReader.create(url), ValidationEventHandler { _, e -> println(e.message) })
-
-            if (schema == null) throw NullPointerException("Failed to load the schema from the URL $url")
-
-            sc.add(schema)
-
-            val cachedSchema = CachedXmlSchema()
-            cachedSchema.url = url
-            cachedSchema.schemaSet = sc
-            cache[url] = cachedSchema
-        }
-
-        return cache[url]?.schemaSet
     }
 }

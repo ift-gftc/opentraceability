@@ -1,21 +1,25 @@
-package mappers.epcis.xml
+package opentraceability.mappers.epcis.xml
 
-import interfaces.IEvent
-import mappers.OpenTraceabilityXmlMapper
-import models.common.StandardBusinessDocumentHeader
-import models.events.*
-import utility.*
+import opentraceability.interfaces.IEvent
+import opentraceability.mappers.OpenTraceabilityXmlMapper
+import opentraceability.models.common.StandardBusinessDocumentHeader
+import opentraceability.models.events.*
+import opentraceability.utility.*
 import java.lang.reflect.Type
 import org.w3c.dom.*
 import opentraceability.mappers.epcis.*
-import utility.StringExtensions.tryConvertToDateTimeOffset
+import opentraceability.utility.StringExtensions.tryConvertToDateTimeOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.*
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.reflect.full.createInstance
 
 class EPCISDocumentBaseXMLMapper {
     companion object {
 
         var _schemaChecker: XmlSchemaChecker = XmlSchemaChecker()
-
 
         inline fun <reified T : EPCISBaseDocument> readXml(strValue: String): Pair<T, Document > {
 
@@ -32,41 +36,42 @@ class EPCISDocumentBaseXMLMapper {
                 if (attribute.name == "creationDate" || attribute.name == "schemaVersion") {
                     continue
                 } else {
-                    if (attribute?.namespaceURI == Constants.XMLNS_NAMEPSACE) {
-                        document.Namespaces[attribute.localName] = attribute.value
+                    if (attribute?.namespaceURI == opentraceability.Constants.XMLNS_NAMEPSACE) {
+                        document.namespaces[attribute.localName] = attribute.value
                     } else {
-                        document.Attributes[attribute.name.toString()] = attribute.value
+                        document.attributes[attribute.name.toString()] = attribute.value
                     }
                 }
             }
 
-            if (document.Namespaces.values.contains(Constants.EPCIS_2_NAMESPACE) || document.Namespaces.values.contains(
-                    Constants.EPCISQUERY_2_NAMESPACE
+            if (document.namespaces.values.contains(opentraceability.Constants.EPCIS_2_NAMESPACE) || document.namespaces.values.contains(
+                    opentraceability.Constants.EPCISQUERY_2_NAMESPACE
                 )
             ) {
-                document.EPCISVersion = EPCISVersion.V2
-            } else if (document.Namespaces.values.contains(Constants.EPCIS_1_NAMESPACE) || document.Namespaces.values.contains(
-                    Constants.EPCISQUERY_1_NAMESPACE
+                document.epcisVersion = EPCISVersion.V2
+            } else if (document.namespaces.values.contains(opentraceability.Constants.EPCIS_1_NAMESPACE) || document.namespaces.values.contains(
+                    opentraceability.Constants.EPCISQUERY_1_NAMESPACE
                 )
             ) {
-                document.EPCISVersion = EPCISVersion.V1
+                document.epcisVersion = EPCISVersion.V1
             }
-            if (document.EPCISVersion == null) {
-                throw Exception("Failed to determine the EPCIS version of the XML document. Must contain a namespace with either '${Constants.EPCIS_2_NAMESPACE}' or '${Constants.EPCIS_1_NAMESPACE}' or '${Constants.EPCISQUERY_2_NAMESPACE}' or '${Constants.EPCISQUERY_1_NAMESPACE}'")
+
+            if (document.epcisVersion == null) {
+                throw Exception("Failed to determine the EPCIS version of the XML document. Must contain a namespace with either '${opentraceability.Constants.EPCIS_2_NAMESPACE}' or '${opentraceability.Constants.EPCIS_1_NAMESPACE}' or '${opentraceability.Constants.EPCISQUERY_2_NAMESPACE}' or '${opentraceability.Constants.EPCISQUERY_1_NAMESPACE}'")
             }
+
             val creationDateAttributeStr = xDoc.documentElement.getAttribute("creationDate")
             if (!creationDateAttributeStr.isNullOrBlank()) {
-                document.CreationDate = creationDateAttributeStr.tryConvertToDateTimeOffset()
+                document.creationDate = creationDateAttributeStr.tryConvertToDateTimeOffset()
             }
-            val xHeader =
-                xDoc.documentElement.getElementsByTagName("EPCISHeader")?.element(Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader")
+
+            val xHeader = xDoc.documentElement.getFirstElementByXPath("EPCISHeader" + opentraceability.Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader")
             if (xHeader != null) {
-                document.Header =
-                    OpenTraceabilityXmlMapper.fromXml<StandardBusinessDocumentHeader>(xHeader, document.EPCISVersion!!)
+                document.header =
+                    OpenTraceabilityXmlMapper.fromXml<StandardBusinessDocumentHeader>(xHeader, document.epcisVersion!!)
             }
 
-
-            val xMasterData = xDoc.documentElement.getElementsByTagName("EPCISHeader")?.element("extension")?.element("EPCISMasterData")
+            val xMasterData = xDoc.documentElement.getFirstElementByXPath("EPCISHeader/extension/EPCISMasterData")
             if (xMasterData != null) {
                 EPCISXmlMasterDataReader.ReadMasterData(document, xMasterData)
             }
@@ -74,94 +79,93 @@ class EPCISDocumentBaseXMLMapper {
         }
 
 
-        fun writeXml(doc: EPCISBaseDocument, epcisNS: Namespace, rootEleName: String): Document {
-            if (doc.EPCISVersion == null) {
-                throw Exception("doc.EPCISVersion is NULL. This must be set to a version.")
+        fun writeXml(doc: EPCISBaseDocument, epcisNS: String, rootEleName: String): Document {
+            if (doc.epcisVersion == null) {
+                throw Exception("doc.epcisVersion is NULL. This must be set to a version.")
             }
 
-            val xDoc = Document(
-                Element(
-                    epcisNS + rootEleName,
-                    doc.Attributes.map { XAttribute(it.key, it.value) }
-                )
-            )
-            if (xDoc.root == null) {
-                throw Exception("Failed to convert EPCIS Document into XML because the XDoc.Root is NULL. This should not happen.")
+            var xDoc = createXmlElementNS(epcisNS, rootEleName)
+            doc.attributes.map {
+                xDoc.setAttribute(it.key, it.value)
             }
 
-            for (ns in doc.Namespaces) {
-                if (ns.value == Constants.CBVMDA_NAMESPACE ||
-                    ns.value == Constants.EPCISQUERY_1_NAMESPACE ||
-                    ns.value == Constants.EPCISQUERY_2_NAMESPACE ||
-                    ns.value == Constants.EPCIS_1_NAMESPACE ||
-                    ns.value == Constants.EPCIS_2_NAMESPACE
+            for (ns in doc.namespaces) {
+                if (ns.value == opentraceability.Constants.CBVMDA_NAMESPACE ||
+                    ns.value == opentraceability.Constants.EPCISQUERY_1_NAMESPACE ||
+                    ns.value == opentraceability.Constants.EPCISQUERY_2_NAMESPACE ||
+                    ns.value == opentraceability.Constants.EPCIS_1_NAMESPACE ||
+                    ns.value == opentraceability.Constants.EPCIS_2_NAMESPACE
                 ) {
                     continue
                 } else {
-                    xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + ns.key, ns.value))
+                    xDoc.setAttributeNS(opentraceability.Constants.XMLNS_XNAMESPACE, ns.key, ns.value)
                 }
             }
 
-            if (doc.CreationDate != null) {
-                xDoc.root.add(XAttribute("creationDate", doc.CreationDate.Value.toString("o")))
+            if (doc.creationDate != null)
+            {
+                xDoc.setAttribute("creationDate", doc.creationDate?.format(ISO_DATE_TIME))
             }
 
-            if (doc.EPCISVersion == EPCISVersion.V2) {
-                xDoc.root.add(XAttribute("schemaVersion", "2.0"))
+            if (doc.epcisVersion == EPCISVersion.V2) {
+                xDoc.setAttribute("schemaVersion", "2.0")
                 if (doc is EPCISQueryDocument) {
-                    xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "epcisq", Constants.EPCISQUERY_2_NAMESPACE))
-                    xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "cbvmda", Constants.CBVMDA_NAMESPACE))
+                    xDoc.setAttributeNS(opentraceability.Constants.XMLNS_XNAMESPACE, "epcisq", opentraceability.Constants.EPCISQUERY_2_NAMESPACE)
+                    xDoc.setAttributeNS(opentraceability.Constants.XMLNS_XNAMESPACE, "cbvmda", opentraceability.Constants.CBVMDA_NAMESPACE)
                 } else {
-                    xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "epcis", Constants.EPCIS_2_NAMESPACE))
-                    xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "cbvmda", Constants.CBVMDA_NAMESPACE))
+                    xDoc.setAttributeNS(opentraceability.Constants.XMLNS_XNAMESPACE, "epcis", opentraceability.Constants.EPCIS_2_NAMESPACE)
+                    xDoc.setAttributeNS(opentraceability.Constants.XMLNS_XNAMESPACE, "cbvmda", opentraceability.Constants.CBVMDA_NAMESPACE)
                 }
-            } else if (doc.EPCISVersion == EPCISVersion.V1) {
-                xDoc.root.add(XAttribute("schemaVersion", "1.2"))
+            } else if (doc.epcisVersion == EPCISVersion.V1) {
+                xDoc.setAttribute("schemaVersion", "1.2")
                 if (doc is EPCISQueryDocument) {
-                    xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "epcisq", Constants.EPCISQUERY_1_NAMESPACE))
-                    xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "cbvmda", Constants.CBVMDA_NAMESPACE))
+                    xDoc.setAttributeNS(opentraceability.Constants.XMLNS_XNAMESPACE, "epcisq", opentraceability.Constants.EPCISQUERY_1_NAMESPACE)
+                    xDoc.setAttributeNS(opentraceability.Constants.XMLNS_XNAMESPACE, "cbvmda", opentraceability.Constants.CBVMDA_NAMESPACE)
                 } else {
-                    xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "epcis", Constants.EPCIS_1_NAMESPACE))
-                    xDoc.root.add(XAttribute(Constants.XMLNS_XNAMESPACE + "cbvmda", Constants.CBVMDA_NAMESPACE))
+                    xDoc.setAttributeNS(opentraceability.Constants.XMLNS_XNAMESPACE, "epcis", opentraceability.Constants.EPCIS_1_NAMESPACE)
+                    xDoc.setAttributeNS(opentraceability.Constants.XMLNS_XNAMESPACE, "cbvmda", opentraceability.Constants.CBVMDA_NAMESPACE)
                 }
             }
 
-            if (doc.Header != null) {
-                val xname = (Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader").toString()
-                val xHeader = OpenTraceabilityXmlMapper.toXml(xname, doc.Header, doc.EPCISVersion!!)
+            if (doc.header != null) {
+                val xname = (opentraceability.Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader").toString()
+                val xHeader = OpenTraceabilityXmlMapper.toXml(xname, doc.header, doc.epcisVersion!!)
                 if (xHeader != null) {
-                    xDoc.root.add(Element("EPCISHeader", xHeader))
+                    var xEPCISHeader = createXmlElement("EPCISHeader")
+                    xEPCISHeader.addElement(xHeader)
+                    xDoc.addElement(xEPCISHeader)
                 }
             }
 
-            EPCISXmlMasterDataWriter.WriteMasterData(xDoc.root, doc)
+            EPCISXmlMasterDataWriter.WriteMasterData(xDoc, doc)
 
-            return xDoc
+            return xDoc.ownerDocument
         }
 
 
-        internal fun getEventTypeFromProfile(xEvent: Element): Type {
-            val actionValue = xEvent.element("action")?.value
+        internal fun getEventTypeFromProfile(xEvent: Element): KClass<IEvent> {
+            val actionValue = xEvent.getFirstElementByXPath("action")?.nodeValue ?: ""
             val action = EventAction.valueOf(actionValue)
-            val bizStep = xEvent.element("bizStep")?.value
-            var eventType = xEvent.name.localName
+            val bizStep = xEvent.getFirstElementByXPath("bizStep")?.nodeValue
+            var eventType = xEvent.nodeName
 
-            if (eventType == "extension") {
-                eventType = xEvent.elements().first().name.localName
+            if (eventType == "extension")
+            {
+                eventType = xEvent.firstChild.nodeName
             }
 
-            val profiles = Setup.Profiles.filter {
+            val profiles = opentraceability.Setup.Profiles.filter {
                 it.EventType.toString() == eventType &&
                         (it.Action == null || it.Action == action) &&
                         (it.BusinessStep == null || it.BusinessStep.lowercase() == bizStep?.lowercase())
-            }.sortedByDescending { it.SpecificityScore }
+            }.sortedByDescending { it.SpecificityScore }.toMutableList()
 
             if (profiles.isEmpty()) {
                 throw Exception("Failed to create event from profile. Type=$eventType and BizStep=$bizStep and Action=$action")
             } else {
                 profiles.filter { it.KDEProfiles != null }.forEach { profile ->
                     profile.KDEProfiles!!.forEach { kdeProfile ->
-                        if (xEvent.queryXPath(kdeProfile.XPath_V1) == null) {
+                        if (xEvent.getFirstElementByXPath(kdeProfile.XPath_V1) == null) {
                             profiles.remove(profile)
                         }
                     }
@@ -177,7 +181,7 @@ class EPCISDocumentBaseXMLMapper {
 
 
         internal fun getEventXName(e: IEvent): String {
-            return when (e.EventType) {
+            return when (e.eventType) {
                 EventType.ObjectEvent -> "ObjectEvent"
                 EventType.TransformationEvent -> "TransformationEvent"
                 EventType.TransactionEvent -> "TransactionEvent"
@@ -195,10 +199,11 @@ class EPCISDocumentBaseXMLMapper {
                 "https://ref.gs1.org/standards/epcis/epcglobal-epcis-2_0.xsd"
             }
 
-            if (!EPCISDocumentBaseXMLMapper.SchemaChecker.validate(xdoc, schemaUrl, { error ->
-                    throw OpenTraceabilitySchemaException("Failed to validate the XML schema for the EPCIS XML.\n$error")
-                })) {
-                throw OpenTraceabilitySchemaException("Failed to validate the XML schema for the EPCIS XML.")
+            var error: AtomicReference<String?> = AtomicReference("")
+            if (!XmlSchemaChecker.validate(xdoc, schemaUrl, error)) {
+                throw Exception("Failed to validate the XML schema for the EPCIS XML.\n$error")
+            } else {
+                throw Exception("Failed to validate the XML schema for the EPCIS XML.")
             }
         }
 
@@ -210,12 +215,12 @@ class EPCISDocumentBaseXMLMapper {
                 "https://ref.gs1.org/standards/epcis/epcglobal-epcis-query-2_0.xsd"
             }
 
-            if (!EPCISDocumentBaseXMLMapper.SchemaChecker.validate(xdoc, schemaUrl, { error ->
-                    throw Exception("Failed to validate the XML schema for the EPCIS XML.\n$error")
-                })) {
+            var error: AtomicReference<String?> = AtomicReference("")
+            if (!XmlSchemaChecker.validate(xdoc, schemaUrl, error)) {
+                throw Exception("Failed to validate the XML schema for the EPCIS XML.\n$error")
+            } else {
                 throw Exception("Failed to validate the XML schema for the EPCIS XML.")
             }
         }
-
     }
 }

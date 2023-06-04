@@ -1,20 +1,20 @@
-package models.events
+package opentraceability.models.events
 
-import interfaces.IEventKDE
+import opentraceability.interfaces.IEventKDE
+import opentraceability.utility.attributes.*
 import java.util.*
-import utility.attributes.*
 
 class SensorElement {
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","sensorMetadata", 0)
-    var MetaData: SensorMetaData? = null
+    var metaData: SensorMetaData? = null
 
     @OpenTraceabilityArrayAttribute
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","sensorReport", 1)
-    var Reports: ArrayList<SensorReport> = ArrayList<SensorReport>()
+    var reports: MutableList<SensorReport> = mutableListOf()
 
     @OpenTraceabilityExtensionElementsAttribute
-    var ExtensionKDEs: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
+    var extensionKDEs: MutableList<IEventKDE> = mutableListOf()
 }

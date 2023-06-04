@@ -1,21 +1,22 @@
-package mappers.epcis.json
+package opentraceability.mappers.epcis.json
 
-import interfaces.*
-import mappers.*
-import models.events.*
+import opentraceability.interfaces.*
+import opentraceability.mappers.*
+import opentraceability.models.events.*
 import org.json.*
+import kotlin.reflect.KClass
 
 class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
 
-    override fun Map(strValue: String): EPCISDocument {
+    override fun map(strValue: String): EPCISDocument {
         try {
             val dic = EPCISDocumentBaseJsonMapper.readJSON<EPCISDocument>(strValue)
 
             var doc = dic.first
             var json = dic.second
 
-            if (doc.EPCISVersion != EPCISVersion.V2) {
-                throw Exception("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
+            if (doc.epcisVersion != EPCISVersion.V2) {
+                throw Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
             }
 
             // read the master data
@@ -30,36 +31,33 @@ class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
                 for (i in 0 until jEventList.length()) {
                     val jEvent = jEventList.optJSONObject(i)
                     val eventType = EPCISDocumentBaseJsonMapper.getEventTypeFromProfile(jEvent)
-                    val e = OpenTraceabilityJsonLDMapper.fromJson(jEvent, eventType, doc.Namespaces) as IEvent
-                    doc.Events.add(e)
+                    val e = OpenTraceabilityJsonLDMapper.fromJson(jEvent, eventType as KClass<*>, doc.namespaces) as IEvent
+                    doc.events.add(e)
                 }
             }
 
             return doc
         } catch (ex: Exception) {
             val exception = Exception("Failed to parse the EPCIS Document from the JSON-LD. json-ld=$strValue", ex)
-            OTLogger.error(exception)
+            opentraceability.OTLogger.error(exception)
             throw exception
         }
     }
 
-
-
-
-    override fun Map(doc: EPCISDocument): String {
-        if (doc.EPCISVersion != EPCISVersion.V2) {
-            throw Exception("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
+    override fun map(doc: EPCISDocument): String {
+        if (doc.epcisVersion != EPCISVersion.V2) {
+            throw Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
         }
 
-        val epcisNS = if (doc.EPCISVersion == EPCISVersion.V2) Constants.EPCIS_2_NAMESPACE else Constants.EPCIS_1_NAMESPACE
+        val epcisNS = if (doc.epcisVersion == EPCISVersion.V2) opentraceability.Constants.EPCIS_2_NAMESPACE else opentraceability.Constants.EPCIS_1_NAMESPACE
 
-        val namespacesReversed = doc.Namespaces.entries.associate { (key, value) -> value to key }.toMutableMap()
+        val namespacesReversed = doc.namespaces.entries.associate { (key, value) -> value to key }.toMutableMap()
 
 
         val jEventList = JSONArray()
         val jEventBody = JSONObject()
         jEventBody.put("eventList", jEventList)
-        for (e in doc.Events) {
+        for (e in doc.events) {
             val jEvent = OpenTraceabilityJsonLDMapper.toJson(e, namespacesReversed)
             if (jEvent != null) {
                 jEventList.put(jEvent)
@@ -68,16 +66,16 @@ class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
 
         val json = EPCISDocumentBaseJsonMapper.writeJson(doc, epcisNS, "EPCISDocument")
 
-        if (!doc.Header?.Sender?.Identifier.isNullOrBlank()) {
-            json.put("sender", doc.Header?.Sender?.Identifier)
+        if (!doc.header?.Sender?.Identifier.isNullOrBlank()) {
+            json.put("sender", doc.header?.Sender?.Identifier)
         }
 
-        if (!doc.Header?.Receiver?.Identifier.isNullOrBlank()) {
-            json.put("receiver", doc.Header?.Receiver?.Identifier)
+        if (!doc.header?.Receiver?.Identifier.isNullOrBlank()) {
+            json.put("receiver", doc.header?.Receiver?.Identifier)
         }
 
-        if (!doc.Header?.DocumentIdentification?.InstanceIdentifier.isNullOrBlank()) {
-            json.put("instanceIdentifier", doc.Header?.DocumentIdentification?.InstanceIdentifier)
+        if (!doc.header?.DocumentIdentification?.InstanceIdentifier.isNullOrBlank()) {
+            json.put("instanceIdentifier", doc.header?.DocumentIdentification?.InstanceIdentifier)
         }
 
         EPCISJsonMasterDataWriter.writeMasterData(json, doc)
@@ -85,12 +83,11 @@ class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
         json.put("epcisBody", jEventBody)
 
         // conform the JSON-LD to the compacted version with CURIE's that EPCIS 2.0 likes
-        EPCISDocumentBaseJsonMapper.conformEPCISJsonLD(json, doc.Namespaces)
+        EPCISDocumentBaseJsonMapper.conformEPCISJsonLD(json, doc.namespaces)
 
         // validate the JSON-LD schema
         EPCISDocumentBaseJsonMapper.checkSchema(json)
 
         return json.toString(4)
     }
-
 }

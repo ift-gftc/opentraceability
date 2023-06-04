@@ -1,19 +1,29 @@
-package mappers
+package opentraceability.mappers
 
-import interfaces.*
-import models.common.LanguageString
-import models.events.*
-import models.events.kdes.*
-import models.identifiers.*
+import opentraceability.interfaces.*
+import opentraceability.models.common.LanguageString
+import opentraceability.models.events.*
+import opentraceability.models.events.kdes.*
+import opentraceability.models.identifiers.*
 import org.json.*
-import utility.*
-import utility.StringExtensions.tryConvertToDateTimeOffset
+import opentraceability.utility.*
+import opentraceability.utility.StringExtensions.toDuration
+import opentraceability.utility.StringExtensions.tryConvertToDateTimeOffset
 import java.util.*
 import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.*
 import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.KType
+import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
 
 class OpenTraceabilityJsonLDMapper {
     companion object {
@@ -21,23 +31,23 @@ class OpenTraceabilityJsonLDMapper {
         /**
          * Converts an object into JSON.
          */
-        fun toJson(value: Any?, namespacesReversed: Map<String, String>, required: Boolean = false): JSONObject? {
+        fun toJson(value: Any?, namespacesReversed: MutableMap<String, String>, required: Boolean = false): JSONObject? {
             try {
                 value?.let {
                     var json: JSONObject? = JSONObject()
                     var jpointer: JSONObject = json!!
 
-                    val t: Type = value::class.java
-                    val typeInfo: OTMappingTypeInformation = OTMappingTypeInformation.getJsonTypeInfo(t)
-                    typeInfo.Properties.filter { it.Version == null || it.Version == EPCISVersion.V2 }.forEach { property ->
-                        property.Property.getValue(value)?.let { obj ->
+                    val t: KType = value::class.starProjectedType
+                    val typeInfo: OTMappingTypeInformation = OTMappingTypeInformation.getJsonTypeInfo(t as KClass<*>)
+                    typeInfo.properties.filter { it.Version == null || it.Version == EPCISVersion.V2 }.forEach { property ->
+                        property.Property?.getter?.call(value)?.let { obj ->
                             var jvaluepointer: JSONObject = jpointer
                             val xchildname: String = property.Name
 
                             when {
                                 property.IsQuantityList -> {
-                                    var products: List<EventProduct> = obj as List<EventProduct>
-                                    products = products.filter { (it.Quantity != null) && (it.Type == property.ProductType) }
+                                    var products: MutableList<EventProduct> = obj as MutableList<EventProduct>
+                                    products = products.filter { (it.Quantity != null) && (it.Type == property.ProductType) }.toMutableList()
                                     if (products.isNotEmpty()) {
                                         val xQuantityList: JSONArray = JSONArray()
                                         for (product in products) {
@@ -55,8 +65,8 @@ class OpenTraceabilityJsonLDMapper {
                                     }
                                 }
                                 property.IsEPCList -> {
-                                    var products: List<EventProduct> = obj as List<EventProduct>
-                                    products = products.filter { (it.Quantity == null) && (it.Type == property.ProductType) }
+                                    var products: MutableList<EventProduct> = obj as MutableList<EventProduct>
+                                    products = products.filter { (it.Quantity == null) && (it.Type == property.ProductType) }.toMutableList()
                                     if (products.isNotEmpty() || property.Required) {
                                         val xEPCList: JSONArray = JSONArray()
                                         for (product in products) {
@@ -73,9 +83,9 @@ class OpenTraceabilityJsonLDMapper {
 
                                     if (list.isNotEmpty() || property.Required) {
                                         if (property.IsRepeating && list.size == 1) {
-                                            val jt: JSONObject? = writeObjectToJToken(list[0])
+                                            val jt: String? = writeObjectToJToken(obj)
                                             if (jt != null) {
-                                                jvaluepointer.put(xchildname,jt)
+                                                jvaluepointer.put(xchildname, jt)
                                             }
                                         } else {
                                             for (o in list) {
@@ -85,7 +95,7 @@ class OpenTraceabilityJsonLDMapper {
                                                         xlist.put(xchild)
                                                     }
                                                 } else {
-                                                    val jt: JSONObject? = writeObjectToJToken(o)
+                                                    val jt: String? = writeObjectToJToken(obj)
                                                     if (jt != null) {
                                                         xlist.put(jt)
                                                     }
@@ -103,26 +113,26 @@ class OpenTraceabilityJsonLDMapper {
                                     }
                                 }
                                 else -> {
-                                    val jt: JSONObject? = writeObjectToJToken(obj)
+                                    val jt: String? = writeObjectToJToken(obj)
                                     if (jt != null) {
-                                        jvaluepointer.put(xchildname,jt)
+                                        jvaluepointer.put(xchildname, jt)
                                     }
                                 }
                             }
                         }
                     }
 
-                    typeInfo.extensionKDEs?.getValue(value)?.let { obj ->
-                        if (obj is MutableList<IEventKDE>) {
-                            val kdes: MutableList<IEventKDE> = obj
+                    typeInfo.extensionKDEs?.getter?.call(value)?.let { obj ->
+                        if (obj is MutableList<*>) {
+                            val kdes: MutableList<IEventKDE> = obj as MutableList<IEventKDE>
                             for (kde in kdes) {
-                                kde.GetJson()?.let { xchild ->
-                                    var name: String = kde.Name
-                                    if (kde.Namespace != null) {
-                                        if (!namespacesReversed.containsKey(kde.Namespace)) {
-                                            throw Exception("The namespace ${kde.Namespace} is not recognized in the EPCIS Document / EPCIS Query Document.")
+                                kde.getJson()?.let { xchild ->
+                                    var name: String = kde.name
+                                    if (kde.namespace != null) {
+                                        if (!namespacesReversed.containsKey(kde.namespace)) {
+                                            throw Exception("The namespace ${kde.namespace} is not recognized in the EPCIS Document / EPCIS Query Document.")
                                         }
-                                        name = namespacesReversed[kde.Namespace] + ":" + name
+                                        name = namespacesReversed[kde.namespace] + ":" + name
                                     }
 
                                     jpointer.put(name,xchild)
@@ -131,17 +141,17 @@ class OpenTraceabilityJsonLDMapper {
                         }
                     }
 
-                    typeInfo.extensionAttributes?.getValue(value)?.let { obj ->
-                        if (obj is MutableList<IEventKDE>) {
-                            val kdes: MutableList<IEventKDE> = obj
+                    typeInfo.extensionAttributes?.getter?.call(value)?.let { obj ->
+                        if (obj is MutableList<*>) {
+                            val kdes: MutableList<IEventKDE> = obj as MutableList<IEventKDE>
                             for (kde in kdes) {
-                                kde.GetJson()?.let { xchild ->
-                                    var name: String = kde.Name
-                                    if (kde.Namespace != null) {
-                                        if (!namespacesReversed.containsKey(kde.Namespace)) {
-                                            throw Exception("The namespace ${kde.Namespace} is not recognized in the EPCIS Document / EPCIS Query Document.")
+                                kde.getJson()?.let { xchild ->
+                                    var name: String = kde.name
+                                    if (kde.namespace != null) {
+                                        if (!namespacesReversed.containsKey(kde.namespace)) {
+                                            throw Exception("The namespace ${kde.namespace} is not recognized in the EPCIS Document / EPCIS Query Document.")
                                         }
-                                        name = namespacesReversed[kde.Namespace] + ":" + name
+                                        name = namespacesReversed[kde.namespace] + ":" + name
                                     }
 
                                     jpointer.put(name,xchild)
@@ -156,7 +166,7 @@ class OpenTraceabilityJsonLDMapper {
                 return null
             } catch (ex: Exception) {
                 val e = Exception("Failed to parse json. value=$value", ex)
-                OTLogger.error(e)
+                opentraceability.OTLogger.error(e)
                 throw e
             }
         }
@@ -165,8 +175,8 @@ class OpenTraceabilityJsonLDMapper {
         /**
          * Converts a JSON object into the generic type specified.
          */
-        inline fun <reified T> fromJson(json: JSONObject, namespaces: Map<String, String>): T {
-            val o: T = fromJson(json, T::class.java, namespaces) as T
+        inline fun <reified T> fromJson(json: JSONObject, namespaces: MutableMap<String, String>): T {
+            val o: T = fromJson(json, T::class.java as KClass<*>, namespaces) as T
             return o
         }
 
@@ -174,8 +184,8 @@ class OpenTraceabilityJsonLDMapper {
         /**
          * Converts a JSON object into the type specified.
          */
-        fun fromJson(json: JSONObject, type: Type, namespaces: Map<String, String>): Any {
-            val value: Any = type.javaClass.kotlin.objectInstance ?: throw Exception("Failed to create instance of type ${type.typeName}")
+        fun fromJson(json: JSONObject, type: KClass<*>, namespaces: MutableMap<String, String>): Any {
+            val value: Any = type.createInstance() ?: throw Exception("Failed to create instance of type ${type.qualifiedName}")
 
             try {
                 val typeInfo: OTMappingTypeInformation = OTMappingTypeInformation.getJsonTypeInfo(type)
@@ -195,25 +205,26 @@ class OpenTraceabilityJsonLDMapper {
 
                 val jobj: JSONObject? = json as? JSONObject
                 if (jobj != null) {
-                    for (jprop in jobj.Properties()) {
-                        mappingProp = typeInfo[jprop.Name]
+                    for (jprop in jobj.keys()) {
+                        mappingProp = typeInfo[jprop]
 
-                        if (mappingProp != null && mappingProp.Property.setMethod == null) {
+                        if (mappingProp != null && mappingProp.Property is KMutableProperty<*>) {
                             continue
                         }
 
-                        val jchild: JSONObject? = jobj[jprop.Name]
-                        if (jchild != null) {
+                        val jChild = jobj.get(jprop) as? JSONObject
+                        if (jChild != null)
+                        {
                             when {
                                 mappingProp != null -> {
-                                    readPropertyMapping(mappingProp, jchild, value, namespaces)
+                                    readPropertyMapping(mappingProp, jChild, value, namespaces)
                                 }
                                 extensionKDEs != null -> {
-                                    val kde: IEventKDE = readKDE(jprop.Name, jchild, namespaces)
+                                    val kde: IEventKDE = readKDE(jprop, jChild, namespaces)
                                     extensionKDEs.add(kde)
                                 }
                                 extensionAttributes != null -> {
-                                    val kde: IEventKDE = readKDE(jprop.Name, jchild, namespaces)
+                                    val kde: IEventKDE = readKDE(jprop, jChild, namespaces)
                                     extensionAttributes.add(kde)
                                 }
                             }
@@ -221,10 +232,10 @@ class OpenTraceabilityJsonLDMapper {
                     }
                 }
 
-                typeInfo.extensionAttributes?.setValue(value, extensionAttributes)
-                typeInfo.extensionKDEs?.setValue(value, extensionKDEs)
+                typeInfo.extensionAttributes?.setter?.call(value, extensionAttributes)
+                typeInfo.extensionKDEs?.setter?.call(value, extensionKDEs)
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
 
@@ -232,50 +243,46 @@ class OpenTraceabilityJsonLDMapper {
         }
 
 
-        fun writeObjectToJToken(obj: Any?): JSONObject? {
+        fun writeObjectToJToken(obj: Any?): String? {
             return when(obj) {
                 null -> null
-                is List<LanguageString> -> {
-                    val json = obj.toJson()
-                    JSONArray.parse(json)
-                }
                 is OffsetDateTime -> {
-                    obj.toString("O")
+                    obj.format(ISO_OFFSET_DATE_TIME)
                 }
                 is UOM -> {
                     obj.UNCode
                 }
                 is Double, is Boolean -> {
-                    JSONObject.fromObject(obj)
+                    obj.toString()
                 }
                 is Country -> {
-                    obj.Abbreviation
+                    obj.abbreviation
                 }
-                is TimeSpan -> {
-                    if (obj.ticks < 0)
-                        "-${obj.negate().totalHours.toString("#00")}:${obj.minutes.toString("00")}"
+                is Duration -> {
+                    if (obj.isNegative())
+                        "-${obj.inWholeHours}:${obj.inWholeMinutes}"
                     else
-                        "+${obj.TotalHours.toString("#00")}:${obj.minutes.toString("00")}"
+                        "+${obj.inWholeHours}:${obj.inWholeMinutes}"
                 }
                 else -> obj.toString() ?: ""
             }
         }
 
-        fun readPropertyMapping(mappingProp: OTMappingTypeInformationProperty, json: JSONObject, value: Any, namespaces: Map<String, String>) {
+        fun readPropertyMapping(mappingProp: OTMappingTypeInformationProperty, json: JSONObject, value: Any, namespaces: MutableMap<String, String>) {
             when {
                 mappingProp.IsQuantityList -> {
                     val e = value as IEvent
                     val jQuantityList = json as? JSONArray
                     jQuantityList?.forEach {
                         val jQuantity = it as JSONObject
-                        val epc = EPC(jQuantity["epcClass"]?.value<String>() ?: "")
+                        val epc = EPC(jQuantity.getString("epcClass"))
 
                         val product = EventProduct(epc).apply {
                             Type = mappingProp.ProductType!!
-                            Quantity = Measurement(jQuantity.value<Double>("quantity"), jQuantity.value<String>("uom") ?: "EA")
+                            Quantity = Measurement(jQuantity.getDouble("quantity"), jQuantity.getString("uom") ?: "EA")
                         }
 
-                        e.AddProduct(product)
+                        e.addProduct(product)
                     }
                 }
                 mappingProp.IsEPCList -> {
@@ -286,19 +293,19 @@ class OpenTraceabilityJsonLDMapper {
                         val product = EventProduct(epc).apply {
                             Type = mappingProp.ProductType!!
                         }
-                        e.AddProduct(product)
+                        e.addProduct(product)
                     }
                 }
                 mappingProp.IsArray -> {
-                    var list = mappingProp.Property.getValue(value) as? MutableList<*>
-                    if (list == null) {
-                        list = (mappingProp.Property.PropertyType.kotlin.objectInstance as? MutableList<*>)
-                            ?: throw Exception("Failed to create instance of ${mappingProp.Property.PropertyType.typeName}")
+                    var list = mappingProp.Property?.getter?.call(value) as? MutableList<Any?>
 
-                        mappingProp.Property.setValue(value, list)
+                    if (list == null)
+                    {
+                        list = (mappingProp.Property.returnType as KClass<*>).createInstance() as MutableList<Any?>
+                        mappingProp.Property?.setter?.call(value, list)
                     }
 
-                    val itemType = list::class.java.genericSuperclass as? Class<*>
+                    val itemType = (list::class.starProjectedType as KClass<*>).typeParameters[0] as KClass<*>
 
                     if (mappingProp.IsRepeating && json !is JSONArray) {
                         val v = json.toString()
@@ -308,9 +315,10 @@ class OpenTraceabilityJsonLDMapper {
                         }
                     } else {
                         val jArr = json as? JSONArray
-                        jArr?.forEach {
-                            val o = if (mappingProp.IsObject) {
-                                fromJson(it, itemType, namespaces)
+                        jArr?.forEach { it: Any? ->
+                            val o = if (mappingProp.IsObject)
+                            {
+                                fromJson(it as JSONObject, itemType, namespaces)
                             } else {
                                 readObjectFromString(it.toString(), itemType)
                             }
@@ -319,20 +327,20 @@ class OpenTraceabilityJsonLDMapper {
                     }
                 }
                 mappingProp.IsObject -> {
-                    val o = fromJson(json, mappingProp.Property.PropertyType, namespaces)
-                    mappingProp.Property.setValue(value, o)
+                    val o = fromJson(json, mappingProp.Property?.returnType as KClass<*>, namespaces)
+                    mappingProp.Property?.setter?.call(value, o)
                 }
-                mappingProp.Property.PropertyType == List::class.java -> {
-                    val languageStrings: List<LanguageString>? = json.toString().fromJson()
+                mappingProp.Property?.returnType == List::class.java -> {
+                    val languageStrings: MutableList<LanguageString>? = fromJson(json, typeOf<MutableList<LanguageString>>() as KClass<*>, namespaces) as MutableList<LanguageString>
                     if (languageStrings != null) {
-                        mappingProp.Property.setValue(value, languageStrings)
+                        mappingProp.Property?.setter?.call(value, languageStrings)
                     }
                 }
                 else -> {
                     val v = json.toString()
                     if (v.isNotBlank()) {
-                        val o = readObjectFromString(v, mappingProp.Property.PropertyType)
-                        mappingProp.Property.setValue(value, o)
+                        val o = readObjectFromString(v, mappingProp.Property?.returnType as KClass<*>)
+                        mappingProp.Property?.setter?.call(value, o)
                     }
                 }
             }
@@ -395,13 +403,13 @@ class OpenTraceabilityJsonLDMapper {
                 }
             } catch (ex: Exception) {
                 val e = Exception("Failed to convert string into object. value=$value and t=$t", ex)
-                OTLogger.error(e)
+                opentraceability.OTLogger.error(e)
                 throw e
             }
         }
 
 
-        fun readKDE(name: String, json: JSONObject, namespaces: Map<String, String>): IEventKDE {
+        fun readKDE(name: String, json: JSONObject, namespaces: MutableMap<String, String>): IEventKDE {
             var kde: IEventKDE? = null
             var ns = ""
             var realName = name
@@ -423,7 +431,7 @@ class OpenTraceabilityJsonLDMapper {
                 kde = EventKDEString(ns, realName)
             }
 
-            kde?.SetFromJson(json) ?: throw Exception("Failed to initialize KDE from JSON = ${json.toString()}")
+            kde?.setFromJson(json) ?: throw Exception("Failed to initialize KDE from JSON = ${json.toString()}")
 
             return kde
         }

@@ -1,25 +1,25 @@
-package models.common
+package opentraceability.models.common
 
-import utility.Country
+import opentraceability.utility.Country
 
 class Address : AnonymizedAddress() {
 
-    var Address1: String? = null
-    var Address2: String? = null
-    var City: String? = null
-    var State: String? = null
-    var County: String? = null
-    override var ZipCode: String? = null
-    override var Country: Country? = null
+    var address1: String? = null
+    var address2: String? = null
+    var city: String? = null
+    var state: String? = null
+    var county: String? = null
+    override var zipCode: String? = null
+    override var country: Country? = null
 
     override fun toString(): String {
-        var pieces: ArrayList<String?> = ArrayList<String?>()
-        pieces.add(Address1)
-        pieces.add(City)
-        pieces.add(State)
-        pieces.add(County)
-        pieces.add(ZipCode)
-        pieces.add(Country?.Abbreviation)
+        var pieces: MutableList<String?> = mutableListOf()
+        pieces.add(address1)
+        pieces.add(city)
+        pieces.add(state)
+        pieces.add(county)
+        pieces.add(zipCode)
+        pieces.add(country?.abbreviation)
 
         var addressStr: String = pieces.filter { x -> !x.isNullOrBlank()  }.joinToString(", ")
         return addressStr
@@ -41,17 +41,18 @@ class Address : AnonymizedAddress() {
 
     fun equals(other: Address?): Boolean {
 
-        if (other != null){
+        if (other == null)
+        {
             return false
         }
 
-        return (this.Address1 == other?.Address1
-                && this.Address2 == other?.Address2
-                && this.City == other?.City
-                && this.County == other?.County
-                && this.State == other?.State
-                && this.ZipCode == other?.ZipCode
-                && this.Country == other?.Country);
+        return (this.address1 == other?.address1
+                && this.address2 == other?.address2
+                && this.city == other?.city
+                && this.county == other?.county
+                && this.state == other?.state
+                && this.zipCode == other?.zipCode
+                && this.country == other?.country);
     }
 
     override fun hashCode(): Int {

@@ -1,6 +1,6 @@
-package utility
+package opentraceability.utility
 
-import OTLogger
+import opentraceability.OTLogger
 import java.util.*
 import org.json.*
 
@@ -38,7 +38,7 @@ object UOMS {
                 }
             }
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -98,6 +98,6 @@ object UOMS {
         return uomsUNCodeDict[formattedName] ?: uomsAbbrevDict.values.find { it.UNCode.equals(formattedName, ignoreCase = true) }
     }
 
-    val list: List<UOM>
-        get() = uomsAbbrevDict.values.toList()
+    val list: MutableList<UOM>
+        get() = uomsAbbrevDict.values.toMutableList()
 }

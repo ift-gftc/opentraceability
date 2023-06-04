@@ -1,8 +1,8 @@
-package mappers.epcis.json
+package opentraceability.mappers.epcis.json
 
-import interfaces.*
-import mappers.OpenTraceabilityJsonLDMapper
-import models.events.*
+import opentraceability.interfaces.*
+import opentraceability.mappers.OpenTraceabilityJsonLDMapper
+import opentraceability.models.events.*
 import org.json.*
 
 class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
@@ -10,8 +10,8 @@ class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
         try {
             val (doc, json) = EPCISDocumentBaseJsonMapper.readJSON<EPCISQueryDocument>(strValue, checkSchema)
 
-            if (doc.EPCISVersion != EPCISVersion.V2) {
-                throw Exception("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
+            if (doc.epcisVersion != EPCISVersion.V2) {
+                throw Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
             }
 
             doc.QueryName = json?.getJSONObject("epcisBody")?.getJSONObject("queryResults")?.getString("queryName") ?: ""
@@ -22,29 +22,29 @@ class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
                 for (i in 0 until jEventsList.length()) {
                     val jEvent = jEventsList.getJSONObject(i)
                     val eventType = EPCISDocumentBaseJsonMapper.getEventTypeFromProfile(jEvent)
-                    val e = OpenTraceabilityJsonLDMapper.fromJson(jEvent, eventType, doc.Namespaces) as IEvent
-                    doc.Events.add(e)
+                    val e = OpenTraceabilityJsonLDMapper.fromJson(jEvent, eventType, doc.namespaces) as IEvent
+                    doc.events.add(e)
                 }
             }
             return doc
         } catch (ex: Exception) {
             val exception = Exception("Failed to parse the EPCIS document from the XML. xml=$strValue", ex)
-            OTLogger.error(exception)
+            opentraceability.OTLogger.error(exception)
             throw exception
         }
     }
 
 
     override fun map(doc: EPCISQueryDocument): String {
-        if (doc.EPCISVersion != EPCISVersion.V2) {
-            throw Exception("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
+        if (doc.epcisVersion != EPCISVersion.V2) {
+            throw Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
         }
-        val epcisNS = if (doc.EPCISVersion == EPCISVersion.V2) Constants.EPCISQUERY_2_NAMESPACE else Constants.EPCISQUERY_1_NAMESPACE
+        val epcisNS = if (doc.epcisVersion == EPCISVersion.V2) opentraceability.Constants.EPCISQUERY_2_NAMESPACE else opentraceability.Constants.EPCISQUERY_1_NAMESPACE
 
-        val namespacesReversed = doc.Namespaces.entries.reversed().associateBy({it.key}, {it.value})
+        val namespacesReversed = doc.namespaces.entries.reversed().associateBy({it.key}, {it.value}).toMutableMap()
 
         val jEventsList = JSONArray()
-        for (e in doc.Events) {
+        for (e in doc.events) {
             val jEvent = OpenTraceabilityJsonLDMapper.toJson(e, namespacesReversed) as JSONObject?
             if (jEvent != null) {
                 jEventsList.put(jEvent)
@@ -61,7 +61,7 @@ class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
         jQueryResults.put("resultsBody",jResultsBody)
         jEPCISBody.put("queryResults",jQueryResults)
         json.put("epcisBody",jEPCISBody)
-        EPCISDocumentBaseJsonMapper.conformEPCISJsonLD(json, doc.Namespaces)
+        EPCISDocumentBaseJsonMapper.conformEPCISJsonLD(json, doc.namespaces)
         EPCISDocumentBaseJsonMapper.checkSchema(json)
         return json.toString()
     }

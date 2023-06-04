@@ -1,8 +1,8 @@
-package models.identifiers
+package opentraceability.models.identifiers
 
-import utility.ObjectExtensions.getInt64HashCode
-import utility.StringExtensions.IsOnlyDigits
-import utility.StringExtensions.IsURICompatibleChars
+import opentraceability.utility.*
+import opentraceability.utility.StringExtensions.IsOnlyDigits
+import opentraceability.utility.StringExtensions.IsURICompatibleChars
 import java.lang.Exception
 
 class GTIN : Comparable<GTIN> {
@@ -20,7 +20,7 @@ class GTIN : Comparable<GTIN> {
             }
             this._gtinStr = gtinStr!!
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
 
@@ -32,7 +32,7 @@ class GTIN : Comparable<GTIN> {
                 val error = DetectGTINIssue(gtinStr)
                 return if (error.isNullOrBlank()) Pair(GTIN(gtinStr), null) else Pair(null, error)
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
         }
@@ -41,7 +41,7 @@ class GTIN : Comparable<GTIN> {
             try {
                 return DetectGTINIssue(gtinStr) == null
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
         }
@@ -83,7 +83,7 @@ class GTIN : Comparable<GTIN> {
                 }
             } catch (ex: Exception) {
                 val exception = Exception("Failed to detect GTIN Issues. GTIN=$gtinStr", ex)
-                OTLogger.error(exception)
+                opentraceability.OTLogger.error(exception)
                 throw exception
             }
         }
@@ -106,7 +106,7 @@ class GTIN : Comparable<GTIN> {
                 return "01/$_gtinStr"
             }
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -123,7 +123,7 @@ class GTIN : Comparable<GTIN> {
 
             return toString().toLowerCase() == other.toString().toLowerCase()
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -132,7 +132,7 @@ class GTIN : Comparable<GTIN> {
         try {
             return toString().toLowerCase().hashCode()
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -141,7 +141,7 @@ class GTIN : Comparable<GTIN> {
         try {
             return _gtinStr?.toLowerCase() ?: ""
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -152,7 +152,7 @@ class GTIN : Comparable<GTIN> {
             val otherInt64Hash = other.toString().getInt64HashCode()
             return myInt64Hash.compareTo(otherInt64Hash)
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }

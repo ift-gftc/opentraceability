@@ -1,7 +1,7 @@
-package utility.attributes
+package opentraceability.utility.attributes
 
-import models.events.EPCISVersion
-import models.events.EventProductType
+import opentraceability.models.events.EPCISVersion
+import opentraceability.models.events.EventProductType
 import java.lang.reflect.Type
 
 @Repeatable

@@ -1,7 +1,7 @@
-package mappers
+package opentraceability.mappers
 
-import interfaces.IMasterDataMapper
-import mappers.masterdata.GS1VocabJsonMapper
+import opentraceability.interfaces.IMasterDataMapper
+import opentraceability.mappers.masterdata.GS1VocabJsonMapper
 
 class MasterDataMappers {
     var GS1WebVocab: IMasterDataMapper = GS1VocabJsonMapper()

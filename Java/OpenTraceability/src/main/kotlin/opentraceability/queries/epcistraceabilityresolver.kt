@@ -1,19 +1,19 @@
-package queries
+package opentraceability.queries
 
-import interfaces.IEPCISQueryDocumentMapper
+import opentraceability.interfaces.IEPCISQueryDocumentMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import mappers.EPCISDataFormat
-import mappers.OpenTraceabilityMappers
-import models.events.EPCISVersion
-import models.events.EventProductType
-import models.identifiers.*
-import models.masterdata.DigitalLink
+import opentraceability.mappers.EPCISDataFormat
+import opentraceability.mappers.OpenTraceabilityMappers
+import opentraceability.models.events.EPCISVersion
+import opentraceability.models.events.EventProductType
+import opentraceability.models.identifiers.*
+import opentraceability.models.masterdata.DigitalLink
 import okhttp3.*
-import utility.OpenTraceabilitySchemaException
+import opentraceability.utility.OpenTraceabilitySchemaException
 import java.io.IOException
 import java.net.URL
 
@@ -33,7 +33,7 @@ object EPCISTraceabilityResolver {
         val response = client.newCall(request).execute()
         return@withContext if (response.isSuccessful) {
             val json = response.body?.string()
-            val link = json?.let { Json.decodeFromString<List<DigitalLink>>(it).firstOrNull() }
+            val link = json?.let { Json.decodeFromString<MutableList<DigitalLink>>(it).firstOrNull() }
             link?.link?.trimEnd('/')?.let { URL(it) }
         } else null
     }
@@ -54,7 +54,7 @@ object EPCISTraceabilityResolver {
         val response = client.newCall(request).execute()
         return@withContext if (response.isSuccessful) {
             val json = response.body?.string()
-            val link = json?.let { Json.decodeFromString<List<DigitalLink>>(it).firstOrNull() }
+            val link = json?.let { Json.decodeFromString<MutableList<DigitalLink>>(it).firstOrNull() }
             link?.link?.trimEnd('/')?.let { URL(it) }
         } else null
     }
@@ -87,7 +87,7 @@ object EPCISTraceabilityResolver {
 
         // Find all EPCs we have not queried for and query for events pertaining to them
         val epcsToQuery = mutableListOf<EPC>()
-        val potentialEpcs = results.Document!!.Events.flatMap { it.Products }
+        val potentialEpcs = results.Document!!.events.flatMap { it.products }
             .filter { it.Type == EventProductType.Child || it.Type == EventProductType.Input }
             .map { it.EPC }
             .distinct()
@@ -108,11 +108,11 @@ object EPCISTraceabilityResolver {
                 }
                 val r = queryEvents(options, p, client)
 
-                results = results.merge(r)
+                results.merge(r)
 
                 if (r.Document != null) {
                     epcsToQuery.clear()
-                    val potentialEpcs = r.Document!!.Events.flatMap { it.Products }
+                    val potentialEpcs = r.Document!!.events.flatMap { it.products }
                         .filter { it.Type == EventProductType.Child || it.Type == EventProductType.Input }
                         .map { it.EPC }
                         .distinct()
@@ -206,18 +206,18 @@ object EPCISTraceabilityResolver {
 
         // If stack trace is enabled, record the stack trace item
         if (options.EnableStackTrace) {
-            val headersList: ArrayList<MutableMap<String, ArrayList<String>>> = ArrayList()
+            val headersList: MutableList<MutableMap<String, MutableList<String>>> = ArrayList()
 
             request.build().headers.forEach { name ->
-                val headerMap: MutableMap<String, ArrayList<String>> = HashMap()
+                val headerMap: MutableMap<String, MutableList<String>> = HashMap()
                 headerMap[name.toString()] = ArrayList(request.build().headers.values(name.toString()))
                 headersList.add(headerMap)
             }
 
-            val headersList2: ArrayList<MutableMap<String, ArrayList<String>>> = ArrayList()
+            val headersList2: MutableList<MutableMap<String, MutableList<String>>> = ArrayList()
 
             response?.headers?.names()?.forEach { name ->
-                val headerMap: MutableMap<String, ArrayList<String>> = HashMap()
+                val headerMap: MutableMap<String, MutableList<String>> = HashMap()
                 headerMap[name] = ArrayList(response.headers.values(name))
                 headersList2.add(headerMap)
             }

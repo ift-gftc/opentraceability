@@ -1,4 +1,4 @@
-package mappers
+package opentraceability.mappers
 
 class OpenTraceabilityMappers {
     companion object {

@@ -1,6 +1,6 @@
-package interfaces
+package opentraceability.interfaces
 
-import models.events.*
+import opentraceability.models.events.*
 
 interface IEPCISQueryDocumentMapper {
     fun map(strValue: String, checkSchema: Boolean = true): EPCISQueryDocument

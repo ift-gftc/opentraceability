@@ -1,19 +1,21 @@
-package models.common
+package opentraceability.models.common
 
-import utility.Country
+import opentraceability.utility.Country
 
 open class AnonymizedAddress {
-    open var ZipCode: String? = null
-    open var Country: Country? = null
+    open var zipCode: String? = null
+    open var country: Country? = null
 
 
     override fun equals(obj: Any?): Boolean {
 
-        if (obj != null){
+        if (obj == null)
+        {
             return false
         }
 
-        if (!(obj is AnonymizedAddress)){
+        if (obj !is AnonymizedAddress)
+        {
             return false
         }
 
@@ -26,11 +28,11 @@ open class AnonymizedAddress {
             return false
         }
 
-        return (this.ZipCode == other?.ZipCode && this.Country == other?.Country);
+        return (this.zipCode == other?.zipCode && this.country == other?.country);
     }
 
     override fun hashCode(): Int {
-        return this.ZipCode.hashCode() + this.Country.hashCode()
+        return this.zipCode.hashCode() + this.country.hashCode()
     }
 
 }

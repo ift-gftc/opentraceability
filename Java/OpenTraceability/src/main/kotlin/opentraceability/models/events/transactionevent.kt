@@ -1,87 +1,87 @@
-package models.events
+package opentraceability.models.events
 
-import interfaces.IEvent
+import opentraceability.interfaces.IEvent
+import opentraceability.models.identifiers.EPC
+import opentraceability.utility.attributes.*
 import java.util.*
-import models.identifiers.EPC
-import utility.attributes.*
 import java.net.URI
 
 abstract class TransactionEvent : EventBase(), IEvent {
 
     @OpenTraceabilityAttribute("","parentID", 8)
-    var ParentID: EPC? = null
+    var parentID: EPC? = null
 
     @OpenTraceabilityProductsAttribute("extension/quantityList", EPCISVersion.V1, EventProductType.Reference, 20, OpenTraceabilityProductsListType.QuantityList)
     @OpenTraceabilityProductsAttribute("quantityList", EPCISVersion.V2, EventProductType.Reference, 15, OpenTraceabilityProductsListType.QuantityList)
     @OpenTraceabilityProductsAttribute("epcList",EPCISVersion.V2, EventProductType.Reference, 9, OpenTraceabilityProductsListType.EPCList)
-    var ReferenceProducts: ArrayList<EventProduct> = ArrayList<EventProduct>()
+    var referenceProducts: MutableList<EventProduct> =mutableListOf()
 
     @OpenTraceabilityAttribute("","action", 10)
-    override var Action: EventAction? = null
+    override var action: EventAction? = null
 
     @OpenTraceabilityAttribute("","bizStep", 11)
-    override var BusinessStep: URI? = null
+    override var businessStep: URI? = null
 
     @OpenTraceabilityAttribute("","disposition", 12)
-    override var Disposition: URI? = null
+    override var disposition: URI? = null
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","readPoint", 13)
-    override var ReadPoint: EventReadPoint? = null
+    override var readPoint: EventReadPoint? = null
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","bizLocation", 14)
-    override var Location: EventLocation? = null
+    override var location: EventLocation? = null
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("bizTransaction")
     @OpenTraceabilityAttribute("","bizTransactionList", 7)
-    override var BizTransactionList: MutableList<EventBusinessTransaction> = mutableListOf()
+    override var bizTransactionList: MutableList<EventBusinessTransaction> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("source")
     @OpenTraceabilityAttribute("","sourceList", 16, EPCISVersion.V2)
     @OpenTraceabilityAttribute("","extension/sourceList", 21, EPCISVersion.V1)
-    override var SourceList: MutableList<EventSource> = mutableListOf()
+    override var sourceList: MutableList<EventSource> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("destination")
     @OpenTraceabilityAttribute("","destinationList", 17, EPCISVersion.V2)
     @OpenTraceabilityAttribute("","extension/destinationList", 22, EPCISVersion.V1)
-    override var DestinationList: MutableList<EventDestination> = mutableListOf()
+    override var destinationList: MutableList<EventDestination> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("sensorElement")
     @OpenTraceabilityAttribute("","sensorElementList", 18, EPCISVersion.V2)
     @OpenTraceabilityAttribute("","extension/sensorElementList",18, EPCISVersion.V1)
-    override var SensorElementList: MutableList<SensorElement> = mutableListOf()
+    override var sensorElementList: MutableList<SensorElement> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","persistentDisposition", 19, EPCISVersion.V2)
     @OpenTraceabilityAttribute("","extension/persistentDisposition", 19, EPCISVersion.V1)
-    override var PersistentDisposition: PersistentDisposition? = null
+    override var persistentDisposition: PersistentDisposition? = null
 
     var ILMD: EventILMD? = null
 
 
     @OpenTraceabilityXmlIgnoreAttribute
     @OpenTraceabilityAttribute("","type", 0)
-    override lateinit var EventType: EventType
+    override lateinit var eventType: EventType
 
-    override var Products: MutableList<EventProduct> = mutableListOf()
+    override var products: MutableList<EventProduct> = mutableListOf()
 
-    override fun AddProduct(product: EventProduct){
+    override fun addProduct(product: EventProduct){
         if (product.Type == EventProductType.Parent)
         {
             if (product.Quantity != null)
             {
                 throw  Exception("Parents do not support quantity.");
             }
-            this.ParentID = product.EPC;
+            this.parentID = product.EPC;
         }
         else if (product.Type == EventProductType.Reference)
         {
-            this.ReferenceProducts.add(product);
+            this.referenceProducts.add(product);
         }
         else
         {

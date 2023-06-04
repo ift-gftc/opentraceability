@@ -1,6 +1,6 @@
-package utility
+package opentraceability.utility
 
-import OTLogger
+import opentraceability.OTLogger
 import org.json.JSONObject
 
 
@@ -63,7 +63,7 @@ class UOM {
 
     companion object {
         private val uomListLock = ReentrantLock()
-        private var uomList: List<UOM>? = null
+        private var uomList: MutableList<UOM>? = null
 
         fun lookUpFromUNCode(unCode: String): UOM {
             return uomListLock.withLock {
@@ -88,12 +88,12 @@ class UOM {
 
                 return UOM(uom)
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
         }
 
-        fun getUOMList(): List<UOM> {
+        fun getUOMList(): MutableList<UOM> {
             if (uomList == null) {
                 // Initialize the list if it's null
                 uomList = loadUOMList()
@@ -101,11 +101,11 @@ class UOM {
             return uomList!!
         }
 
-        fun loadUOMList(): List<UOM> {
+        fun loadUOMList(): MutableList<UOM> {
             // Perform the loading of UOMs from the appropriate source
             // and return the list of UOM objects
             // ...
-            return emptyList()
+            return mutableListOf()
         }
     }
 

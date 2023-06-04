@@ -1,12 +1,12 @@
-package models.events.kdes
+package opentraceability.models.events.kdes
 
-import models.common.Certificate
+import opentraceability.models.common.Certificate
+import opentraceability.utility.attributes.*
 import java.util.*
-import utility.attributes.*
 
 class CertificationList {
     @OpenTraceabilityArrayAttribute
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","certification")
-    var Certificates: ArrayList<Certificate> = ArrayList<Certificate>()
+    var certificates: MutableList<Certificate> = mutableListOf()
 }

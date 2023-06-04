@@ -1,34 +1,36 @@
-package models.events.kdes
+package opentraceability.models.events.kdes
 
-import interfaces.IEventKDE
+import opentraceability.interfaces.IEventKDE
+import opentraceability.Constants
 import org.json.JSONObject
 import org.w3c.dom.Element
 import java.lang.reflect.Type
 import javax.xml.parsers.DocumentBuilderFactory
+import kotlin.reflect.KType
+import kotlin.reflect.full.starProjectedType
 
 class EventKDEBoolean() : EventKDEBase(), IEventKDE {
 
-    override var ValueType: Type = Boolean::class.java
-
+    override var valueType: KType = Boolean::class.starProjectedType
 
     var value: Boolean? = null
 
     constructor(ns: String, name: String) : this() {
-        this.Namespace = ns
-        this.Name = name
+        this.namespace = ns
+        this.name = name
     }
 
-    override fun GetJson(): Any? {
+    override fun getJson(): Any? {
         value?.let { return JSONObject().put("value", it) }
         return null
     }
 
-    override fun GetXml(): Element? {
+    override fun getXml(): Element? {
         value?.let {
             val documentBuilderFactory = DocumentBuilderFactory.newInstance()
             val documentBuilder = documentBuilderFactory.newDocumentBuilder()
             val document = documentBuilder.newDocument()
-            val element = document.createElementNS(Namespace, Name)
+            val element = document.createElementNS(namespace, name)
             element.setAttributeNS(Constants.XSI_NAMESPACE, "type", "boolean")
             element.textContent = it.toString()
             return element
@@ -36,11 +38,11 @@ class EventKDEBoolean() : EventKDEBase(), IEventKDE {
         return null
     }
 
-    override fun SetFromJson(json: JSONObject) {
+    override fun setFromJson(json: JSONObject) {
         this.value = json["value"] as Boolean
     }
 
-    override fun SetFromXml(xml: Element) {
+    override fun setFromXml(xml: Element) {
         this.value = xml.textContent.toBoolean()
     }
 

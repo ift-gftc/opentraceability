@@ -1,6 +1,7 @@
-package models.events.kdes
+package opentraceability.models.events.kdes
 
-import interfaces.IEventKDE
+import opentraceability.interfaces.IEventKDE
+import opentraceability.Constants
 import java.lang.reflect.Type
 import org.w3c.dom.*
 import javax.xml.parsers.DocumentBuilderFactory
@@ -8,12 +9,14 @@ import java.io.StringReader
 import org.json.*
 import javax.xml.parsers.DocumentBuilder
 import org.xml.sax.InputSource
+import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 
 class EventKDEObject: EventKDEBase, IEventKDE {
 
-    override var ValueType: Type = Object::class.java
+    override var valueType: KType = Object::class.createType()
 
-    var Value: Object? = null
+    var value: Object? = null
 
 
     var _xml: Element? = null
@@ -21,12 +24,12 @@ class EventKDEObject: EventKDEBase, IEventKDE {
 
 
     constructor(ns: String, name: String) {
-        this.Namespace = ns;
-        this.Name = name;
+        this.namespace = ns;
+        this.name = name;
     }
 
 
-    override fun GetJson(): JSONObject? {
+    override fun getJson(): JSONObject? {
         if ( _xml != null   ){
             val factory: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
             val builder: DocumentBuilder = factory.newDocumentBuilder()
@@ -48,7 +51,7 @@ class EventKDEObject: EventKDEBase, IEventKDE {
 
 
 
-    override fun GetXml(): Element? {
+    override fun getXml(): Element? {
         if (_xml != null) {
             return _xml
         } else if (_json != null) {
@@ -70,19 +73,19 @@ class EventKDEObject: EventKDEBase, IEventKDE {
         }
     }
 
-    override fun SetFromJson(json: JSONObject) {
+    override fun setFromJson(json: JSONObject) {
         _xml = null
         _json = json
     }
 
-    override fun SetFromXml(xml: Element) {
+    override fun setFromXml(xml: Element) {
         _xml = xml
         _json = null
     }
 
     override fun toString(): String {
-        if (Value != null) {
-            return Value.toString()
+        if (value != null) {
+            return value.toString()
         } else {
             return ""
         }

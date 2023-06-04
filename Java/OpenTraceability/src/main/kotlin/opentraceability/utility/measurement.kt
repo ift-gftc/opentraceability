@@ -1,5 +1,6 @@
-package utility
+package opentraceability.utility
 
+import opentraceability.OTLogger
 import java.lang.Exception
 import org.w3c.dom.Element
 import kotlin.math.round
@@ -37,7 +38,7 @@ class Measurement : Comparable<Measurement?> {
                 value += it.value
             }
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -112,7 +113,7 @@ class Measurement : Comparable<Measurement?> {
             str += " " + uom.UNCode
             return str
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -123,7 +124,7 @@ class Measurement : Comparable<Measurement?> {
             str += " " + uom.Abbreviation
             return str
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -136,7 +137,7 @@ class Measurement : Comparable<Measurement?> {
                 toBase().toString().trim()
             }
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -176,7 +177,7 @@ class Measurement : Comparable<Measurement?> {
                 measurement.uom = uom
                 return measurement
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
         }

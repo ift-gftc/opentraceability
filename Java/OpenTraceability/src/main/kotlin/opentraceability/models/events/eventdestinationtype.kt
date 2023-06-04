@@ -1,6 +1,6 @@
-package models.events
+package opentraceability.models.events
 
-import utility.CBVAttribute
+import opentraceability.utility.CBVAttribute
 
 enum class EventDestinationType(val value: Int) {
 

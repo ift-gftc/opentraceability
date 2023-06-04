@@ -1,16 +1,16 @@
-package queries
+package opentraceability.queries
 
-import interfaces.IEPCISDocumentMapper
-import mappers.*
-import models.events.*
-import models.identifiers.EPC
+import opentraceability.interfaces.IEPCISDocumentMapper
+import opentraceability.mappers.*
+import opentraceability.models.events.*
+import opentraceability.models.identifiers.EPC
 import okhttp3.*
 import java.net.URL
 import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import utility.HttpClientPool
+import opentraceability.utility.HttpClientPool
 import java.net.URI
 import java.util.*
 
@@ -47,7 +47,7 @@ class EPCISTestServerClient(val _baseURL: String, val _format: EPCISDataFormat, 
             .header("GS1-EPCIS-Max", if (_version == EPCISVersion.V1) "1.2" else "2.0")
             .header("GS1-CBV-Version", if (_version == EPCISVersion.V1) "1.2" else "2.0")
             .header("GS1-CBV-XML-Format", "ALWAYS_URN")
-            .post(RequestBody.create(contentType.toMediaTypeOrNull(), mapper.Map(doc)))
+            .post(RequestBody.create(contentType.toMediaTypeOrNull(), mapper.map(doc)))
             .build()
 
         val response = client.newCall(request).execute()

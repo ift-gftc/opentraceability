@@ -1,15 +1,15 @@
-package models.events
+package opentraceability.models.events
 
-import models.identifiers.GLN
-import utility.attributes.OpenTraceabilityAttribute
+import opentraceability.models.identifiers.GLN
+import opentraceability.utility.attributes.OpenTraceabilityAttribute
 
 class EventLocation {
 
     @OpenTraceabilityAttribute("","id")
-    var GLN: GLN? = null
+    var gln: GLN? = null
 
     constructor(gln: GLN) {
-        this.GLN = gln;
+        this.gln = gln;
     }
 
 }

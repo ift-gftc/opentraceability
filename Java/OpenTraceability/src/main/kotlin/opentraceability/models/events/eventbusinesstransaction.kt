@@ -1,16 +1,16 @@
-package models.events
+package opentraceability.models.events
 
-import utility.attributes.*
+import opentraceability.utility.attributes.*
 import java.net.URI
 
 class EventBusinessTransaction {
 
     @OpenTraceabilityJsonAttribute("type")
     @OpenTraceabilityAttribute("", "@type")
-    var Type: URI? = null
+    var type: URI? = null
 
     @OpenTraceabilityJsonAttribute("bizTransaction")
     @OpenTraceabilityAttribute("", "text()")
-    var Value: String? = null
+    var value: String? = null
 
 }

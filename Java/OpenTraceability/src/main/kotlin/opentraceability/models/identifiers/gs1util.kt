@@ -1,4 +1,4 @@
-package models.identifiers
+package opentraceability.models.identifiers
 
 object GS1Util {
     fun IsEven(i: Int): Boolean {

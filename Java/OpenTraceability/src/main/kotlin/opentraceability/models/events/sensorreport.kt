@@ -1,8 +1,8 @@
-package models.events
+package opentraceability.models.events
 
-import interfaces.IEventKDE
-import utility.UOM
-import utility.attributes.*
+import opentraceability.interfaces.IEventKDE
+import opentraceability.utility.UOM
+import opentraceability.utility.attributes.*
 import java.util.*
 import java.net.URI
 import java.time.OffsetDateTime
@@ -11,96 +11,96 @@ class SensorReport {
 
     @OpenTraceabilityJsonAttribute("time")
     @OpenTraceabilityAttribute("","@time")
-    var TimeStamp: OffsetDateTime? = null
+    var timeStamp: OffsetDateTime? = null
 
     @OpenTraceabilityJsonAttribute("type")
     @OpenTraceabilityAttribute("","@type")
-    var Type: URI? = null
+    var type: URI? = null
 
     @OpenTraceabilityJsonAttribute("value")
     @OpenTraceabilityAttribute("","@value")
-    var Value: Double? = null
+    var value: Double? = null
 
     @OpenTraceabilityJsonAttribute("stringValue")
     @OpenTraceabilityAttribute("","@stringValue")
-    var StringValue: String? = null
+    var stringValue: String? = null
 
     @OpenTraceabilityJsonAttribute("booleanValue")
     @OpenTraceabilityAttribute("","@booleanValue")
-    var BooleanValue: Boolean? = null
+    var booleanValue: Boolean? = null
 
     @OpenTraceabilityJsonAttribute("hexBinaryValue")
     @OpenTraceabilityAttribute("","@hexBinaryValue")
-    var HexBinaryValue: String? = null
+    var hexBinaryValue: String? = null
 
     @OpenTraceabilityJsonAttribute("uriValue")
     @OpenTraceabilityAttribute("","@uriValue")
-    var URIValue: URI? = null
+    var uriValue: URI? = null
 
     @OpenTraceabilityJsonAttribute("uom")
     @OpenTraceabilityAttribute("","@uom")
-    var UOM: UOM = UOM()
+    var uom: UOM = UOM()
 
     @OpenTraceabilityJsonAttribute("component")
     @OpenTraceabilityAttribute("","@component")
-    var Component: URI? = null
+    var component: URI? = null
 
     @OpenTraceabilityJsonAttribute("minValue")
     @OpenTraceabilityAttribute("","@minValue")
-    var MinValue: Double? = null
+    var minValue: Double? = null
 
     @OpenTraceabilityJsonAttribute("maxValue")
     @OpenTraceabilityAttribute("","@maxValue")
-    var MaxValue: Double? = null
+    var maxValue: Double? = null
 
     @OpenTraceabilityJsonAttribute("sDev")
     @OpenTraceabilityAttribute("","@sDev")
-    var SDev: Double? = null
+    var sDev: Double? = null
 
     @OpenTraceabilityJsonAttribute("chemicalSubstance")
     @OpenTraceabilityAttribute("","@chemicalSubstance")
-    var ChemicalSubstance: URI? = null
+    var chemicalSubstance: URI? = null
 
     @OpenTraceabilityJsonAttribute("microorganism")
     @OpenTraceabilityAttribute("","@microorganism")
-    var MicroOrganism: URI? = null
+    var microOrganism: URI? = null
 
     @OpenTraceabilityJsonAttribute("deviceID")
     @OpenTraceabilityAttribute("","@deviceID")
-    var DeviceID: URI? = null
+    var deviceID: URI? = null
 
     @OpenTraceabilityJsonAttribute("rawData")
     @OpenTraceabilityAttribute("","@rawData")
-    var RawData: URI? = null
+    var rawData: URI? = null
 
     @OpenTraceabilityJsonAttribute("meanValue")
     @OpenTraceabilityAttribute("","@meanValue")
-    var MeanValue: Double? = null
+    var meanValue: Double? = null
 
     @OpenTraceabilityJsonAttribute("percRank")
     @OpenTraceabilityAttribute("","@percRank")
-    var PercentageRank: Double? = null
+    var percentageRank: Double? = null
 
     @OpenTraceabilityJsonAttribute("dataProcessingMethod")
     @OpenTraceabilityAttribute("","@dataProcessingMethod")
-    var DataProcessingMethod: URI? = null
+    var dataProcessingMethod: URI? = null
 
     @OpenTraceabilityJsonAttribute("coordinateReferenceSystem")
     @OpenTraceabilityAttribute("","@coordinateReferenceSystem")
-    var CoordinateReferenceSystem: URI? = null
+    var coordinateReferenceSystem: URI? = null
 
     @OpenTraceabilityJsonAttribute("exception")
     @OpenTraceabilityAttribute("","@exception")
-    var Exception: URI? = null
+    var exception: URI? = null
 
     @OpenTraceabilityJsonAttribute("percValue")
     @OpenTraceabilityAttribute("","@percValue")
-    var PercentageValue: Double? = null
+    var percentageValue: Double? = null
 
     @OpenTraceabilityJsonAttribute("deviceMetadata")
     @OpenTraceabilityAttribute("","@deviceMetadata")
-    var DeviceMetadata: URI? = null
+    var deviceMetadata: URI? = null
 
     @OpenTraceabilityExtensionAttributesAttribute
-    var ExtensionAttributes: ArrayList<IEventKDE> = ArrayList<IEventKDE>()
+    var extensionAttributes: MutableList<IEventKDE> = mutableListOf()
 }

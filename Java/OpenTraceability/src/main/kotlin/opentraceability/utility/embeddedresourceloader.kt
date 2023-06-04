@@ -1,84 +1,79 @@
-package utility
+package opentraceability.utility
 
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.BufferedReader
-import java.nio.charset.StandardCharsets
+import java.io.*
+import java.util.*
+import java.util.jar.JarInputStream
+import kotlin.collections.HashMap
+import kotlin.collections.set
 import org.w3c.dom.Document
-import org.w3c.dom.Element
-import org.w3c.dom.Node
-import org.w3c.dom.NodeList
+import java.net.URLClassLoader
+import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.parsers.ParserConfigurationException
 
 class EmbeddedResourceLoader {
     private val assemblyMap: MutableMap<String, ClassLoader> = HashMap()
 
     private fun getClassLoader(assemblyName: String): ClassLoader {
-        return assemblyMap.getOrPut(assemblyName) { Thread.currentThread().contextClassLoader }
-    }
-
-    private fun readBytesFromStream(stream: InputStream): ByteArray {
-        val buffer = ByteArray(8192)
-        val outputStream = ByteArrayOutputStream()
-        var bytesRead: Int
-        try {
-            while (stream.read(buffer).also { bytesRead = it } != -1) {
-                outputStream.write(buffer, 0, bytesRead)
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            try {
-                stream.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+        var classLoader: ClassLoader? = assemblyMap[assemblyName]
+        if (classLoader == null) {
+            val assembly = EmbeddedResourceLoader::class.java.classLoader
+            val resourceAsStream = assembly.getResourceAsStream("$assemblyName.jar")
+            classLoader = URLClassLoader(arrayOf(assembly.getResource("$assemblyName.jar")), assembly)
+            assemblyMap[assemblyName] = classLoader
         }
-        return outputStream.toByteArray()
+        return classLoader
     }
 
     fun readBytes(assemblyName: String, resourceName: String): ByteArray {
+        var raw: ByteArray? = null
         try {
             val classLoader = getClassLoader(assemblyName)
             val stream = classLoader.getResourceAsStream(resourceName)
                 ?: throw Exception("Failed to find the resource in the assembly $assemblyName with the resource name $resourceName.")
-            return readBytesFromStream(stream)
+            raw = stream.readBytes()
         } catch (ex: Exception) {
-            ex.printStackTrace()
+            println(ex)
             throw ex
         }
+        return raw
     }
 
     fun readString(assemblyName: String, resourceName: String): String {
+        var result = ""
         try {
             val classLoader = getClassLoader(assemblyName)
             val stream = classLoader.getResourceAsStream(resourceName)
                 ?: throw Exception("Failed to find the resource in the assembly $assemblyName with the resource name $resourceName.")
-            val reader = BufferedReader(InputStreamReader(stream, StandardCharsets.UTF_8))
-            return reader.use { it.readText() }
+            result = stream.bufferedReader().use(BufferedReader::readText)
         } catch (ex: Exception) {
-            ex.printStackTrace()
+            println(ex)
             throw ex
         }
+        return result
     }
 
     fun readXML(assemblyName: String, resourceName: String): Document {
         val xmlStr = readString(assemblyName, resourceName)
-        val factory = DocumentBuilderFactory.newInstance()
-        val builder = factory.newDocumentBuilder()
-        return builder.parse(xmlStr.byteInputStream())
-    }
-
-    fun readStream(assemblyName: String, resourceName: String): InputStream? {
-        try {
-            val classLoader = getClassLoader(assemblyName)
-            return classLoader.getResourceAsStream(resourceName)
+        return try {
+            val factory: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+            val builder: DocumentBuilder = factory.newDocumentBuilder()
+            builder.parse(ByteArrayInputStream(xmlStr.toByteArray()))
         } catch (ex: Exception) {
-            ex.printStackTrace()
+            println(ex)
             throw ex
         }
     }
-}
 
+    fun readStream(assemblyName: String, resourceName: String): InputStream? {
+        var stream: InputStream? = null
+        try {
+            val classLoader = getClassLoader(assemblyName)
+            stream = classLoader.getResourceAsStream(resourceName)
+        } catch (ex: Exception) {
+            println(ex)
+            throw ex
+        }
+        return stream
+    }
+}

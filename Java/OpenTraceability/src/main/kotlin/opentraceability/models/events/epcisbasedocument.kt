@@ -1,98 +1,101 @@
-package models.events
+package opentraceability.models.events
 
-import interfaces.*
-import models.common.StandardBusinessDocumentHeader
-import models.identifiers.*
-import queries.EPCISQueryParameters
+import opentraceability.interfaces.*
+import opentraceability.models.common.StandardBusinessDocumentHeader
+import opentraceability.models.identifiers.*
+import opentraceability.queries.EPCISQueryParameters
 import java.net.*
 import java.time.OffsetDateTime
 
 @Suppress("LocalVariableName", "PropertyName", "FunctionName")
 open class EPCISBaseDocument {
-    var EPCISVersion: EPCISVersion? = null
-    var CreationDate: OffsetDateTime? = null
-    var Header: StandardBusinessDocumentHeader? = null
-    var Events: MutableList<IEvent> = mutableListOf()
-    var MasterData: MutableList<IVocabularyElement> =  mutableListOf()
-    var Namespaces: MutableMap<String, String> = mutableMapOf()
-    var Contexts: MutableList<String> = mutableListOf()
-    var Attributes: MutableMap<String, String> = mutableMapOf()
+    var epcisVersion: EPCISVersion? = null
+    var creationDate: OffsetDateTime? = null
+    var header: StandardBusinessDocumentHeader? = null
+    var events: MutableList<IEvent> = mutableListOf()
+    var masterData: MutableList<IVocabularyElement> =  mutableListOf()
+    var namespaces: MutableMap<String, String> = mutableMapOf()
+    var contexts: MutableList<String> = mutableListOf()
+    var attributes: MutableMap<String, String> = mutableMapOf()
 
-    inline fun <reified T : IVocabularyElement> getMasterData(): List<T> {
-        return this.MasterData.filterIsInstance<T>()
+    inline fun <reified T : IVocabularyElement> searchMasterData(): MutableList<T> {
+        return this.masterData.filterIsInstance<T>().toMutableList()
+    }
+    inline fun <reified T : IVocabularyElement> searchMasterData(id: String?): T? {
+        return this.masterData.filterIsInstance<T>().firstOrNull { it.id == id }
     }
 
     open fun merge(data: EPCISBaseDocument) {
-        data.Events.forEach { e ->
+        data.events.forEach { e ->
             var found: Boolean = false;
 
-            this.Events.forEach { e2 ->
-                if (e.EventID == e2.EventID) {
-                    if (e.ErrorDeclaration == null && e2.ErrorDeclaration != null) {
-                        this.Events.remove(e);
-                        this.Events.add(e2);
+            this.events.forEach { e2 ->
+                if (e.eventID == e2.eventID) {
+                    if (e.errorDeclaration == null && e2.errorDeclaration != null) {
+                        this.events.remove(e);
+                        this.events.add(e2);
                     }
                     found = true;
                 }
             }
 
             if (!found) {
-                this.Events.add(e);
+                this.events.add(e);
             }
 
-            data.MasterData.forEach { element ->
-                var single = this.MasterData.filter { x -> x.ID == element.ID }.single()
+            data.masterData.forEach { element ->
+                var single = this.masterData.filter { x -> x.id == element.id }.single()
 
                 if (single == null) {
-                    this.MasterData.add(element)
+                    this.masterData.add(element)
                 }
             }
         }
     }
 
-    fun filterEvents(parameters: EPCISQueryParameters): List<IEvent> {
+    fun filterEvents(parameters: EPCISQueryParameters): MutableList<IEvent> {
         val events = mutableListOf<IEvent>()
 
-        for (evt in this.Events) {
+        for (evt in this.events) {
             // filter: GE_eventTime
             if (parameters.query.GE_eventTime != null) {
-                if (evt.EventTime == null || evt.EventTime!! < parameters.query.GE_eventTime) {
+                if (evt.eventTime == null || evt.eventTime!! < parameters.query.GE_eventTime) {
                     continue
                 }
             }
 
             // filter: LE_eventTime
             if (parameters.query.LE_eventTime != null) {
-                if (evt.EventTime == null || evt.EventTime!! > parameters.query.LE_eventTime) {
+                if (evt.eventTime == null || evt.eventTime!! > parameters.query.LE_eventTime) {
                     continue
                 }
             }
 
             // filter: GE_recordTime
             if (parameters.query.GE_recordTime != null) {
-                if (evt.RecordTime == null || evt.RecordTime!! < parameters.query.GE_recordTime) {
+                if (evt.recordTime == null || evt.recordTime!! < parameters.query.GE_recordTime) {
                     continue
                 }
             }
 
             // filter: LE_recordTime
             if (parameters.query.LE_recordTime != null) {
-                if (evt.RecordTime == null || evt.RecordTime!! > parameters.query.LE_recordTime) {
+                if (evt.recordTime == null || evt.recordTime!! > parameters.query.LE_recordTime) {
                     continue
                 }
             }
 
             // filter: EQ_bizStep
             if (parameters.query.EQ_bizStep != null && parameters.query.EQ_bizStep.isNotEmpty()) {
-                if (!HasUriMatch(evt.BusinessStep, parameters.query.EQ_bizStep, "https://ref.gs1.org/cbv/BizStep-", "urn:epcglobal:cbv:bizstep:")) {
+                if (!HasUriMatch(evt.businessStep, parameters.query.EQ_bizStep, "https://ref.gs1.org/cbv/BizStep-", "urn:epcglobal:cbv:bizstep:")) {
                     continue
                 }
             }
 
             // filter: EQ_bizLocation
             if (parameters.query.EQ_bizLocation != null && parameters.query.EQ_bizLocation.isNotEmpty()) {
-                if (evt.Location?.GLN == null || !parameters.query.EQ_bizLocation.map { it.toString().toLowerCase() }.contains(
-                        evt.Location!!.GLN.toString().toLowerCase())) {
+                if (evt.location?.gln == null || !parameters.query.EQ_bizLocation.map { it.toString().toLowerCase() }.contains(
+                        evt.location!!.gln.toString().toLowerCase())) {
                     continue
                 }
             }
@@ -131,10 +134,10 @@ open class EPCISBaseDocument {
         return events
     }
 
-    fun HasMatch(evt: IEvent, epcs: List<String>, vararg allowedTypes: EventProductType): Boolean {
+    fun HasMatch(evt: IEvent, epcs: MutableList<String>, vararg allowedTypes: EventProductType): Boolean {
         for (epcMatchStr in epcs) {
             val epcMatch = EPC(epcMatchStr)
-            for (product in evt.Products) {
+            for (product in evt.products) {
                 if (allowedTypes.isEmpty() || allowedTypes.contains(product.Type)) {
                     if (epcMatch.matches(product.EPC)) {
                         return true

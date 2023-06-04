@@ -1,6 +1,7 @@
-package models.identifiers
+package opentraceability.models.identifiers
 
-import utility.ObjectExtensions.getInt64HashCode
+import opentraceability.utility.*
+import opentraceability.OTLogger
 
 
 //[DataContract]
@@ -21,7 +22,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
             }
             this._glnStr = glnStr
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
 
@@ -37,7 +38,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
                 "414/$_glnStr"
             }
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -49,7 +50,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
             return try {
                 DetectGLNIssue(glnStr) == null
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
         }
@@ -111,7 +112,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
                     "The GLN is not in a valid EPCIS URI format or in GS1 GLN-13 format. Value = $glnStr"
                 }
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
         }
@@ -131,7 +132,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
                     false
                 }
             } catch (ex: Exception) {
-                OTLogger.error(ex)
+                opentraceability.OTLogger.error(ex)
                 throw ex
             }
         }
@@ -160,7 +161,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
             return obj1.equals(obj2)
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -177,7 +178,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
             return !obj1.equals(obj2)
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -198,7 +199,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
             return isEquals(obj as GLN)
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -208,7 +209,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
             val hash = toString().hashCode()
             return hash
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -217,7 +218,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
         try {
             return _glnStr.toLowerCase()
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -234,7 +235,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
             return toString() == gln.toString()
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -247,7 +248,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
 
             return toString().toLowerCase() == gln.toString().toLowerCase()
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -267,7 +268,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
                 else -> 1
             }
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }

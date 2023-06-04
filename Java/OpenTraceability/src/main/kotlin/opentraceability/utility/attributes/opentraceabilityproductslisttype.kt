@@ -1,4 +1,4 @@
-package utility.attributes
+package opentraceability.utility.attributes
 
 enum class OpenTraceabilityProductsListType {
     EPCList,

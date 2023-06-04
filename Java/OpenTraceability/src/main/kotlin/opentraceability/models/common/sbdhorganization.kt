@@ -1,16 +1,16 @@
-package models.common
+package opentraceability.models.common
 
-import Constants
-import utility.attributes.*
+import opentraceability.Constants
+import opentraceability.utility.attributes.*
 
 class SBDHOrganization {
 
-    @OpenTraceabilityAttribute(Constants.SBDH_NAMESPACE, "Identifier")
+    @OpenTraceabilityAttribute(opentraceability.Constants.SBDH_NAMESPACE, "Identifier")
     var Identifier: String = ""
 
 
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityAttribute(Constants.SBDH_NAMESPACE, "ContactInformation")
+    @OpenTraceabilityAttribute(opentraceability.Constants.SBDH_NAMESPACE, "ContactInformation")
     var ContactInformation: SBDHContact = SBDHContact()
 
 }

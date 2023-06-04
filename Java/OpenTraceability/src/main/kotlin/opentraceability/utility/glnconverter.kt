@@ -1,9 +1,9 @@
-package utility
+package opentraceability.utility
 
 import com.google.gson.JsonSerializer
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
-import models.identifiers.GLN
+import opentraceability.models.identifiers.GLN
 import java.lang.reflect.Type
 import com.google.gson.*
 

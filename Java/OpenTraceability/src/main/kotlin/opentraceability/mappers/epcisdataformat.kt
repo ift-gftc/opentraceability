@@ -1,4 +1,4 @@
-package mappers
+package opentraceability.mappers
 
 enum class EPCISDataFormat {
     XML,

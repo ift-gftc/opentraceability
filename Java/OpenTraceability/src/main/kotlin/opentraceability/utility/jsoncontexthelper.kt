@@ -1,6 +1,6 @@
-package utility
+package opentraceability.utility
 
-
+import okhttp3.*
 import java.util.*
 import org.json.*
 import java.util.concurrent.ConcurrentHashMap
@@ -20,7 +20,7 @@ object JsonContextHelper {
                     .url(contextURL)
                     .build()
                 val response: Response = client.newCall(request).execute()
-                val jsonString: String = response.body()?.string() ?: throw Exception("Failed to fetch JSON-LD context from $contextURL.")
+                val jsonString: String = response.body?.string() ?: throw Exception("Failed to fetch JSON-LD context from $contextURL.")
                 jContext = JSONObject(jsonString)
                 contextCache[contextURL] = jContext
             }
@@ -29,7 +29,7 @@ object JsonContextHelper {
         return jContext!!.getJSONObject("@context") ?: throw Exception("Failed to fetch JSON-LD context from $contextURL.")
     }
 
-    fun scrapeNamespaces(jContext: JSONObject): Map<String, String> {
+    fun scrapeNamespaces(jContext: JSONObject): MutableMap<String, String> {
         val namespaces: MutableMap<String, String> = HashMap()
         val keys: Iterator<String> = jContext.keys()
         while (keys.hasNext()) {
@@ -47,21 +47,21 @@ object JsonContextHelper {
     }
 
     fun isNamespace(value: String): Boolean {
-        val reg: Pattern = Pattern.compile("^urn:[a-z0-9][a-z0-9-]{0,31}:[a-z0-9()+,\\-.:=@;$_!*'%\\/?#]+$")
-        return if (value.Matches(Regex("^https?://.*$"))) {
+        val reg: Pattern = Pattern.compile("^urn:[a-z0-9][a-z0-9-]{0,31}:[a-z0-9()+,\\-.:=@;\$_!*'%\\/?#]+\$")
+        return if (value.matches(Regex("^https?://.*$"))) {
             true
-        } else reg.matcher(value).Matches()
+        } else reg.matcher(value).matches()
     }
 
-    fun expandVocab(json: Any, jContext: JSONObject, namespaces: Map<String, String>, jVocabContext: JSONObject? = null): Any? {
-        return modifyVocab(json, jContext, namespaces, namespaces.asReversed(), JsonLDVocabTransformationType.EXPAND, jVocabContext)
+    fun expandVocab(json: Any, jContext: JSONObject, namespaces: MutableMap<String, String>, jVocabContext: JSONObject? = null): Any? {
+        return modifyVocab(json, jContext, namespaces, namespaces.reverse(), JsonLDVocabTransformationType.Expand, jVocabContext)
     }
 
-    fun compressVocab(json: Any, jContext: JSONObject, namespaces: Map<String, String>, jVocabContext: JSONObject? = null): Any? {
-        return modifyVocab(json, jContext, namespaces, namespaces.asReversed(), JsonLDVocabTransformationType.COMPRESS, jVocabContext)
+    fun compressVocab(json: Any, jContext: JSONObject, namespaces: MutableMap<String, String>, jVocabContext: JSONObject? = null): Any? {
+        return modifyVocab(json, jContext, namespaces, namespaces.reverse(), JsonLDVocabTransformationType.Compress, jVocabContext)
     }
 
-    fun modifyVocab(json: Any, jContext: JSONObject, namespaces: Map<String, String>, namespacesReverse: Map<String, String>, transformType: JsonLDVocabTransformationType, jVocabContext: JSONObject? = null): Any? {
+    fun modifyVocab(json: Any, jContext: JSONObject, namespaces: MutableMap<String, String>, namespacesReverse: MutableMap<String, String>, transformType: JsonLDVocabTransformationType, jVocabContext: JSONObject? = null): Any? {
         return when (json) {
             is JSONObject -> {
                 val jObj: JSONObject = json
@@ -118,18 +118,18 @@ object JsonContextHelper {
                 val value: String? = json.toString()
                 return if (value == null) {
                     null
-                } else if (transformType == JsonLDVocabTransformationType.EXPAND) {
+                } else if (transformType == JsonLDVocabTransformationType.Expand) {
                     val jMapping: Any? = jc.opt(value)
                     if (jMapping != null) {
                         val uri: String = jMapping.toString()
-                        val parts: List<String> = uri.split(":")
+                        val parts: MutableList<String> = uri.split(":").toMutableList()
                         val ns: String = namespaces[parts[0]]!!
                         val newValue: String = ns + parts[1]
                         newValue
                     } else {
                         null
                     }
-                } else if (transformType == JsonLDVocabTransformationType.COMPRESS) {
+                } else if (transformType == JsonLDVocabTransformationType.Compress) {
                     val ns: String = value.substring(0, value.lastIndexOf('/') + 1)
                     if (namespacesReverse.containsKey(ns)) {
                         val compressedValue: String = value.replace(ns, namespacesReverse[ns] + ":")
@@ -161,3 +161,5 @@ object JsonContextHelper {
         return false
     }
 }
+
+

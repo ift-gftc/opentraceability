@@ -1,51 +1,52 @@
-package models.events.kdes
+package opentraceability.models.events.kdes
 
-
-import interfaces.IEventKDE
+import opentraceability.interfaces.IEventKDE
+import opentraceability.utility.*
 import org.json.*
 import org.w3c.dom.Element
-import utility.*
 import java.lang.reflect.Type
 import javax.xml.parsers.DocumentBuilderFactory
+import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 
 class EventKDECountry: EventKDEBase, IEventKDE {
 
-    override var ValueType: Type = Country::class.java
+    override var valueType: KType = Country::class.createType()
 
-    var Value: Country? = null
+    var value: Country? = null
 
 
     constructor(ns: String, name: String) {
-        this.Namespace = ns;
-        this.Name = name;
+        this.namespace = ns;
+        this.name = name;
     }
 
 
-    override fun GetJson(): JSONObject? {
+    override fun getJson(): JSONObject? {
         TODO("Not yet implemented")
     }
 
-    override fun GetXml(): Element? {
-        val value = this.Value ?: return null
+    override fun getXml(): Element? {
+        val value = this.value ?: return null
         // you would typically use a XML parser here
         val document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
-        val element = document.createElement(this.Name)
-        element.textContent = value.ISO.toString()
+        val element = document.createElement(this.name)
+        element.textContent = value.iso.toString()
         return element
     }
 
-    override fun SetFromJson(json: JSONObject) {
+    override fun setFromJson(json: JSONObject) {
         val strValue = json.toString()
-        this.Value = Countries.parse(strValue)
+        this.value = Countries.parse(strValue)
     }
 
-    override fun SetFromXml(xml: Element) {
-        this.Value = Countries.parse(xml.textContent)
+    override fun setFromXml(xml: Element) {
+        this.value = Countries.parse(xml.textContent)
     }
 
     override fun toString(): String {
-        if (Value != null) {
-            return Value.toString()
+        if (value != null) {
+            return value.toString()
         } else {
             return ""
         }

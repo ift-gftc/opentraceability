@@ -1,4 +1,4 @@
-package utility
+package opentraceability.utility
 
 import java.util.*
 import javax.xml.parsers.DocumentBuilderFactory
@@ -37,24 +37,24 @@ class Countries {
                 if (node.nodeType == Node.ELEMENT_NODE) {
                     val x = node as Element
                     val country = Country(x)
-                    _dirCountries[country.Abbreviation.toUpperCase()] = country
-                    _dirNameCountries[country.Name.toUpperCase()] = country
-                    if (!country.Alpha3.isNullOrEmpty()) {
-                        _dirAlpha3Countries[country.Alpha3.toUpperCase()] = country
+                    _dirCountries[country.abbreviation.toUpperCase()] = country
+                    _dirNameCountries[country.name.toUpperCase()] = country
+                    if (!country.alpha3.isNullOrEmpty()) {
+                        _dirAlpha3Countries[country.alpha3.toUpperCase()] = country
                     }
                 }
             }
         }
 
 
-        var CountryList: ArrayList<Country> = ArrayList<Country>()
+        var CountryList: MutableList<Country> = mutableListOf()
             get() {
-                var list: ArrayList<Country> = ArrayList()
+                var list: MutableList<Country> = ArrayList()
 
                 _dirNameCountries.forEach { element ->
                     list.add(element.value)
                 }
-                return list
+                return list.toMutableList()
             }
 
 
@@ -97,8 +97,8 @@ class Countries {
                 else{
                     run loop@{
                         _dirNameCountries.forEach { element ->
-                            if (element.value.AlternativeName != null) {
-                                if (element.value.AlternativeName.toUpperCase() == name.toUpperCase()) {
+                            if (element.value.alternativeName != null) {
+                                if (element.value.alternativeName.toUpperCase() == name.toUpperCase()) {
                                     country = element.value;
                                     return@loop
                                 }
@@ -118,7 +118,7 @@ class Countries {
 
                 run loop@{
                     _dirCountries.forEach { element ->
-                        if (element.value.ISO == iso) {
+                        if (element.value.iso == iso) {
                             country = element.value;
                             return@loop
                         }

@@ -1,19 +1,19 @@
-package mappers.masterdata
+package opentraceability.mappers.masterdata
 
-import interfaces.IMasterDataMapper
-import interfaces.IVocabularyElement
-import mappers.OpenTraceabilityJsonLDMapper
+import opentraceability.interfaces.IMasterDataMapper
+import opentraceability.interfaces.IVocabularyElement
+import opentraceability.mappers.OpenTraceabilityJsonLDMapper
 import org.json.JSONArray
-import utility.JsonContextHelper
+import opentraceability.utility.JsonContextHelper
 import java.lang.reflect.Type
 import java.util.*
 import org.json.JSONObject;
 import kotlin.reflect.KClass
 
 class GS1VocabJsonMapper : IMasterDataMapper {
-    override fun Map(vocab: IVocabularyElement): String {
-        if (vocab.Context == null) {
-            vocab.Context = JSONObject("""{
+    override fun map(vocab: IVocabularyElement): String {
+        if (vocab.context == null) {
+            vocab.context = JSONObject("""{
                                     "cbvmda": "urn:epcglobal:cbvmda:mda",
                                     "xsd": "http://www.w3.org/2001/XMLSchema#",
                                     "gs1": "http://gs1.org/voc/",
@@ -22,25 +22,25 @@ class GS1VocabJsonMapper : IMasterDataMapper {
                                 }""")
         }
 
-        val namespaces = getNamespaces(vocab.Context ?: throw Exception("vocab.Context is null."))
+        val namespaces = getNamespaces(vocab.context ?: throw Exception("vocab.Context is null."))
         val reversedNamespaces = namespaces.entries.associate { (key, value) -> value to key }.toMutableMap()
 
 
         val json = OpenTraceabilityJsonLDMapper.toJson(vocab, reversedNamespaces) as JSONObject? ?: throw Exception("Failed to map master data into GS1 web vocab.")
-        json.put("@context", vocab.Context)
+        json.put("@context", vocab.context)
         return json.toString()
     }
 
-    override fun <T : IVocabularyElement> Map(type: Class<T>, value: String): IVocabularyElement {
+    override fun <T : IVocabularyElement> map(type: KClass<T>, value: String): IVocabularyElement {
         val json = JSONObject(value)
         val namespaces = getNamespaces(json["@context"] ?: throw Exception("@context is null on the JSON-LD when deserializing GS1 Web Vocab. $value"))
         val obj = OpenTraceabilityJsonLDMapper.fromJson(json, type, namespaces) as IVocabularyElement
-        obj.Context = json.get("@context") as JSONObject
+        obj.context = json.get("@context") as JSONObject
         return obj
     }
 
-    override fun <T : IVocabularyElement> Map(value: String): IVocabularyElement {
-        return Map(T::class.java, value)
+    override fun <T : IVocabularyElement> map(value: String): IVocabularyElement {
+        return map<T>(value)
     }
 
 

@@ -1,4 +1,4 @@
-package models.events
+package opentraceability.models.events
 
 enum class EventProductType(val value: Int) {
     Reference(1),

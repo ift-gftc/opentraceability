@@ -1,42 +1,44 @@
-package models.events.kdes
+package opentraceability.models.events.kdes
 
-import interfaces.IEventKDE
+import opentraceability.interfaces.IEventKDE
 import org.json.JSONObject
 import java.lang.reflect.Type
 import java.time.OffsetDateTime
 import org.w3c.dom.Element
+import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 
 class EventKDEDateTime: EventKDEBase, IEventKDE {
 
-    override var ValueType: Type = OffsetDateTime::class.java
+    override var valueType: KType = OffsetDateTime::class.createType()
 
-    var Value: OffsetDateTime? = null
+    var value: OffsetDateTime? = null
 
     constructor(ns: String, name: String) {
-        this.Namespace = ns;
-        this.Name = name;
+        this.namespace = ns;
+        this.name = name;
     }
 
 
-    override fun GetJson(): JSONObject? {
+    override fun getJson(): JSONObject? {
         TODO("Not yet implemented")
     }
 
-    override fun GetXml(): Element? {
+    override fun getXml(): Element? {
         TODO("Not yet implemented")
     }
 
-    override fun SetFromJson(json: JSONObject) {
+    override fun setFromJson(json: JSONObject) {
         TODO("Not yet implemented")
     }
 
-    override fun SetFromXml(xml: Element) {
+    override fun setFromXml(xml: Element) {
         TODO("Not yet implemented")
     }
 
     override fun toString(): String {
-        if (Value != null) {
-            return Value.toString()
+        if (value != null) {
+            return value.toString()
         } else {
             return ""
         }

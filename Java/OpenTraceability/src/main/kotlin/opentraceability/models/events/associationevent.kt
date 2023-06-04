@@ -1,10 +1,10 @@
-package models.events
+package opentraceability.models.events
 
-import interfaces.IEvent
-import interfaces.IEventKDE
+import opentraceability.interfaces.IEvent
+import opentraceability.interfaces.IEventKDE
+import opentraceability.models.identifiers.*
+import opentraceability.utility.attributes.*
 import java.util.*
-import models.identifiers.*
-import utility.attributes.*
 import java.net.URI
 
 
@@ -12,93 +12,90 @@ import java.net.URI
 class AssociationEvent : EventBase(), IEvent {
 
     @OpenTraceabilityAttribute("","parentID", 7)
-    var ParentID: EPC? = null
+    var parentID: EPC? = null
 
     @OpenTraceabilityProductsAttribute("childQuantityList", EPCISVersion.V2, EventProductType.Child, 9, OpenTraceabilityProductsListType.QuantityList)
     @OpenTraceabilityProductsAttribute("childEPCs", EPCISVersion.V2, EventProductType.Child, 8, OpenTraceabilityProductsListType.EPCList)
-    var Children: MutableList<EventProduct> = mutableListOf()
+    var children: MutableList<EventProduct> = mutableListOf()
 
     @OpenTraceabilityAttribute("","action", 10)
-    override  var Action: EventAction? = null
+    override var action: EventAction? = null
 
     @OpenTraceabilityAttribute("","bizStep", 11)
-    override  var BusinessStep: URI? = null
-
+    override var businessStep: URI? = null
 
     @OpenTraceabilityAttribute("","disposition", 12)
-    override  var Disposition: URI? = null
-
+    override var disposition: URI? = null
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","readPoint", 13)
-    override  var ReadPoint: EventReadPoint? = EventReadPoint()
-
+    override var readPoint: EventReadPoint? = EventReadPoint()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","bizLocation", 14)
-    override var Location: EventLocation? = null
+    override var location: EventLocation? = null
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("bizTransaction")
     @OpenTraceabilityAttribute("","bizTransactionList", 15, EPCISVersion.V2)
-    override  var BizTransactionList: MutableList<EventBusinessTransaction> = mutableListOf()
+    override var bizTransactionList: MutableList<EventBusinessTransaction> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("source")
     @OpenTraceabilityAttribute("","sourceList", 16, EPCISVersion.V2)
-    override var SourceList: MutableList<EventSource> = mutableListOf()
+    override var sourceList: MutableList<EventSource> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("destination")
     @OpenTraceabilityAttribute("","destinationList", 17, EPCISVersion.V2)
-    override var DestinationList: MutableList<EventDestination> = mutableListOf()
+    override var destinationList: MutableList<EventDestination> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityArrayAttribute("sensorElement")
     @OpenTraceabilityAttribute("","sensorElementList", 18, EPCISVersion.V2)
-    override var SensorElementList: MutableList<SensorElement> = mutableListOf()
+    override var sensorElementList: MutableList<SensorElement> = mutableListOf()
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute("","persistentDisposition", 19)
-    override var PersistentDisposition: PersistentDisposition? = PersistentDisposition()
+    override var persistentDisposition: PersistentDisposition? = PersistentDisposition()
 
-    var ILMD: EventILMD = EventILMD()
+    var ilmd: EventILMD = EventILMD()
 
     @OpenTraceabilityXmlIgnoreAttribute
     @OpenTraceabilityAttribute("","type", 0)
-    override lateinit var EventType: EventType
+    override lateinit var eventType: EventType
 
 
-    override var Products: MutableList<EventProduct> = mutableListOf()
+    override var products: MutableList<EventProduct> = mutableListOf()
         get() {
-            val products = ArrayList<EventProduct>()
-            this.ParentID?.let {
-                products.add(EventProduct(it).apply { Type = EventProductType.Parent })
+            val prods: MutableList<EventProduct> = mutableListOf()
+            this.parentID?.let {
+                prods.add(EventProduct(it).apply { Type = EventProductType.Parent })
             }
-            products.addAll(this.Children)
-            return products
+            prods.addAll(this.children)
+            return prods
         }
 
 
-    override fun <T: IEventKDE> GetKDE(clazz: Class<T>, ns: String, name: String): T? {
-        return super.GetKDE<T>(clazz, ns, name)
+    override fun <T: IEventKDE> getKDE(clazz: Class<T>, ns: String, name: String): T? {
+        return super.getKDE<T>(clazz, ns, name)
     }
 
-    override fun <T: IEventKDE> GetKDE(clazz: Class<T>): T? {
-        return super.GetKDE<T>(clazz)
+    override fun <T: IEventKDE> getKDE(clazz: Class<T>): T? {
+        return super.getKDE<T>(clazz)
     }
 
-    override fun AddProduct(product: EventProduct) {
+    override fun addProduct(product: EventProduct) {
         when (product.Type) {
             EventProductType.Parent -> {
                 if (product.Quantity != null) {
                     throw Exception("Parents do not support quantity.")
                 }
-                this.ParentID = product.EPC
+                this.parentID = product.EPC
             }
 
             EventProductType.Child -> {
-                this.Children.add(product)
+                this.children.add(product)
             }
 
             else -> {
@@ -107,8 +104,8 @@ class AssociationEvent : EventBase(), IEvent {
         }
     }
 
-    override fun GetILMD(): EventILMD? {
-        return ILMD
+    override fun grabILMD(): EventILMD? {
+        return ilmd
     }
 
 

@@ -1,15 +1,15 @@
-package models.events
+package opentraceability.models.events
 
-import utility.attributes.*
+import opentraceability.utility.attributes.*
 import java.net.URI
 
 class PersistentDisposition {
 
     @OpenTraceabilityAttribute("","unset", 1)
     @OpenTraceabilityArrayAttribute
-    var Unset: ArrayList<URI>? = null
+    var unset: MutableList<URI>? = null
 
     @OpenTraceabilityAttribute("","set", 2)
     @OpenTraceabilityArrayAttribute
-    var Set: ArrayList<URI>? = null
+    var set: MutableList<URI>? = null
 }

@@ -1,22 +1,26 @@
-package mappers.epcis.json
+package opentraceability.mappers.epcis.json
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import interfaces.IVocabularyElement
-import mappers.OTMappingTypeInformation
-import models.common.LanguageString
-import models.events.*
+import opentraceability.interfaces.IVocabularyElement
+import opentraceability.mappers.OTMappingTypeInformation
+import opentraceability.models.common.LanguageString
+import opentraceability.models.events.*
 import org.json.*
-import utility.attributes.*
+import opentraceability.utility.attributes.*
+import kotlin.reflect.KClass
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.typeOf
 
 
 object EPCISJsonMasterDataWriter {
     fun writeMasterData(jDoc: JSONObject, doc: EPCISBaseDocument) {
-        if (doc.MasterData.isNotEmpty()) {
+        if (doc.masterData.isNotEmpty()) {
             val xEPCISHeader = jDoc.optJSONObject("epcisHeader") ?: JSONObject()
             val epcisMasterData = xEPCISHeader.optJSONObject("epcisMasterData") ?: JSONObject()
             val vocabularyList = epcisMasterData.optJSONArray("vocabularyList") ?: JSONArray()
 
-            for ((type, mdList) in doc.MasterData.groupBy { it.EPCISType }) {
+            for ((type, mdList) in doc.masterData.groupBy { it.epcisType }) {
                 if (type != null) {
                     val jVocabList = writeMasterDataList(mdList.toMutableList(), type)
                     vocabularyList.put(jVocabList)
@@ -50,23 +54,23 @@ object EPCISJsonMasterDataWriter {
         val jVocabElement = JSONObject()
         val attributes = JSONArray()
 
-        val mappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md.javaClass)
+        val mappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md::class.starProjectedType as KClass<*>)
 
         for (mapping in mappings.properties) {
             val id = mapping.Name
             val p = mapping.Property
 
-            val o = p.get(md)
+            val o = p.getter.call(md)
             if (o != null) {
                 if (id.isBlank()) {
-                    val subMappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(o.javaClass)
+                    val subMappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(o::class.starProjectedType as KClass<*>)
                     for (subMapping in subMappings.properties) {
                         val subID = subMapping.Name
                         val subProperty = subMapping.Property
-                        val subObj = subProperty.get(o)
+                        val subObj = subProperty.getter.call(o)
                         if (subObj != null) {
-                            if (subObj is List<*>) {
-                                val l = subObj as List<LanguageString>
+                            if (subObj is MutableList<*>) {
+                                val l = subObj as MutableList<LanguageString>
                                 val str = l.firstOrNull()?.value
                                 if (str != null) {
                                     val jAttribute = JSONObject()
@@ -85,13 +89,13 @@ object EPCISJsonMasterDataWriter {
                             }
                         }
                     }
-                } else if (p.getAnnotation(OpenTraceabilityObjectAttribute::class.java) != null) {
+                } else if (p.annotations.filterIsInstance<OpenTraceabilityObjectAttribute>().isNotEmpty()) {
                     val jAttribute = JSONObject()
                     jAttribute.put("id", id)
-                    jAttribute.put("attribute", writeObject(p.type, o))
+                    jAttribute.put("attribute", writeObject(p.returnType as KClass<*>, o))
                     attributes.put(jAttribute)
-                } else if (p.getAnnotation(OpenTraceabilityArrayAttribute::class.java) != null) {
-                    val l = o as List<*>
+                } else if (p.annotations.filterIsInstance<OpenTraceabilityArrayAttribute>().isNotEmpty()) {
+                    val l = o as MutableList<*>
                     for (i in l) {
                         val str = i.toString()
                         if (str.isNotBlank()) {
@@ -101,8 +105,10 @@ object EPCISJsonMasterDataWriter {
                             attributes.put(jAttribute)
                         }
                     }
-                } else if (o is List<*>) {
-                    val l = o as List<LanguageString>
+                }
+                else if (o::class.starProjectedType == typeOf<MutableList<LanguageString>>())
+                {
+                    val l = o as MutableList<LanguageString>
                     val str = l.firstOrNull()?.value
                     if (str != null) {
                         val jAttribute = JSONObject()
@@ -122,32 +128,35 @@ object EPCISJsonMasterDataWriter {
             }
         }
 
-        for (kde in md.KDEs) {
+        for (kde in md.kdes) {
             val jKDE = kde.getGS1WebVocabJson()
             if (jKDE != null) {
                 val jAttribute = JSONObject()
-                jAttribute.put("id", kde.Name)
+                jAttribute.put("id", kde.name)
                 jAttribute.put("attribute", jKDE)
                 attributes.put(jAttribute)
             }
         }
 
-        jVocabElement.put("id", md.ID ?: "")
+        jVocabElement.put("id", md.id ?: "")
         jVocabElement.put("attributes", attributes)
 
         return jVocabElement
     }
 
-    private fun writeObject(t: Class<*>, o: Any): JSONObject {
+    private fun writeObject(t: KClass<*>, o: Any): JSONObject {
         val j = JSONObject()
-        for (property in t.declaredFields) {
-            val value = property.get(o)
+        for (property in t.memberProperties) {
+            val value = property.getter.call(o)
             if (value != null) {
-                val xmlAtt = property.getAnnotation(OpenTraceabilityAttribute::class.java)
+                val xmlAtt = property.annotations.filterIsInstance<OpenTraceabilityAttribute>().firstOrNull()
                 if (xmlAtt != null) {
-                    if (property.getAnnotation(OpenTraceabilityObjectAttribute::class.java) != null) {
-                        j.put(xmlAtt.name, writeObject(property.type, value))
-                    } else {
+                    if (property.annotations.filterIsInstance<OpenTraceabilityObjectAttribute>().isNotEmpty())
+                    {
+                        j.put(xmlAtt.name, writeObject(property.returnType as KClass<*>, value))
+                    }
+                    else
+                    {
                         val str = value.toString()
                         if (str.isNotBlank()) {
                             j.put(xmlAtt.name, str)

@@ -1,19 +1,20 @@
-package models.masterdata.kdes
+package opentraceability.models.masterdata.kdes
 
-import interfaces.IMasterDataKDE
+import opentraceability.interfaces.IMasterDataKDE
 import org.json.JSONObject
 import org.w3c.dom.Element
 import org.json.XML
-import toXmlString
+import opentraceability.utility.*
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 class MasterDataKDEObject : MasterDataKDEBase, IMasterDataKDE {
     private var _xml: Element? = null
     private var _json: JSONObject? = null
 
-    override var ValueType: Class<*>? = null
-        get() = Any::class.java
+    override var valueType: KType = typeOf<Object>()
 
-    var Value: Any? = null
+    var value: Any? = null
         get() = _xml ?: _json
 
     constructor() {
@@ -21,8 +22,8 @@ class MasterDataKDEObject : MasterDataKDEBase, IMasterDataKDE {
     }
 
     constructor(ns: String, name: String) {
-        super.Namespace = ns
-        super.Name = name
+        super.namespace = ns
+        super.name = name
     }
 
     override fun setFromGS1WebVocabJson(json: JSONObject) {
@@ -32,31 +33,23 @@ class MasterDataKDEObject : MasterDataKDEBase, IMasterDataKDE {
 
     override fun getGS1WebVocabJson(): JSONObject? {
         return if (_xml != null) {
-            val jsonString = org.json.XML.toJSONObject(_xml.toString()).toString()
-            JSONObject(jsonString)
+            val json = _xml!!.toJSON()
+            return json
         } else {
             _json
         }
     }
-
 
     override fun setFromEPCISXml(xml: Element) {
         _xml = xml
         _json = null
     }
 
-
-
     override fun getEPCISXml(): Element? {
         return if (_xml != null) {
             _xml
         } else if (_json != null) {
-            val xmlDoc = XML.toJSONObject(_json.toString()).let { json ->
-                val xmlStr = json.toXmlString()
-                val doc = XMLParser.parse(xmlStr)
-                doc.documentElement
-            }
-            xmlDoc as? Element
+            return _json!!.toXML()
         } else {
             null
         }

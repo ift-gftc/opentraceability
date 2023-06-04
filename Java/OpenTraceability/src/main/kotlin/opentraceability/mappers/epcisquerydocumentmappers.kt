@@ -1,8 +1,8 @@
-package mappers
+package opentraceability.mappers
 
-import interfaces.IEPCISQueryDocumentMapper
-import mappers.epcis.json.EPCISQueryDocumentJsonMapper
-import mappers.epcis.xml.EPCISQueryDocumentXMLMapper
+import opentraceability.interfaces.IEPCISQueryDocumentMapper
+import opentraceability.mappers.epcis.json.EPCISQueryDocumentJsonMapper
+import opentraceability.mappers.epcis.xml.EPCISQueryDocumentXMLMapper
 
 class EPCISQueryDocumentMappers {
     var XML: IEPCISQueryDocumentMapper = EPCISQueryDocumentXMLMapper()

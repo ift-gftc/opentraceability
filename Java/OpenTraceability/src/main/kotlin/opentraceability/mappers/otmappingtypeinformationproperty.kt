@@ -1,28 +1,43 @@
-package mappers
+package opentraceability.mappers
 
-import models.events.*
-import utility.attributes.*
+import opentraceability.models.events.*
+import opentraceability.utility.attributes.*
+import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
 
 class OTMappingTypeInformationProperty {
 
-    var Property: KProperty<*>? = null
+    lateinit var Property: KMutableProperty<*>
     var Required: Boolean = false
     var IsObject: Boolean = false
     var IsArray: Boolean = false
     var IsRepeating: Boolean = false
     var IsEPCList: Boolean = false
     var IsQuantityList: Boolean = false
-    var ProductType: EventProductType? = null
+    var ProductType: EventProductType = EventProductType.Reference
     var Name: String = ""
     var ItemName: String? = null
     var Version: EPCISVersion? = null
     var SequenceOrder: Int? = null
     var CURIEMapping: String? = null
 
+    constructor(property: KMutableProperty<*>, att: OpenTraceabilityMasterDataAttribute, format: EPCISDataFormat ) {
+        this.Name = att.name
+        this.Property = property
+        this.IsObject = property.annotations.filterIsInstance<OpenTraceabilityObjectAttribute>().isNotEmpty()
+        this.IsRepeating = property.annotations.filterIsInstance<OpenTraceabilityRepeatingAttribute>().isNotEmpty()
 
+        val arrayAttribute = property.annotations
+            .filterIsInstance<OpenTraceabilityArrayAttribute>()
+            .firstOrNull()
 
-    constructor(property: KProperty<*>, att: OpenTraceabilityAttribute, format: EPCISDataFormat ) {
+        if (arrayAttribute != null) {
+            this.IsArray = true
+            this.ItemName = arrayAttribute.itemName
+        }
+    }
+
+    constructor(property: KMutableProperty<*>, att: OpenTraceabilityAttribute, format: EPCISDataFormat ) {
         this.Name = att.name
         this.Version = att.version
         this.SequenceOrder = att.sequenceOrder
@@ -48,7 +63,7 @@ class OTMappingTypeInformationProperty {
     }
 
     constructor(
-        property: KProperty<*>,
+        property: KMutableProperty<*>,
         att: OpenTraceabilityJsonAttribute,
         format: EPCISDataFormat
     ) {
@@ -76,7 +91,7 @@ class OTMappingTypeInformationProperty {
     }
 
     constructor(
-        property: KProperty<*>,
+        property: KMutableProperty<*>,
         att: OpenTraceabilityProductsAttribute,
         format: EPCISDataFormat
     )  {
@@ -98,12 +113,4 @@ class OTMappingTypeInformationProperty {
             }
         }
     }
-
-    var required: Boolean = false
-    var isEPCList: Boolean = false
-    var isQuantityList: Boolean = false
-    var productType: EventProductType? = null
-    var version: EPCISVersion? = null
-    var sequenceOrder: Int? = null
-    var curieMapping: String? = null
 }

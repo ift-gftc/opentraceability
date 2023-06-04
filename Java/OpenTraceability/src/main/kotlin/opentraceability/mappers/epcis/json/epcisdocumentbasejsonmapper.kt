@@ -1,22 +1,21 @@
-package mappers.epcis.json
+package opentraceability.mappers.epcis.json
 
-import models.events.*
+import opentraceability.models.events.*
 import org.json.*
-import utility.JsonContextHelper
-import utility.StringExtensions.tryConvertToDateTimeOffset
+import opentraceability.utility.JsonContextHelper
+import opentraceability.utility.StringExtensions.tryConvertToDateTimeOffset
 import java.lang.reflect.Type
 import java.util.*
 import com.google.gson.*
-import models.common.*
+import opentraceability.models.common.*
 import java.net.URL
 import org.everit.json.schema.loader.SchemaLoader
-import utility.JsonContextHelper.getJsonLDContext
-import utility.JsonContextHelper.scrapeNamespaces
+import opentraceability.utility.JsonContextHelper.getJsonLDContext
+import opentraceability.utility.JsonContextHelper.scrapeNamespaces
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 object EPCISDocumentBaseJsonMapper {
-
-
-
     inline fun <reified T : EPCISBaseDocument> readJSON(strValue: String, checkSchema: Boolean = true): Pair<T, JSONObject> {
         if (checkSchema) {
             checkSchema(JSONObject(strValue)) // assuming you have a checkSchema method
@@ -30,15 +29,15 @@ object EPCISDocumentBaseJsonMapper {
 
         val document = T::class.java.getDeclaredConstructor().newInstance()
 
-        document.Attributes["schemaVersion"] = json.optString("schemaVersion", "")
-        document.EPCISVersion = EPCISVersion.V2
+        document.attributes["schemaVersion"] = json.optString("schemaVersion", "")
+        document.epcisVersion = EPCISVersion.V2
 
         val creationDateAttributeStr = json.optString("creationDate")
         if (!creationDateAttributeStr.isNullOrBlank()) {
-            document.CreationDate = creationDateAttributeStr.tryConvertToDateTimeOffset() // assuming you have a tryConvertToDateTimeOffset method
+            document.creationDate = creationDateAttributeStr.tryConvertToDateTimeOffset() // assuming you have a tryConvertToDateTimeOffset method
         }
 
-        document.Attributes = HashMap()
+        document.attributes = HashMap()
 
         val jContextArray = json.optJSONArray("@context")
         if (jContextArray != null) {
@@ -47,18 +46,18 @@ object EPCISDocumentBaseJsonMapper {
                 if (jt is JSONObject) {
                     val ns = scrapeNamespaces(jt) // assuming you have a scrapeNamespaces method
                     ns.forEach { (key, value) ->
-                        document.Namespaces.putIfAbsent(key, value)
+                        document.namespaces.putIfAbsent(key, value)
                     }
-                    document.Contexts.add(jt.toString())
+                    document.contexts.add(jt.toString())
                 } else {
                     val value = jt.toString()
                     if (!value.isBlank()) {
                         val context = getJsonLDContext(value) // assuming you have a getJsonLDContext method
                         val ns = scrapeNamespaces(context)
                         ns.forEach { (key, value) ->
-                            document.Namespaces.putIfAbsent(key, value)
+                            document.namespaces.putIfAbsent(key, value)
                         }
-                        document.Contexts.add(value)
+                        document.contexts.add(value)
                     }
                 }
             }
@@ -67,19 +66,19 @@ object EPCISDocumentBaseJsonMapper {
         }
 
         json.optString("id")?.let {
-            document.Attributes["id"] = it
+            document.attributes["id"] = it
         }
 
-        document.Header = StandardBusinessDocumentHeader() // assuming you have a StandardBusinessDocumentHeader class
+        document.header = StandardBusinessDocumentHeader() // assuming you have a StandardBusinessDocumentHeader class
 
-        document.Header?.Sender = SBDHOrganization() // assuming you have a SBDHOrganization class
-        document.Header?.Sender?.Identifier = json.optString("sender")
+        document.header?.Sender = SBDHOrganization() // assuming you have a SBDHOrganization class
+        document.header?.Sender?.Identifier = json.optString("sender")
 
-        document.Header?.Receiver = SBDHOrganization()
-        document.Header?.Receiver?.Identifier = json.optString("receiver")
+        document.header?.Receiver = SBDHOrganization()
+        document.header?.Receiver?.Identifier = json.optString("receiver")
 
-        document.Header?.DocumentIdentification = SBDHDocumentIdentification() // assuming you have a SBDHDocumentIdentification class
-        document.Header?.DocumentIdentification?.InstanceIdentifier = json.optString("instanceIdentifier")
+        document.header?.DocumentIdentification = SBDHDocumentIdentification() // assuming you have a SBDHDocumentIdentification class
+        document.header?.DocumentIdentification?.InstanceIdentifier = json.optString("instanceIdentifier")
 
         return Pair(document, json)
     }
@@ -89,25 +88,25 @@ object EPCISDocumentBaseJsonMapper {
 
 
     fun writeJson(doc: EPCISBaseDocument, epcisNS: String, docType: String): JSONObject {
-        if (doc.EPCISVersion != EPCISVersion.V2) {
-            throw Exception("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
+        if (doc.epcisVersion != EPCISVersion.V2) {
+            throw Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
         }
 
         // construct the main JSON object
         val jobj = JSONObject()
-        jobj.put("@context", doc.Contexts)
+        jobj.put("@context", doc.contexts)
         jobj.put("@type", docType)
 
 
         // add all of the core attributes of the EPCIS document...
-        jobj.put("schemaVersion", doc.Attributes["schemaVersion"])
+        jobj.put("schemaVersion", doc.attributes["schemaVersion"])
         jobj.put("epcisVersion", "2.0")
-        jobj.put("id", doc.Attributes["id"])
-        jobj.put("creationDate", doc.CreationDate)
+        jobj.put("id", doc.attributes["id"])
+        jobj.put("creationDate", doc.creationDate)
 
-        jobj.put("sender", doc.Header?.Sender?.Identifier)
-        jobj.put("receiver", doc.Header?.Receiver?.Identifier)
-        jobj.put("instanceIdentifier", doc.Header?.DocumentIdentification?.InstanceIdentifier)
+        jobj.put("sender", doc.header?.Sender?.Identifier)
+        jobj.put("receiver", doc.header?.Receiver?.Identifier)
+        jobj.put("instanceIdentifier", doc.header?.DocumentIdentification?.InstanceIdentifier)
         return jobj
     }
 
@@ -146,13 +145,14 @@ object EPCISDocumentBaseJsonMapper {
     }
 
 
-    fun getEventTypeFromProfile(jEvent: JSONObject): Type {
+    fun getEventTypeFromProfile(jEvent: JSONObject): KClass<*> {
         val action: EventAction? = EventAction.values().find { it.name == jEvent.optString("action") }
         val bizStep: String? = jEvent.optString("bizStep")
         val eventType: String = jEvent.optString("type") ?: throw Exception("type property not set on event ${jEvent.toString()}")
 
-        val profiles = Setup.Profiles
-            .filter { it.EventType.toString() == eventType && (it.Action == null || it.Action == action) && (it.BusinessStep == null || it.BusinessStep?.toLowerCase() == bizStep?.toLowerCase()) }
+        val profiles = opentraceability.Setup.Profiles
+            .filter { it.EventType.toString() == eventType && (it.Action == null || it.Action == action) && (it.BusinessStep == null || it.BusinessStep.equals(
+                bizStep, ignoreCase = true)) }
             .sortedByDescending { it.SpecificityScore }
             .toMutableList()
 
@@ -176,7 +176,7 @@ object EPCISDocumentBaseJsonMapper {
     }
 
 
-    fun conformEPCISJsonLD(json: JSONObject, namespaces: Map<String, String>) {
+    fun conformEPCISJsonLD(json: JSONObject, namespaces: MutableMap<String, String>) {
         compressVocab(json)
     }
 

@@ -1,4 +1,4 @@
-package utility
+package opentraceability.utility
 
 import java.util.concurrent.ConcurrentLinkedDeque
 import java.util.concurrent.TimeUnit

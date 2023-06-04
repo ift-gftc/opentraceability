@@ -1,5 +1,6 @@
-package utility
+package opentraceability.utility
 
+import opentraceability.OTLogger
 import java.util.*
 
 object EnumUtil {
@@ -9,7 +10,7 @@ object EnumUtil {
             val displayAnnotation = field.getAnnotationsByType(opentraceability.utility.attributes.Description::class.java)
             return displayAnnotation.firstOrNull()?.Description
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
@@ -20,24 +21,24 @@ object EnumUtil {
             val displayAnnotation = field.getAnnotationsByType(opentraceability.utility.attributes.Display::class.java)
             return displayAnnotation.firstOrNull()?.Name
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
 
-    inline fun <T : Enum<T>, reified A : Annotation> GetEnumAttributes(value: T): List<A> {
+    inline fun <T : Enum<T>, reified A : Annotation> GetEnumAttributes(value: T): MutableList<A> {
         try {
             val field = value::class.java.getField(value.name)
             val annotations = field.getAnnotationsByType(A::class.java)
-            return annotations.toList()
+            return annotations.toMutableList()
         } catch (ex: Exception) {
-            OTLogger.error(ex)
+            opentraceability.OTLogger.error(ex)
             throw ex
         }
     }
 
-    inline fun <reified T : Enum<T>> GetValues(): List<T> {
-        return enumValues<T>().toList()
+    inline fun <reified T : Enum<T>> GetValues(): MutableList<T> {
+        return enumValues<T>().toMutableList()
     }
 
 

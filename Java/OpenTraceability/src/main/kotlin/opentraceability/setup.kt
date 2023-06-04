@@ -1,17 +1,24 @@
+package opentraceability
+
 import com.google.gson.GsonBuilder
-import interfaces.IVocabularyElement
-import models.events.*
-import models.identifiers.*
-import models.masterdata.*
-import utility.*
+import opentraceability.interfaces.IEvent
+import opentraceability.interfaces.IVocabularyElement
+import opentraceability.models.events.*
+import opentraceability.models.identifiers.*
+import opentraceability.models.masterdata.*
+import opentraceability.utility.*
 import java.lang.reflect.Type
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.starProjectedType
 
 class Setup {
     companion object {
 
-        var Profiles: ArrayList<OpenTraceabilityEventProfile> = ArrayList()
-        var MasterDataTypes: MutableMap<String, Type> = mutableMapOf()
-        var MasterDataTypeDefault: MutableMap<Type, Type> = mutableMapOf()
+        var Profiles: MutableList<OpenTraceabilityEventProfile> = ArrayList()
+        var MasterDataTypes: MutableMap<String, KType> = mutableMapOf()
+        var MasterDataTypeDefault: MutableMap<KType, KType> = mutableMapOf()
 
         @Volatile
         var _isInitialized: Boolean = false
@@ -23,36 +30,36 @@ class Setup {
 
                 registerEventProfile(
                     OpenTraceabilityEventProfile(
-                        ObjectEvent<EventILMD>()::class.java,
+                        ObjectEvent<EventILMD>()::class.createType() as KClass<IEvent>,
                         EventType.ObjectEvent
                     )
                 )
                 registerEventProfile(
                     OpenTraceabilityEventProfile(
-                        TransactionEvent::class.java,
+                        TransactionEvent::class.createType() as KClass<IEvent>,
                         EventType.TransactionEvent
                     )
                 )
                 registerEventProfile(
                     OpenTraceabilityEventProfile(
-                        TransformationEvent<EventILMD>()::class.java,
+                        TransformationEvent<EventILMD>()::class.createType() as KClass<IEvent>,
                         EventType.TransformationEvent
                     )
                 )
                 registerEventProfile(
                     OpenTraceabilityEventProfile(
-                        AggregationEvent<EventILMD>()::class.java,
+                        AggregationEvent<EventILMD>()::class.createType() as KClass<IEvent>,
                         EventType.AggregationEvent
                     )
                 )
                 registerEventProfile(
                     OpenTraceabilityEventProfile(
-                        AssociationEvent::class.java,
+                        AssociationEvent::class.createType() as KClass<IEvent>,
                         EventType.AssociationEvent
                     )
                 )
 
-                registerMasterDataType<Tradeitem>();
+                registerMasterDataType<TradeItem>();
                 registerMasterDataType<Location>();
                 registerMasterDataType<TradingParty>();
 
@@ -67,7 +74,6 @@ class Setup {
 
                 _isInitialized = true
             }
-
         }
 
         @Synchronized
@@ -82,7 +88,7 @@ class Setup {
             Profiles.add(profile)
         }
 
-        inline fun <reified T> registerMasterDataType(defaultFor: Type? = null) {
+        inline fun <reified T : IVocabularyElement> registerMasterDataType(defaultFor: KType? = null) {
 
             var v: IVocabularyElement? = T::class.java.newInstance() as IVocabularyElement
 
@@ -92,34 +98,33 @@ class Setup {
 
             var type: String = ""
 
-            if (v.EPCISType != null) {
-                type = v.EPCISType!!.toLowerCase()
+            if (v.epcisType != null) {
+                type = v.epcisType!!.toLowerCase()
             } else {
                 throw Exception("The 'Type' property on the instance of T returned a NULL value.")
             }
 
             if (MasterDataTypes.getValue(type) == null) {
-                MasterDataTypes.put(type, T::class.java)
+                MasterDataTypes.put(type, T::class.starProjectedType)
             } else {
-                MasterDataTypes[type] = T::class.java
+                MasterDataTypes[type] = T::class.starProjectedType
             }
 
             if (defaultFor != null) {
                 if (MasterDataTypeDefault.getValue(defaultFor) == null) {
-                    MasterDataTypeDefault.put(defaultFor, T::class.java)
+                    MasterDataTypeDefault.put(defaultFor, T::class.starProjectedType)
                 } else {
-                    MasterDataTypeDefault[defaultFor] = T::class.java
+                    MasterDataTypeDefault[defaultFor] = T::class.starProjectedType
                 }
             }
         }
 
-
-        inline fun <reified T, reified TDefaultFor> registerMasterDataType() {
-            registerMasterDataType<T>(TDefaultFor::class.java);
+        inline fun <reified T : TDefaultFor, reified TDefaultFor : IVocabularyElement> registerMasterDataType() {
+            registerMasterDataType<T>(TDefaultFor::class.starProjectedType);
         }
 
-        fun getMasterDataTypeDefault(type: Type): Type? {
-            return MasterDataTypeDefault.getValue(type)
+        fun getMasterDataTypeDefault(type: KType): KClass<IVocabularyElement>? {
+            return MasterDataTypeDefault.getValue(type) as KClass<IVocabularyElement>
         }
     }
 }
