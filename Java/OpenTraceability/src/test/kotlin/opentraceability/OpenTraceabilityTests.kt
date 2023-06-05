@@ -258,7 +258,7 @@ class OpenTraceabilityTests {
 
         fun readTestData(v: String): String {
             val loader = EmbeddedResourceLoader()
-            val str = loader.readString("OpenTraceability.Tests", "opentraceability.tests.data.$v")
+            val str = loader.readString("OpenTraceability.Tests", "opentraceability.test.data.$v")
             return str
         }
 

@@ -4,6 +4,7 @@ import opentraceability.OpenTraceabilityTests
 import opentraceability.gdst.MasterData.GDSTLocation
 import opentraceability.interfaces.IVocabularyElement
 import opentraceability.mappers.OpenTraceabilityMappers
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import kotlin.reflect.KClass
@@ -11,6 +12,7 @@ import kotlin.reflect.KClass
 
 class MasterDataTests {
 
+    @Test
     @ParameterizedTest(name = "{0}")
     @ValueSource(strings = ["gs1-vocab-products01.json"])
     fun gs1WebVocabProducts(file: String) {
@@ -20,7 +22,7 @@ class MasterDataTests {
         OpenTraceabilityTests.compareJSON(json, jsonAfter)
     }
 
-
+    @Test
     @ParameterizedTest(name = "{0}")
     @ValueSource(strings = ["gs1-vocab-locations01.json"])
     fun gs1WebVocabLocation(file: String) {
@@ -30,6 +32,7 @@ class MasterDataTests {
         OpenTraceabilityTests.compareJSON(json, jsonAfter)
     }
 
+    @Test
     @ParameterizedTest(name = "{0}")
     @ValueSource(strings = ["gs1-vocab-tradingparties01.json"])
     fun gs1WebVocabTradingParty(file: String) {
@@ -39,6 +42,7 @@ class MasterDataTests {
         OpenTraceabilityTests.compareJSON(json, jsonAfter)
     }
 
+    @Test
     @ParameterizedTest(name = "{0}")
     @ValueSource(strings = ["testserver_advancedfilters.jsonld"])
     fun gs1WebVocabEPCISDocument(file: String) {

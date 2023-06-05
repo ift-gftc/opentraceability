@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.*
 class EPCISDocumentTests {
 
     @ParameterizedTest
-    @CsvFileSource(resources = ["opentraceability/data/xml_files.csv"], numLinesToSkip = 1)
+    @CsvFileSource(resources = ["data/xml_files.csv"], numLinesToSkip = 1)
     fun XML(file: String) {
         val xmlObjectEvents = OpenTraceabilityTests.readTestData(file)
         val doc = OpenTraceabilityMappers.EPCISDocument.XML.map(xmlObjectEvents)
