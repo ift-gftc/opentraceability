@@ -1,8 +1,6 @@
 package opentraceability
 
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
-import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import java.io.ByteArrayInputStream
 import java.io.IOException
@@ -258,9 +256,9 @@ class OpenTraceabilityTests {
         }
 
 
-        internal fun readTestData(v: String): String {
+        fun readTestData(v: String): String {
             val loader = EmbeddedResourceLoader()
-            val str = loader.readString("OpenTraceability.Tests", "OpenTraceability.Tests.Data.$v")
+            val str = loader.readString("OpenTraceability.Tests", "opentraceability.tests.data.$v")
             return str
         }
 

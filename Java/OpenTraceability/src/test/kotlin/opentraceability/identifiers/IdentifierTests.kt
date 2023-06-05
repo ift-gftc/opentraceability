@@ -4,11 +4,13 @@ import opentraceability.OpenTraceabilityTests
 import opentraceability.models.identifiers.*
 import org.junit.jupiter.params.ParameterizedTest
 import org.json.JSONArray
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.assertFails
 
 class IdentifierTests {
 
+    @Test
     @ParameterizedTest
     @ValueSource(strings = ["epc_tests.json"])
     fun EPCTests(file: String) {

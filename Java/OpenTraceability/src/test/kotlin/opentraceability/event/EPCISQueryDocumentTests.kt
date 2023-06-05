@@ -14,7 +14,9 @@ import org.w3c.dom.Element
 class EPCISQueryDocumentTests {
     @Test
     fun XML() {
-        val file = "querydoc_example01.xml"
+        var file: String = "querydoc_example01.xml"
+
+        // read object events from test data specified in the file argument
         val xmlObjectEvents = OpenTraceabilityTests.readTestData(file)
         val doc = OpenTraceabilityMappers.EPCISQueryDocument.XML.map(xmlObjectEvents)
         var xmlObjectEventsAfter = OpenTraceabilityMappers.EPCISQueryDocument.XML.map(doc)

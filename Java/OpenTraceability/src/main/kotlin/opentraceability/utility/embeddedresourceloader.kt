@@ -12,7 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.parsers.ParserConfigurationException
 
 class EmbeddedResourceLoader {
-    private val assemblyMap: MutableMap<String, ClassLoader> = HashMap()
+    var assemblyMap: MutableMap<String, ClassLoader> = mutableMapOf()
 
     private fun getClassLoader(assemblyName: String): ClassLoader {
         var classLoader: ClassLoader? = assemblyMap[assemblyName]

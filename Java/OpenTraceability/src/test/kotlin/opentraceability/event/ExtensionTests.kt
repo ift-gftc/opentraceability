@@ -9,12 +9,11 @@ import org.junit.jupiter.params.provider.ValueSource
 
 class ExtensionTests {
 
-    /*
-
     @Test
     @ParameterizedTest(name = "{0}")
     @ValueSource(strings = ["gdst_extensions_01.xml"])
     fun xml(file: String) {
+        /*
         val xmlObjectEvents = OpenTraceabilityTests.readTestData(file)
         val doc = OpenTraceabilityMappers.EPCISQueryDocument.XML.map(xmlObjectEvents)
         assertTrue(doc.events.any { it is GDSTFishingEvent })
@@ -23,7 +22,7 @@ class ExtensionTests {
         val processingEvent = doc.events.first { it is GDSTProcessingEvent } as GDSTProcessingEvent
         val feedmillEvent = doc.events.first { it is GDSTFeedmillObjectEvent } as GDSTFeedmillObjectEvent
         assertTrue(doc.getMasterData<GDSTLocation>().isNotEmpty())
+        */
     }
 
-    */
 }
