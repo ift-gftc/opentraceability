@@ -1,10 +1,7 @@
 package opentraceability.queries
 
-import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.ObjectMapper
 import opentraceability.interfaces.IVocabularyElement
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import opentraceability.models.identifiers.*
 import opentraceability.models.events.*
 import opentraceability.models.masterdata.*
@@ -15,13 +12,11 @@ import opentraceability.models.identifiers.PGLN
 import opentraceability.models.masterdata.TradingParty
 import opentraceability.mappers.OpenTraceabilityMappers
 import opentraceability.models.masterdata.DigitalLink
-import java.lang.reflect.Type
 import okhttp3.OkHttpClient
 import java.net.URI
 import okhttp3.Request
 import okhttp3.Response
 import kotlin.reflect.KClass
-import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 

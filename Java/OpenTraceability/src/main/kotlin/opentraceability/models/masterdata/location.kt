@@ -15,7 +15,7 @@ import opentraceability.utility.attributes.OpenTraceabilityObjectAttribute
 import java.util.*
 import org.json.JSONObject
 
-class Location : IVocabularyElement {
+open class Location : IVocabularyElement {
 
     override var id: String? = null
 

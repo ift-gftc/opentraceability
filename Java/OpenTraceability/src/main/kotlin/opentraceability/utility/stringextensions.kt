@@ -1,9 +1,13 @@
 package opentraceability.utility
 
+import org.w3c.dom.Document
+import org.xml.sax.InputSource
+import java.io.StringReader
 import java.time.Duration
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import javax.xml.parsers.DocumentBuilderFactory
 
 object StringExtensions {
     private val digitsOnlyRegex = Regex("^[0-9]+$")
@@ -38,5 +42,13 @@ object StringExtensions {
         val regex = "(?=[^{}]*(?:{[^{}]*}[^{}]*)*\$)/"
         var str = this.replace(regex, "%SLASH%")
         return str.split("%SLASH%").toMutableList()
+    }
+
+
+    fun String.parseXmlToDocument(): Document {
+        val factory = DocumentBuilderFactory.newInstance()
+        val builder = factory.newDocumentBuilder()
+        val inputSource = InputSource(StringReader(this))
+        return builder.parse(inputSource)
     }
 }

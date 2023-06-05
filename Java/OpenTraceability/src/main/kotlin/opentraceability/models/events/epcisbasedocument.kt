@@ -13,7 +13,7 @@ open class EPCISBaseDocument {
     var creationDate: OffsetDateTime? = null
     var header: StandardBusinessDocumentHeader? = null
     var events: MutableList<IEvent> = mutableListOf()
-    var masterData: MutableList<IVocabularyElement> =  mutableListOf()
+    var masterData: MutableList<IVocabularyElement> = mutableListOf()
     var namespaces: MutableMap<String, String> = mutableMapOf()
     var contexts: MutableList<String> = mutableListOf()
     var attributes: MutableMap<String, String> = mutableMapOf()
@@ -21,6 +21,7 @@ open class EPCISBaseDocument {
     inline fun <reified T : IVocabularyElement> searchMasterData(): MutableList<T> {
         return this.masterData.filterIsInstance<T>().toMutableList()
     }
+
     inline fun <reified T : IVocabularyElement> searchMasterData(id: String?): T? {
         return this.masterData.filterIsInstance<T>().firstOrNull { it.id == id }
     }
@@ -87,15 +88,24 @@ open class EPCISBaseDocument {
 
             // filter: EQ_bizStep
             if (parameters.query.EQ_bizStep != null && parameters.query.EQ_bizStep.isNotEmpty()) {
-                if (!HasUriMatch(evt.businessStep, parameters.query.EQ_bizStep, "https://ref.gs1.org/cbv/BizStep-", "urn:epcglobal:cbv:bizstep:")) {
+                if (!HasUriMatch(
+                        evt.businessStep,
+                        parameters.query.EQ_bizStep,
+                        "https://ref.gs1.org/cbv/BizStep-",
+                        "urn:epcglobal:cbv:bizstep:"
+                    )
+                ) {
                     continue
                 }
             }
 
             // filter: EQ_bizLocation
             if (parameters.query.EQ_bizLocation != null && parameters.query.EQ_bizLocation.isNotEmpty()) {
-                if (evt.location?.gln == null || !parameters.query.EQ_bizLocation.map { it.toString().toLowerCase() }.contains(
-                        evt.location!!.gln.toString().toLowerCase())) {
+                if (evt.location?.gln == null || !parameters.query.EQ_bizLocation.map { it.toString().toLowerCase() }
+                        .contains(
+                            evt.location!!.gln.toString().toLowerCase()
+                        )
+                ) {
                     continue
                 }
             }
@@ -123,7 +133,13 @@ open class EPCISBaseDocument {
 
             // filter: MATCH_epcClass
             if (parameters.query.MATCH_epcClass != null && parameters.query.MATCH_epcClass.isNotEmpty()) {
-                if (!HasMatch(evt, parameters.query.MATCH_epcClass, EventProductType.Reference, EventProductType.Child)) {
+                if (!HasMatch(
+                        evt,
+                        parameters.query.MATCH_epcClass,
+                        EventProductType.Reference,
+                        EventProductType.Child
+                    )
+                ) {
                     continue
                 }
             }
@@ -177,4 +193,15 @@ open class EPCISBaseDocument {
 
         return true
     }
+
+/*
+    inline fun <reified T : IVocabularyElement> getMasterData(): MutableList<T> {
+        return this.masterData.filterIsInstance<T>().toMutableList()
+    }
+
+    inline fun <reified T : IVocabularyElement> getMasterData(id: String?): T? {
+        return this.masterData.filterIsInstance<T>().firstOrNull { it.id == id }
+    }
+*/
+
 }

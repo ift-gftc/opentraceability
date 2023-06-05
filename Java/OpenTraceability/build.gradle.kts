@@ -23,6 +23,13 @@ dependencies {
     implementation("com.worldturner.medeia:medeia-validator-jackson:1.1.1")
     implementation("com.liferay:com.github.fge.json.schema.validator:2.2.3.LIFERAY-PATCHED-2")
 
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.2")
+    testImplementation("junit:junit:3.8.2")
+    testImplementation("junit:junit:3.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+
     testImplementation(kotlin("test"))
 }
 

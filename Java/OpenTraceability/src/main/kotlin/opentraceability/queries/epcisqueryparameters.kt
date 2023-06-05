@@ -7,11 +7,10 @@ import java.time.OffsetDateTime
 import kotlin.reflect.KMutableProperty
 import java.net.URLEncoder
 import java.time.format.DateTimeFormatter
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
 import kotlin.reflect.full.*
 import kotlin.reflect.typeOf
-
+import com.google.gson.GsonBuilder
+import org.json.JSONObject
 
 class EPCISQueryParameters {
     private val propMapping = mutableMapOf<String, KMutableProperty<*>>()
@@ -161,6 +160,17 @@ class EPCISQueryParameters {
         return "?$queryString"
     }
 
+    fun toJSON(): String {
+        val gson = GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .create()
+        val json = gson.toJson(this.query)
 
+        val jobject = JSONObject()
+        jobject.put("queryType", this.queryType.toString())
+        jobject.put("query", JSONObject(json))
+
+        return jobject.toString()
+    }
 
 }
