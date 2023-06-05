@@ -41,7 +41,6 @@ class GS1VocabJsonMapper : IMasterDataMapper {
         return map<T>(value)
     }
 
-
     fun getNamespaces(jContext: Any): MutableMap<String, String> {
         val namespaces = mutableMapOf<String, String>()
         when (jContext) {

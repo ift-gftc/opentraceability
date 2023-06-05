@@ -6,14 +6,11 @@ import com.github.fge.jackson.JsonLoader
 import com.github.fge.jsonschema.core.exceptions.ProcessingException
 import com.github.fge.jsonschema.main.JsonSchema
 import com.github.fge.jsonschema.main.JsonSchemaFactory
-import com.worldturner.medeia.schema.validation.SchemaValidator
-import kotlinx.coroutines.runBlocking
-import org.everit.json.schema.Validator
 import java.net.URL
-import java.util.concurrent.ConcurrentHashMap
 
 object JsonSchemaChecker {
-    private val schemaCache: MutableMap<String, JsonNode> = mutableMapOf()
+    private val _schemaCache: MutableMap<String, JsonNode> = mutableMapOf()
+
 
     fun isValid(jsonStr: String, schemaURL: String, errors: MutableList<String>): Boolean {
         val schemaNode: JsonNode = getSchema(schemaURL)
@@ -31,8 +28,9 @@ object JsonSchemaChecker {
     }
 
 
-    private fun getSchema(schemaUrl: String): JsonNode {
-        return schemaCache.getOrPut(schemaUrl) {
+
+    fun getSchema(schemaUrl: String): JsonNode {
+        return _schemaCache.getOrPut(schemaUrl) {
             val schemaJson: String = URL(schemaUrl).readText()
             JsonLoader.fromString(schemaJson)
         }

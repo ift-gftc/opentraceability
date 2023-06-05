@@ -3,7 +3,6 @@ package opentraceability.mappers
 import opentraceability.models.events.*
 import opentraceability.utility.attributes.*
 import kotlin.reflect.KMutableProperty
-import kotlin.reflect.KProperty
 
 class OTMappingTypeInformationProperty {
 
@@ -22,10 +21,11 @@ class OTMappingTypeInformationProperty {
     var CURIEMapping: String? = null
 
     constructor(property: KMutableProperty<*>, att: OpenTraceabilityMasterDataAttribute, format: EPCISDataFormat ) {
-        this.Name = att.name
+
         this.Property = property
         this.IsObject = property.annotations.filterIsInstance<OpenTraceabilityObjectAttribute>().isNotEmpty()
         this.IsRepeating = property.annotations.filterIsInstance<OpenTraceabilityRepeatingAttribute>().isNotEmpty()
+        this.Name = att.name
 
         val arrayAttribute = property.annotations
             .filterIsInstance<OpenTraceabilityArrayAttribute>()
@@ -38,6 +38,10 @@ class OTMappingTypeInformationProperty {
     }
 
     constructor(property: KMutableProperty<*>, att: OpenTraceabilityAttribute, format: EPCISDataFormat ) {
+
+        this.Property = property
+        this.IsObject = property.annotations.filterIsInstance<OpenTraceabilityObjectAttribute>().isNotEmpty()
+        this.IsRepeating = property.annotations.filterIsInstance<OpenTraceabilityRepeatingAttribute>().isNotEmpty()
         this.Name = att.name
         this.Version = att.version
         this.SequenceOrder = att.sequenceOrder
@@ -67,12 +71,14 @@ class OTMappingTypeInformationProperty {
         att: OpenTraceabilityJsonAttribute,
         format: EPCISDataFormat
     ) {
+        this.Property = property
+        this.IsObject = property.annotations.filterIsInstance<OpenTraceabilityObjectAttribute>().isNotEmpty()
+        this.IsRepeating = property.annotations.filterIsInstance<OpenTraceabilityRepeatingAttribute>().isNotEmpty()
         this.Name = att.name
 
         val arrayAttribute = property.annotations
             .filterIsInstance<OpenTraceabilityArrayAttribute>()
             .firstOrNull()
-
 
         if (arrayAttribute != null) {
             this.IsArray = true
@@ -95,6 +101,7 @@ class OTMappingTypeInformationProperty {
         att: OpenTraceabilityProductsAttribute,
         format: EPCISDataFormat
     )  {
+        this.Property = property
         this.Name = att.name
         this.Version = att.version
         this.SequenceOrder = att.sequenceOrder

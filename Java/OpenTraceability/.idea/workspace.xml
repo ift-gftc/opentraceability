@@ -6,10 +6,34 @@
   <component name="ChangeListManager">
     <list default="true" id="97ebc57f-a43a-45e7-8bab-7900e03de93a" name="Changes" comment="Kotlin java tests compiled">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/opentraceability/OpenTraceabilityTests.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/opentraceability/OpenTraceabilityTests.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/opentraceability/event/EPCISDocumentTests.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/opentraceability/event/EPCISDocumentTests.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/opentraceability/event/MasterDataTests.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/opentraceability/event/MasterDataTests.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatareader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatareader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatawriter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatawriter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisquerydocumentjsonmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisquerydocumentjsonmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/utils.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epciquerydocumentxmlmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epciquerydocumentxmlmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisdocumentbasexmlmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisdocumentbasexmlmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisdocumentxmlmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisdocumentxmlmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisxmlmasterdatareader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisxmlmasterdatareader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisxmlmasterdatawriter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/xml/epcisxmlmasterdatawriter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/masterdata/gs1vocabjsonmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/masterdata/gs1vocabjsonmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/opentraceabilityjsonldmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/opentraceabilityjsonldmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/opentraceabilityxmlmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/opentraceabilityxmlmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformationproperty.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformationproperty.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/cachedxmlschema.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/cachedxmlschema.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/embeddedresourceloader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/embeddedresourceloader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/enumutil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/enumutil.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/jsoncontexthelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/jsoncontexthelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/jsonschemachecker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/jsonschemachecker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/measurement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/measurement.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/objectextensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/objectextensions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/stringextensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/stringextensions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/uom.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/uom.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/uoms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/uoms.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/xmlextensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/xmlextensions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/xmlschemachecker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/xmlschemachecker.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -288,7 +312,7 @@
       <workItem from="1685632126916" duration="1726000" />
       <workItem from="1685886630760" duration="28744000" />
       <workItem from="1685956649939" duration="7586000" />
-      <workItem from="1685966295562" duration="10246000" />
+      <workItem from="1685966295562" duration="20521000" />
     </task>
     <task id="LOCAL-00001" summary="add gradle">
       <created>1685532130376</created>
@@ -318,7 +342,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685975767383</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Kotlin java tests compiled">
+      <created>1685977819628</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1685977819628</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

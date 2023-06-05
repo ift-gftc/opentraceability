@@ -34,7 +34,6 @@ class EPCISQueryDocumentJsonMapper : IEPCISQueryDocumentMapper {
         }
     }
 
-
     override fun map(doc: EPCISQueryDocument): String {
         if (doc.epcisVersion != EPCISVersion.V2) {
             throw Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")

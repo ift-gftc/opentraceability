@@ -9,4 +9,9 @@ class CachedXmlSchema {
     var schemaSet: Schema? = null
     val lastUpdated: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)
 
+    constructor(_url: String, _schemaSet: Schema){
+        url = _url
+        schemaSet = _schemaSet
+    }
+
 }

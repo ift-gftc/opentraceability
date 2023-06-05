@@ -1,22 +1,20 @@
 package opentraceability.mappers
 
 import opentraceability.utility.attributes.*
-import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.reflect.*
 import kotlin.reflect.full.memberProperties
 
-class OTMappingTypeInformation(
-    val type: KClass<*>,
-    val format: EPCISDataFormat,
-    val isMasterDataMapping: Boolean = false
-) {
+class OTMappingTypeInformation {
+    lateinit var Type: KClass<*>
     val properties: MutableList<OTMappingTypeInformationProperty> = mutableListOf()
     val dic: MutableMap<String, OTMappingTypeInformationProperty> = mutableMapOf()
     var extensionKDEs: KMutableProperty<*>? = null
     var extensionAttributes: KMutableProperty<*>? = null
 
-    init {
+    constructor( type: KClass<*>,  format: EPCISDataFormat,  isMasterDataMapping: Boolean = false)  {
+        Type = type
+
         type.memberProperties.forEach { p ->
             val kprop = p as? KMutableProperty<*>
             if (kprop != null)

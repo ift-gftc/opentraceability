@@ -3,6 +3,7 @@ package opentraceability.utility
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import kotlin.experimental.xor
+
 fun String.getInt32HashCode(): Int {
     val hashCode: Int
     if (isNullOrEmpty()) {

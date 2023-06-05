@@ -4,16 +4,17 @@ import opentraceability.models.events.*
 import org.json.*
 import opentraceability.utility.JsonContextHelper
 import opentraceability.utility.StringExtensions.tryConvertToDateTimeOffset
-import java.lang.reflect.Type
 import java.util.*
 import com.google.gson.*
+import opentraceability.interfaces.IEvent
 import opentraceability.models.common.*
+import opentraceability.utility.JsonContextHelper.Companion.getJsonLDContext
+import opentraceability.utility.JsonContextHelper.Companion.scrapeNamespaces
 import java.net.URL
 import org.everit.json.schema.loader.SchemaLoader
-import opentraceability.utility.JsonContextHelper.getJsonLDContext
-import opentraceability.utility.JsonContextHelper.scrapeNamespaces
+import opentraceability.utility.JsonSchemaChecker
+import opentraceability.utility.OpenTraceabilitySchemaException
 import kotlin.reflect.KClass
-import kotlin.reflect.KType
 
 object EPCISDocumentBaseJsonMapper {
     inline fun <reified T : EPCISBaseDocument> readJSON(strValue: String, checkSchema: Boolean = true): Pair<T, JSONObject> {
@@ -83,10 +84,6 @@ object EPCISDocumentBaseJsonMapper {
         return Pair(document, json)
     }
 
-
-
-
-
     fun writeJson(doc: EPCISBaseDocument, epcisNS: String, docType: String): JSONObject {
         if (doc.epcisVersion != EPCISVersion.V2) {
             throw Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.")
@@ -109,41 +106,6 @@ object EPCISDocumentBaseJsonMapper {
         jobj.put("instanceIdentifier", doc.header?.DocumentIdentification?.InstanceIdentifier)
         return jobj
     }
-
-    fun checkSchema(json: JSONObject) {
-        val schemaUrl = URL("https://ref.gs1.org/standards/epcis/epcis-json-schema.json")
-        val schemaJson = JSONObject(JSONTokener(schemaUrl.openStream()))
-        val schema = SchemaLoader.load(schemaJson)
-        try {
-            schema.validate(json)  // throws a ValidationException if this object is invalid
-        } catch (e: Exception) {
-            throw Exception("Failed to validate JSON schema with errors:\n" + e.message + "\n\n and json " + json.toString(2))
-        }
-    }
-
-
-
-    fun normalizeEPCISJsonLD(jEPCISStr: String): String {
-        val gson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create()
-        val json = gson.fromJson(jEPCISStr, JSONObject::class.java) ?: throw Exception("Failed to parse json from string. $jEPCISStr")
-
-        val jEPCISContext = JsonContextHelper.getJsonLDContext("https://ref.gs1.org/standards/epcis/epcis-context.jsonld")
-        val namespaces = JsonContextHelper.scrapeNamespaces(jEPCISContext)
-
-        var jEventList: JSONArray? = json.optJSONObject("epcisBody")?.optJSONArray("eventList")
-        if (jEventList == null) {
-            jEventList = json.optJSONObject("epcisBody")?.optJSONObject("queryResults")?.optJSONObject("resultsBody")?.optJSONArray("eventList")
-        }
-        jEventList?.let {
-            for (i in 0 until it.length()) {
-                val jEvent = it.optJSONObject(i)
-                jEvent?.let { JsonContextHelper.expandVocab(it, jEPCISContext, namespaces) }
-            }
-        }
-
-        return json.toString()
-    }
-
 
     fun getEventTypeFromProfile(jEvent: JSONObject): KClass<*> {
         val action: EventAction? = EventAction.values().find { it.name == jEvent.optString("action") }
@@ -175,11 +137,33 @@ object EPCISDocumentBaseJsonMapper {
         }
     }
 
+    fun checkSchema(json: JSONObject) {
+        val jsonString = json.toString()
+        val schemaUrl = "https://ref.gs1.org/standards/epcis/epcis-json-schema.json"
+        val isValid = JsonSchemaChecker.isValid(jsonString, schemaUrl, mutableListOf<String>())
+        if (!isValid) {
+            val errors = mutableListOf<String>()
+            JsonSchemaChecker.isValid(jsonString, schemaUrl, errors)
+            val errorString = errors.joinToString("\n")
+            throw OpenTraceabilitySchemaException("Failed to validate JSON schema with errors:\n$errorString\n\n and json $jsonString")
+        }
+    }
+
+
+    internal fun getEventType(e: IEvent): String {
+        return when (e.eventType) {
+            EventType.ObjectEvent -> "ObjectEvent"
+            EventType.TransformationEvent -> "TransformationEvent"
+            EventType.TransactionEvent -> "TransactionEvent"
+            EventType.AggregationEvent -> "AggregationEvent"
+            EventType.AssociationEvent -> "AssociationEvent"
+            else -> throw Exception("Failed to determine the event type. Event Kotlin type is ${e::class.qualifiedName}")
+        }
+    }
 
     fun conformEPCISJsonLD(json: JSONObject, namespaces: MutableMap<String, String>) {
         compressVocab(json)
     }
-
 
     fun compressVocab(json: Any): Any {
         if (json is JSONObject) {
@@ -217,6 +201,27 @@ object EPCISDocumentBaseJsonMapper {
             }
             return JSONTokener(newVal).nextValue()
         }
+    }
+
+    fun normalizeEPCISJsonLD(jEPCISStr: String): String {
+        val gson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create()
+        val json = gson.fromJson(jEPCISStr, JSONObject::class.java) ?: throw Exception("Failed to parse json from string. $jEPCISStr")
+
+        val jEPCISContext = JsonContextHelper.getJsonLDContext("https://ref.gs1.org/standards/epcis/epcis-context.jsonld")
+        val namespaces = JsonContextHelper.scrapeNamespaces(jEPCISContext)
+
+        var jEventList: JSONArray? = json.optJSONObject("epcisBody")?.optJSONArray("eventList")
+        if (jEventList == null) {
+            jEventList = json.optJSONObject("epcisBody")?.optJSONObject("queryResults")?.optJSONObject("resultsBody")?.optJSONArray("eventList")
+        }
+        jEventList?.let {
+            for (i in 0 until it.length()) {
+                val jEvent = it.optJSONObject(i)
+                jEvent?.let { JsonContextHelper.expandVocab(it, jEPCISContext, namespaces) }
+            }
+        }
+
+        return json.toString()
     }
 }
 

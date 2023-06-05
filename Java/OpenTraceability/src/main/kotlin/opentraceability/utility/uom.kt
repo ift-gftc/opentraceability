@@ -1,13 +1,11 @@
 package opentraceability.utility
 
-import opentraceability.OTLogger
 import org.json.JSONObject
-
-
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 class UOM {
+    val _locker = Any()
     var Name: String = ""
     var Abbreviation: String = ""
     var UnitDimension: String = ""
@@ -108,6 +106,21 @@ class UOM {
             return mutableListOf()
         }
     }
+
+
+    fun CopyFrom(uom: UOM) {
+        this.Abbreviation = uom.Abbreviation
+        this.Name = uom.Name
+        this.UnitDimension= uom.UnitDimension
+        this.UNCode= uom.UNCode
+        this.SubGroup = uom.SubGroup
+        this.Offset = uom.Offset
+        this.A = uom.A
+        this.B = uom.B
+        this.C = uom.C
+        this.D= uom.D
+    }
+
 
     fun isBase(): Boolean {
         return A == 0.0 && B == 1.0 && C == 1.0 && D == 0.0

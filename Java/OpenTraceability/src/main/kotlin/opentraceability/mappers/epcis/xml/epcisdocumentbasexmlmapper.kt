@@ -8,6 +8,7 @@ import opentraceability.utility.*
 import java.lang.reflect.Type
 import org.w3c.dom.*
 import opentraceability.mappers.epcis.*
+import opentraceability.utility.StringExtensions.parseXmlToDocument
 import opentraceability.utility.StringExtensions.tryConvertToDateTimeOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.*
@@ -23,7 +24,7 @@ class EPCISDocumentBaseXMLMapper {
 
         inline fun <reified T : EPCISBaseDocument> readXml(strValue: String): Pair<T, Document > {
 
-            var xDoc = utils.parseXml(strValue)
+            var xDoc = strValue.parseXmlToDocument()
 
             if (xDoc.documentElement == null) {
                 throw Exception("Failed to parse EPCISBaseDocument from xml string because after parsing the XDocument the Root property was null.")
@@ -199,8 +200,8 @@ class EPCISDocumentBaseXMLMapper {
                 "https://ref.gs1.org/standards/epcis/epcglobal-epcis-2_0.xsd"
             }
 
-            var error: AtomicReference<String?> = AtomicReference("")
-            if (!XmlSchemaChecker.validate(xdoc, schemaUrl, error)) {
+            var (isValid,error) = XmlSchemaChecker.validate(xdoc, schemaUrl)
+            if (!isValid) {
                 throw Exception("Failed to validate the XML schema for the EPCIS XML.\n$error")
             } else {
                 throw Exception("Failed to validate the XML schema for the EPCIS XML.")
@@ -215,8 +216,8 @@ class EPCISDocumentBaseXMLMapper {
                 "https://ref.gs1.org/standards/epcis/epcglobal-epcis-query-2_0.xsd"
             }
 
-            var error: AtomicReference<String?> = AtomicReference("")
-            if (!XmlSchemaChecker.validate(xdoc, schemaUrl, error)) {
+            var (isValid,error) = XmlSchemaChecker.validate(xdoc, schemaUrl)
+            if (!isValid) {
                 throw Exception("Failed to validate the XML schema for the EPCIS XML.\n$error")
             } else {
                 throw Exception("Failed to validate the XML schema for the EPCIS XML.")

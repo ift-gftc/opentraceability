@@ -1,6 +1,5 @@
 package opentraceability.utility
 
-import opentraceability.OTLogger
 import java.lang.Exception
 import org.w3c.dom.Element
 import kotlin.math.round

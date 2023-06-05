@@ -1,6 +1,6 @@
 package opentraceability.utility
 
-import opentraceability.mappers.epcis.utils
+import opentraceability.utility.StringExtensions.parseXmlToDocument
 import org.json.JSONObject
 import org.json.XML
 import org.w3c.dom.Document
@@ -105,7 +105,7 @@ fun Element.toJSON(): JSONObject {
 
 fun JSONObject.toXML(): Element {
     val xmlStr = XML.toString(this)
-    var xml = utils.parseXml(xmlStr)
+    var xml = xmlStr.parseXmlToDocument()
     return xml.documentElement
 }
 

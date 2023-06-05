@@ -3,14 +3,12 @@ package opentraceability.mappers.epcis.xml
 import opentraceability.interfaces.IVocabularyElement
 import opentraceability.mappers.OTMappingTypeInformation
 import opentraceability.models.common.LanguageString
-import opentraceability.models.events.*
 import opentraceability.models.events.EPCISBaseDocument
 import opentraceability.models.identifiers.PGLN
 import opentraceability.models.masterdata.*
 import opentraceability.models.masterdata.kdes.*
 import opentraceability.utility.*
 import opentraceability.utility.attributes.*
-import java.lang.reflect.Type
 import java.net.URI
 import org.w3c.dom.Element
 import kotlin.reflect.*
@@ -55,7 +53,6 @@ class EPCISXmlMasterDataReader {
             doc.masterData.add(tradeitem)
         }
 
-
         fun ReadLocation(doc: EPCISBaseDocument, xLocation: Element, type: String) {
             // read the GLN from the id
             val id = xLocation.getAttribute("id") ?: ""
@@ -71,7 +68,6 @@ class EPCISXmlMasterDataReader {
             doc.masterData.add(loc)
         }
 
-
         fun ReadTradingParty(doc: EPCISBaseDocument, xTradingParty: Element, type: String) {
             // read the PGLN from the id
             val id = xTradingParty.getAttribute("id") ?: ""
@@ -84,7 +80,6 @@ class EPCISXmlMasterDataReader {
             doc.masterData.add(tp)
         }
 
-
         fun ReadUnknown(doc: EPCISBaseDocument, xVocabElement: Element, type: String) {
             // read the PGLN from the id
             val id = xVocabElement.getAttribute("id") ?: ""
@@ -96,8 +91,6 @@ class EPCISXmlMasterDataReader {
             ReadMasterDataObject(ele, xVocabElement)
             doc.masterData.add(ele)
         }
-
-
 
         fun ReadMasterDataObject(md: IVocabularyElement, xMasterData: Element, readKDEs: Boolean = true) {
             val mappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md::class.starProjectedType as KClass<*>)
@@ -158,7 +151,6 @@ class EPCISXmlMasterDataReader {
             }
         }
 
-
         fun readKDEObject(xeAtt: Element, t: KClass<*>): Any {
             val value = t.createInstance() ?: throw Exception("Failed to create instance of ${t.qualifiedName}")
 
@@ -189,58 +181,56 @@ class EPCISXmlMasterDataReader {
             return value
         }
 
-
-        fun TrySetValueType(`val`: String, p: KMutableProperty<*>, o: Any): Boolean {
+        fun TrySetValueType(value: String, p: KMutableProperty<*>, o: Any): Boolean {
             when {
                 p.returnType == String::class.java -> {
-                    p.setter.call(o, `val`)
+                    p.setter.call(o, value)
                     return true
                 }
                 p.returnType == MutableList::class.java && p.returnType == List::class.java -> {
                     val cur = p.getter.call(o) as MutableList<String>?
                     if (cur == null) {
                         val newList = mutableListOf<String>()
-                        newList.add(`val`)
+                        newList.add(value)
                         p.setter.call(o, newList)
                     } else {
-                        cur.add(`val`)
+                        cur.add(value)
                     }
                     return true
                 }
                 p.returnType == Boolean::class.java || p.returnType == java.lang.Boolean::class.java -> {
-                    val v = java.lang.Boolean.parseBoolean(`val`)
+                    val v = java.lang.Boolean.parseBoolean(value)
                     p.setter.call(o, v)
                     return true
                 }
                 p.returnType == Double::class.java || p.returnType == java.lang.Double::class.java -> {
-                    val v = java.lang.Double.parseDouble(`val`)
+                    val v = java.lang.Double.parseDouble(value)
                     p.setter.call(o, v)
                     return true
                 }
                 p.returnType == URI::class.java -> {
-                    val v = URI.create(`val`)
+                    val v = URI.create(value)
                     p.setter.call(o, v)
                     return true
                 }
                 p.typeParameters[0].starProjectedType == typeOf<MutableList<LanguageString>>() -> {
                     val l = mutableListOf<LanguageString>()
-                    l.add(LanguageString("en-US", `val`))
+                    l.add(LanguageString("en-US", value))
                     p.setter.call(o, l)
                     return true
                 }
                 p.returnType == Country::class.java -> {
-                    val v = Countries.parse(`val`)
+                    val v = Countries.parse(value)
                     p.setter.call(o, v)
                     return true
                 }
                 p.returnType == PGLN::class.java -> {
-                    val v = PGLN(`val`)
+                    val v = PGLN(value)
                     p.setter.call(o, v)
                     return true
                 }
                 else -> return false
             }
         }
-
     }
 }

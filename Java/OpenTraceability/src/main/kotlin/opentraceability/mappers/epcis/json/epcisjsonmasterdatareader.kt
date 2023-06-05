@@ -7,17 +7,13 @@ import opentraceability.models.events.*
 import opentraceability.models.identifiers.PGLN
 import opentraceability.models.masterdata.*
 import opentraceability.models.masterdata.kdes.*
-import org.json.*
 import opentraceability.utility.*
 import opentraceability.utility.attributes.*
-import java.lang.reflect.Type
 import java.net.URI
 import kotlin.reflect.KMutableProperty
 import org.json.JSONArray
 import org.json.JSONObject
-import java.lang.reflect.ParameterizedType
 import kotlin.reflect.KClass
-import kotlin.reflect.KType
 import kotlin.reflect.full.*
 import kotlin.reflect.typeOf
 
@@ -167,7 +163,6 @@ class EPCISJsonMasterDataReader {
                 }
             }
         }
-
 
         fun readKDEObject(j: JSONObject, t: KClass<*>): Any {
             var value = t.createInstance()

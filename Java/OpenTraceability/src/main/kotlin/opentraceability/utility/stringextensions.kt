@@ -2,6 +2,7 @@ package opentraceability.utility
 
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
+import java.io.ByteArrayInputStream
 import java.io.StringReader
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -51,4 +52,5 @@ object StringExtensions {
         val inputSource = InputSource(StringReader(this))
         return builder.parse(inputSource)
     }
+
 }

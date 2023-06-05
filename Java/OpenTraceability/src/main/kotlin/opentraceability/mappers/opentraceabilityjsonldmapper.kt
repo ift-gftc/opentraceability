@@ -9,21 +9,16 @@ import org.json.*
 import opentraceability.utility.*
 import opentraceability.utility.StringExtensions.toDuration
 import opentraceability.utility.StringExtensions.tryConvertToDateTimeOffset
-import java.util.*
-import java.lang.reflect.Type
 import java.net.URI
 import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.createInstance
-import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
-import kotlin.time.DurationUnit
 
 class OpenTraceabilityJsonLDMapper {
     companion object {
@@ -171,7 +166,6 @@ class OpenTraceabilityJsonLDMapper {
             }
         }
 
-
         /**
          * Converts a JSON object into the generic type specified.
          */
@@ -179,7 +173,6 @@ class OpenTraceabilityJsonLDMapper {
             val o: T = fromJson(json, T::class.java as KClass<*>, namespaces) as T
             return o
         }
-
 
         /**
          * Converts a JSON object into the type specified.
@@ -241,7 +234,6 @@ class OpenTraceabilityJsonLDMapper {
 
             return value
         }
-
 
         fun writeObjectToJToken(obj: Any?): String? {
             return when(obj) {
@@ -346,8 +338,6 @@ class OpenTraceabilityJsonLDMapper {
             }
         }
 
-
-
         fun readObjectFromString(value: String, t: KClass<*>): Any? {
             return try {
                 when (t) {
@@ -408,7 +398,6 @@ class OpenTraceabilityJsonLDMapper {
             }
         }
 
-
         fun readKDE(name: String, json: JSONObject, namespaces: MutableMap<String, String>): IEventKDE {
             var kde: IEventKDE? = null
             var ns = ""
@@ -435,7 +424,6 @@ class OpenTraceabilityJsonLDMapper {
 
             return kde
         }
-
 
     }
 }

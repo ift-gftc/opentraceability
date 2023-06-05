@@ -5,17 +5,11 @@ import opentraceability.interfaces.IEvent
 import opentraceability.mappers.OpenTraceabilityXmlMapper
 import opentraceability.models.events.*
 import opentraceability.utility.*
-import org.w3c.dom.Element
 
 class EPCISDocumentXMLMapper : IEPCISDocumentMapper {
 
     override fun map(strValue: String): EPCISDocument {
         try {
-            //val xDoc: Document
-            //val document: EPCISQueryDocument
-
-            // TODO: validate the schema depending on the version in the document
-
             var (document, d)  = EPCISDocumentBaseXMLMapper.readXml<EPCISDocument>(strValue)
             var xDoc = d.documentElement
 

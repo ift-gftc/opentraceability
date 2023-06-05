@@ -7,7 +7,6 @@ import opentraceability.models.events.*
 import opentraceability.models.events.kdes.*
 import org.w3c.dom.Element
 import opentraceability.utility.attributes.OpenTraceabilityAttribute
-import java.lang.reflect.Type
 import opentraceability.utility.*
 import opentraceability.utility.StringExtensions.splitXPath
 import opentraceability.utility.StringExtensions.tryConvertToDateTimeOffset
@@ -23,10 +22,7 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
 
-
-class OpenTraceabilityXmlMapper
-{
-
+class OpenTraceabilityXmlMapper {
     companion object {
 
         fun toXml(xname: String, value: Any?, version: EPCISVersion, required: Boolean = false): Element? {
@@ -217,8 +213,7 @@ class OpenTraceabilityXmlMapper
             return value
         }
 
-        fun writeObjectToString(obj: Any?): String?
-        {
+        fun writeObjectToString(obj: Any?): String? {
             return when (obj) {
                 null -> null
                 (obj::class.createType() == typeOf<MutableList<LanguageString>>()) -> {
@@ -390,6 +385,8 @@ class OpenTraceabilityXmlMapper
 
             return kde
         }
+
+
 
         fun readAttributeKDE(x: Node, attName: String, attValue: String): IEventKDE {
             var kde: IEventKDE? = IEventKDE.initializeKDE(x.namespaceURI, x.nodeName)

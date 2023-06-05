@@ -1,6 +1,5 @@
 package opentraceability.mappers.epcis.json
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import opentraceability.interfaces.IVocabularyElement
 import opentraceability.mappers.OTMappingTypeInformation
 import opentraceability.models.common.LanguageString
@@ -11,7 +10,6 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
-
 
 object EPCISJsonMasterDataWriter {
     fun writeMasterData(jDoc: JSONObject, doc: EPCISBaseDocument) {

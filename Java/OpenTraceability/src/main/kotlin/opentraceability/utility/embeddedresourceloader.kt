@@ -14,7 +14,7 @@ import javax.xml.parsers.ParserConfigurationException
 class EmbeddedResourceLoader {
     var assemblyMap: MutableMap<String, ClassLoader> = mutableMapOf()
 
-    private fun getClassLoader(assemblyName: String): ClassLoader {
+    private fun getAssembly(assemblyName: String): ClassLoader {
         var classLoader: ClassLoader? = assemblyMap[assemblyName]
         if (classLoader == null) {
             val assembly = EmbeddedResourceLoader::class.java.classLoader
@@ -28,7 +28,7 @@ class EmbeddedResourceLoader {
     fun readBytes(assemblyName: String, resourceName: String): ByteArray {
         var raw: ByteArray? = null
         try {
-            val classLoader = getClassLoader(assemblyName)
+            val classLoader = getAssembly(assemblyName)
             val stream = classLoader.getResourceAsStream(resourceName)
                 ?: throw Exception("Failed to find the resource in the assembly $assemblyName with the resource name $resourceName.")
             raw = stream.readBytes()
@@ -42,7 +42,7 @@ class EmbeddedResourceLoader {
     fun readString(assemblyName: String, resourceName: String): String {
         var result = ""
         try {
-            val classLoader = getClassLoader(assemblyName)
+            val classLoader = getAssembly(assemblyName)
             val stream = classLoader.getResourceAsStream(resourceName)
                 ?: throw Exception("Failed to find the resource in the assembly $assemblyName with the resource name $resourceName.")
             result = stream.bufferedReader().use(BufferedReader::readText)
@@ -68,7 +68,7 @@ class EmbeddedResourceLoader {
     fun readStream(assemblyName: String, resourceName: String): InputStream? {
         var stream: InputStream? = null
         try {
-            val classLoader = getClassLoader(assemblyName)
+            val classLoader = getAssembly(assemblyName)
             stream = classLoader.getResourceAsStream(resourceName)
         } catch (ex: Exception) {
             println(ex)

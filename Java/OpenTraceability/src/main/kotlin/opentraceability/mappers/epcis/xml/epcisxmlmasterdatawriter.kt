@@ -3,15 +3,11 @@ package opentraceability.mappers.epcis.xml
 import opentraceability.interfaces.IVocabularyElement
 import opentraceability.mappers.OTMappingTypeInformation
 import opentraceability.models.common.LanguageString
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.*
 import opentraceability.models.events.EPCISBaseDocument
 import opentraceability.utility.*
 import org.w3c.dom.Element
 import opentraceability.utility.attributes.*
-import org.apache.commons.codec.language.bm.Lang
 import kotlin.reflect.KClass
-import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
@@ -158,7 +154,5 @@ class EPCISXmlMasterDataWriter {
                 }
             }
         }
-
-
     }
 }

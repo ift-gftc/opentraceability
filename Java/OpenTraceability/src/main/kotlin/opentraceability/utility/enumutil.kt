@@ -40,7 +40,4 @@ object EnumUtil {
     inline fun <reified T : Enum<T>> GetValues(): MutableList<T> {
         return enumValues<T>().toMutableList()
     }
-
-
-
 }
