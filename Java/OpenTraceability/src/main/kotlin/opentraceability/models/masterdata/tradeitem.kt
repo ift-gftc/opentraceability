@@ -12,7 +12,7 @@ import opentraceability.utility.attributes.OpenTraceabilityMasterDataAttribute
 import java.util.*
 import org.json.JSONObject
 
-class TradeItem : IVocabularyElement {
+class TradeItem() : IVocabularyElement {
     override var id: String? = null
 
     override  var epcisType: String? = "urn:epcglobal:epcis:vtype:EPCClass"

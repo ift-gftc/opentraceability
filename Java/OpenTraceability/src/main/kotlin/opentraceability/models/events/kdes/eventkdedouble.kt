@@ -15,9 +15,7 @@ class EventKDEDouble: EventKDEBase, IEventKDE {
 
     var value: Double? = null
 
-    constructor() {
-
-    }
+    constructor(){}
 
     constructor(ns: String, name: String) {
         this.namespace = ns;

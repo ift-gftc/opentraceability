@@ -30,6 +30,8 @@ class OpenTraceabilityEventProfile {
     lateinit var EventClassType: KClass<IEvent>
     var KDEProfiles: MutableList<OpenTraceabilityEventKDEProfile>? = null
 
+    constructor(){}
+
     constructor(eventClassType: KClass<IEvent>, eventType: EventType) {
         EventType = eventType;
         EventClassType = eventClassType;

@@ -6,9 +6,7 @@ class PGLN {
 
     internal var _pglnStr: String = ""
 
-    constructor() {
-
-    }
+    constructor(){}
 
     constructor(pglnStr: String?) {
         val error = DetectPGLNIssue(pglnStr)

@@ -4,13 +4,45 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97ebc57f-a43a-45e7-8bab-7900e03de93a" name="Changes" comment="Start testing debug">
+    <list default="true" id="97ebc57f-a43a-45e7-8bab-7900e03de93a" name="Changes" comment="Disable JSON schema checking">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/common/sbdhdocumentidentification.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/common/sbdhdocumentidentification.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/common/sbdhorganization.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/common/sbdhorganization.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/jsoncontexthelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/jsoncontexthelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatareader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatareader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformationproperty.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformationproperty.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/epcisbasedocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/epcisbasedocument.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/eventlocation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/eventlocation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/eventproduct.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/eventproduct.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdeboolean.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdeboolean.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdecountry.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdecountry.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdedatetime.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdedatetime.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdedouble.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdedouble.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdeobject.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdeobject.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdestring.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/events/kdes/eventkdestring.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/gln.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/gln.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/gtin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/gtin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/pgln.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/pgln.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/address.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/address.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/digitallink.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/digitallink.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/kdes/masterdatakdebase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/kdes/masterdatakdebase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/kdes/masterdatakdecountry.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/kdes/masterdatakdecountry.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/kdes/masterdatakdeobject.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/kdes/masterdatakdeobject.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/kdes/masterdatakdestring.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/kdes/masterdatakdestring.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/location.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/location.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/tradeitem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/tradeitem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/tradingparty.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/tradingparty.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/vocabularyelement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/vocabularyelement.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/opentraceabilityeventkdeprofile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/opentraceabilityeventkdeprofile.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/opentraceabilityeventprofile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/opentraceabilityeventprofile.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/epcisqueryparameters.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/epcisqueryparameters.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/epcistraceabilityresolver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/epcistraceabilityresolver.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/masterdataresolver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/queries/masterdataresolver.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/cachedxmlschema.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/cachedxmlschema.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/countries.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/countries.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/country.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/country.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/opentraceabilityschemaexception.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/opentraceabilityschemaexception.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/uoms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/uoms.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/opentraceability/queries/QueryTests.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/opentraceability/queries/QueryTests.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -255,9 +287,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.EPCISDocumentTests.JSONLD" />
+        <item itemvalue="Gradle.MasterDataTests.gs1WebVocabEPCISDocument" />
         <item itemvalue="Gradle.SchemaCheckTests.epcisQueryDocumentXML12" />
         <item itemvalue="Gradle.MasterDataTests.gs1WebVocabTradingParty" />
-        <item itemvalue="Gradle.MasterDataTests.gs1WebVocabEPCISDocument" />
         <item itemvalue="Gradle.UtilityTests" />
       </list>
     </recent_temporary>
@@ -300,7 +332,7 @@
       <workItem from="1686061998151" duration="402000" />
       <workItem from="1686062414608" duration="186000" />
       <workItem from="1686062614179" duration="2296000" />
-      <workItem from="1686064950882" duration="6675000" />
+      <workItem from="1686064950882" duration="10623000" />
     </task>
     <task id="LOCAL-00001" summary="add gradle">
       <created>1685532130376</created>
@@ -372,7 +404,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686069990435</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Disable JSON schema checking">
+      <created>1686078548211</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1686078548211</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -395,7 +434,8 @@
     <MESSAGE value="Kotlin java tests compiled" />
     <MESSAGE value="Review OpenTraceability Conversion" />
     <MESSAGE value="Start testing debug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Start testing debug" />
+    <MESSAGE value="Disable JSON schema checking" />
+    <option name="LAST_COMMIT_MESSAGE" value="Disable JSON schema checking" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -427,7 +467,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt</url>
-          <line>260</line>
+          <line>261</line>
           <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
@@ -437,28 +477,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt</url>
-          <line>266</line>
+          <line>267</line>
           <option name="timeStamp" value="55" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt</url>
-          <line>20</line>
+          <line>21</line>
           <option name="timeStamp" value="56" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt</url>
-          <line>77</line>
+          <line>78</line>
           <option name="timeStamp" value="57" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/gtin.kt</url>
-          <line>16</line>
-          <option name="timeStamp" value="58" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/gtin.kt</url>
-          <line>50</line>
-          <option name="timeStamp" value="59" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/opentraceabilityjsonldmapper.kt</url>
@@ -481,11 +511,6 @@
           <option name="timeStamp" value="155" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/test/kotlin/opentraceability/event/MasterDataTests.kt</url>
-          <line>41</line>
-          <option name="timeStamp" value="156" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/test/kotlin/opentraceability/OpenTraceabilityTests.kt</url>
           <line>193</line>
           <option name="timeStamp" value="157" />
@@ -496,9 +521,19 @@
           <option name="timeStamp" value="164" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt</url>
-          <line>77</line>
-          <option name="timeStamp" value="168" />
+          <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.kt</url>
+          <line>28</line>
+          <option name="timeStamp" value="173" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisjsonmasterdatareader.kt</url>
+          <line>106</line>
+          <option name="timeStamp" value="187" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/kotlin/opentraceability/event/EPCISDocumentTests.kt</url>
+          <line>49</line>
+          <option name="timeStamp" value="188" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.lang.NoSuchMethodError" package="java.lang" />

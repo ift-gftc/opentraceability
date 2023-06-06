@@ -15,6 +15,7 @@ class EPC {
     var GTIN: GTIN? = null
     var SerialLotNumber: String? = null
 
+    constructor(){}
 
     constructor(epcStr: String?) {
         try {

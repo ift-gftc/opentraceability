@@ -18,6 +18,7 @@ class EventKDEString: EventKDEBase, IEventKDE {
     var type: String? = null
     var attributes: MutableMap<String, String> = mutableMapOf()
 
+    constructor(){}
 
     constructor(ns: String, name: String) {
         this.namespace = ns;

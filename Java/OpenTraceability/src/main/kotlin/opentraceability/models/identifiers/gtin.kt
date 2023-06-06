@@ -9,8 +9,7 @@ class GTIN : Comparable<GTIN> {
 
     var _gtinStr: String = ""
 
-    constructor() {
-    }
+    constructor(){}
 
     constructor(gtinStr: String?) {
         try {

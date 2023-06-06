@@ -12,20 +12,23 @@ class OTMappingTypeInformation {
     var extensionKDEs: KMutableProperty<*>? = null
     var extensionAttributes: KMutableProperty<*>? = null
 
-    constructor( type: KClass<*>,  format: EPCISDataFormat,  isMasterDataMapping: Boolean = false)  {
+    constructor() { }
+
+    constructor(type: KClass<*>, format: EPCISDataFormat, isMasterDataMapping: Boolean = false) {
         Type = type
 
         type.memberProperties.forEach { p ->
             val kprop = p as? KMutableProperty<*>
-            if (kprop != null)
-            {
-                if (format == EPCISDataFormat.XML && kprop.annotations.filterIsInstance<OpenTraceabilityXmlIgnoreAttribute>().isNotEmpty()) {
+            if (kprop != null) {
+                if (format == EPCISDataFormat.XML && kprop.annotations.filterIsInstance<OpenTraceabilityXmlIgnoreAttribute>()
+                        .isNotEmpty()
+                ) {
                     return@forEach
                 }
 
                 if (isMasterDataMapping) {
                     val mdAtt = kprop.annotations.filterIsInstance<OpenTraceabilityMasterDataAttribute>()
-                    if (mdAtt != null) {
+                    if (mdAtt != null && mdAtt.count() > 0) {
                         val property = OTMappingTypeInformationProperty(kprop, mdAtt.first(), format)
                         properties.add(property)
                         dic[property.Name] = property
@@ -43,7 +46,7 @@ class OTMappingTypeInformation {
                                 dic[property.Name] = property
                             }
                         }
-                    } else if (jsonAtt != null && jsonAtt.isNotEmpty() &&  format == EPCISDataFormat.JSON) {
+                    } else if (jsonAtt != null && jsonAtt.isNotEmpty() && format == EPCISDataFormat.JSON) {
                         val property = OTMappingTypeInformationProperty(kprop, jsonAtt.first(), format)
                         if (!dic.containsKey(property.Name)) {
                             properties.add(property)

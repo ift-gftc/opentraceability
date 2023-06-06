@@ -11,8 +11,7 @@ class GLN /*: IEquatable<GLN>, IComparable<GLN>*/ {
     internal var _glnStr: String = ""
 
 
-    constructor() {
-    }
+    constructor(){}
 
     constructor(glnStr: String) {
         try {

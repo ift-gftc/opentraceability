@@ -16,6 +16,8 @@ class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE {
     var type: String? = null
     val attributes: MutableMap<String, String> = mutableMapOf()
 
+    constructor(){}
+
     constructor(ValueType: KType) {
         // Default constructor
         this.valueType = ValueType

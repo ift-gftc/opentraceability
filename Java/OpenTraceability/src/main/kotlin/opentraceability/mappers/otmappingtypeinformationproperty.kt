@@ -20,6 +20,8 @@ class OTMappingTypeInformationProperty {
     var SequenceOrder: Int? = null
     var CURIEMapping: String? = null
 
+    constructor(){}
+
     constructor(property: KMutableProperty<*>, att: OpenTraceabilityMasterDataAttribute, format: EPCISDataFormat ) {
 
         this.Property = property

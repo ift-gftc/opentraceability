@@ -93,16 +93,18 @@ class EPCISJsonMasterDataReader {
         }
 
         fun readMasterDataObject(md: IVocabularyElement, jMasterData: JSONObject, readKDEs: Boolean = true) {
-            val mappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md::class.starProjectedType as KClass<*>)
+
+            //val mappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md::class.starProjectedType as KClass<*>)
+            val mappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md::class)
 
             // work on expanded objects...
             // these are objects on the vocab element represented by one or more attributes in the EPCIS master data
             val ignoreAttributes = mutableListOf<String>()
             for (property in mappedProperties.properties.filter { it.Name == "" })
             {
-                val subMappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(property.Property.returnType as KClass<*>)
+                val subMappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(property.Property::class)
                 var setAttribute = false
-                val subObject = (property.Property.returnType as KClass<*>).createInstance()
+                val subObject = (property.Property::class).createInstance()
                 if (subObject != null) {
                     val jAttArray = jMasterData.optJSONArray("attributes")
                     if (jAttArray != null) {

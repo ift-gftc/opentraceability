@@ -15,6 +15,7 @@ class EventKDECountry: EventKDEBase, IEventKDE {
 
     var value: Country? = null
 
+    constructor(){}
 
     constructor(ns: String, name: String) {
         this.namespace = ns;

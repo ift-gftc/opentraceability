@@ -23,6 +23,8 @@ class EventKDEObject: EventKDEBase, IEventKDE {
     var _json: JSONObject? = null
 
 
+    constructor(){}
+
     constructor(ns: String, name: String) {
         this.namespace = ns;
         this.name = name;

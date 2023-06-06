@@ -15,6 +15,7 @@ class EventKDEBoolean() : EventKDEBase(), IEventKDE {
 
     var value: Boolean? = null
 
+
     constructor(ns: String, name: String) : this() {
         this.namespace = ns
         this.name = name

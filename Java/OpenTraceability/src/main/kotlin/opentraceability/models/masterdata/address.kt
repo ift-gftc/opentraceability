@@ -6,7 +6,7 @@ import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute
 import opentraceability.utility.attributes.OpenTraceabilityMasterDataAttribute
 import java.util.*
 
-class Address {
+class Address() {
 
     @OpenTraceabilityJsonAttribute("@type")
     var type: String? = "gs1:PostalAddress"

@@ -17,9 +17,7 @@ class MasterDataKDEObject : MasterDataKDEBase, IMasterDataKDE {
     var value: Any? = null
         get() = _xml ?: _json
 
-    constructor() {
-        // Default constructor
-    }
+    constructor(){}
 
     constructor(ns: String, name: String) {
         super.namespace = ns

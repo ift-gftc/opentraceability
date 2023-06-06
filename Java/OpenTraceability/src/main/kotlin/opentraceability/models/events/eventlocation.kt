@@ -8,6 +8,8 @@ class EventLocation {
     @OpenTraceabilityAttribute("","id")
     var gln: GLN? = null
 
+    constructor(){}
+
     constructor(gln: GLN) {
         this.gln = gln;
     }

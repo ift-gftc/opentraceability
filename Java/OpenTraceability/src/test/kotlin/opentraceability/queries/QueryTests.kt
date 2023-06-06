@@ -111,7 +111,7 @@ class QueryTests {
         runBlocking {
             doc.events.forEach { e ->
                 e.products.forEach { p ->
-                    val parameters = EPCISQueryParameters(p.EPC)
+                    val parameters = EPCISQueryParameters(p.EPC!!)
                     val results = client.queryEvents(blobId, parameters)
                     assertNotNull(results.Document)
                     assertEquals(0, results.Errors.size, "Errors found in the query events")
@@ -180,7 +180,7 @@ class QueryTests {
 // query for the events for each epc in the blob
         for (event in doc.events) {
             for (product in event.products) {
-                val parameters = EPCISQueryParameters(product.EPC)
+                val parameters = EPCISQueryParameters(product.EPC!!)
                 val results = client.queryEvents(blobId, parameters)
                 assertEquals(0, results.Errors.size, "errors found in the query events")
                 assertEquals(1, results.Document?.events?.size, "no events returned")

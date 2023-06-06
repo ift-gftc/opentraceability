@@ -94,7 +94,7 @@ object EPCISTraceabilityResolver {
 
         for (e in potentialEpcs) {
             if (!queriedEpcs.contains(e)) {
-                epcsToQuery.add(e)
+                epcsToQuery.add(e!!)
                 queriedEpcs.add(e)
             }
         }
@@ -119,7 +119,7 @@ object EPCISTraceabilityResolver {
 
                     for (e in potentialEpcs) {
                         if (!queriedEpcs.contains(e)) {
-                            epcsToQuery.add(e)
+                            epcsToQuery.add(e!!)
                             queriedEpcs.add(e)
                         }
                     }

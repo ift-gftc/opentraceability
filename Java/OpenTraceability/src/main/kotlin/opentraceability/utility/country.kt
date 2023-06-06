@@ -13,6 +13,8 @@ class Country :  Comparable<Country> {
     var alpha3: String = ""
     var iso: Int = 0
 
+    constructor(){}
+
     constructor(other: Country) {
         this.abbreviation = other.abbreviation
         this.alpha3 = other.alpha3

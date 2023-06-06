@@ -26,7 +26,7 @@ class EPCISQueryParameters {
     var queryType: EPCISQueryType = EPCISQueryType.events
     val query: EPCISQuery = EPCISQuery()
 
-    constructor()
+    constructor(){}
 
     constructor(vararg epcs: EPC) {
         for (epc in epcs) {

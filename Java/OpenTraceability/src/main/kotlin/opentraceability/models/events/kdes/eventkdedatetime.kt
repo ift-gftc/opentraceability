@@ -14,6 +14,9 @@ class EventKDEDateTime: EventKDEBase, IEventKDE {
 
     var value: OffsetDateTime? = null
 
+    constructor(){}
+
+
     constructor(ns: String, name: String) {
         this.namespace = ns;
         this.name = name;

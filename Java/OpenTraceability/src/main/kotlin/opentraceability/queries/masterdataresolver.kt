@@ -29,8 +29,8 @@ class MasterDataResolver {
         ) {
             for (evt in doc.events) {
                 for (p in evt.products) {
-                    if (p.EPC.Type == EPCType.Class || p.EPC.Type == EPCType.Instance) {
-                        resolveTradeitem(options, p.EPC.GTIN, doc, client)
+                    if (p.EPC!!.Type == EPCType.Class || p.EPC!!.Type == EPCType.Instance) {
+                        resolveTradeitem(options, p.EPC!!.GTIN, doc, client)
                     }
                 }
 

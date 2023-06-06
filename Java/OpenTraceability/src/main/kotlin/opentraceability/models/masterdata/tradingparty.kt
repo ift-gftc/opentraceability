@@ -13,7 +13,7 @@ import java.util.*
 import org.json.JSONObject
 
 
-class TradingParty : IVocabularyElement {
+class TradingParty() : IVocabularyElement {
 
     override var id: String? = null
 

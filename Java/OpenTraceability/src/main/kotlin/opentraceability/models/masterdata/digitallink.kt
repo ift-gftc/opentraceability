@@ -1,7 +1,7 @@
 package opentraceability.models.masterdata
 
 
-class DigitalLink {
+class DigitalLink() {
     var link: String = ""
     var title: String = ""
     var linkType: String = ""

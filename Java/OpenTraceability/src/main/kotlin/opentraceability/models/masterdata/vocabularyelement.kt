@@ -8,7 +8,7 @@ import opentraceability.utility.EnumUtil
 import java.util.*
 import org.json.JSONObject
 
-class VocabularyElement : IVocabularyElement {
+class VocabularyElement() : IVocabularyElement {
     override var id: String? = null
     override var epcisType: String? = ""
     override var jsonLDType: String? = null

@@ -155,7 +155,7 @@ open class EPCISBaseDocument {
             val epcMatch = EPC(epcMatchStr)
             for (product in evt.products) {
                 if (allowedTypes.isEmpty() || allowedTypes.contains(product.Type)) {
-                    if (epcMatch.matches(product.EPC)) {
+                    if (epcMatch.matches(product.EPC!!)) {
                         return true
                     }
                 }

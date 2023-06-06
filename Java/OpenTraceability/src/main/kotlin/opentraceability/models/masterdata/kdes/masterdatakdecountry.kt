@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-class MasterDataKDECountry : MasterDataKDEBase(), IMasterDataKDE {
+class MasterDataKDECountry() : MasterDataKDEBase(), IMasterDataKDE {
     var value: Country? = null
 
     override var valueType: KType = typeOf<Country>()
