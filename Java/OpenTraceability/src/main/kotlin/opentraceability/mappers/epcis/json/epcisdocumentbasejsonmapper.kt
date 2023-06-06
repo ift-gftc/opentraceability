@@ -19,7 +19,8 @@ import kotlin.reflect.KClass
 object EPCISDocumentBaseJsonMapper {
     inline fun <reified T : EPCISBaseDocument> readJSON(strValue: String, checkSchema: Boolean = true): Pair<T, JSONObject> {
         if (checkSchema) {
-            checkSchema(JSONObject(strValue)) // assuming you have a checkSchema method
+            var obj = JSONObject(strValue)
+            checkSchema(obj) // assuming you have a checkSchema method
         }
 
         var normalizedStrValue = normalizeEPCISJsonLD(strValue) // assuming you have a normalizeEPCISJsonLD method
