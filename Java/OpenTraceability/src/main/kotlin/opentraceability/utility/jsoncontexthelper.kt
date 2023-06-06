@@ -6,6 +6,10 @@ import org.json.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import java.util.regex.Pattern
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 class JsonContextHelper {
 
@@ -18,6 +22,13 @@ class JsonContextHelper {
         fun getJsonLDContext(contextURL: String): JSONObject {
             var jContext: JSONObject? = contextCache[contextURL]
             if (jContext == null) {
+
+
+
+                val httpUrl = contextURL.toHttpUrlOrNull()
+                    ?: throw IllegalArgumentException("Invalid URL: $contextURL")
+
+
                 synchronized(lock) {
                     val client = OkHttpClient()
                     val request = Request.Builder()

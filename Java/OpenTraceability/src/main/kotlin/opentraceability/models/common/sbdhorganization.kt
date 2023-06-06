@@ -6,7 +6,7 @@ import opentraceability.utility.attributes.*
 class SBDHOrganization {
 
     @OpenTraceabilityAttribute(opentraceability.Constants.SBDH_NAMESPACE, "Identifier")
-    var Identifier: String = ""
+    var Identifier: String? = null
 
 
     @OpenTraceabilityObjectAttribute

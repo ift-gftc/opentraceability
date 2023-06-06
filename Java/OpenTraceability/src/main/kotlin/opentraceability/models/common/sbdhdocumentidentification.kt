@@ -13,7 +13,7 @@ class SBDHDocumentIdentification {
     var TypeVersion: String = ""
 
     @OpenTraceabilityAttribute(opentraceability.Constants.SBDH_NAMESPACE, "InstanceIdentifier", 3)
-    var InstanceIdentifier: String = ""
+    var InstanceIdentifier: String? = null
 
 
     @OpenTraceabilityAttribute(opentraceability.Constants.SBDH_NAMESPACE, "Type", 4)

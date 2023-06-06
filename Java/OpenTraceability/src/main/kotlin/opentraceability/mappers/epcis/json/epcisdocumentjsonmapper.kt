@@ -10,7 +10,7 @@ class EPCISDocumentJsonMapper : IEPCISDocumentMapper {
 
     override fun map(strValue: String): EPCISDocument {
         try {
-            val dic = EPCISDocumentBaseJsonMapper.readJSON<EPCISDocument>(strValue)
+            val dic = EPCISDocumentBaseJsonMapper.readJSON<EPCISDocument>(strValue, false)
 
             var doc = dic.first
             var json = dic.second

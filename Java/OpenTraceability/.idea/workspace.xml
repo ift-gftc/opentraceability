@@ -6,7 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="97ebc57f-a43a-45e7-8bab-7900e03de93a" name="Changes" comment="Start testing debug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/tradingparty.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/tradingparty.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/common/sbdhdocumentidentification.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/common/sbdhdocumentidentification.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/common/sbdhorganization.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/common/sbdhorganization.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/jsoncontexthelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/utility/jsoncontexthelper.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +131,7 @@
       <recent name="opentraceability.Queries" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.MasterDataTests.gs1WebVocabTradingParty">
+  <component name="RunManager" selected="Gradle.EPCISDocumentTests.JSONLD">
     <configuration name="EPCISDocumentTests.JSONLD" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -250,11 +254,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.EPCISDocumentTests.JSONLD" />
+        <item itemvalue="Gradle.SchemaCheckTests.epcisQueryDocumentXML12" />
         <item itemvalue="Gradle.MasterDataTests.gs1WebVocabTradingParty" />
         <item itemvalue="Gradle.MasterDataTests.gs1WebVocabEPCISDocument" />
-        <item itemvalue="Gradle.SchemaCheckTests.epcisQueryDocumentXML12" />
         <item itemvalue="Gradle.UtilityTests" />
-        <item itemvalue="Gradle.EPCISDocumentTests.JSONLD" />
       </list>
     </recent_temporary>
   </component>
@@ -296,7 +300,7 @@
       <workItem from="1686061998151" duration="402000" />
       <workItem from="1686062414608" duration="186000" />
       <workItem from="1686062614179" duration="2296000" />
-      <workItem from="1686064950882" duration="4041000" />
+      <workItem from="1686064950882" duration="6675000" />
     </task>
     <task id="LOCAL-00001" summary="add gradle">
       <created>1685532130376</created>
@@ -361,7 +365,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686065522348</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Start testing debug">
+      <created>1686069990435</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1686069990435</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -456,17 +467,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt</url>
-          <line>146</line>
+          <line>148</line>
           <option name="timeStamp" value="143" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.kt</url>
-          <line>12</line>
-          <option name="timeStamp" value="150" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt</url>
-          <line>144</line>
+          <line>146</line>
           <option name="timeStamp" value="151" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
@@ -483,6 +489,16 @@
           <url>file://$PROJECT_DIR$/src/test/kotlin/opentraceability/OpenTraceabilityTests.kt</url>
           <line>193</line>
           <option name="timeStamp" value="157" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.kt</url>
+          <line>38</line>
+          <option name="timeStamp" value="164" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.kt</url>
+          <line>77</line>
+          <option name="timeStamp" value="168" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.lang.NoSuchMethodError" package="java.lang" />

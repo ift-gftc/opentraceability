@@ -26,27 +26,27 @@ object EPCISDocumentBaseJsonMapper {
         var normalizedStrValue = normalizeEPCISJsonLD(strValue) // assuming you have a normalizeEPCISJsonLD method
 
         val settings = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create()
-        val json = settings.fromJson(normalizedStrValue, JSONObject::class.java)
+        val json = settings.fromJson(normalizedStrValue, JsonObject::class.java)
             ?: throw Exception("Failed to parse json from string. $strValue")
 
         val document = T::class.java.getDeclaredConstructor().newInstance()
 
-        document.attributes["schemaVersion"] = json.optString("schemaVersion", "")
+        document.attributes["schemaVersion"] = json.get("schemaVersion")?.asString ?: ""
         document.epcisVersion = EPCISVersion.V2
 
-        val creationDateAttributeStr = json.optString("creationDate")
+        val creationDateAttributeStr = json.get("creationDate")?.asString
         if (!creationDateAttributeStr.isNullOrBlank()) {
             document.creationDate = creationDateAttributeStr.tryConvertToDateTimeOffset() // assuming you have a tryConvertToDateTimeOffset method
         }
 
         document.attributes = HashMap()
 
-        val jContextArray = json.optJSONArray("@context")
+        val jContextArray = json.getAsJsonArray("@context")
         if (jContextArray != null) {
-            for (i in 0 until jContextArray.length()) {
+            for (i in 0 until jContextArray.count()) {
                 val jt = jContextArray.get(i)
-                if (jt is JSONObject) {
-                    val ns = scrapeNamespaces(jt) // assuming you have a scrapeNamespaces method
+                if (jt is JsonObject) {
+                    val ns = scrapeNamespaces( JSONObject(jt.toString())) // assuming you have a scrapeNamespaces method
                     ns.forEach { (key, value) ->
                         document.namespaces.putIfAbsent(key, value)
                     }
@@ -54,6 +54,8 @@ object EPCISDocumentBaseJsonMapper {
                 } else {
                     val value = jt.toString()
                     if (!value.isBlank()) {
+                        var value = value.replace("\"","")
+
                         val context = getJsonLDContext(value) // assuming you have a getJsonLDContext method
                         val ns = scrapeNamespaces(context)
                         ns.forEach { (key, value) ->
@@ -67,22 +69,22 @@ object EPCISDocumentBaseJsonMapper {
             throw Exception("the @context on the root of the JSON-LD EPCIS file was not an array. we are currently expecting this to be an array.")
         }
 
-        json.optString("id")?.let {
+        json.get("id")?.asString?.let {
             document.attributes["id"] = it
         }
 
         document.header = StandardBusinessDocumentHeader() // assuming you have a StandardBusinessDocumentHeader class
 
         document.header?.Sender = SBDHOrganization() // assuming you have a SBDHOrganization class
-        document.header?.Sender?.Identifier = json.optString("sender")
+        document.header?.Sender?.Identifier = json.get("sender")?.asString
 
         document.header?.Receiver = SBDHOrganization()
-        document.header?.Receiver?.Identifier = json.optString("receiver")
+        document.header?.Receiver?.Identifier = json.get("receiver")?.asString
 
         document.header?.DocumentIdentification = SBDHDocumentIdentification() // assuming you have a SBDHDocumentIdentification class
-        document.header?.DocumentIdentification?.InstanceIdentifier = json.optString("instanceIdentifier")
+        document.header?.DocumentIdentification?.InstanceIdentifier = json.get("instanceIdentifier")?.asString
 
-        return Pair(document, json)
+        return Pair(document, JSONObject(json.toString()))
     }
 
     fun writeJson(doc: EPCISBaseDocument, epcisNS: String, docType: String): JSONObject {
@@ -206,18 +208,18 @@ object EPCISDocumentBaseJsonMapper {
 
     fun normalizeEPCISJsonLD(jEPCISStr: String): String {
         val gson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create()
-        val json = gson.fromJson(jEPCISStr, JSONObject::class.java) ?: throw Exception("Failed to parse json from string. $jEPCISStr")
+        val json = gson.fromJson(jEPCISStr, JsonObject::class.java) ?: throw Exception("Failed to parse json from string. $jEPCISStr")
 
         val jEPCISContext = JsonContextHelper.getJsonLDContext("https://ref.gs1.org/standards/epcis/epcis-context.jsonld")
         val namespaces = JsonContextHelper.scrapeNamespaces(jEPCISContext)
 
-        var jEventList: JSONArray? = json.optJSONObject("epcisBody")?.optJSONArray("eventList")
+        var jEventList: JsonArray? = json.getAsJsonObject("epcisBody")?.getAsJsonArray("eventList")
         if (jEventList == null) {
-            jEventList = json.optJSONObject("epcisBody")?.optJSONObject("queryResults")?.optJSONObject("resultsBody")?.optJSONArray("eventList")
+            jEventList = json.getAsJsonObject("epcisBody")?.getAsJsonObject("queryResults")?.getAsJsonObject("resultsBody")?.getAsJsonArray("eventList")
         }
         jEventList?.let {
-            for (i in 0 until it.length()) {
-                val jEvent = it.optJSONObject(i)
+            for (i in 0 until it.count()) {
+                val jEvent = it.get(i)
                 jEvent?.let { JsonContextHelper.expandVocab(it, jEPCISContext, namespaces) }
             }
         }
