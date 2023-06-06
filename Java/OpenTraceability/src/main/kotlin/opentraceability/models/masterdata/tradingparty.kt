@@ -22,7 +22,7 @@ class TradingParty : IVocabularyElement {
     @OpenTraceabilityJsonAttribute("@type")
     override var jsonLDType: String? = "gs1:Organization"
 
-    override lateinit var vocabularyType: VocabularyType
+    override var vocabularyType: VocabularyType = VocabularyType.TradingParty
 
     override var context: JSONObject? = null
 
