@@ -2,18 +2,39 @@ package opentraceability.event
 
 import opentraceability.OpenTraceabilityTests
 import opentraceability.mappers.OpenTraceabilityMappers
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.*
+import java.io.File
 
 class EPCISDocumentTests {
 
-    @ParameterizedTest
-    @CsvFileSource(resources = ["data/xml_files.csv"], numLinesToSkip = 1)
-    fun XML(file: String) {
-        val xmlObjectEvents = OpenTraceabilityTests.readTestData(file)
-        val doc = OpenTraceabilityMappers.EPCISDocument.XML.map(xmlObjectEvents)
-        val xmlObjectEventsAfter = OpenTraceabilityMappers.EPCISDocument.XML.map(doc)
-        OpenTraceabilityTests.compareXML(xmlObjectEvents, xmlObjectEventsAfter)
+    @Test
+    //@ParameterizedTest
+    //@CsvFileSource(resources = ["xml_files.csv"], numLinesToSkip = 1)
+    fun XML() {
+
+        var masterFile: String = "src/test/kotlin/opentraceability/data/xml_files.csv"
+
+        val str = OpenTraceabilityTests.loadFile(masterFile)
+
+        val substrings = str.split("\r\n")
+
+        for (file in substrings) {
+
+            try {
+                val xmlObjectEvents = OpenTraceabilityTests.readTestData(file)
+                val doc = OpenTraceabilityMappers.EPCISDocument.XML.map(xmlObjectEvents)
+                val xmlObjectEventsAfter = OpenTraceabilityMappers.EPCISDocument.XML.map(doc)
+                OpenTraceabilityTests.compareXML(xmlObjectEvents, xmlObjectEventsAfter)
+            }
+            catch (ex: Exception){
+                throw ex
+            }
+
+
+        }
+
     }
 
     @ParameterizedTest

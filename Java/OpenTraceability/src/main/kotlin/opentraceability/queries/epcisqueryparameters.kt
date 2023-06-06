@@ -13,7 +13,7 @@ import com.google.gson.GsonBuilder
 import org.json.JSONObject
 
 class EPCISQueryParameters {
-    private val propMapping = mutableMapOf<String, KMutableProperty<*>>()
+    val propMapping = mutableMapOf<String, KMutableProperty<*>>()
 
     init {
         for (prop in EPCISQuery::class.members) {

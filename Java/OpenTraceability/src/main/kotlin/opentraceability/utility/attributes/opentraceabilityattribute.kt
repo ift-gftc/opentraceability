@@ -1,9 +1,6 @@
 package opentraceability.utility.attributes
 
-import opentraceability.models.identifiers.*
-import opentraceability.models.events.*
 import opentraceability.models.events.EPCISVersion
-import java.lang.reflect.Type
 import javax.xml.namespace.QName
 
 @Repeatable

@@ -1,4 +1,4 @@
-kotlin/opentraceability/data/object_event_all_possible_fields.xml
-kotlin/opentraceability/data/aggregation_event_all_possible_fields.xml
-kotlin/opentraceability/data/association_event_all_possible_fields.xml
-kotlin/opentraceability/data/transformation_event_all_possible_fields.xml
+object_event_all_possible_fields.xml
+aggregation_event_all_possible_fields.xml
+association_event_all_possible_fields.xml
+transformation_event_all_possible_fields.xml

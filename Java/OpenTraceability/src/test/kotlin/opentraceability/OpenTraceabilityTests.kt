@@ -12,6 +12,7 @@ import org.w3c.dom.*
 import kotlin.test.assertFails
 import opentraceability.utility.*
 import org.json.JSONObject
+import java.io.File
 
 class OpenTraceabilityTests {
 
@@ -31,12 +32,12 @@ class OpenTraceabilityTests {
 
         internal fun xmlCompare(primary: Element, secondary: Element, noAssertions: Boolean = false) {
             if (primary.tagName != secondary.tagName) {
-                assertFails { "The XML element name does not match where name=${primary.tagName}.\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
+                assert(false) { "The XML element name does not match where name=${primary.tagName}.\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
             }
 
             if (primary.hasAttributes()) {
                 if (primary.getAttributes().getLength() != secondary.getAttributes().getLength()) {
-                    assertFails { "The XML attribute counts to not match.\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
+                    assert(false) { "The XML attribute counts to not match.\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
                 }
 
 
@@ -45,14 +46,14 @@ class OpenTraceabilityTests {
                     val attr = attributes.item(i) as Attr
 
                     if (secondary.getAttribute(attr.name) == null) {
-                        assertFails { "The XML attribute ${attr.name} was not found on the secondary xml.\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
+                        assert(false) { "The XML attribute ${attr.name} was not found on the secondary xml.\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
                     }
 
                     val val1 = attr.value
                     val val2 = secondary.getAttribute(attr.name)
                     if (val1?.toLowerCase() != val2?.toLowerCase()) {
                         if (!tryAdvancedValueCompare(val1, val2)) {
-                            assertFails { "The XML attribute ${attr.name} value does not match where the original is $val1 and the after is $val2.\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
+                            assert(false) { "The XML attribute ${attr.name} value does not match where the original is $val1 and the after is $val2.\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
                         }
                     }
                 }
@@ -68,7 +69,7 @@ class OpenTraceabilityTests {
                     val missing1 = eles1.filter { !eles2.contains(it) }
                     val missing2 = eles2.filter { !eles1.contains(it) }
 
-                    assertFails {
+                    assert(false) {
                         "The XML child elements count does not match.\nElements only in primary xml: ${
                             missing1.joinToString(
                                 ", "
@@ -82,14 +83,14 @@ class OpenTraceabilityTests {
                     // we will try and find the matching node...
                     val xchild2 = findMatchingNode(child1, secondary, i)
                     if (xchild2 == null) {
-                        assertFails { "Failed to find matching node for comparison in the secondary xml.\nchild1=$child1\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
+                        assert(false) { "Failed to find matching node for comparison in the secondary xml.\nchild1=$child1\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
                     } else {
                         xmlCompare(child1, xchild2)
                     }
                 }
             } else if (primary.textContent.toLowerCase() != secondary.textContent.toLowerCase()) {
                 if (!tryAdvancedValueCompare(primary.textContent, secondary.textContent)) {
-                    assertFails { "The XML element value does not match where name=${primary.textContent} and value=${primary.textContent} with the after value=${secondary.textContent}.\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
+                    assert(false) { "The XML element value does not match where name=${primary.textContent} and value=${primary.textContent} with the after value=${secondary.textContent}.\nprimary xml:\n${primary.toString()}\n\nsecondary xml:\n${secondary.toString()}" }
                 }
             }
         }
@@ -173,9 +174,9 @@ class OpenTraceabilityTests {
         }
 
         internal fun compareJSON(json: String, jsonAfter: String) {
-            val j1 = Json.parseToJsonElement(json) as? JSONObject
+            val j1 = JSONObject(json) as? JSONObject
                 ?: throw Exception("Failed to parse json from string. $json")
-            val j2 = Json.parseToJsonElement(jsonAfter) as? JSONObject
+            val j2 = JSONObject(jsonAfter) as? JSONObject
                 ?: throw Exception("Failed to parse json from string. $jsonAfter")
 
             jsonCompare(j1, j2)
@@ -190,14 +191,14 @@ class OpenTraceabilityTests {
                 val name = j1props.next()
                 val value = j1.get(name)
 
-                val j2Value = j2[name]
+                val j2Value = if (j2.has(name)) j2[name] else null
 
                 if (j2Value == null) {
-                    assertFails { "j1 has property $name, but it was not found on j2." }
+                    assert(false) { "j1 has property $name, but it was not found on j2." }
                 }
 
-                if (value::class != j2Value::class) {
-                    assertFails { "j1 property value type for $name is ${value::class}, but on j2 it is ${j2Value::class}." }
+                if (value::class != j2Value!!::class) {
+                    assert(false) {  "j1 property value type for $name is ${value::class}, but on j2 it is ${j2Value::class}." }
                 }
 
                 when (value) {
@@ -214,7 +215,7 @@ class OpenTraceabilityTests {
                                 val jt2 = jarr2[i]
 
                                 if (jt1::class != jt2::class) {
-                                    assertFails { "j1 property array $name has item[$i] with type ${jt1::class}, but on j2 it is ${jt2::class}." }
+                                    assert(false) { "j1 property array $name has item[$i] with type ${jt1::class}, but on j2 it is ${jt2::class}." }
                                 }
 
                                 when {
@@ -224,7 +225,7 @@ class OpenTraceabilityTests {
                                         val str2 = jt2.toString()
                                         if (!tryAdvancedValueCompare(str1, str2)) {
                                             if (str1.lowercase() != str2.lowercase()) {
-                                                assertFails { "j1 property array $name has item[$i] with value $str1, but on j2 it the value is $str2." }
+                                                assert(false) { "j1 property array $name has item[$i] with value $str1, but on j2 it the value is $str2." }
                                             }
                                         }
                                     }
@@ -238,7 +239,7 @@ class OpenTraceabilityTests {
                         if (jobj2 != null) {
                             jsonCompare(value, jobj2)
                         } else {
-                            assertFails { "j1 property $name is JSONObject, but not on j2." }
+                            assert(false) { "j1 property $name is JSONObject, but not on j2." }
                         }
                     }
 
@@ -247,7 +248,7 @@ class OpenTraceabilityTests {
                         val str2 = j2Value.toString()
                         if (!tryAdvancedValueCompare(str1, str2)) {
                             if (str1.lowercase() != str2.lowercase()) {
-                                assertFails { "j1 property $name has string value $str1, but on j2 it the value is $str2." }
+                                assert(false) { "j1 property $name has string value $str1, but on j2 it the value is $str2." }
                             }
                         }
                     }
@@ -257,10 +258,21 @@ class OpenTraceabilityTests {
 
 
         fun readTestData(v: String): String {
-            val loader = EmbeddedResourceLoader()
-            val str = loader.readString("OpenTraceability.Tests", "opentraceability.test.data.$v")
+            //val loader = EmbeddedResourceLoader()
+            //val str = loader.readString("OpenTraceability.Tests", "opentraceability.test.data.$v")
+
+            val str = loadFile("src/test/kotlin/opentraceability/data/$v")
             return str
         }
+
+
+
+        fun loadFile(filePath: String) : String {
+            val file = File(filePath)
+            val jsonString = file.readText()
+            return jsonString;
+        }
+
 
         fun getConfiguration(appsettingsName: String): Properties {
             // get the current working directory
@@ -273,29 +285,26 @@ class OpenTraceabilityTests {
 
             val config = Properties()
 
-            val loader = EmbeddedResourceLoader()
-            val jsonString = loader.readString(
-                "OpenTraceability.Tests",
-                "OpenTraceability.Tests.Configurations.$appsettingsName.json"
-            )
-            val appsettings = Json.parseToJsonElement(jsonString) as JSONObject
+            //val loader = EmbeddedResourceLoader()
+            //val jsonString = loader.readString("OpenTraceability.Tests","OpenTraceability.Tests.Configurations.$appsettingsName.json")
 
-            ByteArrayInputStream(appsettings.toString().toByteArray(Charsets.UTF_8)).use { stream ->
-                config.load(stream)
-            }
+            val jsonString = loadFile("src/test/kotlin/opentraceability/configurations/$appsettingsName.json")
+            val appsettings = JSONObject(jsonString)
+
+            ByteArrayInputStream(appsettings.toString().toByteArray(Charsets.UTF_8)).use { stream -> config.load(stream) }
 
             try {
-                val machineJsonStr = loader.readString(
-                    "OpenTraceability.Tests",
-                    "OpenTraceability.Tests.Configurations.AppSettings.$appsettingsName.${System.getenv("COMPUTERNAME")}.json"
-                )
+
+                //val machineJsonStr = loader.readString("OpenTraceability.Tests","OpenTraceability.Tests.Configurations.AppSettings.$appsettingsName.${System.getenv("COMPUTERNAME")}.json")
+
+                val machineJsonStr = loadFile("src/test/kotlin/opentraceability/configurations/$appsettingsName.${System.getenv("COMPUTERNAME")}.json")
                 val machineAppSettings = Json.parseToJsonElement(machineJsonStr) as JSONObject
 
                 ByteArrayInputStream(machineAppSettings.toString().toByteArray(Charsets.UTF_8)).use { stream ->
                     config.load(stream)
                 }
             } catch (ex: IOException) {
-                if (!ex.message!!.contains("Failed to find the resource in the assembly")) {
+                if (!ex.message!!.contains("(The system cannot find the file specified)")) {
                     throw ex
                 }
             }
@@ -304,6 +313,8 @@ class OpenTraceabilityTests {
         }
 
     }
+
+
 
 
 }

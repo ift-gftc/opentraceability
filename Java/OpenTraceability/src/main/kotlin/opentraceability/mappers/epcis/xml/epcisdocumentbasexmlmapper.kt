@@ -9,6 +9,7 @@ import java.lang.reflect.Type
 import org.w3c.dom.*
 import opentraceability.mappers.epcis.*
 import opentraceability.utility.StringExtensions.parseXmlToDocument
+import opentraceability.utility.StringExtensions.removeBOM
 import opentraceability.utility.StringExtensions.tryConvertToDateTimeOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.*
@@ -23,6 +24,7 @@ class EPCISDocumentBaseXMLMapper {
         var _schemaChecker: XmlSchemaChecker = XmlSchemaChecker()
 
         inline fun <reified T : EPCISBaseDocument> readXml(strValue: String): Pair<T, Document > {
+
 
             var xDoc = strValue.parseXmlToDocument()
 

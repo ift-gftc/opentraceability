@@ -27,24 +27,24 @@ class IdentifierTests {
             val e: EPC? = null
             val err: String? = null
             if (!EPC.tryParse(epcStr, e, err)) {
-                assertFails{"Failed EPC.tryParse $err"}
+                assert(false){"Failed EPC.tryParse $err"}
             }
 
             val epc = EPC(epcStr)
 
             if (epc.Type != expectedType) {
-                assertFails{"Failed to parse the EPC $epcStr. The expected type was $expectedType but we got ${epc.Type}"}
+                assert(false){"Failed to parse the EPC $epcStr. The expected type was $expectedType but we got ${epc.Type}"}
             }
 
             if (expectedGTIN != null) {
                 if (epc.GTIN?.toString() != expectedGTIN) {
-                    assertFails { "Failed to parse the EPC $epcStr. The expected GTIN was $expectedGTIN but we got ${epc.GTIN?.toString()}"}
+                    assert(false) { "Failed to parse the EPC $epcStr. The expected GTIN was $expectedGTIN but we got ${epc.GTIN?.toString()}"}
                 }
             }
 
             if (expectedLotOrSerial != null) {
                 if (epc.SerialLotNumber != expectedLotOrSerial) {
-                    assertFails{"Failed to parse the EPC $epcStr. The expected Lot or Serial was $expectedLotOrSerial but we got ${epc.SerialLotNumber}"}
+                    assert(false){"Failed to parse the EPC $epcStr. The expected Lot or Serial was $expectedLotOrSerial but we got ${epc.SerialLotNumber}"}
                 }
             }
         }
