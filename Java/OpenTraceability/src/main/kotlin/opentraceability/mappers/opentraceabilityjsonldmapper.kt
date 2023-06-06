@@ -33,7 +33,8 @@ class OpenTraceabilityJsonLDMapper {
                     var jpointer: JSONObject = json!!
 
                     val t: KType = value::class.starProjectedType
-                    val typeInfo: OTMappingTypeInformation = OTMappingTypeInformation.getJsonTypeInfo(t as KClass<*>)
+                    //val typeInfo: OTMappingTypeInformation = OTMappingTypeInformation.getJsonTypeInfo(t as KClass<*>)
+                    val typeInfo: OTMappingTypeInformation = OTMappingTypeInformation.getJsonTypeInfo(t::class)
                     typeInfo.properties.filter { it.Version == null || it.Version == EPCISVersion.V2 }.forEach { property ->
                         property.Property?.getter?.call(value)?.let { obj ->
                             var jvaluepointer: JSONObject = jpointer

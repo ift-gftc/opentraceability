@@ -11,10 +11,10 @@ import kotlin.test.assertFails
 class IdentifierTests {
 
     @Test
-    @ParameterizedTest
-    @ValueSource(strings = ["epc_tests.json"])
-    fun EPCTests(file: String) {
-        val jsonStr = OpenTraceabilityTests.readTestData(file)
+    //@ParameterizedTest
+    //@ValueSource(strings = ["epc_tests.json"])
+    fun EPCTests() {
+        val jsonStr = OpenTraceabilityTests.readTestData("epc_tests.json")
         val jarr = JSONArray(jsonStr)
 
         for (i in 0 until jarr.length()) {

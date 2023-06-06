@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test
 
 class UtilityTests {
     @Test
-    fun jsonCompareTest(file: String) {
-        val json1 = OpenTraceabilityTests.readTestData(file)
-        val json2 = OpenTraceabilityTests.readTestData(file)
+    //@ParameterizedTest(name = "{0}")
+    //@ValueSource(strings = ["EPCISQueryDocument.jsonld"])
+    fun jsonCompareTest() {
+        val json1 = OpenTraceabilityTests.readTestData("EPCISQueryDocument.jsonld")
+        val json2 = OpenTraceabilityTests.readTestData("EPCISQueryDocument.jsonld")
         OpenTraceabilityTests.compareJSON(json1, json2)
     }
 }

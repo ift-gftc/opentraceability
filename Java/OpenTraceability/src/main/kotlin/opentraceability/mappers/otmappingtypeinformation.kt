@@ -43,7 +43,7 @@ class OTMappingTypeInformation {
                                 dic[property.Name] = property
                             }
                         }
-                    } else if (jsonAtt != null && format == EPCISDataFormat.JSON) {
+                    } else if (jsonAtt != null && jsonAtt.isNotEmpty() &&  format == EPCISDataFormat.JSON) {
                         val property = OTMappingTypeInformationProperty(kprop, jsonAtt.first(), format)
                         if (!dic.containsKey(property.Name)) {
                             properties.add(property)

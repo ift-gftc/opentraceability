@@ -6,5 +6,8 @@ import kotlin.reflect.KClass
 interface IMasterDataMapper {
     fun map(vocab: IVocabularyElement): String
     fun map(t: KClass<*>, value: String): IVocabularyElement
-    fun <T: IVocabularyElement> map(value: String): IVocabularyElement
+    //fun <T: IVocabularyElement> map(value: String): IVocabularyElement
+    //fun <T : IVocabularyElement> map(type: KClass<T>, value: String): T
+
 }
+

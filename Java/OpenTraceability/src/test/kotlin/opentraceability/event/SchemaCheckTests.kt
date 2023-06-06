@@ -10,10 +10,10 @@ import org.junit.jupiter.params.provider.CsvSource
 
 class SchemaCheckTests {
     @Test
-    @ParameterizedTest(name = "{0}")
-    @CsvSource("querydoc_fail_schemacheck.xml,false")
-    fun epcisQueryDocumentXML12(file: String, pass: Boolean) {
-        val xmlObjectEvents = OpenTraceabilityTests.readTestData(file)
+    //@ParameterizedTest(name = "{0}")
+    //@CsvSource("querydoc_fail_schemacheck.xml,false")
+    fun epcisQueryDocumentXML12() {
+        val xmlObjectEvents = OpenTraceabilityTests.readTestData("querydoc_fail_schemacheck.xml")
         val xDoc = xmlObjectEvents.parseXmlToDocument()
 
         val exceptionThrown = try {
@@ -23,7 +23,7 @@ class SchemaCheckTests {
             true
         }
 
-        Assertions.assertEquals(pass, exceptionThrown)
+        Assertions.assertEquals(false, exceptionThrown)
     }
 
 

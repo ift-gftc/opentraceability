@@ -11,35 +11,43 @@ import kotlin.reflect.KClass
 class GS1VocabJsonMapper : IMasterDataMapper {
     override fun map(vocab: IVocabularyElement): String {
         if (vocab.context == null) {
-            vocab.context = JSONObject("""{
+            vocab.context = JSONObject(
+                """{
                                     "cbvmda": "urn:epcglobal:cbvmda:mda",
                                     "xsd": "http://www.w3.org/2001/XMLSchema#",
                                     "gs1": "http://gs1.org/voc/",
                                     "@vocab": "http://gs1.org/voc/",
                                     "gdst": "https://traceability-dialogue.org/vocab"
-                                }""")
+                                }"""
+            )
         }
 
         val namespaces = getNamespaces(vocab.context ?: throw Exception("vocab.Context is null."))
         val reversedNamespaces = namespaces.entries.associate { (key, value) -> value to key }.toMutableMap()
 
 
-        val json = OpenTraceabilityJsonLDMapper.toJson(vocab, reversedNamespaces) ?: throw Exception("Failed to map master data into GS1 web vocab.")
+        val json = OpenTraceabilityJsonLDMapper.toJson(vocab, reversedNamespaces)
+            ?: throw Exception("Failed to map master data into GS1 web vocab.")
         json.put("@context", vocab.context)
         return json.toString()
     }
 
     override fun map(type: KClass<*>, value: String): IVocabularyElement {
         val json = JSONObject(value)
-        val namespaces = getNamespaces(json["@context"] ?: throw Exception("@context is null on the JSON-LD when deserializing GS1 Web Vocab. $value"))
+        val namespaces = getNamespaces(
+            json["@context"]
+                ?: throw Exception("@context is null on the JSON-LD when deserializing GS1 Web Vocab. $value")
+        )
         val obj = OpenTraceabilityJsonLDMapper.fromJson(json, type, namespaces) as IVocabularyElement
         obj.context = json.get("@context") as JSONObject
         return obj
     }
 
+    /*
     override fun <T : IVocabularyElement> map(value: String): IVocabularyElement {
-        return map<T>(value)
+        return map(T, value)
     }
+    */
 
     fun getNamespaces(jContext: Any): MutableMap<String, String> {
         val namespaces = mutableMapOf<String, String>()
@@ -47,6 +55,7 @@ class GS1VocabJsonMapper : IMasterDataMapper {
             is JSONObject -> {
                 namespaces.putAll(JsonContextHelper.scrapeNamespaces(jContext))
             }
+
             is JSONArray -> {
                 for (j in jContext) {
                     val ns = JsonContextHelper.scrapeNamespaces(j as JSONObject)

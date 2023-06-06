@@ -141,10 +141,10 @@ object EPCISDocumentBaseJsonMapper {
     fun checkSchema(json: JSONObject) {
         val jsonString = json.toString()
         val schemaUrl = "https://ref.gs1.org/standards/epcis/epcis-json-schema.json"
-        val isValid = JsonSchemaChecker.isValid(jsonString, schemaUrl, mutableListOf<String>())
+
+        val (isValid, errors) = JsonSchemaChecker.isValid(jsonString, schemaUrl)
+
         if (!isValid) {
-            val errors = mutableListOf<String>()
-            JsonSchemaChecker.isValid(jsonString, schemaUrl, errors)
             val errorString = errors.joinToString("\n")
             throw OpenTraceabilitySchemaException("Failed to validate JSON schema with errors:\n$errorString\n\n and json $jsonString")
         }
