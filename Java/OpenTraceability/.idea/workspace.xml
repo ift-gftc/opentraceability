@@ -6,13 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="97ebc57f-a43a-45e7-8bab-7900e03de93a" name="Changes" comment="Continue working on unit test">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/opentraceabilityjsonldmapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/opentraceabilityjsonldmapper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/otmappingtypeinformation.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/tradeitem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/opentraceability/models/masterdata/tradeitem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/opentraceability/OpenTraceabilityTests.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/opentraceability/OpenTraceabilityTests.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/opentraceability/event/EPCISQueryDocumentTests.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/opentraceability/event/EPCISQueryDocumentTests.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/opentraceability/identifiers/IdentifierTests.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/opentraceability/identifiers/IdentifierTests.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,8 +126,8 @@
       <recent name="opentraceability.Queries" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.QueryTests">
-    <configuration name="IdentifierTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Gradle.MasterDataTests.gs1WebVocabProducts">
+    <configuration name="MasterDataTests.gs1WebVocabEPCISDocument" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -147,7 +140,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;opentraceability.identifiers.IdentifierTests&quot;" />
+            <option value="&quot;opentraceability.event.MasterDataTests.gs1WebVocabEPCISDocument&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -158,7 +151,7 @@
       <ForceTestExec>true</ForceTestExec>
       <method v="2" />
     </configuration>
-    <configuration name="MasterDataTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="MasterDataTests.gs1WebVocabLocation" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -171,7 +164,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;opentraceability.event.MasterDataTests&quot;" />
+            <option value="&quot;opentraceability.event.MasterDataTests.gs1WebVocabLocation&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -182,7 +175,7 @@
       <ForceTestExec>true</ForceTestExec>
       <method v="2" />
     </configuration>
-    <configuration name="QueryTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="MasterDataTests.gs1WebVocabProducts" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -195,7 +188,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;opentraceability.queries.QueryTests&quot;" />
+            <option value="&quot;opentraceability.event.MasterDataTests.gs1WebVocabProducts&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -206,7 +199,7 @@
       <ForceTestExec>true</ForceTestExec>
       <method v="2" />
     </configuration>
-    <configuration name="SchemaCheckTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="MasterDataTests.gs1WebVocabTradingParty" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -219,7 +212,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;opentraceability.event.SchemaCheckTests&quot;" />
+            <option value="&quot;opentraceability.event.MasterDataTests.gs1WebVocabTradingParty&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -230,7 +223,7 @@
       <ForceTestExec>true</ForceTestExec>
       <method v="2" />
     </configuration>
-    <configuration name="UtilityTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="SchemaCheckTests.epcisQueryDocumentXML12" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -243,7 +236,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;opentraceability.event.UtilityTests&quot;" />
+            <option value="&quot;opentraceability.event.SchemaCheckTests.epcisQueryDocumentXML12&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -256,11 +249,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.QueryTests" />
-        <item itemvalue="Gradle.IdentifierTests" />
-        <item itemvalue="Gradle.UtilityTests" />
-        <item itemvalue="Gradle.SchemaCheckTests" />
-        <item itemvalue="Gradle.MasterDataTests" />
+        <item itemvalue="Gradle.MasterDataTests.gs1WebVocabProducts" />
+        <item itemvalue="Gradle.SchemaCheckTests.epcisQueryDocumentXML12" />
+        <item itemvalue="Gradle.MasterDataTests.gs1WebVocabEPCISDocument" />
+        <item itemvalue="Gradle.MasterDataTests.gs1WebVocabTradingParty" />
+        <item itemvalue="Gradle.MasterDataTests.gs1WebVocabLocation" />
       </list>
     </recent_temporary>
   </component>
@@ -305,7 +298,7 @@
       <workItem from="1686064950882" duration="10993000" />
       <workItem from="1686090382635" duration="1778000" />
       <workItem from="1686120863581" duration="7178000" />
-      <workItem from="1686128427251" duration="18998000" />
+      <workItem from="1686128427251" duration="23028000" />
     </task>
     <task id="LOCAL-00001" summary="add gradle">
       <created>1685532130376</created>
@@ -398,7 +391,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686136336738</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Continue working on unit test">
+      <created>1686153191325</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1686153191325</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -504,16 +504,6 @@
           <option name="timeStamp" value="318" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/test/kotlin/opentraceability/identifiers/IdentifierTests.kt</url>
-          <line>26</line>
-          <option name="timeStamp" value="336" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/test/kotlin/opentraceability/identifiers/IdentifierTests.kt</url>
-          <line>28</line>
-          <option name="timeStamp" value="338" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/models/identifiers/epc.kt</url>
           <line>21</line>
           <option name="timeStamp" value="339" />
@@ -587,6 +577,11 @@
           <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/opentraceabilityjsonldmapper.kt</url>
           <line>237</line>
           <option name="timeStamp" value="409" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/opentraceability/mappers/opentraceabilityjsonldmapper.kt</url>
+          <line>356</line>
+          <option name="timeStamp" value="426" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.lang.NoSuchMethodError" package="java.lang" />
