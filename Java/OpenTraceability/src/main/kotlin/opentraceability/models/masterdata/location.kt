@@ -25,7 +25,7 @@ open class Location() : IVocabularyElement {
     @OpenTraceabilityJsonAttribute("@type")
     override var jsonLDType: String? = "gs1:Place"
 
-    override lateinit var vocabularyType: VocabularyType
+    override var vocabularyType: VocabularyType = VocabularyType.Location
 
     override var context: JSONObject? = null
 

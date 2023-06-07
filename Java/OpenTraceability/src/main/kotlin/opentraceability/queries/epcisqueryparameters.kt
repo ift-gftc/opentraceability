@@ -11,6 +11,7 @@ import kotlin.reflect.full.*
 import kotlin.reflect.typeOf
 import com.google.gson.GsonBuilder
 import org.json.JSONObject
+import kotlin.reflect.jvm.jvmErasure
 
 class EPCISQueryParameters {
     val propMapping = mutableMapOf<String, KMutableProperty<*>>()
@@ -47,18 +48,21 @@ class EPCISQueryParameters {
 
             val prop = propMapping[key]
             if (prop != null) {
-                when (prop.returnType) {
-                    typeOf<OffsetDateTime>() -> {
-                        val dt = OffsetDateTime.parse(value)
+                when {
+                    OffsetDateTime::class.java.isAssignableFrom(prop.returnType.jvmErasure.javaObjectType) -> {
+                        val fixedStr = value.replace(" ", "+")
+                        val dt = OffsetDateTime.parse(fixedStr)
                         prop.setter.call(query, dt)
                     }
-                    typeOf<MutableList<String>>() -> {
-                        val values = value.split("|")
-                        prop.setter.call(query, values.toMutableList())
-                    }
-                    typeOf<MutableList<URI>>() -> {
-                        val values = value.split("|").map { URI.create(it) }
-                        prop.setter.call(query, values.toMutableList())
+                    MutableList::class.java.isAssignableFrom(prop.returnType.jvmErasure.javaObjectType) -> {
+                        // need to further check the type argument (String, URI) of the MutableList here
+                        if (prop.returnType.arguments.first().type?.jvmErasure == String::class) {
+                            val values = value.split("|")
+                            prop.setter.call(query, values.toMutableList())
+                        } else if (prop.returnType.arguments.first().type?.jvmErasure == URI::class) {
+                            val values = value.split("|").map { URI.create(it) }
+                            prop.setter.call(query, values.toMutableList())
+                        }
                     }
                 }
             }
@@ -122,8 +126,10 @@ class EPCISQueryParameters {
         val queryParameters = mutableListOf<String>()
 
         // Go through each property on the query
-        for (prop in EPCISQueryParameters::class.memberProperties) {
-            when (val value = prop.get(this)) {
+        for (prop in EPCISQuery::class.java.declaredFields) {
+            prop.isAccessible = true
+
+            when (val value = prop.get(this.query)) {
                 is String -> {
                     if (value.isNotBlank()) {
                         val encodedValue = URLEncoder.encode(value.toString(), "UTF-8")
@@ -133,9 +139,12 @@ class EPCISQueryParameters {
                 }
                 is MutableList<*> -> {
                     if (value.isNotEmpty()) {
-                        val encodedValues = value.filterIsInstance<String>()
-                            .map { URLEncoder.encode(it, "UTF-8") }
-                            .joinToString("|")
+
+                        val encodedValues = value.joinToString("%7C") {
+                            if (it is URI) URLEncoder.encode(it.toString(), "UTF-8")
+                            else URLEncoder.encode(it.toString(), "UTF-8")
+                        }
+
                         val queryParam = "${prop.name}=$encodedValues"
                         queryParameters.add(queryParam)
                     }
@@ -159,6 +168,8 @@ class EPCISQueryParameters {
         val queryString = queryParameters.joinToString("&")
         return "?$queryString"
     }
+
+
 
     fun toJSON(): String {
         val gson = GsonBuilder()

@@ -57,9 +57,12 @@ class EPCISQueryDocumentTests {
 
     @Test
     fun JSONLD() {
+
+        OpenTraceabilityTests()
+
         val file = "EPCISQueryDocument.jsonld"
         val json = OpenTraceabilityTests.readTestData(file)
-        val doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.map(json)
+        val doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.map(json, false)
         val jsonAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.map(doc)
         OpenTraceabilityTests.compareJSON(json, jsonAfter)
     }

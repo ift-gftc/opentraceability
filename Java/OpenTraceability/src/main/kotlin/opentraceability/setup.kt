@@ -30,31 +30,31 @@ class Setup {
 
                 registerEventProfile(
                     OpenTraceabilityEventProfile(
-                        ObjectEvent<EventILMD>()::class.createType() as KClass<IEvent>,
+                        ObjectEvent<EventILMD>()::class as KClass<IEvent>,
                         EventType.ObjectEvent
                     )
                 )
                 registerEventProfile(
                     OpenTraceabilityEventProfile(
-                        TransactionEvent::class.createType() as KClass<IEvent>,
+                        TransactionEvent::class as KClass<IEvent>,
                         EventType.TransactionEvent
                     )
                 )
                 registerEventProfile(
                     OpenTraceabilityEventProfile(
-                        TransformationEvent<EventILMD>()::class.createType() as KClass<IEvent>,
+                        TransformationEvent<EventILMD>()::class as KClass<IEvent>,
                         EventType.TransformationEvent
                     )
                 )
                 registerEventProfile(
                     OpenTraceabilityEventProfile(
-                        AggregationEvent<EventILMD>()::class.createType() as KClass<IEvent>,
+                        AggregationEvent<EventILMD>()::class as KClass<IEvent>,
                         EventType.AggregationEvent
                     )
                 )
                 registerEventProfile(
                     OpenTraceabilityEventProfile(
-                        AssociationEvent::class.createType() as KClass<IEvent>,
+                        AssociationEvent::class as KClass<IEvent>,
                         EventType.AssociationEvent
                     )
                 )
@@ -104,11 +104,15 @@ class Setup {
                 throw Exception("The 'Type' property on the instance of T returned a NULL value.")
             }
 
+            MasterDataTypes[type] = T::class.starProjectedType
+
+            /*
             if (MasterDataTypes.getValue(type) == null) {
                 MasterDataTypes.put(type, T::class.starProjectedType)
             } else {
                 MasterDataTypes[type] = T::class.starProjectedType
             }
+            */
 
             if (defaultFor != null) {
                 if (MasterDataTypeDefault.getValue(defaultFor) == null) {

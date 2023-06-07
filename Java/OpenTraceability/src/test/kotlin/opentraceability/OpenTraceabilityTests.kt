@@ -16,6 +16,11 @@ import java.io.File
 
 class OpenTraceabilityTests {
 
+    constructor() {
+        init()
+    }
+
+
     fun init() {
         opentraceability.Setup.Initialize()
         opentraceability.gdst.Setup.initialize()

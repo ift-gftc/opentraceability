@@ -25,6 +25,4 @@ class SchemaCheckTests {
 
         Assertions.assertEquals(false, exceptionThrown)
     }
-
-
 }

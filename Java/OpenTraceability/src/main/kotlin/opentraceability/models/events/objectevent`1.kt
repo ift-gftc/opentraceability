@@ -5,7 +5,7 @@ import opentraceability.utility.attributes.*
 import java.util.*
 import java.net.URI
 
-class ObjectEvent<T> : EventBase(), IILMDEvent<T> {
+class ObjectEvent<T>() : EventBase(), IILMDEvent<T> {
 
     @OpenTraceabilityXmlIgnoreAttribute
     @OpenTraceabilityAttribute("", "type", 0)

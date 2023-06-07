@@ -2,7 +2,7 @@ package opentraceability.models.common
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class LanguageString(
+class LanguageString(
     @JsonProperty("@language") var language: String = "",
     @JsonProperty("@value") var value: String = ""
 )

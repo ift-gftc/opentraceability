@@ -13,6 +13,8 @@ class EPCISDocumentTests {
     //@CsvFileSource(resources = ["xml_files.csv"], numLinesToSkip = 1)
     fun XML() {
 
+        OpenTraceabilityTests()
+
         var csvFileSource: String = "src/test/kotlin/opentraceability/data/xml_files.csv"
         val str = OpenTraceabilityTests.loadFile(csvFileSource)
 
@@ -38,6 +40,8 @@ class EPCISDocumentTests {
     //@ParameterizedTest
     //@CsvFileSource(resources = ["jsonld_files.csv"], numLinesToSkip = 1)
     fun JSONLD() {
+
+        OpenTraceabilityTests()
 
         var csvFileSource: String = "src/test/kotlin/opentraceability/data/jsonld_files.csv"
         val str = OpenTraceabilityTests.loadFile(csvFileSource)

@@ -58,14 +58,23 @@ class EPCISJsonMasterDataReader {
             // read the GLN from the id
             val id = xLocation.optString("id", "")
             val t = opentraceability.Setup.MasterDataTypes[type]
-            val loc = (t!!::class.createInstance() as? Location) ?: throw Exception("Failed to activate instance Location of $t")
 
-            loc.gln = opentraceability.models.identifiers.GLN(id)
-            loc.epcisType = type
+            if (t != null){
+                //val loc = if (t is Location) { t } else {throw Exception("Failed to activate instance Location of $t")}
+                val loc = if (t?.classifier == Location::class) {
+                    Location::class.createInstance()
+                } else {
+                    throw Exception("Failed to activate instance Location of $t")
+                }
 
-            // read the object
-            readMasterDataObject(loc, xLocation)
-            doc.masterData.add(loc)
+                loc.gln = opentraceability.models.identifiers.GLN(id)
+                loc.epcisType = type
+
+                // read the object
+                readMasterDataObject(loc, xLocation)
+                doc.masterData.add(loc)
+            }
+
         }
 
         fun readTradingParty(doc: EPCISBaseDocument, xTradingParty: JSONObject, type: String) {
@@ -102,30 +111,37 @@ class EPCISJsonMasterDataReader {
             val ignoreAttributes = mutableListOf<String>()
             for (property in mappedProperties.properties.filter { it.Name == "" })
             {
-                val subMappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(property.Property::class)
-                var setAttribute = false
-                val subObject = (property.Property::class).createInstance()
-                if (subObject != null) {
-                    val jAttArray = jMasterData.optJSONArray("attributes")
-                    if (jAttArray != null) {
-                        for (i in 0 until jAttArray.length()) {
-                            val jAtt = jAttArray.getJSONObject(i)
-                            val id = jAtt.optString("id", "")
-                            val propMapping = subMappedProperties[id]
-                            if (propMapping != null)
-                            {
-                                if (!trySetValueType(jAtt.optString("attribute", ""), propMapping.Property, subObject)) {
-                                    val value = readKDEObject(jAtt, propMapping.Property.returnType as KClass<*>)
-                                    propMapping.Property.setter.call(subObject, value)
+                try {
+                    val subMappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(property.Property.returnType::class)
+                    var setAttribute = false
+                    //val subObject = property.Property.returnType::class.createInstance()
+                    var subObject: MutableList<String> = mutableListOf()
+
+                    if (subObject != null) {
+                        val jAttArray = jMasterData.optJSONArray("attributes")
+                        if (jAttArray != null) {
+                            for (i in 0 until jAttArray.length()) {
+                                val jAtt = jAttArray.getJSONObject(i)
+                                val id = jAtt.optString("id", "")
+                                val propMapping = subMappedProperties[id]
+                                if (propMapping != null)
+                                {
+                                    if (!trySetValueType(jAtt.optString("attribute", ""), propMapping.Property, subObject)) {
+                                        val value = readKDEObject(jAtt, propMapping.Property.returnType as KClass<*>)
+                                        propMapping.Property.setter.call(subObject, value)
+                                    }
+                                    setAttribute = true
+                                    ignoreAttributes.add(id)
                                 }
-                                setAttribute = true
-                                ignoreAttributes.add(id)
+                            }
+                            if (setAttribute) {
+                                property.Property.setter.call(md, subObject)
                             }
                         }
-                        if (setAttribute) {
-                            property.Property.setter.call(md, subObject)
-                        }
                     }
+                }
+                catch (ex: Exception){
+                    throw ex
                 }
             }
 

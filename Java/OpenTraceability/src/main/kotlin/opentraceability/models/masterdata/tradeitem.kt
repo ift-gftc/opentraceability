@@ -12,24 +12,29 @@ import opentraceability.utility.attributes.OpenTraceabilityMasterDataAttribute
 import java.util.*
 import org.json.JSONObject
 
-class TradeItem() : IVocabularyElement {
+class TradeItem : IVocabularyElement {
+
+    constructor() {
+
+    }
+
     override var id: String? = null
 
-    override  var epcisType: String? = "urn:epcglobal:epcis:vtype:EPCClass"
+    override var epcisType: String? = "urn:epcglobal:epcis:vtype:EPCClass"
 
     @OpenTraceabilityJsonAttribute("@type")
-    override  var jsonLDType: String? = "gs1:Product"
+    override var jsonLDType: String? = "gs1:Product"
 
-    override lateinit var vocabularyType: VocabularyType
+    override var vocabularyType: VocabularyType = VocabularyType.TradeItem
 
-    override  var context: JSONObject? = null
+    override var context: JSONObject? = null
 
     @OpenTraceabilityJsonAttribute("gtin")
     var gtin: GTIN? = null
 
     @OpenTraceabilityJsonAttribute("productName")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#descriptionShort")
-    var shortDescription: MutableList<LanguageString>? = null
+    var shortDescription: MutableList<LanguageString>? = mutableListOf()
 
     @OpenTraceabilityJsonAttribute("cbvmda:tradeItemConditionCode")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#tradeItemConditionCode")
@@ -46,12 +51,12 @@ class TradeItem() : IVocabularyElement {
     @OpenTraceabilityArrayAttribute
     @OpenTraceabilityJsonAttribute("cbvmda:speciesForFisheryStatisticsPurposesName")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName")
-    var fisherySpeciesScientificName: MutableList<String>? = null
+    var fisherySpeciesScientificName: MutableList<String>? = mutableListOf()
 
     @OpenTraceabilityArrayAttribute
     @OpenTraceabilityJsonAttribute("cbvmda:speciesForFisheryStatisticsPurposesCode")
     @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode")
-    var fisherySpeciesCode: MutableList<String>? = null
+    var fisherySpeciesCode: MutableList<String>? = mutableListOf()
 
-    override  var kdes: MutableList<IMasterDataKDE> = mutableListOf()
+    override var kdes: MutableList<IMasterDataKDE> = mutableListOf()
 }

@@ -49,6 +49,9 @@ class QueryTests {
 
     @Test
     fun queryParameters() {
+
+        OpenTraceabilityTests()
+
         val parameters = EPCISQueryParameters()
         parameters.query.MATCH_epc = mutableListOf("https://id.gs1.org/01/00614141777778/10/987")
         parameters.query.MATCH_anyEPC = mutableListOf("https://id.gs1.org/01/00614141777778/10/987", "https://id.gs1.org/01/00614141777778/10/987")
@@ -72,6 +75,10 @@ class QueryTests {
 
     @Test
     fun queryParameters02() {
+
+
+        OpenTraceabilityTests()
+
         val parameters = EPCISQueryParameters()
         parameters.query.MATCH_epc = mutableListOf("https://id.gs1.org/01/00614141777778/10/987")
         parameters.query.MATCH_anyEPC =

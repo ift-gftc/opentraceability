@@ -16,6 +16,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
@@ -179,7 +180,15 @@ class OpenTraceabilityJsonLDMapper {
          * Converts a JSON object into the type specified.
          */
         fun fromJson(json: JSONObject, type: KClass<*>, namespaces: MutableMap<String, String>): Any {
-            val value: Any = type.createInstance() ?: throw Exception("Failed to create instance of type ${type.qualifiedName}")
+            //val value: Any = type::class.createInstance() ?: throw Exception("Failed to create instance of type ${type.qualifiedName}")
+
+            val noArgsConstructor = type.primaryConstructor
+            val value: Any = if (noArgsConstructor != null && noArgsConstructor.parameters.isEmpty()) {
+                 noArgsConstructor.call()
+            } else {
+                throw Exception("Failed to create instance of type ${type.qualifiedName}")
+            }
+
 
             try {
                 val typeInfo: OTMappingTypeInformation = OTMappingTypeInformation.getJsonTypeInfo(type)
