@@ -7,8 +7,8 @@ import kotlin.reflect.full.memberProperties
 
 class OTMappingTypeInformation {
     lateinit var Type: KClass<*>
-    val properties: MutableList<OTMappingTypeInformationProperty> = mutableListOf()
-    val dic: MutableMap<String, OTMappingTypeInformationProperty> = mutableMapOf()
+    var properties: MutableList<OTMappingTypeInformationProperty> = mutableListOf()
+    var dic: MutableMap<String, OTMappingTypeInformationProperty> = mutableMapOf()
     var extensionKDEs: KMutableProperty<*>? = null
     var extensionAttributes: KMutableProperty<*>? = null
 
@@ -30,7 +30,7 @@ class OTMappingTypeInformation {
                     val mdAtt = kprop.annotations.filterIsInstance<OpenTraceabilityMasterDataAttribute>()
                     if (mdAtt != null && mdAtt.count() > 0) {
                         val property = OTMappingTypeInformationProperty(kprop, mdAtt.first(), format)
-                        properties.add(property)
+                        this.properties.add(property)
                         dic[property.Name] = property
                     }
                 } else {
@@ -42,21 +42,21 @@ class OTMappingTypeInformation {
                         atts.forEach { att ->
                             val property = OTMappingTypeInformationProperty(kprop, att, format)
                             if (!dic.containsKey(property.Name)) {
-                                properties.add(property)
+                                this.properties.add(property)
                                 dic[property.Name] = property
                             }
                         }
                     } else if (jsonAtt != null && jsonAtt.isNotEmpty() && format == EPCISDataFormat.JSON) {
                         val property = OTMappingTypeInformationProperty(kprop, jsonAtt.first(), format)
                         if (!dic.containsKey(property.Name)) {
-                            properties.add(property)
+                            this.properties.add(property)
                             dic[property.Name] = property
                         }
                     } else if (productAtts.isNotEmpty()) {
                         productAtts.forEach { att ->
                             val property = OTMappingTypeInformationProperty(kprop, att, format)
                             if (!dic.containsKey(property.Name)) {
-                                properties.add(property)
+                                this.properties.add(property)
                                 dic[property.Name] = property
                             }
                         }
@@ -69,7 +69,10 @@ class OTMappingTypeInformation {
                     ) {
                         extensionAttributes = p
                     }
-                    properties.sortWith(compareBy({ it.SequenceOrder == null }, { it.SequenceOrder }))
+
+                    this.properties = this.properties.toMutableList().apply {
+                        sortWith(compareBy({ it.SequenceOrder == null }, { it.SequenceOrder }))
+                    }
                 }
             }
         }

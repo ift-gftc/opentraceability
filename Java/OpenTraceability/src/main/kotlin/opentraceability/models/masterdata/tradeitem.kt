@@ -12,11 +12,7 @@ import opentraceability.utility.attributes.OpenTraceabilityMasterDataAttribute
 import java.util.*
 import org.json.JSONObject
 
-class TradeItem : IVocabularyElement {
-
-    constructor() {
-
-    }
+class TradeItem()  : IVocabularyElement {
 
     override var id: String? = null
 

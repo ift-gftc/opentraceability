@@ -273,9 +273,12 @@ class OpenTraceabilityTests {
 
 
         fun loadFile(filePath: String) : String {
-            val file = File(filePath)
-            val jsonString = file.readText()
-            return jsonString;
+            val fileString = File(filePath).readText(Charsets.UTF_8)
+            return fileString;
+
+            //to clear prolog
+            //val cleanString = fileString.replaceFirst("^([\\W]+)<", "<")
+            //return cleanString;
         }
 
 

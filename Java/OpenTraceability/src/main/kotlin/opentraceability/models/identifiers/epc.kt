@@ -41,11 +41,11 @@ class EPC {
                 val parts2 = parts.last().split('.').toMutableList()
                 parts.removeAt(parts.size - 1)
 
-                val gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
+                var gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
                 parts2[2]?.let { lotNumber ->
                     this.SerialLotNumber = lotNumber
                 }
-                gtinStr.replace(":class:lgtin:", ":idpat:sgtin:")
+                gtinStr = gtinStr.replace(":class:lgtin:", ":idpat:sgtin:")
                 this.GTIN = GTIN(gtinStr)
             }
             // else if this is a GS1 instance level epc (GS1 GTIN + Serial Number)
@@ -56,11 +56,11 @@ class EPC {
                 val parts2 = parts.last().split('.').toMutableList()
                 parts.removeAt(parts.size - 1)
 
-                val gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
+                var gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
                 parts2[2]?.let { lotNumber ->
                     this.SerialLotNumber = lotNumber
                 }
-                gtinStr.replace(":id:sgtin:", ":idpat:sgtin:")
+                gtinStr = gtinStr.replace(":id:sgtin:", ":idpat:sgtin:")
                 this.GTIN = GTIN(gtinStr)
             }
             // else if this is a GDST / IBM private class level identifier (GTIN + Lot Number)
@@ -71,11 +71,11 @@ class EPC {
                 val parts2 = parts.last().split('.').toMutableList()
                 parts.removeAt(parts.size - 1)
 
-                val gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
+                var gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
                 parts2[2]?.let { lotNumber ->
                     this.SerialLotNumber = lotNumber
                 }
-                gtinStr.replace(":product:lot:class:", ":product:class:")
+                gtinStr = gtinStr.replace(":product:lot:class:", ":product:class:")
                 this.GTIN = GTIN(gtinStr)
             }
             // else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
@@ -86,11 +86,11 @@ class EPC {
                 val parts2 = parts.last().split('.').toMutableList()
                 parts.removeAt(parts.size - 1)
 
-                val gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
+                var gtinStr = "${parts.joinToString(":")}:${parts2[0]}.${parts2[1]}"
                 parts2[2]?.let { lotNumber ->
                     this.SerialLotNumber = lotNumber
                 }
-                gtinStr.replace(":product:serial:obj:", ":product:class:")
+                gtinStr =gtinStr.replace(":product:serial:obj:", ":product:class:")
                 this.GTIN = GTIN(gtinStr)
             } else if (epcStr.startsWith("urn:sscc:")) {
                 this.Type = EPCType.SSCC
@@ -257,19 +257,19 @@ class EPC {
         }
 
 
-        fun tryParse(epcStr: String?, epc: EPC?, error: String?): Boolean {
+        fun tryParse(epcStr: String?): Pair<Boolean, String?> {
 
-            var error: String? = error
-            var epc: EPC? = epc
+            var error: String? = ""
+            var epc: EPC? = null
 
             try {
                 error = EPC.DetectEPCIssue(epcStr)
                 if (error.isNullOrBlank()) {
                     epc = EPC(epcStr)
-                    return true
+                    return Pair(true, error)
                 } else {
                     epc = null
-                    return false
+                    return Pair(false, error)
                 }
             } catch (ex: Exception) {
                 opentraceability.OTLogger.error(ex)

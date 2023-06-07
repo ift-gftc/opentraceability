@@ -14,10 +14,9 @@ import org.w3c.dom.Element
 class EPCISQueryDocumentTests {
     @Test
     fun XML() {
-        var file: String = "querydoc_example01.xml"
 
         // read object events from test data specified in the file argument
-        val xmlObjectEvents = OpenTraceabilityTests.readTestData(file)
+        val xmlObjectEvents = OpenTraceabilityTests.readTestData("querydoc_example01.xml")
         val doc = OpenTraceabilityMappers.EPCISQueryDocument.XML.map(xmlObjectEvents)
         var xmlObjectEventsAfter = OpenTraceabilityMappers.EPCISQueryDocument.XML.map(doc)
         OpenTraceabilityTests.compareXML(xmlObjectEvents, xmlObjectEventsAfter)
@@ -34,8 +33,8 @@ class EPCISQueryDocumentTests {
 
     @Test
     fun XML12ToJSONLD() {
-        val file = "gdst_extensions_01.xml"
-        val stringXmlEvents = OpenTraceabilityTests.readTestData(file)
+
+        val stringXmlEvents = OpenTraceabilityTests.readTestData("gdst_extensions_01.xml")
         val doc = OpenTraceabilityMappers.EPCISQueryDocument.XML.map(stringXmlEvents)
         doc.header = null
         doc.epcisVersion = EPCISVersion.V2
@@ -60,8 +59,7 @@ class EPCISQueryDocumentTests {
 
         OpenTraceabilityTests()
 
-        val file = "EPCISQueryDocument.jsonld"
-        val json = OpenTraceabilityTests.readTestData(file)
+        val json = OpenTraceabilityTests.readTestData("EPCISQueryDocument.jsonld")
         val doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.map(json, false)
         val jsonAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.map(doc)
         OpenTraceabilityTests.compareJSON(json, jsonAfter)

@@ -24,9 +24,9 @@ class IdentifierTests {
             val expectedGTIN = jTestcase.optString("gtin", null)
             val expectedLotOrSerial = jTestcase.optString("lotOrSerial", null)
 
-            val e: EPC? = null
-            val err: String? = null
-            if (!EPC.tryParse(epcStr, e, err)) {
+            var (valid, err) = EPC.tryParse(epcStr)
+
+            if (!valid) {
                 assert(false){"Failed EPC.tryParse $err"}
             }
 

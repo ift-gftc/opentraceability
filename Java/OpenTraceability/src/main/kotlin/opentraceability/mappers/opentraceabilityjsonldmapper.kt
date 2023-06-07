@@ -18,6 +18,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
 
@@ -182,11 +183,18 @@ class OpenTraceabilityJsonLDMapper {
         fun fromJson(json: JSONObject, type: KClass<*>, namespaces: MutableMap<String, String>): Any {
             //val value: Any = type::class.createInstance() ?: throw Exception("Failed to create instance of type ${type.qualifiedName}")
 
-            val noArgsConstructor = type.primaryConstructor
-            val value: Any = if (noArgsConstructor != null && noArgsConstructor.parameters.isEmpty()) {
-                 noArgsConstructor.call()
-            } else {
-                throw Exception("Failed to create instance of type ${type.qualifiedName}")
+            var value: Any? = null
+
+            try {
+                val noArgsConstructor = type.primaryConstructor
+                value = if (noArgsConstructor != null && noArgsConstructor.parameters.isEmpty()) {
+                    noArgsConstructor.call()
+                } else {
+                    throw Exception("Failed to create instance of type ${type.qualifiedName}")
+                }
+            }
+            catch (ex: Exception){
+                var error = ex
             }
 
 
@@ -211,16 +219,16 @@ class OpenTraceabilityJsonLDMapper {
                     for (jprop in jobj.keys()) {
                         mappingProp = typeInfo[jprop]
 
-                        if (mappingProp != null && mappingProp.Property is KMutableProperty<*>) {
+                        if (mappingProp != null && mappingProp.Property.isAccessible) {
                             continue
                         }
 
-                        val jChild = jobj.get(jprop) as? JSONObject
+                        val jChild = jobj.get(jprop)
                         if (jChild != null)
                         {
                             when {
                                 mappingProp != null -> {
-                                    readPropertyMapping(mappingProp, jChild, value, namespaces)
+                                    readPropertyMapping(mappingProp, jChild, value!!, namespaces)
                                 }
                                 extensionKDEs != null -> {
                                     val kde: IEventKDE = readKDE(jprop, jChild, namespaces)
@@ -242,7 +250,7 @@ class OpenTraceabilityJsonLDMapper {
                 throw ex
             }
 
-            return value
+            return value!!
         }
 
         fun writeObjectToJToken(obj: Any?): String? {
@@ -270,7 +278,8 @@ class OpenTraceabilityJsonLDMapper {
             }
         }
 
-        fun readPropertyMapping(mappingProp: OTMappingTypeInformationProperty, json: JSONObject, value: Any, namespaces: MutableMap<String, String>) {
+        fun readPropertyMapping(mappingProp: OTMappingTypeInformationProperty, json: Any, value: Any, namespaces: MutableMap<String, String>) {
+
             when {
                 mappingProp.IsQuantityList -> {
                     val e = value as IEvent
@@ -329,11 +338,23 @@ class OpenTraceabilityJsonLDMapper {
                     }
                 }
                 mappingProp.IsObject -> {
-                    val o = fromJson(json, mappingProp.Property?.returnType as KClass<*>, namespaces)
+                    val o = fromJson(JSONObject(json), mappingProp.Property?.returnType as KClass<*>, namespaces)
                     mappingProp.Property?.setter?.call(value, o)
                 }
-                mappingProp.Property?.returnType == List::class.java -> {
-                    val languageStrings: MutableList<LanguageString>? = fromJson(json, typeOf<MutableList<LanguageString>>() as KClass<*>, namespaces) as MutableList<LanguageString>
+                mappingProp.Property?.returnType?.classifier  == MutableList::class-> {
+
+                    /*
+                        val instance = (mappingProp.Property?.getter?.call(mappingProp) as? MutableList<*>)?.firstOrNull()
+
+                        if (instance is LanguageString) {
+                            println("This property is a MutableList<LanguageString>")
+                        } else {
+                            println("This property is a MutableList of something other than LanguageString")
+                        }
+                    */
+
+
+                    val languageStrings: MutableList<LanguageString>? = fromJson(JSONObject(json), typeOf<MutableList<LanguageString>>() as KClass<*>, namespaces) as MutableList<LanguageString>
                     if (languageStrings != null) {
                         mappingProp.Property?.setter?.call(value, languageStrings)
                     }
@@ -341,7 +362,7 @@ class OpenTraceabilityJsonLDMapper {
                 else -> {
                     val v = json.toString()
                     if (v.isNotBlank()) {
-                        val o = readObjectFromString(v, mappingProp.Property?.returnType as KClass<*>)
+                        val o = readObjectFromString(v, mappingProp.Property?.returnType?.classifier!! as KClass<*>)
                         mappingProp.Property?.setter?.call(value, o)
                     }
                 }
@@ -349,6 +370,7 @@ class OpenTraceabilityJsonLDMapper {
         }
 
         fun readObjectFromString(value: String, t: KClass<*>): Any? {
+
             return try {
                 when (t) {
                     OffsetDateTime::class -> {
@@ -408,7 +430,7 @@ class OpenTraceabilityJsonLDMapper {
             }
         }
 
-        fun readKDE(name: String, json: JSONObject, namespaces: MutableMap<String, String>): IEventKDE {
+        fun readKDE(name: String, json: Any, namespaces: MutableMap<String, String>): IEventKDE {
             var kde: IEventKDE? = null
             var ns = ""
             var realName = name
@@ -430,7 +452,7 @@ class OpenTraceabilityJsonLDMapper {
                 kde = EventKDEString(ns, realName)
             }
 
-            kde?.setFromJson(json) ?: throw Exception("Failed to initialize KDE from JSON = ${json.toString()}")
+            kde?.setFromJson(JSONObject(json)) ?: throw Exception("Failed to initialize KDE from JSON = ${json.toString()}")
 
             return kde
         }
