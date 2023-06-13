@@ -15,7 +15,7 @@
 		<RepositoryUrl>https://github.com/ift-gftc/opentraceability</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>epcis;open;traceability;ift;gdst</PackageTags>
-		<VersionPrefix>1.2.1</VersionPrefix>
+		<VersionPrefix>1.2.2</VersionPrefix>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -55,6 +55,7 @@
 		<PackageReference Include="Crc32.NET" Version="1.2.0" />
 		<PackageReference Include="JsonSchema.Net" Version="4.1.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 	</ItemGroup>
 
 	<ItemGroup>

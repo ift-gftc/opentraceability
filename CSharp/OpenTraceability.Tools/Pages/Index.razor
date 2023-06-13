@@ -1,0 +1,291 @@
+﻿@page "/"
+@using Newtonsoft.Json.Linq;
+@using OpenTraceability.Mappers.MasterData;
+@using OpenTraceability.Models.Events;
+@using OpenTraceability.Utility;
+@using System.Xml.Linq;
+
+<style>
+    ::-webkit-scrollbar {
+        width: 1.5rem;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+        overflow:hidden;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 1.0rem;
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+
+    .description {
+        padding: 2.0rem;
+        border-radius: 1.0rem;
+        background-color: #f0f0f0;
+        box-shadow: 0px 0px 5px 3px rgba(0,0,0,0.2);
+        margin: 1.0rem;
+        font-family: Consolas;
+    }
+
+    textarea {
+        flex: 1;
+        width: 100%;
+        border-radius: 1.0rem;
+        font-size: 1.0rem;
+        font-family: Consolas;
+        padding: 1.0rem;
+    }
+
+    .error {
+        padding: 2.0rem;
+        border-radius: 1.0rem;
+        background-color: rgba(218,0,0,0.5);
+        color: white;
+        box-shadow: 0px 0px 5px 3px rgba(0,0,0,0.2);
+        margin: 1.0rem;
+        font-family: Consolas;
+    }
+
+    .textarea {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 2.0rem;
+        border-radius: 1.0rem;
+        background-color: #f0f0f0;
+        box-shadow: 0px 0px 5px 3px rgba(0,0,0,0.2);
+        margin: 1.0rem;
+        font-family: Consolas;
+    }
+</style>
+
+<div style="height: 100vh; width: 100%; max-width: 100%; min-width: 100%; display: flex; flex-direction: column; padding: 1.0rem;">
+    <div class="description">
+        <p>
+            This tool will convert EPCIS 1.2 XML into EPCIS 2.0 JSON-LD and GS1 Web Vocab JSON-LD. Just paste your EPCIS 1.2 XML into the INPUT box on the
+            left and it will automatically convert into the OUTPUT boxes on the right.
+
+            You can paste a single event, an entire event list, an entire EPCIS Query Document, an entire EPCIS Document, or just the EPCIS Header with master data.
+        </p>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: row; width: 100%;">
+        <div class="textarea">
+            <center><h3>EPCIS 1.2 XML (INPUT)</h3></center>
+            <InputTextArea Value="@input" ValueChanged="@InputChanged" ValueExpression="(() => input)" />
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; width: 100%;">
+            <div class="textarea">
+                <center><h3>GS1 Web Vocab JSON-LD (OUTPUT)</h3></center>
+                <InputTextArea AdditionalAttributes="@(new Dictionary<string, object>() { {"readonly",""} })" @bind-Value="@outputMasterData" />
+            </div>
+            <div class="textarea">
+                <center><h3>EPCIS 2.0 JSON-LD (OUTPUT)</h3></center>
+                <InputTextArea AdditionalAttributes="@(new Dictionary<string, object>() { {"readonly",""} })" @bind-Value="@outputEvents" />
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="error">
+            <p>@error</p>
+        </div>
+    }
+</div>
+
+@code {
+    string error = "";
+    string input = "";
+
+    string outputMasterData = "";
+    string outputEvents = "";
+
+    async Task InputChanged(string i)
+    {
+        error = "";
+        OpenTraceability.GDST.Setup.Initialize();
+
+        try 
+        {
+            EPCISDocument? doc = TryParseFromMasterDataBit(i);
+            if (doc == null && !string.IsNullOrEmpty(error))
+            {
+                return;
+            }
+
+            doc = TryParseFromSingleElement(i);
+            if (doc == null && !string.IsNullOrEmpty(error))
+            {
+                return;
+            }
+
+            XDocument? xml = null;
+            try
+            {
+                xml = XDocument.Parse(i);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.ToString());
+                error = "Failed to parse input XML. " + ex.Message;
+            }
+
+            if (xml?.Root != null)
+            {
+                doc = TryParseFromEPCISQueryDocument(xml, i);
+                if (doc == null && !string.IsNullOrEmpty(error))
+                {
+                    return;
+                }
+
+                doc = TryParseFromEPCISDocument(xml, i);
+                if (doc == null && !string.IsNullOrEmpty(error))
+                {
+                    return;
+                }
+
+                if (doc == null)
+                {
+                    error = "Failed to detect input XML type.";
+                    return;
+                }
+                else
+                {
+                    try
+                    {
+                        doc.EPCISVersion = EPCISVersion.V2;
+                        outputEvents = await OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.JSON.MapAsync(doc);
+
+                        GS1VocabJsonMapper masterdataMapper = new GS1VocabJsonMapper();
+                        JArray jMasterData = new JArray();
+                        foreach (var md in doc.MasterData)
+                        {
+                            jMasterData.Add(JObject.Parse(masterdataMapper.Map(md)));
+                        }
+                        outputMasterData = jMasterData.ToString(Newtonsoft.Json.Formatting.Indented);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.ToString());
+                        error = "Failed to convert to ouput JSON-LD. " + ex.Message;
+                    }
+                }
+            }
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    EPCISDocument? TryParseFromEPCISDocument(XDocument xml, string i)
+    {
+        EPCISDocument? doc = null;
+        if (xml.Root?.Name.LocalName == "EPCISDocument")
+        {
+            try
+            {
+                i = FixPotentiallyBadXML(i);
+                doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.ToString());
+                error = "Failed to map input XML to EPCISDocument. " + ex.Message;
+            }
+        }
+        return doc;
+    }
+
+    EPCISDocument? TryParseFromEPCISQueryDocument(XDocument xml, string i)
+    {
+        EPCISDocument? doc = null;
+        if (xml.Root?.Name.LocalName == "EPCISQueryDocument")
+        {
+            try
+            {
+                i = FixPotentiallyBadXML(i);
+                doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(i).ToEPCISDocument();
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.ToString());
+                error = "Failed to map input XML to EPCISQueryDocument. " + ex.Message;
+            }
+        }
+        return doc;
+    }
+
+    EPCISDocument? TryParseFromSingleElement(string i)
+    {
+        EPCISDocument? doc = null;
+        if (i.Trim().StartsWith("<ObjectEvent>") || i.Trim().StartsWith("<TransformationEvent>") || i.Trim().StartsWith("<AggregationEvent>") || i.Trim().StartsWith("<TransactionEvent>"))
+        {
+            EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+            string template = loader.ReadString("OpenTraceability.Tools", "OpenTraceability.Tools.Resources.EPCISEventTemplate.xml");
+            string completeXml = template.Replace("{EVENT}", i);
+            input = completeXml;
+            try
+            {
+                i = FixPotentiallyBadXML(i);
+                doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
+            }
+            catch (Exception ex2)
+            {
+                Console.Write(ex2.ToString());
+                error = "Failed to map input XML to EPCISDocument. " + ex2.Message;
+            }
+        }
+        return doc;
+    }
+
+    EPCISDocument? TryParseFromMasterDataBit(string i)
+    {
+        EPCISDocument? doc = null;
+        if (i.Trim().StartsWith("<EPCISMasterData>"))
+        {
+            EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+            string template = loader.ReadString("OpenTraceability.Tools", "OpenTraceability.Tools.Resources.EPCISMasterDataTemplate.xml");
+            string completeXml = template.Replace("{MASTER_DATA}", i);
+            input = completeXml;
+            try
+            {
+                i = FixPotentiallyBadXML(i);
+                doc = OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISDocument.XML.Map(i);
+            }
+            catch (Exception ex2)
+            {
+                Console.Write(ex2.ToString());
+                error = "Failed to map input XML to EPCISDocument. " + ex2.Message;
+            }
+        }
+        return doc;
+    }
+
+    string FixPotentiallyBadXML(string i)
+    {
+        XDocument xml = XDocument.Parse(i);
+        foreach (var e in xml.Descendants().ToList())
+        {
+            if (e.Name.LocalName == "eventID")
+            {
+                e.Value = "urn:uuid:" + Guid.NewGuid().ToString();
+            }
+
+            if (e.Name.LocalName == "readPoint")
+            {
+                if (e.Element("id") == null || string.IsNullOrWhiteSpace(e.Element("id")?.Value))
+                {
+                    e.Remove();
+                }
+            }
+        }
+        return xml.ToString();
+    }
+}
