@@ -9,7 +9,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 {
     public static class EPCISDocumentBaseJsonMapper
     {
-        public static async Task<(T, JObject)> ReadJSONAsync<T>(string strValue, bool checkSchema = true) where T : EPCISBaseDocument, new()
+        public static async Task<(T, JObject)> ReadJSONAsync<T>(string strValue, string expectedType, bool checkSchema = true) where T : EPCISBaseDocument, new()
         {
             // validate the JSON...
             if (checkSchema)
@@ -23,6 +23,11 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             // convert into XDocument
             var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
             JObject json = JsonConvert.DeserializeObject<JObject>(strValue, settings) ?? throw new Exception("Failed to parse json from string. " + strValue);
+
+            if (json["type"]?.ToString() != expectedType)
+            {
+                throw new Exception("Failed to parse json from string. Expected type=" + expectedType + ", actual type=" + json["type"]?.ToString() ?? string.Empty);
+            }
 
             // read all of the attributes
             T document = Activator.CreateInstance<T>();
@@ -186,6 +191,19 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
 
             return json;
+        }
+
+        /// <summary>
+        /// This performs a final cleanup on the JSON-LD document.
+        /// </summary>
+        /// <param name="json"></param>
+        public static void PostWriteEventCleanUp(JObject json)
+        {
+            // when converting from XML to JSON, the XML allows an empty readPoint, but the JSON does not.
+            if (json["readPoint"] is JObject && json["readPoint"]?["id"] == null)
+            {
+                json.Remove("readPoint");
+            }
         }
 
         internal static Type GetEventTypeFromProfile(JObject jEvent)

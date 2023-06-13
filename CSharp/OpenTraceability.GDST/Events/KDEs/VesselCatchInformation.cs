@@ -62,6 +62,7 @@ namespace OpenTraceability.GDST.Events.KDEs
         [OpenTraceability(Constants.GDST_NAMESPACE, "vesselPublicRegistry", 0)]
         public string? VesselPublicRegistry { get; set; }
 
+        [OpenTraceabilityJson("gdst:vesselTripDate")]
         [OpenTraceability(Constants.GDST_NAMESPACE, "vesselTripDate", 0)]
         public DateTimeOffset? VesselTripDate { get; set; }
 

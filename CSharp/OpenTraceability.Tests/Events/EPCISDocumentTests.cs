@@ -3,6 +3,7 @@ using OpenTraceability.Mappers;
 using OpenTraceability.Mappers.EPCIS;
 using OpenTraceability.Mappers.EPCIS.JSON;
 using OpenTraceability.Mappers.EPCIS.XML;
+using OpenTraceability.Models.Common;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Events.KDEs;
 using System.Xml.Linq;
@@ -42,6 +43,8 @@ namespace OpenTraceability.Tests.Events
         [TestCase("gdst_extensions_03.xml")]
         public void XML_1_2__to__JSON_LD(string file)
         {
+            OpenTraceability.GDST.Setup.Initialize();
+
             // read object events from test data specified in the file argument
             string stringXmlEvents = OpenTraceabilityTests.ReadTestData(file);
 
@@ -55,7 +58,7 @@ namespace OpenTraceability.Tests.Events
 
             // convert back into EPCIS Query Document
             EPCISDocument docAfter = OpenTraceabilityMappers.EPCISDocument.JSON.Map(jsonLD);
-            docAfter.Header = null;
+            docAfter.Header = StandardBusinessDocumentHeader.DummyHeader;
 
             // convert back into XML 1.2
             docAfter.EPCISVersion = EPCISVersion.V1;

@@ -115,9 +115,6 @@
 				<action>ADD</action>
 				<bizStep>urn:gdst:bizStep:fishingEvent</bizStep>
 				<disposition>urn:epcglobal:cbv:disp:active</disposition>
-				<readPoint>
-					<id/>
-				</readPoint>
 				<bizLocation>
 					<id>urn:gdst:example.org:location:loc:fisherman02.1</id>
 				</bizLocation>
@@ -136,15 +133,9 @@
 								<cbvmda:vesselID>FV-002</cbvmda:vesselID>
 								<gdst:imoNumber>IMO00000002</gdst:imoNumber>
 								<cbvmda:vesselFlagState>US</cbvmda:vesselFlagState>
-								<gdst:vesselPublicRegistry/>
-								<gdst:gpsAvailability/>
-								<gdst:satelliteTrackingAuthority/>
-								<cbvmda:economicZone/>
-								<gdst:fisheryImprovementProject/>
-								<gdst:rfmoArea/>
-								<gdst:subnationalPermitArea/>
 								<cbvmda:catchArea>urn:gdst:fao:77</cbvmda:catchArea>
 								<cbvmda:fishingGearTypeCode>urn:gdst:gear:1.2</cbvmda:fishingGearTypeCode>
+								<gdst:gpsAvailability>false</gdst:gpsAvailability>
 								<gdst:vesselTripDate>2021-09-26T13:37:42.255Z</gdst:vesselTripDate>
 							</cbvmda:vesselCatchInformation>
 						</cbvmda:vesselCatchInformationList>
@@ -153,21 +144,18 @@
 								<gdst:certificationType>urn:gdst:certType:fishingAuth</gdst:certificationType>
 								<certificationStandard>San Diego Fishing Authority</certificationStandard>
 								<certificationAgency>San Diego Fishing Authority</certificationAgency>
-								<certificationValue/>
 								<certificationIdentification>SDFA-1001</certificationIdentification>
 							</certification>
 							<certification>
 								<gdst:certificationType>urn:gdst:certType:harvestCert</gdst:certificationType>
 								<certificationStandard>San Diego Fishing Authority</certificationStandard>
 								<certificationAgency>San Diego Fishing Authority</certificationAgency>
-								<certificationValue/>
 								<certificationIdentification>SDFA-1001</certificationIdentification>
 							</certification>
 							<certification>
 								<gdst:certificationType>urn:gdst:certType:humanPolicy</gdst:certificationType>
 								<certificationStandard>San Diego Fishing Authority</certificationStandard>
 								<certificationAgency>San Diego Fishing Authority</certificationAgency>
-								<certificationValue/>
 								<certificationIdentification>SDFA-1001</certificationIdentification>
 							</certification>
 						</cbvmda:certificationList>
@@ -211,21 +199,18 @@
 						<gdst:certificationType>urn:gdst:certType:transshipmentAuth</gdst:certificationType>
 						<certificationStandard>San Diego Transshipment Authorization</certificationStandard>
 						<certificationAgency>San Diego Transshipment Authorization</certificationAgency>
-						<certificationValue/>
 						<certificationIdentification>SDTA-1001</certificationIdentification>
 					</certification>
 					<certification>
 						<gdst:certificationType>urn:gdst:certType:harvestCoC</gdst:certificationType>
 						<certificationStandard>San Diego Transshipment Authorization</certificationStandard>
 						<certificationAgency>San Diego Transshipment Authorization</certificationAgency>
-						<certificationValue/>
 						<certificationIdentification>SDTA-1001</certificationIdentification>
 					</certification>
 					<certification>
 						<gdst:certificationType>urn:gdst:certType:humanPolicy</gdst:certificationType>
 						<certificationStandard>San Diego Transshipment Authorization</certificationStandard>
 						<certificationAgency>San Diego Transshipment Authorization</certificationAgency>
-						<certificationValue/>
 						<certificationIdentification>SDTA-1001</certificationIdentification>
 					</certification>
 				</cbvmda:certificationList>
@@ -242,9 +227,6 @@
 				<action>ADD</action>
 				<bizStep>urn:gdst:bizStep:fishingEvent</bizStep>
 				<disposition>urn:epcglobal:cbv:disp:active</disposition>
-				<readPoint>
-					<id/>
-				</readPoint>
 				<bizLocation>
 					<id>urn:gdst:example.org:location:loc:fisherman01.1</id>
 				</bizLocation>
@@ -263,15 +245,9 @@
 								<cbvmda:vesselID>FV-001</cbvmda:vesselID>
 								<gdst:imoNumber>IMO00000001</gdst:imoNumber>
 								<cbvmda:vesselFlagState>US</cbvmda:vesselFlagState>
-								<gdst:vesselPublicRegistry/>
-								<gdst:gpsAvailability/>
-								<gdst:satelliteTrackingAuthority/>
-								<cbvmda:economicZone/>
-								<gdst:fisheryImprovementProject/>
-								<gdst:rfmoArea/>
-								<gdst:subnationalPermitArea/>
 								<cbvmda:catchArea>urn:gdst:fao:77</cbvmda:catchArea>
 								<cbvmda:fishingGearTypeCode>urn:gdst:gear:1.2</cbvmda:fishingGearTypeCode>
+								<gdst:gpsAvailability>false</gdst:gpsAvailability>
 								<gdst:vesselTripDate>2021-09-26T13:37:42.255Z</gdst:vesselTripDate>
 							</cbvmda:vesselCatchInformation>
 						</cbvmda:vesselCatchInformationList>
@@ -280,21 +256,18 @@
 								<gdst:certificationType>urn:gdst:certType:fishingAuth</gdst:certificationType>
 								<certificationStandard>San Diego Fishing Authority</certificationStandard>
 								<certificationAgency>San Diego Fishing Authority</certificationAgency>
-								<certificationValue/>
 								<certificationIdentification>SDFA-1002</certificationIdentification>
 							</certification>
 							<certification>
 								<gdst:certificationType>urn:gdst:certType:harvestCert</gdst:certificationType>
 								<certificationStandard>San Diego Fishing Authority</certificationStandard>
 								<certificationAgency>San Diego Fishing Authority</certificationAgency>
-								<certificationValue/>
 								<certificationIdentification>SDFA-1002</certificationIdentification>
 							</certification>
 							<certification>
 								<gdst:certificationType>urn:gdst:certType:humanPolicy</gdst:certificationType>
 								<certificationStandard>San Diego Fishing Authority</certificationStandard>
 								<certificationAgency>San Diego Fishing Authority</certificationAgency>
-								<certificationValue/>
 								<certificationIdentification>SDFA-1002</certificationIdentification>
 							</certification>
 						</cbvmda:certificationList>
@@ -336,21 +309,18 @@
 						<gdst:certificationType>urn:gdst:certType:transshipmentAuth</gdst:certificationType>
 						<certificationStandard>San Diego Transshipment Authorization</certificationStandard>
 						<certificationAgency>San Diego Transshipment Authorization</certificationAgency>
-						<certificationValue/>
 						<certificationIdentification>SDTA-1001</certificationIdentification>
 					</certification>
 					<certification>
 						<gdst:certificationType>urn:gdst:certType:harvestCoC</gdst:certificationType>
 						<certificationStandard>San Diego Transshipment Authorization</certificationStandard>
 						<certificationAgency>San Diego Transshipment Authorization</certificationAgency>
-						<certificationValue/>
 						<certificationIdentification>SDTA-1001</certificationIdentification>
 					</certification>
 					<certification>
 						<gdst:certificationType>urn:gdst:certType:humanPolicy</gdst:certificationType>
 						<certificationStandard>San Diego Transshipment Authorization</certificationStandard>
 						<certificationAgency>San Diego Transshipment Authorization</certificationAgency>
-						<certificationValue/>
 						<certificationIdentification>SDTA-1001</certificationIdentification>
 					</certification>
 				</cbvmda:certificationList>
@@ -392,14 +362,12 @@
 						<gdst:certificationType>urn:gdst:certType:landingAuth</gdst:certificationType>
 						<certificationStandard>San Diego Landing Authority</certificationStandard>
 						<certificationAgency>San Diego Landing Authority</certificationAgency>
-						<certificationValue/>
 						<certificationIdentification>SDLA-001</certificationIdentification>
 					</certification>
 					<certification>
 						<gdst:certificationType>urn:gdst:certType:humanPolicy</gdst:certificationType>
 						<certificationStandard>San Diego Landing Authority</certificationStandard>
 						<certificationAgency>San Diego Landing Authority</certificationAgency>
-						<certificationValue/>
 						<certificationIdentification>SDLA-001</certificationIdentification>
 					</certification>
 				</cbvmda:certificationList>
@@ -416,9 +384,6 @@
 				<action>OBSERVE</action>
 				<bizStep>urn:epcglobal:cbv:bizstep:shipping</bizStep>
 				<disposition>urn:epcglobal:cbv:disp:active</disposition>
-				<readPoint>
-					<id/>
-				</readPoint>
 				<bizLocation>
 					<id>urn:gdst:example.org:location:loc:tuna_processor.port_san_diego</id>
 				</bizLocation>
@@ -439,10 +404,6 @@
 				<cbvmda:certificationList>
 					<certification>
 						<gdst:certificationType>urn:gdst:certType:harvestCoC</gdst:certificationType>
-						<certificationStandard/>
-						<certificationAgency/>
-						<certificationValue/>
-						<certificationIdentification/>
 					</certification>
 				</cbvmda:certificationList>
 				<gdst:productOwner>urn:epc:id:sgln:08600031303.0.0</gdst:productOwner>
@@ -458,9 +419,6 @@
 				<action>OBSERVE</action>
 				<bizStep>urn:epcglobal:cbv:bizstep:receiving</bizStep>
 				<disposition>urn:epcglobal:cbv:disp:active</disposition>
-				<readPoint>
-					<id/>
-				</readPoint>
 				<bizLocation>
 					<id>urn:epc:id:sgln:08600031303.1.0</id>
 				</bizLocation>
@@ -481,10 +439,6 @@
 				<cbvmda:certificationList>
 					<certification>
 						<gdst:certificationType>urn:gdst:certType:harvestCoC</gdst:certificationType>
-						<certificationStandard/>
-						<certificationAgency/>
-						<certificationValue/>
-						<certificationIdentification/>
 					</certification>
 				</cbvmda:certificationList>
 				<gdst:productOwner>urn:epc:id:sgln:08600031303.0.0</gdst:productOwner>

@@ -17,7 +17,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         {
             try
             {
-                (EPCISQueryDocument doc, JObject json) = await EPCISDocumentBaseJsonMapper.ReadJSONAsync<EPCISQueryDocument>(strValue, checkSchema);
+                (EPCISQueryDocument doc, JObject json) = await EPCISDocumentBaseJsonMapper.ReadJSONAsync<EPCISQueryDocument>(strValue, "EPCISQueryDocument", checkSchema);
 
                 if (doc.EPCISVersion != EPCISVersion.V2)
                 {
@@ -73,6 +73,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 JObject? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed) as JObject;
                 if (jEvent != null)
                 {
+                    EPCISDocumentBaseJsonMapper.PostWriteEventCleanUp(jEvent);
                     jEventsList.Add(jEvent);
                 }
             }
