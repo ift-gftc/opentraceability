@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnumUtil {
-    public static <T extends Enum<T>> String GetEnumDescription(T value) {
+    public static <T extends Enum<T>> String GetEnumDescription(T value) throws NoSuchFieldException {
         try {
             Field field = value.getClass().getField(value.name());
             opentraceability.utility.attributes.Description[] displayAnnotation = field.getAnnotationsByType(opentraceability.utility.attributes.Description.class);
@@ -18,7 +18,7 @@ public class EnumUtil {
         }
     }
 
-    public static <T extends Enum<T>> String GetEnumDisplayName(T value) {
+    public static <T extends Enum<T>> String GetEnumDisplayName(T value) throws NoSuchFieldException {
         try {
             Field field = value.getClass().getField(value.name());
             opentraceability.utility.attributes.Display[] displayAnnotation = field.getAnnotationsByType(opentraceability.utility.attributes.Display.class);
@@ -29,7 +29,7 @@ public class EnumUtil {
         }
     }
 
-    public static <T extends Enum<T>, A extends Annotation> List<A> GetEnumAttributes(T value) {
+    public static <T extends Enum<T>, A extends Annotation> List<A> GetEnumAttributes(T value) throws NoSuchFieldException {
         try {
             Field field = value.getClass().getField(value.name());
             A[] annotations = field.getAnnotationsByType((Class<A>) Annotation.class);
@@ -44,7 +44,14 @@ public class EnumUtil {
         }
     }
 
-    public static <T extends Enum<T>> List<T> GetValues() {
-        return List.of(Enum.<T>values());
+    public static <T extends Enum<T>> List<T> GetValues(Class<T> enumClass) {
+        List<T> valuesList = new ArrayList<>();
+        T[] enumValues = enumClass.getEnumConstants();
+
+        for (T value : enumValues) {
+            valuesList.add(value);
+        }
+
+        return valuesList;
     }
 }

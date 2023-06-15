@@ -4,20 +4,19 @@ import opentraceability.OTLogger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class UOMS {
-    public UOMS() {
+    public UOMS() throws Exception {
         load();
     }
-
-    private static final Object _locker = new Object();
 
     public static Map<String, UOM> uomsAbbrevDict = new HashMap<>();
     public static Map<String, UOM> uomsUNCodeDict = new HashMap<>();
 
-    public static void load() {
+    public static void load() throws Exception {
         try {
             // Load the subscriptions JSON
             EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
@@ -48,11 +47,11 @@ public class UOMS {
         }
     }
 
-    public static UOM getBase(UOM uom) {
+    public static UOM getBase(UOM uom) throws Exception {
         return getBase(uom.UnitDimension);
     }
 
-    public static UOM getBase(String dimension) {
+    public static UOM getBase(String dimension) throws Exception {
         for (UOM entry : uomsAbbrevDict.values()) {
             if (entry.UnitDimension.equals(dimension) && entry.isBase()) {
                 return entry;
@@ -111,9 +110,7 @@ public class UOMS {
         return uom;
     }
 
-    public static List<UOM> getList() {
-        synchronized (_locker) {
-            return new ArrayList<>(uomsAbbrevDict.values());
-        }
+    public static ArrayList<UOM> getList() {
+        return new ArrayList<>(uomsAbbrevDict.values());
     }
 }

@@ -31,11 +31,11 @@ public class EventBase {
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute(value = Constants.CBVMDA_NAMESPACE, name = "certificationList", versions = {}, conditionalVersions = {})
-    @OpenTraceabilityJsonAttribute("cbvmda:certificationList")
+    @OpenTraceabilityJsonAttribute(name="cbvmda:certificationList")
     public CertificationList certificationList;
 
     @OpenTraceabilityAttribute(value = Constants.CBVMDA_NAMESPACE, name = "informationProvider", versions = {}, conditionalVersions = {})
-    @OpenTraceabilityJsonAttribute("cbvmda:informationProvider")
+    @OpenTraceabilityJsonAttribute(name="cbvmda:informationProvider")
     public PGLN informationProvider;
 
     @OpenTraceabilityExtensionElementsAttribute

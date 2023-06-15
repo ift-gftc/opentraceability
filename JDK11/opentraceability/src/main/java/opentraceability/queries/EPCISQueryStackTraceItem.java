@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import opentraceability.models.identifiers.*;
 
-class EPCISQueryStackTraceItem {
+public class EPCISQueryStackTraceItem {
     public String ID = UUID.randomUUID().toString();
     public LocalDateTime Created = LocalDateTime.now();
     //public HttpStatusCode ResponseStatusCode = null;

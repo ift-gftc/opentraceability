@@ -14,5 +14,5 @@ public abstract class IVocabularyElement {
 
     public VocabularyType vocabularyType = null;
 
-    public ArrayList<IMasterDataKDE> kdes = null;
+    public ArrayList<IMasterDataKDE> kdes = new ArrayList<IMasterDataKDE>();
 }

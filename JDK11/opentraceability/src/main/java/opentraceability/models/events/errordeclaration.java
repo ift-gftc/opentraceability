@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class ErrorDeclaration {
-    @OpenTraceabilityJsonAttribute("reason")
+    @OpenTraceabilityJsonAttribute(name="reason")
     @OpenTraceabilityAttribute("", "@type")
     public URI Reason = null;
 

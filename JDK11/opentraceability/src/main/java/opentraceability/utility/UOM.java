@@ -40,47 +40,42 @@ public class UOM {
         this.C = 1.0;
         this.D = 0.0;
 
-        this.Name = juom.has("name") ? juom.getString("name") : throw new Exception("name not set on uom json. " + juom.toString());
-        this.UNCode = juom.has("UNCode") ? juom.getString("UNCode") : throw new Exception("UNCode not set on uom json. " + juom.toString());
-        this.Abbreviation = juom.has("symbol") ? juom.getString("symbol") : throw new Exception("symbol not set on uom json. " + juom.toString());
-        this.UnitDimension = juom.has("type") ? juom.getString("type") : throw new Exception("type not set on uom json. " + juom.toString());
+        this.Name = juom.has("name") ? juom.getString("name") : null;
+        this.UNCode = juom.has("UNCode") ? juom.getString("UNCode") : null;
+        this.Abbreviation = juom.has("symbol") ? juom.getString("symbol") : null;
+        this.UnitDimension = juom.has("type") ? juom.getString("type") : null;
 
         String offsetString = juom.has("offset") ? juom.getString("offset") : null;
         if (offsetString != null) {
             Offset = Double.valueOf(offsetString);
         }
 
-        String multiplierString = juom.has("multiplier") ? juom.getString("multiplier") : throw new Exception("multiplier not set on uom json. " + juom.toString());
+        String multiplierString = juom.has("multiplier") ? juom.getString("multiplier") : null;
         if (multiplierString.contains("/")) {
             int numerator = Integer.parseInt(multiplierString.split("/")[0]);
             int denominator = Integer.parseInt(multiplierString.split("/")[1]);
             B = numerator;
             C = denominator;
         } else {
-            String multiplier = juom.has("multiplier") ? juom.getString("multiplier") : throw new Exception("multiplier not set on uom json. " + juom.toString());
+            String multiplier = juom.has("multiplier") ? juom.getString("multiplier") : null;
             B = Double.valueOf(multiplier);
         }
     }
 
     public static UOM lookUpFromUNCode(String unCode) {
-        Object[] lockObjs = new Object[]{new Object()};
-        return uomListLock.withLock(new Function0<UOM>() {
-            public UOM invoke() {
-                for (UOM uom : getUOMList()) {
-                    if (uom.UNCode == unCode) {
-                        return uom;
-                    }
-                }              
-                return new UOM();
+        for (UOM uom : getUOMList()) {
+            if (uom.UNCode == unCode) {
+                return uom;
             }
-        });
+        }
+        return null;
     }
 
     public static boolean isNullOrEmpty(UOM uom) {
         return uom == null || uom.Abbreviation.isEmpty();
     }
 
-    public static UOM parseFromName(String name) {
+    public static UOM parseFromName(String name) throws Exception {
         try {
             if (name == null || name.isEmpty()) {
                 throw new IllegalArgumentException("name");

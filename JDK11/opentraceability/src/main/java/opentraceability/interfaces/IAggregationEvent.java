@@ -2,6 +2,6 @@ package opentraceability.interfaces;
 
 import opentraceability.models.identifiers.EPC;
 
-public interface IAggregationEvent extends IEvent {
+public abstract class IAggregationEvent<T> extends IILMDEvent<T> {
     EPC parentID = null;
 }

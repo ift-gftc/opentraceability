@@ -12,35 +12,35 @@ import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute;
 
 public class SensorMetaData {
 
-    @OpenTraceabilityJsonAttribute("time")
+    @OpenTraceabilityJsonAttribute(name="time")
     @OpenTraceabilityAttribute("", "@time")
     public OffsetDateTime timeStamp;
 
-    @OpenTraceabilityJsonAttribute("deviceID")
+    @OpenTraceabilityJsonAttribute(name="deviceID")
     @OpenTraceabilityAttribute("", "@deviceID")
     public URI deviceID;
 
-    @OpenTraceabilityJsonAttribute("deviceMetadata")
+    @OpenTraceabilityJsonAttribute(name="deviceMetadata")
     @OpenTraceabilityAttribute("", "@deviceMetadata")
     public URI deviceMetaData;
 
-    @OpenTraceabilityJsonAttribute("rawData")
+    @OpenTraceabilityJsonAttribute(name="rawData")
     @OpenTraceabilityAttribute("", "@rawData")
     public URI rawData;
 
-    @OpenTraceabilityJsonAttribute("startTime")
+    @OpenTraceabilityJsonAttribute(name="startTime")
     @OpenTraceabilityAttribute("", "@startTime")
     public OffsetDateTime startTime;
 
-    @OpenTraceabilityJsonAttribute("bizRules")
+    @OpenTraceabilityJsonAttribute(name="bizRules")
     @OpenTraceabilityAttribute("", "@bizRules")
     public URI bizRules;
 
-    @OpenTraceabilityJsonAttribute("dataProcessingMethod")
+    @OpenTraceabilityJsonAttribute(name="dataProcessingMethod")
     @OpenTraceabilityAttribute("", "@dataProcessingMethod")
     public URI dataProcessingMethod;
 
-    @OpenTraceabilityJsonAttribute("endTime")
+    @OpenTraceabilityJsonAttribute(name="endTime")
     @OpenTraceabilityAttribute("", "@endTime")
     public OffsetDateTime endTime;
 

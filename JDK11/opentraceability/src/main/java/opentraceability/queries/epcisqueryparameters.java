@@ -10,6 +10,7 @@ import opentraceability.models.identifiers.EPCType;
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EPCISQueryParameters {
-    public Map<String, KMutableProperty<?>> propMapping = Stream.of(EPCISQuery.class.getMembers())
+    public Map<String, Field> propMapping = Stream.of(EPCISQuery.class.getFields())
         .filter(KMutableProperty.class::isInstance)
         .map(KMutableProperty.class::cast)
         .collect(Collectors.toMap(KMutableProperty::getName, Function.identity()));

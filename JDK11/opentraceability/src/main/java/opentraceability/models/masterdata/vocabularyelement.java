@@ -8,7 +8,7 @@ import opentraceability.models.identifiers.*;
 import opentraceability.utility.EnumUtil;
 import org.json.JSONObject;
 
-public class VocabularyElement implements IVocabularyElement {
+public class VocabularyElement extends IVocabularyElement {
     public String id = null;
     public String epcisType = "";
     public String jsonLDType = null;
@@ -21,7 +21,7 @@ public class VocabularyElement implements IVocabularyElement {
     public VocabularyElement() {
     }
 
-    public VocabularyType getVocabularyType() {
+    public VocabularyType getVocabularyType() throws NoSuchFieldException {
         VocabularyType type = VocabularyType.Unknown;
         for (VocabularyType t : VocabularyType.values()) {
             if (EnumUtil.GetEnumDescription(t).trim().equals(epcisType.trim())) {

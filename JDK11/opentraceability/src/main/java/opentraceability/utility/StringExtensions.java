@@ -42,7 +42,7 @@ public class StringExtensions {
     }
 
     public static List<String> splitXPath(String str) {
-        String regex = "(?=[^{}]*(?:{[^{}]*}[^{}]*)*$)/";
+        String regex = "(?=[^{}]*(?:{[^{}]*}[^{}]*)*$)";
         str = str.replaceAll(regex, "%SLASH%");
         return List.of(str.split("%SLASH%"));
     }

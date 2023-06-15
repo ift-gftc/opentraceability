@@ -8,11 +8,11 @@ import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute;
 import java.net.URI;
 
 public class EventDestination {
-    @OpenTraceabilityJsonAttribute("type")
+    @OpenTraceabilityJsonAttribute(name="type")
     @OpenTraceabilityAttribute("", "@type")
     public URI type;
 
-    @OpenTraceabilityJsonAttribute("destination")
+    @OpenTraceabilityJsonAttribute(name="destination")
     @OpenTraceabilityAttribute("", "text()")
     public String value;
 

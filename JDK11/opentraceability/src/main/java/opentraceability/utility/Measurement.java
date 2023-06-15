@@ -2,6 +2,8 @@ package opentraceability.utility;
 
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+
 public class Measurement implements Comparable<Measurement> {
     public double value = 0.0;
     public UOM uom = new UOM();
@@ -12,7 +14,7 @@ public class Measurement implements Comparable<Measurement> {
 
     public Measurement(Element xmlElement) {
         value = xmlElement.getAttribute("Value") != null ? Double.parseDouble(xmlElement.getAttribute("Value")) : 0.0;
-        uom = UOM.parseFromName(xmlElement.getAttribute("UoM") != null ? xmlElement.getAttribute("UoM") : "");
+        uom =  UOMS.getUOMFromName(xmlElement.getAttribute("UoM") != null ? xmlElement.getAttribute("UoM") : "");
     }
 
     public Measurement(Measurement copyFrom) {
@@ -27,7 +29,7 @@ public class Measurement implements Comparable<Measurement> {
 
     public Measurement(double value, String unitCode) {
         this.value = value;
-        uom = UOM.parseFromName(unitCode);
+        uom = UOMS.getUOMFromName(unitCode);
     }
 
     public void add(Measurement measurement) throws Exception {
@@ -154,7 +156,7 @@ public class Measurement implements Comparable<Measurement> {
             numberStr = strParts[0].trim();
             uomStr = strParts[1].trim();
 
-            UOM[] uoms = UOMS.list;
+            ArrayList<UOM> uoms = UOMS.getList();
 
             double dblValue = Double.parseDouble(numberStr);
             UOM uom = UOMS.getUOMFromUNCode(uomStr);
@@ -210,8 +212,20 @@ public class Measurement implements Comparable<Measurement> {
             return 1;
         }
 
-        Measurement thisBase = toBase();
-        Measurement otherBase = other.toBase();
+        Measurement thisBase = null;
+        try {
+            thisBase = toBase();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        Measurement otherBase = null;
+        try {
+            otherBase = other.toBase();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         if (thisBase.value == otherBase.value) {
             return 0;
         } else if (thisBase.value < otherBase.value) {

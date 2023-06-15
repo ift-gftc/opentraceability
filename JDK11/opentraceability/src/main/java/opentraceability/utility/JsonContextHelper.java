@@ -1,16 +1,27 @@
 package opentraceability.utility;
 
-import okhttp3.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.TrustAllStrategy;
+import org.apache.http.impl.client.*;
+import org.apache.http.ssl.*;
+import org.apache.http.util.EntityUtils;
+import org.apache.karaf.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.net.ssl.SSLContext;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static okhttp3.HttpUrl.Companion.toHttpUrlOrNull;
 
 public class JsonContextHelper {
 
@@ -20,24 +31,35 @@ public class JsonContextHelper {
     public static JSONObject getJsonLDContext(String contextURL) throws Exception {
         JSONObject jContext = contextCache.get(contextURL);
         if (jContext == null) {
-            HttpUrl httpUrl = toHttpUrlOrNull(contextURL);
-            if (httpUrl == null) {
-                throw new IllegalArgumentException("Invalid URL: " + contextURL);
-            }
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(contextURL)
-                    .build();
-            Response response = client.newCall(request).execute();
-            String jsonString = response.body().string();
-            if (jsonString.isEmpty()) {
-                throw new Exception("Failed to fetch JSON-LD context from " + contextURL + " : Response Body was empty.");
-            }
-            jContext = new JSONObject(jsonString);
-            if (jContext != null) {
-                contextCache.put(contextURL, jContext);
-            } else {
-                throw new Exception("Failed to fetch JSON-LD context from " + contextURL + " : Response Body was not in JSON format.");
+            TrustStrategy trustStrategy = new TrustAllStrategy();
+            SSLContext sslContext = SSLContextBuilder.create().loadTrustMaterial(trustStrategy).build();
+            HttpClientBuilder clientBuilder = HttpClientBuilder.create().setSSLContext(sslContext).setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+            CloseableHttpClient client = clientBuilder.build();
+
+            try {
+                HttpGet request = new HttpGet(contextURL);
+                request.setProtocolVersion(HttpVersion.HTTP_1_1);
+                request.setHeader(HttpHeaders.ACCEPT, "application/json");
+
+                CloseableHttpResponse response = client.execute(request);
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode == HttpStatus.SC_OK) {
+                    HttpEntity entity = response.getEntity();
+                    String jsonString = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+                    if (jsonString.isEmpty()) {
+                        throw new Exception("Failed to fetch JSON-LD context from " + contextURL + " : Response Body was empty.");
+                    }
+                    jContext = new JSONObject(jsonString);
+                    if (jContext != null) {
+                        contextCache.put(contextURL, jContext);
+                    } else {
+                        throw new Exception("Failed to fetch JSON-LD context from " + contextURL + " : Response Body was not in JSON format.");
+                    }
+                } else {
+                    throw new Exception("Failed to fetch JSON-LD context from " + contextURL + " : HTTP status code = " + statusCode);
+                }
+            } finally {
+                client.close();
             }
         }
         JSONObject jHead = jContext.optJSONObject("@context");
@@ -66,7 +88,7 @@ public class JsonContextHelper {
     }
 
     public static boolean isNamespace(String value) {
-        Pattern reg = Pattern.compile("^urn:[a-z0-9][a-z0-9-]{0,31}:[a-z0-9()+,\\-.:=@;\$_!*'%\\/?#]+$");
+        Pattern reg = Pattern.compile("^urn:[a-z0-9][a-z0-9-]{0,31}:[a-z0-9()+,\\-.:=@;\\$_!*'%\\/?#]+$");
         if (value.matches("^https?://.*$")) {
             return true;
         } else {
@@ -76,11 +98,11 @@ public class JsonContextHelper {
     }
 
     public static Object expandVocab(Object json, JSONObject jContext, Map<String, String> namespaces, JSONObject jVocabContext) throws Exception {
-        return modifyVocab(json, jContext, namespaces, reverseMap(namespaces), JsonLDVocabTransformationType.Expand, jVocabContext);
+        return modifyVocab(json, jContext, namespaces, DictionaryExtensions.reverse(namespaces), JsonLDVocabTransformationType.Expand, jVocabContext);
     }
 
     public static Object compressVocab(Object json, JSONObject jContext, Map<String, String> namespaces, JSONObject jVocabContext) throws Exception {
-        return modifyVocab(json, jContext, namespaces, reverseMap(namespaces), JsonLDVocabTransformationType.Compress, jVocabContext);
+        return modifyVocab(json, jContext, namespaces, DictionaryExtensions.reverse(namespaces), JsonLDVocabTransformationType.Compress, jVocabContext);
     }
 
     public static Object modifyVocab(Object json, JSONObject jContext, Map<String, String> namespaces, Map<String, String> namespacesReverse, JsonLDVocabTransformationType transformType, JSONObject jVocabContext) throws Exception {
@@ -157,7 +179,7 @@ public class JsonContextHelper {
                 String ns = value.substring(0, value.lastIndexOf('/') + 1);
                 if (namespacesReverse.containsKey(ns)) {
                     String compressedValue = value.replace(ns, namespacesReverse.get(ns) + ":");
-                    String compressedVocab = jc.keys().stream().filter(k -> Objects.equals(jc.optString(k), compressedValue)).findFirst().orElse(null);
+                    String compressedVocab = jc.keySet().stream().filter(k -> Objects.equals(jc.optString(k), compressedValue)).findFirst().orElse(null);
                     return compressedVocab;
                 } else {
                     return value;
@@ -184,4 +206,4 @@ public class JsonContextHelper {
         return false;
     }
 
-    public static <K
+}

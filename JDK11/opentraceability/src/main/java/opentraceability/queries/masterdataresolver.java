@@ -12,14 +12,7 @@ import opentraceability.models.masterdata.Location;
 import opentraceability.models.masterdata.TradeItem;
 import opentraceability.models.masterdata.TradingParty;
 import opentraceability.models.identifiers.*;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import kotlin.reflect.KClass;
-import kotlin.reflect.typeOf;
 
 public class MasterDataResolver {
     public static void resolveMasterData(DigitalLinkQueryOptions options, EPCISBaseDocument doc, OkHttpClient client) throws Exception {

@@ -13,7 +13,7 @@ import opentraceability.utility.attributes.OpenTraceabilityArrayAttribute;
 import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute;
 import opentraceability.utility.attributes.OpenTraceabilityMasterDataAttribute;
 
-public class TradeItem implements IVocabularyElement {
+public class TradeItem extends IVocabularyElement {
     public String id = null;
     public String epcisType = "urn:epcglobal:epcis:vtype:EPCClass";
     @OpenTraceabilityJsonAttribute(name = "@type")
@@ -42,5 +42,4 @@ public class TradeItem implements IVocabularyElement {
     @OpenTraceabilityJsonAttribute(name = "cbvmda:speciesForFisheryStatisticsPurposesCode")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode")
     public List<String> fisherySpeciesCode = new ArrayList<String>();
-    public List<IMasterDataKDE> kdes = new ArrayList<IMasterDataKDE>();
 }

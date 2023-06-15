@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 
 import static opentraceability.utility.OTXmlUtil.*;
 
-public class MasterDataKDECountry extends MasterDataKDEBase implements IMasterDataKDE {
+public class MasterDataKDECountry extends IMasterDataKDE {
     public Country value = null;
 
     public Type getValueType() {
@@ -22,7 +22,7 @@ public class MasterDataKDECountry extends MasterDataKDEBase implements IMasterDa
             return null;
         } else {
             Element x = createXmlElement("attribute");
-            x.setAttribute("id", name);
+            x.setAttribute("id", this.name);
             x.setTextContent(value.alpha3);
             return x;
         }

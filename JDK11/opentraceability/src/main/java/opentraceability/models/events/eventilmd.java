@@ -18,30 +18,30 @@ import opentraceability.models.events.kdes.CertificationList;
 
 public class EventILMD {
     @OpenTraceabilityAttribute(Constants.CBVMDA_NAMESPACE, "productionMethodForFishAndSeafoodCode")
-    @OpenTraceabilityJsonAttribute("cbvmda:productionMethodForFishAndSeafoodCode")
+    @OpenTraceabilityJsonAttribute(name="cbvmda:productionMethodForFishAndSeafoodCode")
     public String productionMethodForFishAndSeafoodCode;
 
     @OpenTraceabilityAttribute(Constants.CBVMDA_NAMESPACE, "itemExpirationDate")
-    @OpenTraceabilityJsonAttribute("cbvmda:itemExpirationDate")
+    @OpenTraceabilityJsonAttribute(name="cbvmda:itemExpirationDate")
     public OffsetDateTime itemExpirationDate;
 
     @OpenTraceabilityAttribute(Constants.CBVMDA_NAMESPACE, "productionDate")
-    @OpenTraceabilityJsonAttribute("cbvmda:productionDate")
+    @OpenTraceabilityJsonAttribute(name="cbvmda:productionDate")
     public OffsetDateTime productionDate;
 
     @OpenTraceabilityArrayAttribute
     @OpenTraceabilityRepeatingAttribute
     @OpenTraceabilityAttribute(Constants.CBVMDA_NAMESPACE, "countryOfOrigin")
-    @OpenTraceabilityJsonAttribute("cbvmda:countryOfOrigin")
+    @OpenTraceabilityJsonAttribute(name="cbvmda:countryOfOrigin")
     public List<Country> countryOfOrigin;
 
     @OpenTraceabilityAttribute(Constants.CBVMDA_NAMESPACE, "lotNumber")
-    @OpenTraceabilityJsonAttribute("cbvmda:lotNumber")
+    @OpenTraceabilityJsonAttribute(name="cbvmda:lotNumber")
     public String lotNumber;
 
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute(Constants.CBVMDA_NAMESPACE, "certificationList")
-    @OpenTraceabilityJsonAttribute("cbvmda:certificationList")
+    @OpenTraceabilityJsonAttribute(name="cbvmda:certificationList")
     public CertificationList certificationList;
 
     @OpenTraceabilityExtensionElementsAttribute

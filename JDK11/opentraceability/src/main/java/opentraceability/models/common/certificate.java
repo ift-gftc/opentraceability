@@ -6,7 +6,7 @@ import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute;
 import java.time.OffsetDateTime;
 
 public class Certificate {
-    @OpenTraceabilityJsonAttribute("gdst:certificationType")
+    @OpenTraceabilityJsonAttribute(name="gdst:certificationType")
     @OpenTraceabilityAttribute(Constants.GDST_NAMESPACE, "certificationType")
     public String certificateType = null;
 

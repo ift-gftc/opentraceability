@@ -7,11 +7,11 @@ import java.net.URI;
 
 public class EventBusinessTransaction {
 
-    @OpenTraceabilityJsonAttribute("type")
+    @OpenTraceabilityJsonAttribute(name="type")
     @OpenTraceabilityAttribute("", "@type")
     public URI type;
 
-    @OpenTraceabilityJsonAttribute("bizTransaction")
+    @OpenTraceabilityJsonAttribute(name="bizTransaction")
     @OpenTraceabilityAttribute("", "text()")
     public String value;
 

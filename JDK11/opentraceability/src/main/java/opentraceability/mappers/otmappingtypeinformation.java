@@ -1,9 +1,6 @@
 package opentraceability.mappers;
 
 import opentraceability.utility.attributes.*;
-import kotlin.reflect.*;
-import kotlin.reflect.full.KMutableProperty;
-import kotlin.reflect.full.memberProperties;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;

@@ -12,7 +12,7 @@ import opentraceability.models.identifiers.GLN;
 import opentraceability.models.identifiers.PGLN;
 
 
-public class Location implements IVocabularyElement {
+public class Location extends IVocabularyElement {
 
     public Location(){
         epcisType = "urn:epcglobal:epcis:vtype:Location";
@@ -22,41 +22,41 @@ public class Location implements IVocabularyElement {
 
     public String epcisType;
 
-    @OpenTraceabilityJsonAttribute("@type")
+    @OpenTraceabilityJsonAttribute(name = "@type")
     public String jsonLDType = "gs1:Place";
 
     public VocabularyType vocabularyType = VocabularyType.Location;
 
     public JSONObject context = null;
 
-    @OpenTraceabilityJsonAttribute("globalLocationNumber")
+    @OpenTraceabilityJsonAttribute(name = "globalLocationNumber")
     public GLN gln = null;
 
-    @OpenTraceabilityJsonAttribute("cbvmda:owning_party")
-    @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:owning_party")
+    @OpenTraceabilityJsonAttribute(name = "cbvmda:owning_party")
+    @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:owning_party")
     public PGLN owningParty = null;
 
-    @OpenTraceabilityJsonAttribute("cbvmda:informationProvider")
-    @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#informationProvider")
+    @OpenTraceabilityJsonAttribute(name = "cbvmda:informationProvider")
+    @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#informationProvider")
     public PGLN informationProvider = null;
 
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityMasterDataAttribute("https://gs1.org/cbv/cbvmda:certificationList")
+    @OpenTraceabilityMasterDataAttribute(name = "https://gs1.org/cbv/cbvmda:certificationList")
     public CertificationList certificationList = null;
 
-    @OpenTraceabilityJsonAttribute("name")
-    @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#name")
+    @OpenTraceabilityJsonAttribute(name = "name")
+    @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#name")
     public List<LanguageString> name = new ArrayList<LanguageString>();
 
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityJsonAttribute("address")
+    @OpenTraceabilityJsonAttribute(name = "address")
     @OpenTraceabilityMasterDataAttribute
     public Address address = null;
 
-    @OpenTraceabilityJsonAttribute("cbvmda:unloadingPort")
-    @OpenTraceabilityMasterDataAttribute("urn:epcglobal:cbv:mda#unloadingPort")
+    @OpenTraceabilityJsonAttribute(name = "cbvmda:unloadingPort")
+    @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#unloadingPort")
     public String unloadingPort = null;
 
-    public List<IMasterDataKDE> kdes = new ArrayList<IMasterDataKDE>();
+    public ArrayList<IMasterDataKDE> kdes = new ArrayList<IMasterDataKDE>();
 
 }

@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MasterDataKDEString extends MasterDataKDEBase implements IMasterDataKDE {
+public class MasterDataKDEString extends IMasterDataKDE {
 
     public Type valueType = String.class;
 

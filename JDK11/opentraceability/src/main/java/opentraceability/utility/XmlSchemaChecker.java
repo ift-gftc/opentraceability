@@ -90,7 +90,7 @@ public class XmlSchemaChecker {
         Date now = new Date();
 
         CachedXmlSchema cacheEntry = cache.get(url);
-        Duration timeDifference = Duration.between(cacheEntry.getLastUpdated(), Instant.now());
+        Duration timeDifference = Duration.between(cacheEntry.lastUpdated, Instant.now());
         long hoursDifference = timeDifference.toHours();
         boolean isCacheExpired = hoursDifference > 1;
 
@@ -109,6 +109,6 @@ public class XmlSchemaChecker {
             cache.put(url, cachedSchema);
         }
 
-        return cache.get(url).getSchemaSet();
+        return cache.get(url).schemaSet;
     }
 }

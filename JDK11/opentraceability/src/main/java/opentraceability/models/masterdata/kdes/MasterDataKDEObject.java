@@ -1,18 +1,16 @@
 package opentraceability.models.masterdata.kdes;
 
-import kotlin.reflect.Type;
-import kotlin.reflect.typeOf;
 import opentraceability.interfaces.IMasterDataKDE;
-import opentraceability.utility.XMLExtensionsKt;
-
+import opentraceability.utility.XmlToJsonConverter;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
+import java.lang.reflect.Type;
 
-public class MasterDataKDEObject extends MasterDataKDEBase implements IMasterDataKDE {
+public class MasterDataKDEObject extends IMasterDataKDE  {
     private Element _xml = null;
     private JSONObject _json = null;
 
-    Type valueType = typeOf<Object>();
+    Type valueType = Object.class;
 
     public Object getValue() {
         return _xml != null ? _xml : _json;
@@ -44,7 +42,7 @@ public class MasterDataKDEObject extends MasterDataKDEBase implements IMasterDat
 
     public JSONObject getGS1WebVocabJson() {
         if (_xml != null) {
-            JSONObject json = XMLExtensionsKt.toJSON(_xml);
+            JSONObject json = XmlToJsonConverter.toJSON(_xml);
             return json;
         } else {
             return _json;
@@ -61,7 +59,7 @@ public class MasterDataKDEObject extends MasterDataKDEBase implements IMasterDat
         if (_xml != null) {
             xml = _xml;
         } else if (_json != null) {
-            xml = XMLExtensionsKt.toXML(_json);
+            xml = XmlToJsonConverter.toXML(_json);
         } else {
             xml = null;
         }
