@@ -810,7 +810,7 @@
                                 "gdst:satelliteTrackingAuthority": "test",
                                 "gdst:subnationalPermitArea": "test",
                                 "gdst:vesselPublicRegistry": "test",
-                                "{https://traceability-dialogue.org/epcis}vesselTripDate": "2022-01-20T10:57:24.1560000+00:00",
+                                "gdst:vesselTripDate": "2022-01-20T10:57:24.1560000+00:00",
                                 "cbvmda:catchArea": "urn:gdst:fao:27.1"
                             }
                         ]

@@ -122,5 +122,15 @@ namespace GS1.Mappers.EPCIS
 
             return xDoc.ToString();
         }
+
+        public Task<EPCISQueryDocument> MapAsync(string strValue, bool checkSchema = true)
+        {
+            return Task.FromResult(Map(strValue, checkSchema));
+        }
+
+        public Task<string> MapAsync(EPCISQueryDocument doc)
+        {
+            return Task.FromResult(Map(doc));
+        }
     }
 }
