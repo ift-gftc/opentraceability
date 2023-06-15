@@ -7,7 +7,7 @@ import kotlin.reflect.full.memberProperties
 
 class OTMappingTypeInformation {
     lateinit var Type: KClass<*>
-    var properties: MutableList<OTMappingTypeInformationProperty> = mutableListOf()
+    var properties: ArrayList<OTMappingTypeInformationProperty> = arrayListOf()
     var dic: MutableMap<String, OTMappingTypeInformationProperty> = mutableMapOf()
     var extensionKDEs: KMutableProperty<*>? = null
     var extensionAttributes: KMutableProperty<*>? = null
@@ -70,7 +70,7 @@ class OTMappingTypeInformation {
                         extensionAttributes = p
                     }
 
-                    this.properties = this.properties.toMutableList().apply {
+                    this.properties = this.properties.apply {
                         sortWith(compareBy({ it.SequenceOrder == null }, { it.SequenceOrder }))
                     }
                 }

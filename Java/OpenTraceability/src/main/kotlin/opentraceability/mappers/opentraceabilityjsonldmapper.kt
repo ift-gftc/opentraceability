@@ -44,11 +44,11 @@ class OpenTraceabilityJsonLDMapper {
 
                             when {
                                 property.IsQuantityList -> {
-                                    var products: MutableList<EventProduct> = obj as MutableList<EventProduct>
-                                    products = products.filter { (it.Quantity != null) && (it.Type == property.ProductType) }.toMutableList()
-                                    if (products.isNotEmpty()) {
+                                    var products: ArrayList<EventProduct> = obj as ArrayList<EventProduct>
+                                    var filteredProducts = products.filter { (it.Quantity != null) && (it.Type == property.ProductType) }
+                                    if (filteredProducts.isNotEmpty()) {
                                         val xQuantityList: JSONArray = JSONArray()
-                                        for (product in products) {
+                                        for (product in filteredProducts) {
                                             if (product.EPC != null && product.Quantity != null) {
                                                 val xQuantity: JSONObject = JSONObject()
                                                 xQuantity.put("epcClass", product.EPC.toString())
@@ -63,11 +63,11 @@ class OpenTraceabilityJsonLDMapper {
                                     }
                                 }
                                 property.IsEPCList -> {
-                                    var products: MutableList<EventProduct> = obj as MutableList<EventProduct>
-                                    products = products.filter { (it.Quantity == null) && (it.Type == property.ProductType) }.toMutableList()
-                                    if (products.isNotEmpty() || property.Required) {
+                                    var products: ArrayList<EventProduct> = obj as ArrayList<EventProduct>
+                                    var filteredProducts = products.filter { (it.Quantity == null) && (it.Type == property.ProductType) }
+                                    if (filteredProducts.isNotEmpty() || property.Required) {
                                         val xEPCList: JSONArray = JSONArray()
-                                        for (product in products) {
+                                        for (product in filteredProducts) {
                                             product.EPC?.let {
                                                 xEPCList.put(it.toString())
                                             }
@@ -76,7 +76,7 @@ class OpenTraceabilityJsonLDMapper {
                                     }
                                 }
                                 property.IsArray -> {
-                                    val list: MutableList<Any> = obj as MutableList<Any>
+                                    val list: ArrayList<Any> = obj as ArrayList<Any>
                                     val xlist: JSONArray = JSONArray()
 
                                     if (list.isNotEmpty() || property.Required) {
@@ -121,8 +121,8 @@ class OpenTraceabilityJsonLDMapper {
                     }
 
                     typeInfo.extensionKDEs?.getter?.call(value)?.let { obj ->
-                        if (obj is MutableList<*>) {
-                            val kdes: MutableList<IEventKDE> = obj as MutableList<IEventKDE>
+                        if (obj is ArrayList<*>) {
+                            val kdes: ArrayList<IEventKDE> = obj as ArrayList<IEventKDE>
                             for (kde in kdes) {
                                 kde.getJson()?.let { xchild ->
                                     var name: String = kde.name
@@ -140,8 +140,8 @@ class OpenTraceabilityJsonLDMapper {
                     }
 
                     typeInfo.extensionAttributes?.getter?.call(value)?.let { obj ->
-                        if (obj is MutableList<*>) {
-                            val kdes: MutableList<IEventKDE> = obj as MutableList<IEventKDE>
+                        if (obj is ArrayList<*>) {
+                            val kdes: ArrayList<IEventKDE> = obj as ArrayList<IEventKDE>
                             for (kde in kdes) {
                                 kde.getJson()?.let { xchild ->
                                     var name: String = kde.name
@@ -180,7 +180,7 @@ class OpenTraceabilityJsonLDMapper {
         /**
          * Converts a JSON object into the type specified.
          */
-        fun fromJson(json: JSONObject, type: KClass<*>, namespaces: MutableMap<String, String>): Any {
+        fun fromJson(json: JSONObject, type: KType, namespaces: MutableMap<String, String>): Any {
             //val value: Any = type::class.createInstance() ?: throw Exception("Failed to create instance of type ${type.qualifiedName}")
 
             var value: Any? = null
@@ -201,15 +201,15 @@ class OpenTraceabilityJsonLDMapper {
             try {
                 val typeInfo: OTMappingTypeInformation = OTMappingTypeInformation.getJsonTypeInfo(type)
 
-                var extensionKDEs: MutableList<IEventKDE>? = null
-                var extensionAttributes: MutableList<IEventKDE>? = null
+                var extensionKDEs: ArrayList<IEventKDE>? = null
+                var extensionAttributes: ArrayList<IEventKDE>? = null
 
                 if (typeInfo.extensionAttributes != null) {
-                    extensionAttributes = mutableListOf()
+                    extensionAttributes = arrayListOf()
                 }
 
                 if (typeInfo.extensionKDEs != null) {
-                    extensionKDEs = mutableListOf()
+                    extensionKDEs = arrayListOf()
                 }
 
                 var mappingProp: OTMappingTypeInformationProperty? = null
@@ -308,11 +308,11 @@ class OpenTraceabilityJsonLDMapper {
                     }
                 }
                 mappingProp.IsArray -> {
-                    var list = mappingProp.Property?.getter?.call(value) as? MutableList<Any?>
+                    var list = mappingProp.Property?.getter?.call(value) as? ArrayList<Any?>
 
                     if (list == null)
                     {
-                        list = (mappingProp.Property.returnType as KClass<*>).createInstance() as MutableList<Any?>
+                        list = (mappingProp.Property.returnType as KClass<*>).createInstance() as ArrayList<Any?>
                         mappingProp.Property?.setter?.call(value, list)
                     }
 
@@ -341,20 +341,20 @@ class OpenTraceabilityJsonLDMapper {
                     val o = fromJson(JSONObject(json), mappingProp.Property?.returnType as KClass<*>, namespaces)
                     mappingProp.Property?.setter?.call(value, o)
                 }
-                mappingProp.Property?.returnType?.classifier  == MutableList::class-> {
+                mappingProp.Property?.returnType?.classifier  == ArrayList::class-> {
 
                     /*
-                        val instance = (mappingProp.Property?.getter?.call(mappingProp) as? MutableList<*>)?.firstOrNull()
+                        val instance = (mappingProp.Property?.getter?.call(mappingProp) as? ArrayList<*>)?.firstOrNull()
 
                         if (instance is LanguageString) {
-                            println("This property is a MutableList<LanguageString>")
+                            println("This property is a ArrayList<LanguageString>")
                         } else {
-                            println("This property is a MutableList of something other than LanguageString")
+                            println("This property is a ArrayList of something other than LanguageString")
                         }
                     */
 
 
-                    val languageStrings: MutableList<LanguageString>? = fromJson(JSONObject(json), typeOf<MutableList<LanguageString>>() as KClass<*>, namespaces) as MutableList<LanguageString>
+                    val languageStrings: ArrayList<LanguageString>? = fromJson(JSONObject(json), typeOf<ArrayList<LanguageString>>() as KClass<*>, namespaces) as ArrayList<LanguageString>
                     if (languageStrings != null) {
                         mappingProp.Property?.setter?.call(value, languageStrings)
                     }

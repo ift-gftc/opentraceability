@@ -97,7 +97,7 @@ class EPCISXmlMasterDataReader {
 
             // work on expanded objects...
             // these are objects on the vocab element represented by one or more attributes in the EPCIS master data
-            val ignoreAttributes = mutableListOf<String>()
+            val ignoreAttributes = arrayListOf<String>()
             for (property in mappedProperties.properties.filter { it.Name == "" }) {
                 val subMappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(property.Property.returnType as KClass<*>)
                 var setAttribute = false
@@ -154,8 +154,8 @@ class EPCISXmlMasterDataReader {
         fun readKDEObject(xeAtt: Element, t: KClass<*>): Any {
             val value = t.createInstance() ?: throw Exception("Failed to create instance of ${t.qualifiedName}")
 
-            if (value is MutableList<*>) {
-                val list = value as MutableList<Any>
+            if (value is ArrayList<*>) {
+                val list = value as ArrayList<Any>
                 for (xchild in xeAtt.elements()) {
                     val child = readKDEObject(xchild, t.typeParameters[0].starProjectedType as KClass<*>)
                     list.add(child)
@@ -187,10 +187,10 @@ class EPCISXmlMasterDataReader {
                     p.setter.call(o, value)
                     return true
                 }
-                p.returnType == MutableList::class.java && p.returnType == List::class.java -> {
-                    val cur = p.getter.call(o) as MutableList<String>?
+                p.returnType == ArrayList::class.java && p.returnType == List::class.java -> {
+                    val cur = p.getter.call(o) as ArrayList<String>?
                     if (cur == null) {
-                        val newList = mutableListOf<String>()
+                        val newList = arrayListOf<String>()
                         newList.add(value)
                         p.setter.call(o, newList)
                     } else {
@@ -213,8 +213,8 @@ class EPCISXmlMasterDataReader {
                     p.setter.call(o, v)
                     return true
                 }
-                p.typeParameters[0].starProjectedType == typeOf<MutableList<LanguageString>>() -> {
-                    val l = mutableListOf<LanguageString>()
+                p.typeParameters[0].starProjectedType == typeOf<ArrayList<LanguageString>>() -> {
+                    val l = arrayListOf<LanguageString>()
                     l.add(LanguageString("en-US", value))
                     p.setter.call(o, l)
                     return true

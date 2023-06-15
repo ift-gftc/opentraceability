@@ -40,7 +40,7 @@ class OpenTraceabilityXmlMapper {
                     xvalue = xvalue?.getFirstElementByXPath(p) ?: throw Exception("Failed to add xml element, p=$p")
                 }
 
-                if (value is MutableList<*>) {
+                if (value is ArrayList<*>) {
                     if (value.isNotEmpty()) {
                         val t = value.first()!!::class.java
                         val xchildname = t.getAnnotation(OpenTraceabilityAttribute::class.java)?.name
@@ -67,7 +67,7 @@ class OpenTraceabilityXmlMapper {
 
                     // typeInfo.extensionKDEs?.let { extKDEs ->
                     //     val obj = extKDEs.getValue(value)
-                    //     if (obj is MutableList<IEventKDE>) {
+                    //     if (obj is ArrayList<IEventKDE>) {
                     //         obj.forEach { kde ->
                     //             val xchild = kde.getXml()
                     //             if (xchild != null) {
@@ -79,7 +79,7 @@ class OpenTraceabilityXmlMapper {
 
                     // typeInfo.extensionAttributes?.let { extAttrs ->
                     //     val obj = extAttrs.getValue(value)
-                    //     if (obj is MutableList<IEventKDE>) {
+                    //     if (obj is ArrayList<IEventKDE>) {
                     //         obj.forEach { kde ->
                     //             val xKDE = kde.getXml()
                     //             if (xKDE != null) {
@@ -109,8 +109,8 @@ class OpenTraceabilityXmlMapper {
                 val mappingInfo = OTMappingTypeInformation.getXmlTypeInfo(type as KClass<*>)
 
                 // if this is a list, then we will make a list of the objects...
-                if (value is MutableList<*>) {
-                    val list = value as MutableList<Any?>
+                if (value is ArrayList<*>) {
+                    val list = value as ArrayList<Any?>
                     val att = type.javaObjectType.getAnnotation(OpenTraceabilityAttribute::class.java)
                     if (att != null)
                     {
@@ -129,15 +129,15 @@ class OpenTraceabilityXmlMapper {
                 } else {
                     val typeInfo = OTMappingTypeInformation.getXmlTypeInfo(type)
 
-                    var extensionKDEs: MutableList<IEventKDE>? = null
-                    var extensionAttributes: MutableList<IEventKDE>? = null
+                    var extensionKDEs: ArrayList<IEventKDE>? = null
+                    var extensionAttributes: ArrayList<IEventKDE>? = null
 
                     if (typeInfo.extensionAttributes != null) {
-                        extensionAttributes = mutableListOf<IEventKDE>()
+                        extensionAttributes = arrayListOf<IEventKDE>()
                     }
 
                     if (typeInfo.extensionKDEs != null) {
-                        extensionKDEs = mutableListOf<IEventKDE>()
+                        extensionKDEs = arrayListOf<IEventKDE>()
                     }
 
                     var mappingProp: OTMappingTypeInformationProperty?
@@ -216,8 +216,8 @@ class OpenTraceabilityXmlMapper {
         fun writeObjectToString(obj: Any?): String? {
             return when (obj) {
                 null -> null
-                (obj::class.createType() == typeOf<MutableList<LanguageString>>()) -> {
-                    var list = obj as? MutableList<LanguageString>
+                (obj::class.createType() == typeOf<ArrayList<LanguageString>>()) -> {
+                    var list = obj as? ArrayList<LanguageString>
                     if (list != null)
                     {
                         if (list.isEmpty()) null else list.first().value
@@ -274,11 +274,11 @@ class OpenTraceabilityXmlMapper {
                     val itemType = mappingProp.Property.returnType.arguments[0].type
                         ?: throw Exception("Cannot determine item type of list type.")
 
-                    var list = mappingProp.Property.getter.call(value) as MutableList<Any?>
+                    var list = mappingProp.Property.getter.call(value) as ArrayList<Any?>
 
                     if (list == null)
                     {
-                        list = mutableListOf()
+                        list = arrayListOf()
                         mappingProp.Property.setter.call(value, list)
                     }
 
@@ -318,8 +318,8 @@ class OpenTraceabilityXmlMapper {
                 typeOf<OffsetDateTime>() -> {
                     value.tryConvertToDateTimeOffset() ?: throw Exception("Failed to convert string to datetimeoffset where value = $value")
                 }
-                typeOf<MutableList<LanguageString>>() -> {
-                    mutableListOf(LanguageString("en-US", value))
+                typeOf<ArrayList<LanguageString>>() -> {
+                    arrayListOf(LanguageString("en-US", value))
                 }
                 typeOf<UOM>() -> {
                     UOM.lookUpFromUNCode(value)

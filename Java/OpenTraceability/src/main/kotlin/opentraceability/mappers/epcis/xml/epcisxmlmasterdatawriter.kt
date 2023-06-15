@@ -29,7 +29,7 @@ class EPCISXmlMasterDataWriter {
 
                 for (mdList in doc.masterData.groupBy { it.epcisType }) {
                     if (mdList.key != null) {
-                        WriteMasterDataList(mdList.value.toMutableList(), xVocabList, mdList.key!!)
+                        WriteMasterDataList(mdList.value, xVocabList, mdList.key!!)
                     } else {
                         throw Exception("There are master data vocabulary elements where the Type is NULL.")
                     }
@@ -37,7 +37,7 @@ class EPCISXmlMasterDataWriter {
             }
         }
 
-        fun WriteMasterDataList(data: MutableList<IVocabularyElement>, xVocabList: Element, type: String) {
+        fun WriteMasterDataList(data: List<IVocabularyElement>, xVocabList: Element, type: String) {
             if (data.isNotEmpty()) {
                 val xVocab = createXmlElement(("Vocabulary"))
                 xVocab.setAttribute("type", type)
@@ -72,8 +72,8 @@ class EPCISXmlMasterDataWriter {
                             val subProperty = subMapping.Property
                             val subObj = subProperty.getter.call(o)
                             if (subObj != null) {
-                                if (subObj::class.starProjectedType == typeOf<MutableList<LanguageString>>()) {
-                                    val l = subObj as MutableList<LanguageString>
+                                if (subObj::class.starProjectedType == typeOf<ArrayList<LanguageString>>()) {
+                                    val l = subObj as ArrayList<LanguageString>
                                     val str = l.firstOrNull()?.value
                                     if (str != null) {
                                         val xAtt = xVocabEle.addElement("attribute")
@@ -95,7 +95,7 @@ class EPCISXmlMasterDataWriter {
                         xAtt.setAttribute("id", id)
                         WriteObject(xAtt, p.returnType as KClass<*>, o)
                     } else if (p.annotations.filterIsInstance<OpenTraceabilityArrayAttribute>().isNotEmpty()) {
-                        val l = o as MutableList<*>
+                        val l = o as ArrayList<*>
                         for (i in l) {
                             val str = i?.toString()
                             if (!str.isNullOrEmpty()) {
@@ -104,8 +104,8 @@ class EPCISXmlMasterDataWriter {
                                 xAtt.nodeValue = str
                             }
                         }
-                    } else if (o::class.starProjectedType == typeOf<MutableList<LanguageString>>()) {
-                        val l = o as MutableList<LanguageString>
+                    } else if (o::class.starProjectedType == typeOf<ArrayList<LanguageString>>()) {
+                        val l = o as ArrayList<LanguageString>
                         val str = l.firstOrNull()?.value
                         if (str != null) {
                             val xAtt = xVocabEle.addElement("attribute")

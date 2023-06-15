@@ -20,7 +20,7 @@ object EPCISJsonMasterDataWriter {
 
             for ((type, mdList) in doc.masterData.groupBy { it.epcisType }) {
                 if (type != null) {
-                    val jVocabList = writeMasterDataList(mdList.toMutableList(), type)
+                    val jVocabList = writeMasterDataList(mdList, type)
                     vocabularyList.put(jVocabList)
                 } else {
                     throw Exception("There are master data vocabulary elements where the Type is NULL.")
@@ -33,7 +33,7 @@ object EPCISJsonMasterDataWriter {
         }
     }
 
-    private fun writeMasterDataList(data: MutableList<IVocabularyElement>, type: String): JSONObject {
+    private fun writeMasterDataList(data: List<IVocabularyElement>, type: String): JSONObject {
         val jVocab = JSONObject()
         val vocabularyElementList = JSONArray()
 
@@ -67,8 +67,8 @@ object EPCISJsonMasterDataWriter {
                         val subProperty = subMapping.Property
                         val subObj = subProperty.getter.call(o)
                         if (subObj != null) {
-                            if (subObj is MutableList<*>) {
-                                val l = subObj as MutableList<LanguageString>
+                            if (subObj is ArrayList<*>) {
+                                val l = subObj as ArrayList<LanguageString>
                                 val str = l.firstOrNull()?.value
                                 if (str != null) {
                                     val jAttribute = JSONObject()
@@ -93,7 +93,7 @@ object EPCISJsonMasterDataWriter {
                     jAttribute.put("attribute", writeObject(p.returnType as KClass<*>, o))
                     attributes.put(jAttribute)
                 } else if (p.annotations.filterIsInstance<OpenTraceabilityArrayAttribute>().isNotEmpty()) {
-                    val l = o as MutableList<*>
+                    val l = o as ArrayList<*>
                     for (i in l) {
                         val str = i.toString()
                         if (str.isNotBlank()) {
@@ -104,9 +104,9 @@ object EPCISJsonMasterDataWriter {
                         }
                     }
                 }
-                else if (o::class.starProjectedType == typeOf<MutableList<LanguageString>>())
+                else if (o::class.starProjectedType == typeOf<ArrayList<LanguageString>>())
                 {
-                    val l = o as MutableList<LanguageString>
+                    val l = o as ArrayList<LanguageString>
                     val str = l.firstOrNull()?.value
                     if (str != null) {
                         val jAttribute = JSONObject()

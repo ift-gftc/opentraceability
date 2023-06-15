@@ -108,14 +108,14 @@ class EPCISJsonMasterDataReader {
 
             // work on expanded objects...
             // these are objects on the vocab element represented by one or more attributes in the EPCIS master data
-            val ignoreAttributes = mutableListOf<String>()
+            val ignoreAttributes = arrayListOf<String>()
             for (property in mappedProperties.properties.filter { it.Name == "" })
             {
                 try {
                     val subMappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(property.Property.returnType::class)
                     var setAttribute = false
                     //val subObject = property.Property.returnType::class.createInstance()
-                    var subObject: MutableList<String> = mutableListOf()
+                    var subObject: ArrayList<String> = arrayListOf()
 
                     if (subObject != null) {
                         val jAttArray = jMasterData.optJSONArray("attributes")
@@ -185,8 +185,8 @@ class EPCISJsonMasterDataReader {
         fun readKDEObject(j: JSONObject, t: KClass<*>): Any {
             var value = t.createInstance()
 
-            if (value is MutableList<*>) {
-                val list = value as MutableList<Any>
+            if (value is ArrayList<*>) {
+                val list = value as ArrayList<Any>
                 if (j is JSONArray)
                 {
                     for (xchild in j) {
@@ -233,9 +233,9 @@ class EPCISJsonMasterDataReader {
                     return true
                 }
                 returnType.isSubtypeOf(List::class.starProjectedType) -> {
-                    val current = property.getter.call(obj) as MutableList<String>?
+                    val current = property.getter.call(obj) as ArrayList<String>?
                     if (current == null) {
-                        val newList = mutableListOf<String>()
+                        val newList = arrayListOf<String>()
                         newList.add(value)
                         property.setter.call(obj, newList)
                     } else {
@@ -258,8 +258,8 @@ class EPCISJsonMasterDataReader {
                     property.setter.call(obj, v)
                     return true
                 }
-                returnType == typeOf<MutableList<LanguageString>>() -> {
-                    val l = mutableListOf<LanguageString>()
+                returnType == typeOf<ArrayList<LanguageString>>() -> {
+                    val l = arrayListOf<LanguageString>()
                     l.add(LanguageString("en-US", value))
                     property.setter.call(obj, l)
                     return true
