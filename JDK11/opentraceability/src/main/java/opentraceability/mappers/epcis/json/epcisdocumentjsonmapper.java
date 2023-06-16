@@ -1,5 +1,6 @@
 package opentraceability.mappers.epcis.json;
 
+import opentraceability.models.events.EPCISVersion;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,6 +17,8 @@ import opentraceability.mappers.epcis.json.schema.EPCISDocumentBaseJsonSchemaVal
 import opentraceability.models.enums.EPCISVersion;
 import opentraceability.models.events.EPCISDocument;
 import opentraceability.utils.JsonUtils;
+
+import java.lang.reflect.Type;
 
 public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper {
 
@@ -35,7 +38,7 @@ public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper {
                 EPCISJsonMasterDataReader.readMasterData(doc, jMasterData);
             }
 
-            final var jEventList = JsonUtils.getJSONArray(JsonUtils.getJSONObject(json, "epcisBody"), "eventList");
+            final JSONArray jEventList = JsonUtils.getJSONArray(JsonUtils.getJSONObject(json, "epcisBody"), "eventList");
             if (jEventList != null) {
                 for (var i = 0; i < jEventList.length(); i++) {
                     final var jEvent = JsonUtils.getJSONObject(jEventList, i);
@@ -53,7 +56,7 @@ public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper {
         }
     }
 
-    public String map(final EPCISDocument doc) {
+    public String map(final EPCISDocument doc) throws Exception {
         if (doc.epcisVersion != EPCISVersion.V2) {
             throw new Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
         }

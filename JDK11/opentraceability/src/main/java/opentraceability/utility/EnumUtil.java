@@ -29,10 +29,10 @@ public class EnumUtil {
         }
     }
 
-    public static <T extends Enum<T>, A extends Annotation> List<A> GetEnumAttributes(T value) throws NoSuchFieldException {
+    public static <T extends Enum<T>, A extends Annotation> List<A> GetEnumAttributes(T value, Class<A> annotationClass) throws NoSuchFieldException {
         try {
             Field field = value.getClass().getField(value.name());
-            A[] annotations = field.getAnnotationsByType((Class<A>) Annotation.class);
+            A[] annotations = field.getAnnotationsByType(annotationClass);
             List<A> annotationList = new ArrayList<>();
             for (A annotation : annotations) {
                 annotationList.add(annotation);

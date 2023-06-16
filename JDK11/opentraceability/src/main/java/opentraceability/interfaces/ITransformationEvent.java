@@ -1,6 +1,7 @@
 package opentraceability.interfaces;
 
-public interface ITransformationEvent extends IEvent {
-    String getTransformationID();
-    void setTransformationID(String transformationID);
+import opentraceability.models.events.EventILMD;
+
+public abstract class ITransformationEvent<T extends EventILMD> extends IILMDEvent<T> {
+    public String transformationID;
 }

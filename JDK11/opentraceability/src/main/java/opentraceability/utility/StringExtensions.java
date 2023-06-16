@@ -5,6 +5,8 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,8 +23,13 @@ public class StringExtensions {
         return DIGITS_ONLY_REGEX.matcher(str).matches();
     }
 
-    public static boolean isURiCompatibleChars(String str) {
-        return !IS_URI_COMPATIBLE_CHARS_REGEX.matcher(str).matches();
+    public static boolean isURICompatibleChars(String str) {
+        try {
+            new URI(str);
+        } catch (URISyntaxException e) {
+            return false;
+        }
+        return true;
     }
 
     public static OffsetDateTime tryConvertToDateTimeOffset(String str) {

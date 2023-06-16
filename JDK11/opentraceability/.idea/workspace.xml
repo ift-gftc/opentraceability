@@ -5,54 +5,80 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a90cffd5-42a7-4393-b4db-8951db78ce91" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/Pair.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/AggregationEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/ObjectEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/CBVAttributes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityEventKDEOrder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IAggregationEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IAggregationEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IMasterDataKDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IMasterDataKDE.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IVocabularyElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IVocabularyElement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/otmappingtypeinformation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/otmappingtypeinformation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/certificate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/certificate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/errordeclaration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/errordeclaration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventbase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventbase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventbusinesstransaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventbusinesstransaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventdestination.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventdestination.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventilmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventilmd.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/sensormetadata.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/sensormetadata.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/sensorreport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/SensorReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/identifiers/epc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/identifiers/epc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IAggregationEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEPCISDocumentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEPCISDocumentMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEventKDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEventKDE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IILMDEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IILMDEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IMasterDataMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IMasterDataMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/ITransformationEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/ITransformationEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/epcisdocumentbasejsonmapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/epcisdocumentjsonmapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/epcisjsonmasterdatareader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/epcisjsonmasterdatareader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/epcisjsonmasterdatawriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/epcisjsonmasterdatawriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/epcisquerydocumentjsonmapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/epcisquerydocumentjsonmapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/masterdata/gs1vocabjsonmapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/masterdata/gs1vocabjsonmapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/otmappingtypeinformationproperty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/OTMappingTypeInformationProperty.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/address.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/Address.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/anonymizedaddress.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/AnonymizedAddress.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/certificate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/Certificate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/languagestring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/LanguageString.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/sbdhcontact.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/SBDHContact.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/sbdhdocumentidentification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/SBDHDocumentIdentification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/sbdhorganization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/SBDHOrganization.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/standardbusinessdocumentheader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/common/StandardBusinessDocumentHeader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/aggregationevent`1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/associationevent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/AssociationEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/epcisbasedocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EPCISBaseDocument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/epcisdocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EPCISDocument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/epcisquerydocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EPCISQueryDocument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/epcisversion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EPCISVersion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/errordeclaration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/ErrorDeclaration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventbase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventbusinessstep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventBusinessStep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventbusinesstransaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventBusinessTransaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventbusinesstransactiontype.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventdestination.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventDestination.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventdestinationtype.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventDestinationType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventerrortype.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventErrorType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventilmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventILMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventlocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventLocation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventproducttype.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventProductType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventreadpoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventReadPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventsource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/eventsourcetype.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventSourceType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/eventkdeboolean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEBoolean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/eventkdecountry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDECountry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/eventkdedatetime.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEDateTime.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/eventkdedouble.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEDouble.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/eventkdeobject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/eventkdestring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEString.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/objectevent`1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/persistentdisposition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/PersistentDisposition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/sensorelement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/SensorElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/sensormetadata.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/SensorMetaData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/transactionevent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/TransactionEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/identifiers/epc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/identifiers/EPC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/identifiers/gln.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/identifiers/gln.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/identifiers/gs1util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/identifiers/GS1Util.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/TradeItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/TradeItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/address.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/Address.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/digitallink.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/DigitalLink.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/masterdatakdebase.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/masterdatakdecountry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/MasterDataKDECountry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/masterdatakdeobject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/MasterDataKDEObject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/masterdatakdestring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/MasterDataKDEString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/location.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/tradingparty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/tradingparty.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/vocabularyelement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/vocabularyelement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/epcisquery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQuery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/epcisqueryerror.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQueryError.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/epcisqueryerrortype.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQueryErrorType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/epcisqueryparameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/epcisqueryparameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/epcisqueryresults.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQueryResults.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/epcisquerystacktraceitem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQueryStackTraceItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/epcisquerytype.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQueryType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/masterdataresolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/masterdataresolver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/OTXmlUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/OTXmlUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/Location.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/tradingparty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/TradingParty.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/vocabularyelement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/VocabularyElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/epcisqueryparameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQueryParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/CBVAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/CBVAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/EnumUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/EnumUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/StringExtensions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/StringExtensions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/enumutil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/EnumUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/httpclientpool.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/jsoncontexthelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/JsonContextHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/jsonldvocabtransformationtype.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/JsonLDVocabTransformationType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/jsonschemachecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/jsonschemachecker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/limitedpool`1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/limitedpoolitem`1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/measurement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/Measurement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/uom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/UOM.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/uoms.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/UOMS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/xmlschemachecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XmlSchemaChecker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/xmltojsonconverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XmlToJsonConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityProductsAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityProductsAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/jsonschemachecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/JsonSchemaChecker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +90,7 @@
       <list>
         <option value="Interface" />
         <option value="Class" />
+        <option value="AnnotationType" />
       </list>
     </option>
   </component>
@@ -95,7 +122,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "jdk.selected.JAVA_MODULE": "11",
-    "last_opened_file_path": "C:/GitHub/DuckScapePhilip/opentraceability/JDK11/opentraceability/src/main/java/opentraceability",
+    "last_opened_file_path": "/Users/philip/Projects/opentraceability/JDK11/opentraceability",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -103,6 +130,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "editor.preferences.fonts.default",
     "vue.rearranger.settings.migration": "true"
   }
@@ -114,6 +142,9 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\GitHub\DuckScapePhilip\opentraceability\JDK11\opentraceability\src\main\java" />
       <recent name="C:\GitHub\DuckScapePhilip\opentraceability\JDK11\opentraceability\src\main" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="opentraceability.interfaces" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -128,6 +159,7 @@
       <workItem from="1686777000421" duration="415000" />
       <workItem from="1686777425246" duration="4199000" />
       <workItem from="1686808319475" duration="7453000" />
+      <workItem from="1686837251164" duration="14916000" />
     </task>
     <servers />
   </component>
@@ -141,12 +173,12 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/otmappingtypeinformationproperty.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/OTMappingTypeInformationProperty.java</url>
           <line>73</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/otmappingtypeinformationproperty.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/OTMappingTypeInformationProperty.java</url>
           <line>100</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>

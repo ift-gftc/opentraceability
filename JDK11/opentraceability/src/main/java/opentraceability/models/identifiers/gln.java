@@ -7,7 +7,7 @@ import opentraceability.utility.GS1Util;
 
 // [DataContract]
 // [JsonConverter(typeof(GLNConverter))]
-class GLN {
+public class GLN {
 
     String _glnStr = "";
 
@@ -181,50 +181,45 @@ class GLN {
         }
     }
 
-    public static String DetectGLNIssue(String gln) {
-        try {
-            if (gln == null || gln.isEmpty()) {
-                return "The GLN is NULL or EMPTY.";
-            } else if (!IsURICompatibleChars(gln)) {
-                return "The GLN contains non-compatiable characters for a URI.";
-            } else if (gln.contains(" ")) {
-                return "GLN cannot contain spaces.";
-            } else if (gln.length() == 13 && IsOnlyDigits(gln)) {
-                String checksum = GS1Util.CalculateGLN13CheckSum(gln);
-                if (checksum.charAt(0) != gln.charAt(12)) {
-                    return "The check sum did not calculate correctly. The expected check sum was " + checksum
-                            + ".  Please make sure to validate that you typed the GLN correctly. It's possible the check sum "
-                            + "was typed correctly but another number was entered wrong.";
-                }
-                return null;
-            } else if (gln.startsWith("urn:") && gln.contains(":location:loc:")) {
-                return null;
-            } else if (gln.startsWith("urn:") && gln.contains(":location:extension:loc:")) {
-                return null;
-            } else if (gln.contains(":id:sgln:")) {
-                String[] pieces = gln.split(":")[gln.split(":").length - 1].split("\\.");
-                if (pieces.length < 2) {
-                    throw new Exception("The GLN " + gln + " is not valid.");
-                }
-                String lastPiece = pieces[0] + pieces[1];
-                if (!IsOnlyDigits(lastPiece)) {
-                    return "This is supposed to be a GS1 GLN based on the System Prefix and "
-                            + "Data Type Prefix. That means the Company Prefix and Serial Numbers "
-                            + "should only be digits. Found non-digit characters in the Company Prefix "
-                            + "or Serial Number.";
-                } else if (lastPiece.length() != 12) {
-                    return "This is supposed to be a GS1 GLN based on the System Prefix and Data Type "
-                            + "Prefix. That means the Company Prefix and Serial Numbers should contain a maximum "
-                            + "total of 12 digits between the two. The total number of digits when combined "
-                            + "is " + lastPiece.length() + ".";
-                }
-                return null;
-            } else {
-                return "The GLN is not in a valid EPCIS URI format or in GS1 GLN-13 format. Value = " + gln;
+    public static String DetectGLNIssue(String gln) throws Exception {
+        if (gln == null || gln.isEmpty()) {
+            return "The GLN is NULL or EMPTY.";
+        } else if (!IsURICompatibleChars(gln)) {
+            return "The GLN contains non-compatiable characters for a URI.";
+        } else if (gln.contains(" ")) {
+            return "GLN cannot contain spaces.";
+        } else if (gln.length() == 13 && IsOnlyDigits(gln)) {
+            String checksum = GS1Util.CalculateGLN13CheckSum(gln);
+            if (checksum.charAt(0) != gln.charAt(12)) {
+                return "The check sum did not calculate correctly. The expected check sum was " + checksum
+                        + ".  Please make sure to validate that you typed the GLN correctly. It's possible the check sum "
+                        + "was typed correctly but another number was entered wrong.";
             }
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
+            return null;
+        } else if (gln.startsWith("urn:") && gln.contains(":location:loc:")) {
+            return null;
+        } else if (gln.startsWith("urn:") && gln.contains(":location:extension:loc:")) {
+            return null;
+        } else if (gln.contains(":id:sgln:")) {
+            String[] pieces = gln.split(":")[gln.split(":").length - 1].split("\\.");
+            if (pieces.length < 2) {
+                throw new Exception("The GLN " + gln + " is not valid.");
+            }
+            String lastPiece = pieces[0] + pieces[1];
+            if (!IsOnlyDigits(lastPiece)) {
+                return "This is supposed to be a GS1 GLN based on the System Prefix and "
+                        + "Data Type Prefix. That means the Company Prefix and Serial Numbers "
+                        + "should only be digits. Found non-digit characters in the Company Prefix "
+                        + "or Serial Number.";
+            } else if (lastPiece.length() != 12) {
+                return "This is supposed to be a GS1 GLN based on the System Prefix and Data Type "
+                        + "Prefix. That means the Company Prefix and Serial Numbers should contain a maximum "
+                        + "total of 12 digits between the two. The total number of digits when combined "
+                        + "is " + lastPiece.length() + ".";
+            }
+            return null;
+        } else {
+            return "The GLN is not in a valid EPCIS URI format or in GS1 GLN-13 format. Value = " + gln;
         }
     }
 

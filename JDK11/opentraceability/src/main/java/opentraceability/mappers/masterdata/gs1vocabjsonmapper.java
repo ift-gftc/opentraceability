@@ -1,6 +1,5 @@
 package opentraceability.mappers.masterdata;
 
-import kotlin.reflect.KClass;
 import opentraceability.interfaces.IMasterDataMapper;
 import opentraceability.interfaces.IVocabularyElement;
 import opentraceability.mappers.OpenTraceabilityJsonLDMapper;
@@ -8,12 +7,13 @@ import opentraceability.utility.JsonContextHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.HashMap;
 
 public class GS1VocabJsonMapper implements IMasterDataMapper {
     @Override
-    public String map(IVocabularyElement vocab) {
+    public String map(IVocabularyElement vocab) throws Exception {
         if (vocab.context == null) {
             vocab.context = new JSONObject(
                 "{\n" +
@@ -26,8 +26,12 @@ public class GS1VocabJsonMapper implements IMasterDataMapper {
             );
         }
 
-        JSONObject context = vocab.getContext();
-        Map<String, String> namespaces = getNamespaces(context != null ? context : throw new RuntimeException("vocab.getContext() is null."));
+        JSONObject context = vocab.context;
+        if (context == null)
+        {
+            throw new Exception("vocab.context is null");
+        }
+        Map<String, String> namespaces = getNamespaces(context);
         Map<String, String> reversedNamespaces = new HashMap<>();
 
         for (Map.Entry<String, String> entry : namespaces.entrySet()) {
@@ -38,12 +42,12 @@ public class GS1VocabJsonMapper implements IMasterDataMapper {
         if (json == null) {
             throw new RuntimeException("Failed to map master data into GS1 web vocab.");
         }
-        json.put("@context", vocab.getContext());
+        json.put("@context", context);
         return json.toString();
     }
 
     @Override
-    public IVocabularyElement map(Type type, String value) {
+    public IVocabularyElement map(Type type, String value) throws Exception {
         JSONObject json = new JSONObject(value);
         JSONObject context = json.optJSONObject("@context");
         if (context == null) {
@@ -51,18 +55,11 @@ public class GS1VocabJsonMapper implements IMasterDataMapper {
         }
         Map<String, String> namespaces = getNamespaces(context);
         IVocabularyElement obj = (IVocabularyElement) OpenTraceabilityJsonLDMapper.fromJson(json, type, namespaces);
-        obj.setContext(json.getJSONObject("@context"));
+        obj.context = json.getJSONObject("@context");
         return obj;
     }
 
-    /*
-    @Override
-    public <T extends IVocabularyElement> IVocabularyElement map(String value) {
-        return map(T.class, value);
-    }
-    */
-
-    private Map<String, String> getNamespaces(Object jContext) {
+    private Map<String, String> getNamespaces(Object jContext) throws Exception {
         Map<String, String> namespaces = new HashMap<>();
         if (jContext instanceof JSONObject) {
             namespaces.putAll(JsonContextHelper.scrapeNamespaces((JSONObject)jContext));

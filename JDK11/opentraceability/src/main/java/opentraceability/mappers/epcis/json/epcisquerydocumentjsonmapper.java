@@ -22,7 +22,7 @@ public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper {
             EPCISQueryDocument doc = (EPCISQueryDocument) result.get(EPCISDocumentBaseJsonMapper.Field.DOC);
             JSONObject json = (JSONObject) result.get(EPCISDocumentBaseJsonMapper.Field.JSON);
 
-            if (doc.getEpcisVersion() != EPCISVersion.V2) {
+            if (doc.epcisVersion != EPCISVersion.V2) {
                 throw new Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
             }
 

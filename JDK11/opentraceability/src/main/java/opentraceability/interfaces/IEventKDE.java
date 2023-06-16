@@ -7,6 +7,20 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 
 public abstract class IEventKDE {
+
+    public String namespace = "";
+    public String name = "";
+    public Type valueType = null;
+
+
+    public abstract void setFromJson(JSONObject json) throws Exception;
+
+    public abstract Object getJson() throws Exception;
+
+    public abstract void setFromXml(Element xml) throws Exception;
+
+    public abstract Element getXml() throws Exception;
+
     static HashMap<String, Type> registeredKDEs = new HashMap<String, Type>();
 
     static void RegisterKDE(Type type, String ns, String name) throws Exception {
@@ -42,16 +56,4 @@ public abstract class IEventKDE {
 
         return kde;
     }
-
-    String namespace = "";
-    String name = "";
-    Type valueType = null;
-
-    abstract void setFromJson(JSONObject json);
-
-    abstract Object getJson();
-
-    abstract void setFromXml(Element xml);
-
-    abstract Element getXml();
 }

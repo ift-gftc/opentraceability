@@ -3,6 +3,7 @@ package opentraceability.mappers.epcis.json;
 import opentraceability.interfaces.IVocabularyElement;
 import opentraceability.models.common.LanguageString;
 import opentraceability.models.events.EPCISBaseDocument;
+import opentraceability.models.identifiers.GLN;
 import opentraceability.models.masterdata.Location;
 import opentraceability.models.masterdata.TradeItem;
 import opentraceability.models.masterdata.TradingParty;
@@ -20,7 +21,7 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class EPCISJsonMasterDataReader {
-    public static void readMasterData(EPCISBaseDocument doc, JSONObject jMasterData) {
+    public static void readMasterData(EPCISBaseDocument doc, JSONObject jMasterData) throws Exception {
         JSONArray jVocabList = jMasterData.optJSONArray("vocabularyList");
         if (jVocabList != null) {
             for (int i = 0; i < jVocabList.length(); i++) {
@@ -49,47 +50,57 @@ public class EPCISJsonMasterDataReader {
         }
     }
 
-    public static void readTradeItem(EPCISBaseDocument doc, JSONObject xTradeitem, String type) {
+    public static void readTradeItem(EPCISBaseDocument doc, JSONObject xTradeitem, String type) throws Exception
+    {
         String id = xTradeitem.optString("id", "");
-        TradeItem tradeitem = new TradeItem();
-        tradeitem.gtin = new GTIN(id);
-        tradeitem.epcisType = type;
+        Type t = opentraceability.Setup.MasterDataTypes.get(type);
 
-        readMasterDataObject(tradeitem, xTradeitem, true);
-        doc.masterData.add(tradeitem);
+        if (t != null) {
+            TradeItem md = (TradeItem)t.getClass().newInstance();
+            md.gtin = new GTIN(id);
+            md.epcisType = type;
+
+            readMasterDataObject(md, xTradeitem, true);
+            doc.masterData.add(md);
+        }
+        else {
+            throw new Exception("Failed to look up master data class type for " + type);
+        }
     }
 
-    public static void readLocation(EPCISBaseDocument doc, JSONObject xLocation, String type) {
+    public static void readLocation(EPCISBaseDocument doc, JSONObject xLocation, String type) throws Exception
+    {
         String id = xLocation.optString("id", "");
         Type t = opentraceability.Setup.MasterDataTypes.get(type);
 
         if (t != null) {
-            Location loc = null;
-            try {
-                if (t.getClass() == Location.class) {
-                    loc = Location.class.newInstance();
-                } else {
-                    throw new Exception("Failed to activate instance Location of " + t);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException();
-            }
-            loc.gln = new GLN(id);
-            loc.epcisType = type;
+            Location md = (Location)t.getClass().newInstance();
+            md.gln = new GLN(id);
+            md.epcisType = type;
 
-            readMasterDataObject(loc, xLocation, true);
-            doc.masterData.add(loc);
+            readMasterDataObject(md, xLocation, true);
+            doc.masterData.add(md);
+        }
+        else {
+            throw new Exception("Failed to look up master data class type for " + type);
         }
     }
 
     public static void readTradingParty(EPCISBaseDocument doc, JSONObject xTradingParty, String type) throws Exception {
         String id = xTradingParty.optString("id", "");
-        TradingParty tp = new TradingParty();
-        tp.pgln = new PGLN(id);
-        tp.epcisType = type;
+        Type t = opentraceability.Setup.MasterDataTypes.get(type);
 
-        readMasterDataObject(tp, xTradingParty, true);
-        doc.masterData.add(tp);
+        if (t != null) {
+            TradingParty md = (TradingParty)t.getClass().newInstance();
+            md.pgln = new PGLN(id);
+            md.epcisType = type;
+
+            readMasterDataObject(md, xTradingParty, true);
+            doc.masterData.add(md);
+        }
+        else {
+            throw new Exception("Failed to look up master data class type for " + type);
+        }
     }
 
     public static void ReadUnknown(EPCISBaseDocument doc, JSONObject xVocabElement, String type) {

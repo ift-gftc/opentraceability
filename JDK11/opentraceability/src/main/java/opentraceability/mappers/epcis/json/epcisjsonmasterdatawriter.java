@@ -41,8 +41,8 @@ public class EPCISJsonMasterDataWriter {
             }
 
             for (IVocabularyElement vocabElement : doc.masterData) {
-                if (vocabElement instanceof MasterDataVocabElement) {
-                    MasterDataVocabElement mdVe = (MasterDataVocabElement) vocabElement;
+                if (vocabElement instanceof IVocabularyElement) {
+                    IVocabularyElement mdVe = (IVocabularyElement) vocabElement;
                     JSONObject jVocabList = writeMasterDataList(mdVe.elements, mdVe.type);
                     vocabularyList.put(jVocabList);
                 } else {

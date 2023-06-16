@@ -14,12 +14,11 @@ import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute;
 import opentraceability.utility.attributes.OpenTraceabilityMasterDataAttribute;
 
 public class TradeItem extends IVocabularyElement {
-    public String id = null;
-    public String epcisType = "urn:epcglobal:epcis:vtype:EPCClass";
-    @OpenTraceabilityJsonAttribute(name = "@type")
-    public String jsonLDType = "gs1:Product";
-    public VocabularyType vocabularyType = VocabularyType.TradeItem;
-    public JSONObject context = null;
+    public TradeItem()
+    {
+        epcisType = "urn:epcglobal:epcis:vtype:EPCClass";
+        vocabularyType = VocabularyType.TradeItem;
+    }
     @OpenTraceabilityJsonAttribute(name = "gtin")
     public GTIN gtin = null;
     @OpenTraceabilityJsonAttribute(name = "productName")

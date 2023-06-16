@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import opentraceability.OpenTraceabilityEventKDEProfile;
+import opentraceability.OpenTraceabilityEventProfile;
 import opentraceability.Setup;
 import opentraceability.interfaces.IEvent;
 import opentraceability.models.common.*;
@@ -13,6 +15,8 @@ import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +32,7 @@ public class EPCISDocumentBaseJsonMapper {
 
         String normalizedStrValue = normalizeEPCISJsonLD(strValue);
 
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
-        JsonObject json = gson.fromJson(normalizedStrValue, JsonObject.class);
+        JSONObject json = new JSONObject(normalizedStrValue);
 
         T document = (T) getInstanceFromClass(T.class);
 
@@ -44,12 +47,12 @@ public class EPCISDocumentBaseJsonMapper {
 
         document.attributes = new HashMap<String, Object>();
 
-        JsonArray jContextArray = json.getAsJsonArray("@context");
+        JSONArray jContextArray = json.getJSONArray("@context");
 
         if (jContextArray != null) {
-            for (int i = 0; i < jContextArray.size(); i++) {
+            for (int i = 0; i < jContextArray.length(); i++) {
                 Object jt = jContextArray.get(i);
-                if (jt instanceof JsonObject) {
+                if (jt instanceof JSONObject) {
                     Map<String, String> ns = JsonContextHelper.scrapeNamespaces(new JSONObject(jt.toString()));
                     for (Map.Entry<String, String> entry : ns.entrySet()) {
                         if (!document.namespaces.containsKey(entry.getKey())) {
@@ -61,8 +64,8 @@ public class EPCISDocumentBaseJsonMapper {
                     String value = jt.toString();
                     if (!value.isEmpty()) {
                         String newValue = value.replace("\"", "");
-                        String context = JsonContextHelper.getJsonLDContext(newValue);
-                        Map<String, String> ns = JsonContextHelper.scrapeNamespaces(new JSONObject(context));
+                        JSONObject context = JsonContextHelper.getJsonLDContext(newValue);
+                        Map<String, String> ns = JsonContextHelper.scrapeNamespaces(context);
                         for (Map.Entry<String, String> entry : ns.entrySet()) {
                             if (!document.namespaces.containsKey(entry.getKey())) {
                                 document.namespaces.put(entry.getKey(), entry.getValue().toString());
@@ -78,21 +81,20 @@ public class EPCISDocumentBaseJsonMapper {
         }
 
         if (json.get("id") != null) {
-            document.attributes.put("id", json.get("id").getAsString());
+            document.attributes.put("id", json.getString("id"));
         }
 
         document.header = new StandardBusinessDocumentHeader();
 
         document.header.Sender = new SBDHOrganization();
-        document.header.Sender.Identifier = (json.get("sender") != null ? json.get("sender").getAsString() : "");
+        document.header.Sender.Identifier = (json.get("sender") != null ? json.getString("sender") : "");
 
         document.header.Receiver = new SBDHOrganization();
-        document.header.Receiver.Identifier = (json.get("receiver") != null ? json.get("receiver").getAsString()
-                : "");
+        document.header.Receiver.Identifier = (json.get("receiver") != null ? json.getString("receiver") : "");
 
         document.header.DocumentIdentification = new SBDHDocumentIdentification();
         document.header.DocumentIdentification.InstanceIdentifier = (json.get("instanceIdentifier") != null
-                ? json.get("instanceIdentifier").getAsString() : "");
+                ? json.getString("instanceIdentifier") : "");
 
         JSONObject jResult = new JSONObject(json.toString());
         return new Pair<>(document, jResult);
@@ -124,9 +126,9 @@ public class EPCISDocumentBaseJsonMapper {
         String bizStep = null;
         String eventType = jEvent.optString("type");
 
-        ArrayList<EventProfile> profiles = new ArrayList<>();
+        ArrayList<OpenTraceabilityEventProfile> profiles = new ArrayList<>();
 
-        for (EventProfile profile : Setup.Profiles) {
+        for (OpenTraceabilityEventProfile profile : Setup.Profiles) {
             if (profile.EventType.toString().equals(eventType)) {
                 if (profile.Action == null || profile.Action == action) {
                     if (profile.BusinessStep == null || profile.BusinessStep.equalsIgnoreCase(bizStep)) {
@@ -136,16 +138,16 @@ public class EPCISDocumentBaseJsonMapper {
             }
         }
 
-        profiles.sort((p1, p2) -> p2.SpecificityScore - p1.SpecificityScore);
+        profiles.sort((p1, p2) -> p2.getSpecificityScore() - p1.getSpecificityScore());
 
         if (profiles.isEmpty() == true) {
             throw new Exception(
                     "Failed to create event from profile. Type=" + eventType + " and BizStep=" + bizStep + " and Action="
                             + action);
         } else {
-            for (EventProfile profile : profiles) {
+            for (OpenTraceabilityEventProfile profile : profiles) {
                 if (profile.KDEProfiles != null) {
-                    for (KeyedDataElementProfile kdeProfile : profile.KDEProfiles) {
+                    for (OpenTraceabilityEventKDEProfile kdeProfile : profile.KDEProfiles) {
                         if (jEvent.opt(kdeProfile.JPath) == null) {
                             profiles.remove(profile);
                             break;
