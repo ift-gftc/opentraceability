@@ -16,7 +16,7 @@ public class EPCISXmlMasterDataWriter
 {
 	public static void WriteMasterData(XElement xDocument, EPCISBaseDocument doc)
 	{
-		if (!doc.getMasterData().isEmpty())
+		if (!doc.masterData.isEmpty())
 		{
 			XElement xEPCISHeader = xDocument.Element("EPCISHeader");
 			if (xEPCISHeader == null)
@@ -31,7 +31,7 @@ public class EPCISXmlMasterDataWriter
 //ORIGINAL LINE: XElement xVocabList = xDocument.XPathSelectElement("EPCISHeader/extension/EPCISMasterData/VocabularyList") ?? throw new Exception("Failed to grab the element EPCISHeader/extension/EPCISMasterData/VocabularyList.");
 			XElement xVocabList = xDocument.XPathSelectElement("EPCISHeader/extension/EPCISMasterData/VocabularyList") != null ? xDocument.XPathSelectElement("EPCISHeader/extension/EPCISMasterData/VocabularyList") : throw new RuntimeException("Failed to grab the element EPCISHeader/extension/EPCISMasterData/VocabularyList.");
 
-			for (var mdList : doc.getMasterData().GroupBy(m -> m.EPCISType))
+			for (var mdList : doc.masterData.GroupBy(m -> m.EPCISType))
 			{
 				if (mdList.Key != null)
 				{
@@ -77,8 +77,8 @@ public class EPCISXmlMasterDataWriter
 			PropertyInfo p = mapping.getProperty();
 
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? o = p.GetValue(md);
-			Object o = p.GetValue(md);
+//ORIGINAL LINE: object? o = p.get(md);
+			Object o = p.get(md);
 			if (o != null)
 			{
 				if (Objects.equals(id, ""))
@@ -89,8 +89,8 @@ public class EPCISXmlMasterDataWriter
 						String subID = subMapping.getName();
 						PropertyInfo subProperty = subMapping.getProperty();
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? subObj = subProperty.GetValue(o);
-						Object subObj = subProperty.GetValue(o);
+//ORIGINAL LINE: object? subObj = subProperty.get(o);
+						Object subObj = subProperty.get(o);
 						if (subObj != null)
 						{
 							if (subObj.getClass() == ArrayList<LanguageString>.class)
@@ -183,13 +183,13 @@ public class EPCISXmlMasterDataWriter
 		return xVocabEle;
 	}
 
-	private static void WriteObject(XElement x, java.lang.Class t, Object o)
+	private static void WriteObject(XElement x, Type t, Object o)
 	{
 		for (var property : t.GetProperties())
 		{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? value = property.GetValue(o);
-			Object value = property.GetValue(o);
+//ORIGINAL LINE: object? value = property.get(o);
+			Object value = property.get(o);
 			if (value != null)
 			{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:

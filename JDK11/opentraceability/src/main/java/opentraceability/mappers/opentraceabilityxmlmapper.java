@@ -1,6 +1,5 @@
 package opentraceability.mappers;
 
-import Newtonsoft.Json.Linq.*;
 import opentraceability.interfaces.*;
 import opentraceability.models.common.*;
 import opentraceability.models.events.*;
@@ -55,7 +54,7 @@ public final class OpenTraceabilityXmlMapper
 				{
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: Type t = list[0] == null ? null : list[0].GetType() ?? throw new Exception("Failed to get list item type.");
-					java.lang.Class t = list.get(0) == null ? null : ((list.get(0).getClass()) != null ? list.get(0).getClass() : throw new RuntimeException("Failed to get list item type."));
+					Type t = list.get(0) == null ? null : ((list.get(0).getClass()) != null ? list.get(0).getClass() : throw new RuntimeException("Failed to get list item type."));
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: XName xchildname = t.GetCustomAttribute<OpenTraceabilityAttribute>() == null ? null : t.GetCustomAttribute<OpenTraceabilityAttribute>().Name ?? throw new Exception("Failed to get xname from type. type = " + t.FullName);
 					XName xchildname = t.<OpenTraceabilityAttribute>GetCustomAttribute() == null ? null : ((t.<OpenTraceabilityAttribute>GetCustomAttribute().Name) != null ? t.<OpenTraceabilityAttribute>GetCustomAttribute().Name : throw new RuntimeException("Failed to get xname from type. type = " + t.FullName));
@@ -75,13 +74,13 @@ public final class OpenTraceabilityXmlMapper
 			}
 			else
 			{
-				java.lang.Class t = value.getClass();
+				Type t = value.getClass();
 				OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetXmlTypeInfo(t);
 				for (var property : typeInfo.getProperties().Where(p -> p.Version == null || p.Version == version))
 				{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? obj = property.Property.GetValue(value);
-					Object obj = property.Property.GetValue(value);
+//ORIGINAL LINE: object? obj = property.Property.get(value);
+					Object obj = property.Property.get(value);
 					if (obj != null)
 					{
 						XElement xvaluepointer = xvalue;
@@ -121,7 +120,7 @@ public final class OpenTraceabilityXmlMapper
 								xvaluepointer.Value = objStr;
 							}
 						}
-						else if (property.IsQuantityList)
+						else if (property.isQuantityList)
 						{
 							ArrayList<EventProduct> products = (ArrayList<EventProduct>)obj;
 							products = products.stream().filter(p -> p.Quantity != null && p.Type == property.ProductType).collect(Collectors.toList());
@@ -130,13 +129,13 @@ public final class OpenTraceabilityXmlMapper
 								XElement xQuantityList = new XElement(xchildname);
 								for (var product : products)
 								{
-									if (product.getEPC() != null && product.getQuantity() != null)
+									if (product.EPC != null && product.Quantity != null)
 									{
-										XElement xQuantity = new XElement("quantityElement", new XElement("epcClass", product.getEPC().toString()), new XElement("quantity", product.getQuantity().getValue()));
+										XElement xQuantity = new XElement("quantityElement", new XElement("epcClass", product.EPC.toString()), new XElement("quantity", product.Quantity.getValue()));
 
-										if (!Objects.equals(product.getQuantity().getUoM().getUNCode(), "EA"))
+										if (!Objects.equals(product.Quantity.getUoM().getUNCode(), "EA"))
 										{
-											xQuantity.Add(new XElement("uom", product.getQuantity().getUoM().getUNCode()));
+											xQuantity.Add(new XElement("uom", product.Quantity.getUoM().getUNCode()));
 										}
 
 										xQuantityList.Add(xQuantity);
@@ -154,9 +153,9 @@ public final class OpenTraceabilityXmlMapper
 								XElement xEPCList = new XElement(property.Name);
 								for (var product : products)
 								{
-									if (product.getEPC() != null)
+									if (product.EPC != null)
 									{
-										xEPCList.Add(new XElement("epc", product.getEPC().toString()));
+										xEPCList.Add(new XElement("epc", product.EPC.toString()));
 									}
 								}
 								xvaluepointer.Add(xEPCList);
@@ -241,11 +240,11 @@ public final class OpenTraceabilityXmlMapper
 					}
 				}
 
-				if (typeInfo.getExtensionKDEs() != null)
+				if (typeInfo.extensionKDEs != null)
 				{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? obj = typeInfo.ExtensionKDEs.GetValue(value);
-					Object obj = typeInfo.getExtensionKDEs().GetValue(value);
+//ORIGINAL LINE: object? obj = typeInfo.ExtensionKDEs.get(value);
+					Object obj = typeInfo.extensionKDEs.get(value);
 					if (obj != null && obj instanceof List<IEventKDE>)
 					{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
@@ -268,8 +267,8 @@ public final class OpenTraceabilityXmlMapper
 				if (typeInfo.getExtensionAttributes() != null)
 				{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? obj = typeInfo.ExtensionAttributes.GetValue(value);
-					Object obj = typeInfo.getExtensionAttributes().GetValue(value);
+//ORIGINAL LINE: object? obj = typeInfo.ExtensionAttributes.get(value);
+					Object obj = typeInfo.getExtensionAttributes().get(value);
 					if (obj != null && obj instanceof List<IEventKDE>)
 					{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
@@ -309,7 +308,7 @@ public final class OpenTraceabilityXmlMapper
 		return o;
 	}
 
-	public static Object FromXml(XElement x, java.lang.Class type, EPCISVersion version)
+	public static Object FromXml(XElement x, Type type, EPCISVersion version)
 	{
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: object value = Activator.CreateInstance(type) ?? throw new Exception("Failed to create instance of type " + type.FullName);
@@ -360,7 +359,7 @@ public final class OpenTraceabilityXmlMapper
 					extensionAttributes = new ArrayList<IEventKDE>();
 				}
 
-				if (typeInfo.getExtensionKDEs() != null)
+				if (typeInfo.extensionKDEs != null)
 				{
 					extensionKDEs = new ArrayList<IEventKDE>();
 				}
@@ -380,8 +379,8 @@ public final class OpenTraceabilityXmlMapper
 						String attValue = x.Attribute(tangible.StringHelper.trimStart(xchildname, '@')) == null ? null : x.Attribute(tangible.StringHelper.trimStart(xchildname, '@')).Value;
 						if (!tangible.StringHelper.isNullOrEmpty(attValue))
 						{
-							Object o = ReadObjectFromString(attValue, mappingProp.getProperty().PropertyType);
-							mappingProp.getProperty().SetValue(value, o);
+							Object o = ReadObjectFromString(attValue, mappingProp.field.getType());
+							mappingProp.field.set(value, o);
 						}
 					}
 					else if (extensionAttributes != null)
@@ -399,8 +398,8 @@ public final class OpenTraceabilityXmlMapper
 					String eleText = x.Value;
 					if (!(eleText == null || eleText.isBlank()))
 					{
-						Object o = ReadObjectFromString(eleText, mappingProp.getProperty().PropertyType);
-						mappingProp.getProperty().SetValue(value, o);
+						Object o = ReadObjectFromString(eleText, mappingProp.field.getType());
+						mappingProp.field.set(value, o);
 					}
 				}
 				else
@@ -439,9 +438,9 @@ public final class OpenTraceabilityXmlMapper
 					typeInfo.getExtensionAttributes().SetValue(value, extensionAttributes);
 				}
 
-				if (typeInfo.getExtensionKDEs() != null)
+				if (typeInfo.extensionKDEs != null)
 				{
-					typeInfo.getExtensionKDEs().SetValue(value, extensionKDEs);
+					typeInfo.extensionKDEs.SetValue(value, extensionKDEs);
 				}
 			}
 		}
@@ -474,9 +473,9 @@ public final class OpenTraceabilityXmlMapper
 				return l.get(0).Value;
 			}
 		}
-		else if (obj instanceof DateTimeOffset)
+		else if (obj instanceof OffsetDateTime)
 		{
-			DateTimeOffset dt = (DateTimeOffset)obj;
+			OffsetDateTime dt = (OffsetDateTime)obj;
 			return dt.toString("O");
 		}
 		else if (obj instanceof UOM)
@@ -521,13 +520,13 @@ public final class OpenTraceabilityXmlMapper
 			{
 				EPC epc = new EPC((xQuantity.Element("epcClass") == null ? null : xQuantity.Element("epcClass").Value) != null ? (xQuantity.Element("epcClass") == null ? null : xQuantity.Element("epcClass").Value) : "");
 				EventProduct product = new EventProduct(epc);
-				product.setType(mappingProp.getProductType());
+				product.Type = mappingProp.productType;
 
 				double quantity = Double.parseDouble((xQuantity.Element("quantity") == null ? null : xQuantity.Element("quantity").Value) != null ? (xQuantity.Element("quantity") == null ? null : xQuantity.Element("quantity").Value) : "");
 				String uom = xQuantity.Element("uom") == null ? null : ((xQuantity.Element("uom").Value) != null ? xQuantity.Element("uom").Value : "EA");
 				product.setQuantity(new Measurement(quantity, uom));
 
-				e.AddProduct(product);
+				e.addProduct(product);
 			}
 		}
 		else if (mappingProp.isEPCList())
@@ -537,13 +536,13 @@ public final class OpenTraceabilityXmlMapper
 			{
 				EPC epc = new EPC(xEPC.Value);
 				EventProduct product = new EventProduct(epc);
-				product.setType(mappingProp.getProductType());
-				e.AddProduct(product);
+				product.Type = mappingProp.productType;
+				e.addProduct(product);
 			}
 		}
 		else if (mappingProp.isArray())
 		{
-			Object tempVar = mappingProp.getProperty().GetValue(value);
+			Object tempVar = mappingProp.field.get(value);
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: IList? list = tempVar instanceof java.util.List ? (java.util.List)tempVar : null;
 			List list = tempVar instanceof List ? (List)tempVar : null;
@@ -551,12 +550,12 @@ public final class OpenTraceabilityXmlMapper
 			{
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: list = (IList)(Activator.CreateInstance(mappingProp.Property.PropertyType) ?? throw new Exception("Failed to create instance of " + mappingProp.Property.PropertyType.FullName));
-				list = (List)(mappingProp.getProperty().PropertyType.newInstance() != null ? mappingProp.getProperty().PropertyType.newInstance() : throw new RuntimeException("Failed to create instance of " + mappingProp.getProperty().PropertyType.FullName));
+				list = (List)(mappingProp.field.getType().newInstance() != null ? mappingProp.field.getType().newInstance() : throw new RuntimeException("Failed to create instance of " + mappingProp.field.getType().FullName));
 
-				mappingProp.getProperty().SetValue(value, list);
+				mappingProp.field.set(value, list);
 			}
 
-			java.lang.Class itemType = mappingProp.getProperty().PropertyType.GenericTypeArguments[0];
+			Type itemType = mappingProp.field.getType().GenericTypeArguments[0];
 			if (mappingProp.getItemName() != null)
 			{
 				for (XElement xitem : xchild.Elements(mappingProp.getItemName()))
@@ -589,8 +588,8 @@ public final class OpenTraceabilityXmlMapper
 		}
 		else if (mappingProp.isObject())
 		{
-			Object o = FromXml(xchild, mappingProp.getProperty().PropertyType, version);
-			mappingProp.getProperty().SetValue(value, o);
+			Object o = FromXml(xchild, mappingProp.field.getType(), version);
+			mappingProp.field.set(value, o);
 		}
 		else
 		{
@@ -599,20 +598,20 @@ public final class OpenTraceabilityXmlMapper
 			String eleText = xchild.Value;
 			if (!(eleText == null || eleText.isBlank()))
 			{
-				Object o = ReadObjectFromString(eleText, mappingProp.getProperty().PropertyType);
-				mappingProp.getProperty().SetValue(value, o);
+				Object o = ReadObjectFromString(eleText, mappingProp.field.getType());
+				mappingProp.field.set(value, o);
 			}
 		}
 	}
 
-	private static Object ReadObjectFromString(String value, java.lang.Class t)
+	private static Object ReadObjectFromString(String value, Type t)
 	{
-		if (t == DateTimeOffset.class || t == DateTimeOffset.class)
+		if (t == OffsetDateTime.class || t == OffsetDateTime.class)
 		{
-			DateTimeOffset tempVar = StringExtensions.TryConvertToDateTimeOffset(value);
+			OffsetDateTime tempVar = StringExtensions.TryConvertToDateTimeOffset(value);
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: DateTimeOffset dt = value.TryConvertToDateTimeOffset() ?? throw new Exception("Failed to convert string to datetimeoffset where value = " + value);
-			DateTimeOffset dt = tempVar != null ? tempVar : throw new RuntimeException("Failed to convert string to datetimeoffset where value = " + value);
+//ORIGINAL LINE: OffsetDateTime dt = value.TryConvertToDateTimeOffset() ?? throw new Exception("Failed to convert string to datetimeoffset where value = " + value);
+			OffsetDateTime dt = tempVar != null ? tempVar : throw new RuntimeException("Failed to convert string to datetimeoffset where value = " + value);
 			return dt;
 		}
 		else if (t == ArrayList<LanguageString>.class)
@@ -696,7 +695,7 @@ public final class OpenTraceabilityXmlMapper
 		// if not, then check if the data type is specified and we recognize it
 		if (kde == null)
 		{
-			XAttribute xsiType = x.Attribute((XNamespace)Constants.XSI_NAMESPACE + "type");
+			XAttribute xsiType = x.Attribute((String)Constants.XSI_NAMESPACE + "type");
 			if (xsiType != null)
 			{
 				switch (xsiType.getValue())

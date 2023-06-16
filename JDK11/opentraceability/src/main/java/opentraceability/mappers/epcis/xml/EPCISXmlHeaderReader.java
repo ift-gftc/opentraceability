@@ -28,18 +28,18 @@ public final class EPCISXmlHeaderReader
 		if (xDocId != null)
 		{
 			header.setDocumentIdentification(new SBDHDocumentIdentification());
-			header.getDocumentIdentification().setStandard(xDocId.Element(Constants.SBDH_XNAMESPACE + "Standard") == null ? null : ((xDocId.Element(Constants.SBDH_XNAMESPACE + "Standard").Value) != null ? xDocId.Element(Constants.SBDH_XNAMESPACE + "Standard").Value : ""));
-			header.getDocumentIdentification().setType(xDocId.Element(Constants.SBDH_XNAMESPACE + "Type") == null ? null : ((xDocId.Element(Constants.SBDH_XNAMESPACE + "Type").Value) != null ? xDocId.Element(Constants.SBDH_XNAMESPACE + "Type").Value : ""));
-			header.getDocumentIdentification().setTypeVersion(xDocId.Element(Constants.SBDH_XNAMESPACE + "TypeVersion") == null ? null : ((xDocId.Element(Constants.SBDH_XNAMESPACE + "TypeVersion").Value) != null ? xDocId.Element(Constants.SBDH_XNAMESPACE + "TypeVersion").Value : ""));
-			header.getDocumentIdentification().setInstanceIdentifier(xDocId.Element(Constants.SBDH_XNAMESPACE + "InstanceIdentifier") == null ? null : ((xDocId.Element(Constants.SBDH_XNAMESPACE + "InstanceIdentifier").Value) != null ? xDocId.Element(Constants.SBDH_XNAMESPACE + "InstanceIdentifier").Value : ""));
-			header.getDocumentIdentification().setMultipleType(xDocId.Element(Constants.SBDH_XNAMESPACE + "MultipleType") == null ? null : ((xDocId.Element(Constants.SBDH_XNAMESPACE + "MultipleType").Value) != null ? xDocId.Element(Constants.SBDH_XNAMESPACE + "MultipleType").Value : ""));
+			header.DocumentIdentification.setStandard(xDocId.Element(Constants.SBDH_XNAMESPACE + "Standard") == null ? null : ((xDocId.Element(Constants.SBDH_XNAMESPACE + "Standard").Value) != null ? xDocId.Element(Constants.SBDH_XNAMESPACE + "Standard").Value : ""));
+			header.DocumentIdentification.setType(xDocId.Element(Constants.SBDH_XNAMESPACE + "Type") == null ? null : ((xDocId.Element(Constants.SBDH_XNAMESPACE + "Type").Value) != null ? xDocId.Element(Constants.SBDH_XNAMESPACE + "Type").Value : ""));
+			header.DocumentIdentification.setTypeVersion(xDocId.Element(Constants.SBDH_XNAMESPACE + "TypeVersion") == null ? null : ((xDocId.Element(Constants.SBDH_XNAMESPACE + "TypeVersion").Value) != null ? xDocId.Element(Constants.SBDH_XNAMESPACE + "TypeVersion").Value : ""));
+			header.DocumentIdentification.setInstanceIdentifier(xDocId.Element(Constants.SBDH_XNAMESPACE + "InstanceIdentifier") == null ? null : ((xDocId.Element(Constants.SBDH_XNAMESPACE + "InstanceIdentifier").Value) != null ? xDocId.Element(Constants.SBDH_XNAMESPACE + "InstanceIdentifier").Value : ""));
+			header.DocumentIdentification.setMultipleType(xDocId.Element(Constants.SBDH_XNAMESPACE + "MultipleType") == null ? null : ((xDocId.Element(Constants.SBDH_XNAMESPACE + "MultipleType").Value) != null ? xDocId.Element(Constants.SBDH_XNAMESPACE + "MultipleType").Value : ""));
 
-			DateTimeOffset dt = new DateTimeOffset();
-			tangible.OutObject<System.DateTimeOffset> tempOut_dt = new tangible.OutObject<System.DateTimeOffset>();
-			if (DateTimeOffset.TryParse((xDocId.Element(Constants.SBDH_XNAMESPACE + "CreationDateAndTime") == null ? null : xDocId.Element(Constants.SBDH_XNAMESPACE + "CreationDateAndTime").Value), tempOut_dt))
+			OffsetDateTime dt = new OffsetDateTime();
+			tangible.OutObject<System.OffsetDateTime> tempOut_dt = new tangible.OutObject<System.OffsetDateTime>();
+			if (OffsetDateTime.TryParse((xDocId.Element(Constants.SBDH_XNAMESPACE + "CreationDateAndTime") == null ? null : xDocId.Element(Constants.SBDH_XNAMESPACE + "CreationDateAndTime").Value), tempOut_dt))
 			{
 			dt = tempOut_dt.outArgValue;
-				header.getDocumentIdentification().setCreationDateAndTime(dt);
+				header.DocumentIdentification.setCreationDateAndTime(dt);
 			}
 		else
 		{

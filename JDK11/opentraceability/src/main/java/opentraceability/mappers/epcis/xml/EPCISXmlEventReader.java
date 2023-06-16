@@ -189,7 +189,7 @@ public final class EPCISXmlEventReader
 	//            {
 	//                string pName = parts.First();
 	//                PropertyInfo p = obj.GetType().GetProperty(pName) ?? throw new Exception($"Failed to find property on {obj.GetType().FullName} with name {pName}");
-	//                object? o2 = p.GetValue(obj);
+	//                object? o2 = p.get(obj);
 	//                if (o2 == null)
 	//                {
 	//                    o2 = Activator.CreateInstance(p.PropertyType) ?? throw new Exception("Failed to create instance of " + p.PropertyType.FullName);
@@ -205,7 +205,7 @@ public final class EPCISXmlEventReader
 	//                switch (kde.Type)
 	//                {
 	//                    case "EventTimeZoneOffset": ReadEventTimeZoneOffset(kde, obj, x, pInfo); break;
-	//                    case "DateTimeOffset": ReadDateTimeOffset(kde, obj, x, pInfo); break;
+	//                    case "OffsetDateTime": ReadDateTimeOffset(kde, obj, x, pInfo); break;
 	//                    case "URI": ReadURI(kde, obj, x, pInfo); break;
 	//                    case "Action": ReadAction(kde, obj, x, pInfo); break;
 	//                    case "String": ReadString(kde, obj, x, pInfo); break;
@@ -275,7 +275,7 @@ public final class EPCISXmlEventReader
 
 	//private static void ReadDateTimeOffset(EPCISMappingKDE kde, object e, XElement x, PropertyInfo pInfo)
 	//{
-	//    DateTimeOffset? dt = x.Value.TryConvertToDateTimeOffset();
+	//    OffsetDateTime? dt = x.Value.TryConvertToDateTimeOffset();
 	//    pInfo.SetValue(e, dt);
 	//}
 
@@ -309,7 +309,7 @@ public final class EPCISXmlEventReader
 	//        EventProduct product = new EventProduct();
 	//        product.Type = productType;
 	//        product.EPC = new EPC(xEPC.Value);
-	//        e.AddProduct(product);
+	//        e.addProduct(product);
 	//    }
 	//}
 
@@ -325,7 +325,7 @@ public final class EPCISXmlEventReader
 	//        string uom = xQuantity.Element("uom")?.Value ?? "EA";
 	//        product.Quantity = new Measurement(quantity, uom);
 
-	//        e.AddProduct(product);
+	//        e.addProduct(product);
 	//    }
 	//}
 
@@ -334,7 +334,7 @@ public final class EPCISXmlEventReader
 	//    EventProduct product = new EventProduct();
 	//    product.EPC = new EPC(x.Value);
 	//    product.Type = EventProductType.Parent;
-	//    e.AddProduct(product);
+	//    e.addProduct(product);
 	//}
 
 	//private static object ReadObject(XElement x, Type t)
@@ -492,9 +492,9 @@ public final class EPCISXmlEventReader
 
 	//private static object ReadObjectFromString(string value, Type t)
 	//{
-	//    if (t == typeof(DateTimeOffset) || t == typeof(DateTimeOffset?))
+	//    if (t == typeof(OffsetDateTime) || t == typeof(OffsetDateTime?))
 	//    {
-	//        DateTimeOffset dt = value.TryConvertToDateTimeOffset() ?? throw new Exception("Failed to convert string to datetimeoffset where value = " + value);
+	//        OffsetDateTime dt = value.TryConvertToDateTimeOffset() ?? throw new Exception("Failed to convert string to datetimeoffset where value = " + value);
 	//        return dt;
 	//    }
 	//    else if (t == typeof(UOM))
@@ -533,7 +533,7 @@ public final class EPCISXmlEventReader
 	//    // if not, then check if the data type is specified and we recognize it
 	//    if (kde == null)
 	//    {
-	//        XAttribute? xsiType = x.Attribute((XNamespace)Constants.XSI_NAMESPACE + "type");
+	//        XAttribute? xsiType = x.Attribute((String)Constants.XSI_NAMESPACE + "type");
 	//        if (xsiType != null)
 	//        {
 	//            switch (xsiType.Value)

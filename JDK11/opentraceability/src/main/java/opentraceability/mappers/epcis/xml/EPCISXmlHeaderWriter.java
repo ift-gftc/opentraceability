@@ -17,18 +17,18 @@ public final class EPCISXmlHeaderWriter
 			xHeader.Add(new XElement(Constants.SBDH_XNAMESPACE + "HeaderVersion", header.getHeaderVersion()));
 		}
 
-		WriteHeaderOrganization("Sender", header.getSender(), xHeader);
-		WriteHeaderOrganization("Receiver", header.getReceiver(), xHeader);
+		WriteHeaderOrganization("Sender", header.Sender, xHeader);
+		WriteHeaderOrganization("Receiver", header.Receiver, xHeader);
 
-		if (header.getDocumentIdentification() != null)
+		if (header.DocumentIdentification != null)
 		{
 			XElement xDocId = new XElement(Constants.SBDH_XNAMESPACE + "DocumentIdentification");
-			XElementExtensions.AddStringElement(xDocId, Constants.SBDH_XNAMESPACE + "Standard", header.getDocumentIdentification().getStandard());
-			XElementExtensions.AddStringElement(xDocId, Constants.SBDH_XNAMESPACE + "TypeVersion", header.getDocumentIdentification().getTypeVersion());
-			XElementExtensions.AddStringElement(xDocId, Constants.SBDH_XNAMESPACE + "InstanceIdentifier", header.getDocumentIdentification().getInstanceIdentifier());
-			XElementExtensions.AddStringElement(xDocId, Constants.SBDH_XNAMESPACE + "Type", header.getDocumentIdentification().getType());
-			XElementExtensions.AddStringElement(xDocId, Constants.SBDH_XNAMESPACE + "MultipleType", header.getDocumentIdentification().getMultipleType());
-			XElementExtensions.AddDateTimeOffsetISOElement(xDocId, Constants.SBDH_XNAMESPACE + "CreationDateAndTime", header.getDocumentIdentification().getCreationDateAndTime());
+			XElementExtensions.AddStringElement(xDocId, Constants.SBDH_XNAMESPACE + "Standard", header.DocumentIdentification.getStandard());
+			XElementExtensions.AddStringElement(xDocId, Constants.SBDH_XNAMESPACE + "TypeVersion", header.DocumentIdentification.getTypeVersion());
+			XElementExtensions.AddStringElement(xDocId, Constants.SBDH_XNAMESPACE + "InstanceIdentifier", header.DocumentIdentification.getInstanceIdentifier());
+			XElementExtensions.AddStringElement(xDocId, Constants.SBDH_XNAMESPACE + "Type", header.DocumentIdentification.getType());
+			XElementExtensions.AddStringElement(xDocId, Constants.SBDH_XNAMESPACE + "MultipleType", header.DocumentIdentification.getMultipleType());
+			XElementExtensions.AddDateTimeOffsetISOElement(xDocId, Constants.SBDH_XNAMESPACE + "CreationDateAndTime", header.DocumentIdentification.getCreationDateAndTime());
 			xHeader.Add(xDocId);
 		}
 
@@ -42,9 +42,9 @@ public final class EPCISXmlHeaderWriter
 		if (org != null)
 		{
 			XElement xOrg = new XElement(Constants.SBDH_XNAMESPACE + xName);
-			if (!(org.getIdentifier() == null || org.getIdentifier().isBlank()))
+			if (!(org.Identifier() == null || org.Identifier().isBlank()))
 			{
-				xOrg.Add(new XElement(Constants.SBDH_XNAMESPACE + "Identifier", org.getIdentifier()));
+				xOrg.Add(new XElement(Constants.SBDH_XNAMESPACE + "Identifier", org.Identifier()));
 			}
 			if (!(org.ContactName == null || org.ContactName.isBlank()) || !(org.EmailAddress == null || org.EmailAddress.isBlank()))
 			{

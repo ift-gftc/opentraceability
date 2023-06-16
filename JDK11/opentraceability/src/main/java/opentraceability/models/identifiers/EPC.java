@@ -1,12 +1,10 @@
 package opentraceability.models.identifiers;
 
-import Newtonsoft.Json.*;
 import opentraceability.utility.*;
 import opentraceability.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
-//C# TO JAVA CONVERTER TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [JsonConverter(typeof(EPCConverter))] public class EPC
 public class EPC
 {
 	private String _epcStr = "";
@@ -20,8 +18,6 @@ public class EPC
 	{
 		Type = value;
 	}
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: public GTIN? GTIN {get;private set;}
 	private GTIN GTIN;
 	public final GTIN getGTIN()
 	{
@@ -45,118 +41,106 @@ public class EPC
 
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: public EPC(string? epcStr)
-	public EPC(String epcStr)
-	{
-		try
+	public EPC(String epcStr) throws Exception {
+		String error = EPC.DetectEPCIssue(epcStr);
+
+		if (!(error == null || error.isBlank()))
 		{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: string? error = EPC.DetectEPCIssue(epcStr);
-			String error = EPC.DetectEPCIssue(epcStr);
-
-			if (!(error == null || error.isBlank()))
-			{
-				throw new RuntimeException(String.format("The EPC %1$s is invalid. %2$s", epcStr, error));
-			}
-			else if (epcStr == null)
-			{
-				throw new NullPointerException("epcStr");
-			}
-
-			this._epcStr = epcStr;
-
-			// if this is a GS1 class level epc (GS1 GTIN + Lot Number)
-			if (epcStr.startsWith("urn:epc:id:sscc:"))
-			{
-				this.setType(EPCType.SSCC);
-				this.setSerialLotNumber(epcStr.split(java.util.regex.Pattern.quote(":"), -1).LastOrDefault());
-			}
-			else if (epcStr.startsWith("urn:epc:class:lgtin:"))
-			{
-				this.setType(EPCType.Class);
-
-				ArrayList<String> parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1).ToList();
-				ArrayList<String> parts2 = parts.get(parts.size() - 1).split("[.]", -1).ToList();
-				parts.remove(parts.size() - 1);
-
-				String gtinStr = tangible.StringHelper.join(":", parts) + ":" + parts2.get(0) + "." + parts2.get(1);
-				gtinStr = gtinStr.replace(":class:lgtin:", ":idpat:sgtin:");
-				this.setSerialLotNumber(parts2.get(2));
-				this.setGTIN(new GTIN(gtinStr));
-			}
-			// else if this is a GS1 instance level epc (GS1 GTIN + Serial Number)
-			else if (epcStr.startsWith("urn:epc:id:sgtin:"))
-			{
-				this.setType(EPCType.Instance);
-
-				ArrayList<String> parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1).ToList();
-				ArrayList<String> parts2 = parts.get(parts.size() - 1).split("[.]", -1).ToList();
-				parts.remove(parts.size() - 1);
-
-				String gtinStr = tangible.StringHelper.join(":", parts) + ":" + parts2.get(0) + "." + parts2.get(1);
-				gtinStr = gtinStr.replace(":id:sgtin:", ":idpat:sgtin:");
-				this.setSerialLotNumber(parts2.get(2));
-				this.setGTIN(new GTIN(gtinStr));
-			}
-			// else if this is a GDST / IBM private class level identifier (GTIN + Lot Number)
-			else if (epcStr.startsWith("urn:") && epcStr.contains(":product:lot:class:"))
-			{
-				this.setType(EPCType.Class);
-
-				ArrayList<String> parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1).ToList();
-				ArrayList<String> parts2 = parts.get(parts.size() - 1).split("[.]", -1).ToList();
-				parts.remove(parts.size() - 1);
-
-				String gtinStr = tangible.StringHelper.join(":", parts) + ":" + parts2.get(0) + "." + parts2.get(1);
-				gtinStr = gtinStr.replace(":product:lot:class:", ":product:class:");
-				this.setSerialLotNumber(parts2.get(2));
-				this.setGTIN(new GTIN(gtinStr));
-			}
-			// else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
-			else if (epcStr.startsWith("urn:") && epcStr.contains(":product:serial:obj:"))
-			{
-				this.setType(EPCType.Instance);
-
-				ArrayList<String> parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1).ToList();
-				ArrayList<String> parts2 = parts.get(parts.size() - 1).split("[.]", -1).ToList();
-				parts.remove(parts.size() - 1);
-
-				String gtinStr = tangible.StringHelper.join(":", parts) + ":" + parts2.get(0) + "." + parts2.get(1);
-				gtinStr = gtinStr.replace(":product:serial:obj:", ":product:class:");
-				this.setSerialLotNumber(parts2.get(2));
-				this.setGTIN(new GTIN(gtinStr));
-			}
-			else if (epcStr.startsWith("urn:sscc:"))
-			{
-				this.setType(EPCType.SSCC);
-			}
-			else if (epcStr.startsWith("urn:") && epcStr.contains(":lpn:obj:"))
-			{
-				this.setType(EPCType.SSCC);
-			}
-			else if (epcStr.startsWith("urn:epc:id:bic:"))
-			{
-				this.setType(EPCType.SSCC);
-			}
-			else if (Uri.IsWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/obj/"))
-			{
-				this.setType(EPCType.Instance);
-				this.setSerialLotNumber(epcStr.split("[/]", -1).LastOrDefault());
-			}
-			else if (Uri.IsWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/class/"))
-			{
-				this.setType(EPCType.Class);
-				this.setSerialLotNumber(epcStr.split("[/]", -1).LastOrDefault());
-			}
-			else if (Uri.IsWellFormedUriString(epcStr, UriKind.Absolute))
-			{
-				this.setType(EPCType.URI);
-			}
+			throw new RuntimeException(String.format("The EPC %1$s is invalid. %2$s", epcStr, error));
 		}
-		catch (RuntimeException Ex)
+		else if (epcStr == null)
 		{
-			RuntimeException exception = new RuntimeException("The EPC is not in a valid format and could not be parsed. EPC=" + epcStr, Ex);
-			OTLogger.Error(Ex);
-			throw exception;
+			throw new NullPointerException("epcStr");
+		}
+
+		this._epcStr = epcStr;
+
+		// if this is a GS1 class level epc (GS1 GTIN + Lot Number)
+		if (epcStr.startsWith("urn:epc:id:sscc:"))
+		{
+			this.setType(EPCType.SSCC);
+			this.setSerialLotNumber(StringExtensions.LastOrDefault(epcStr.split(java.util.regex.Pattern.quote(":"), -1)));
+		}
+		else if (epcStr.startsWith("urn:epc:class:lgtin:"))
+		{
+			this.setType(EPCType.Class);
+
+			ArrayList<String> parts = new ArrayList<>(Arrays.asList(epcStr.split(java.util.regex.Pattern.quote(":"), -1)));
+			ArrayList<String> parts2 = new ArrayList<>(Arrays.asList(parts.get(parts.size() - 1).split("[.]", -1)));
+			parts.remove(parts.size() - 1);
+
+			String gtinStr = tangible.StringHelper.join(":", parts.toArray(new String[0])) + ":" + parts2.get(0) + "." + parts2.get(1);
+			gtinStr = gtinStr.replace(":class:lgtin:", ":idpat:sgtin:");
+			this.setSerialLotNumber(parts2.get(2));
+			this.setGTIN(new GTIN(gtinStr));
+		}
+		// else if this is a GS1 instance level epc (GS1 GTIN + Serial Number)
+		else if (epcStr.startsWith("urn:epc:id:sgtin:"))
+		{
+			this.setType(EPCType.Instance);
+
+			ArrayList<String> parts = new ArrayList<>(Arrays.asList(epcStr.split(java.util.regex.Pattern.quote(":"), -1)));
+			ArrayList<String> parts2 = new ArrayList<>(Arrays.asList(parts.get(parts.size() - 1).split("[.]", -1)));
+			parts.remove(parts.size() - 1);
+
+			String gtinStr = tangible.StringHelper.join(":", parts.toArray(new String[0])) + ":" + parts2.get(0) + "." + parts2.get(1);
+			gtinStr = gtinStr.replace(":id:sgtin:", ":idpat:sgtin:");
+			this.setSerialLotNumber(parts2.get(2));
+			this.setGTIN(new GTIN(gtinStr));
+		}
+		// else if this is a GDST / IBM private class level identifier (GTIN + Lot Number)
+		else if (epcStr.startsWith("urn:") && epcStr.contains(":product:lot:class:"))
+		{
+			this.setType(EPCType.Class);
+
+			ArrayList<String> parts = new ArrayList<>(Arrays.asList(epcStr.split(java.util.regex.Pattern.quote(":"), -1)));
+			ArrayList<String> parts2 = new ArrayList<>(Arrays.asList(parts.get(parts.size() - 1).split("[.]", -1)));
+			parts.remove(parts.size() - 1);
+
+			String gtinStr = tangible.StringHelper.join(":", parts.toArray(new String[0])) + ":" + parts2.get(0) + "." + parts2.get(1);
+			gtinStr = gtinStr.replace(":product:lot:class:", ":product:class:");
+			this.setSerialLotNumber(parts2.get(2));
+			this.setGTIN(new GTIN(gtinStr));
+		}
+		// else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
+		else if (epcStr.startsWith("urn:") && epcStr.contains(":product:serial:obj:"))
+		{
+			this.setType(EPCType.Instance);
+
+			ArrayList<String> parts = new ArrayList<>(Arrays.asList(epcStr.split(java.util.regex.Pattern.quote(":"), -1)));
+			ArrayList<String> parts2 = new ArrayList<>(Arrays.asList(parts.get(parts.size() - 1).split("[.]", -1)));
+			parts.remove(parts.size() - 1);
+
+			String gtinStr = tangible.StringHelper.join(":", parts.toArray(new String[0])) + ":" + parts2.get(0) + "." + parts2.get(1);
+			gtinStr = gtinStr.replace(":product:serial:obj:", ":product:class:");
+			this.setSerialLotNumber(parts2.get(2));
+			this.setGTIN(new GTIN(gtinStr));
+		}
+		else if (epcStr.startsWith("urn:sscc:"))
+		{
+			this.setType(EPCType.SSCC);
+		}
+		else if (epcStr.startsWith("urn:") && epcStr.contains(":lpn:obj:"))
+		{
+			this.setType(EPCType.SSCC);
+		}
+		else if (epcStr.startsWith("urn:epc:id:bic:"))
+		{
+			this.setType(EPCType.SSCC);
+		}
+		else if (StringExtensions.isURI(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/"))
+		{
+			this.setType(EPCType.Instance);
+			this.setSerialLotNumber(StringExtensions.LastOrDefault(epcStr.split("[/]", -1)));
+		}
+		else if (StringExtensions.isURI(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/"))
+		{
+			this.setType(EPCType.Class);
+			this.setSerialLotNumber(StringExtensions.LastOrDefault(epcStr.split("[/]", -1)));
+		}
+		else if (StringExtensions.isURI(epcStr))
+		{
+			this.setType(EPCType.URI);
 		}
 	}
 
@@ -210,168 +194,150 @@ public class EPC
 
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: public static string? DetectEPCIssue(string? epcStr)
-	public static String DetectEPCIssue(String epcStr)
-	{
-		try
+	public static String DetectEPCIssue(String epcStr) throws Exception {
+		if ((epcStr == null || epcStr.isBlank()))
 		{
-			if ((epcStr == null || epcStr.isBlank()))
+			return ("The EPC is a NULL or White Space string.");
+		}
+
+		// if this is a GS1 class level epc (GS1 GTIN + Lot Number)
+		if (epcStr.startsWith("urn:epc:class:lgtin:"))
+		{
+			if (!StringExtensions.isURI(epcStr))
 			{
-				return ("The EPC is a NULL or White Space string.");
+				return ("The EPC contains non-compatiable characters for a URN format.");
 			}
 
-			// if this is a GS1 class level epc (GS1 GTIN + Lot Number)
-			if (epcStr.startsWith("urn:epc:class:lgtin:"))
+			String[] parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1);
+			String[] parts2 = StringExtensions.Last(parts).split("[.]", -1);
+
+			if (parts2.length < 3)
 			{
-				if (!StringExtensions.IsURICompatibleChars(epcStr))
-				{
-					return ("The EPC contains non-compatiable characters for a URN format.");
-				}
-
-				String[] parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1);
-				String[] parts2 = parts.Last().split("[.]", -1);
-
-				if (parts2.Count() < 3)
-				{
-					return String.format("The EPC %1$s is not in the right format. It doesn't contain a company prefix, item code, and lot number.", epcStr);
-				}
-				else
-				{
-					return "";
-				}
-			}
-			// else if this is a GS1 instance level epc (GS1 GTIN + Serial Number)
-			else if (epcStr.startsWith("urn:epc:id:sgtin:"))
-			{
-				if (!StringExtensions.IsURICompatibleChars(epcStr))
-				{
-					return ("The EPC contains non-compatiable characters for a URN format.");
-				}
-
-				String[] parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1);
-				String[] parts2 = parts.Last().split("[.]", -1);
-
-				if (parts2.Count() < 3)
-				{
-					return String.format("The EPC %1$s is not in the right format. It doesn't contain a company prefix, item code, and lot number.", epcStr);
-				}
-				else
-				{
-					return null;
-				}
-			}
-			// else if this is a GDST / IBM private class level identifier (GTIN + Lot Number)
-			else if (epcStr.startsWith("urn:") && epcStr.contains(":product:lot:class:"))
-			{
-				if (!StringExtensions.IsURICompatibleChars(epcStr))
-				{
-					return ("The EPC contains non-compatiable characters for a URN format.");
-				}
-
-				String[] parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1);
-				String[] parts2 = parts.Last().split("[.]", -1);
-
-				if (parts2.Count() < 3)
-				{
-					return String.format("The EPC %1$s is not in the right format. It doesn't contain a company prefix, item code, and serial number.", epcStr);
-				}
-				else
-				{
-					return null;
-				}
-			}
-			// else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
-			else if (epcStr.startsWith("urn:") && epcStr.contains(":product:serial:obj:"))
-			{
-				if (!StringExtensions.IsURICompatibleChars(epcStr))
-				{
-					return ("The EPC contains non-compatiable characters for a URN format.");
-				}
-
-				String[] parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1);
-				String[] parts2 = parts.Last().split("[.]", -1);
-
-				if (parts2.Count() < 3)
-				{
-					return String.format("The EPC %1$s is not in the right format. It doesn't contain a company prefix, item code, and a serial number.", epcStr);
-				}
-				else
-				{
-					return null;
-				}
-			}
-			else if (epcStr.startsWith("urn:epc:id:sscc:"))
-			{
-				if (!StringExtensions.IsURICompatibleChars(epcStr))
-				{
-					return ("The EPC contains non-compatiable characters for a URN format.");
-				}
-
-				return null;
-			}
-			else if (epcStr.startsWith("urn:epc:id:bic:"))
-			{
-				if (!StringExtensions.IsURICompatibleChars(epcStr))
-				{
-					return ("The EPC contains non-compatiable characters for a URN format.");
-				}
-
-				return null;
-			}
-			else if (epcStr.startsWith("urn:") && epcStr.contains(":lpn:obj:"))
-			{
-				if (!StringExtensions.IsURICompatibleChars(epcStr))
-				{
-					return ("The EPC contains non-compatiable characters for a URN format.");
-				}
-
-				return null;
-			}
-			else if (Uri.IsWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/obj/"))
-			{
-				return null;
-			}
-			else if (Uri.IsWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.startsWith("http") && epcStr.contains("/class/"))
-			{
-				return null;
-			}
-			else if (Uri.IsWellFormedUriString(epcStr, UriKind.Absolute))
-			{
-				return null;
+				return String.format("The EPC %1$s is not in the right format. It doesn't contain a company prefix, item code, and lot number.", epcStr);
 			}
 			else
 			{
-				return "This EPC does not fit any of the allowed formats.";
+				return "";
 			}
 		}
-		catch (RuntimeException Ex)
+		// else if this is a GS1 instance level epc (GS1 GTIN + Serial Number)
+		else if (epcStr.startsWith("urn:epc:id:sgtin:"))
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			if (!StringExtensions.isURI(epcStr))
+			{
+				return ("The EPC contains non-compatiable characters for a URN format.");
+			}
+
+			String[] parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1);
+			String[] parts2 = StringExtensions.Last(parts).split("[.]", -1);
+
+			if (parts2.length < 3)
+			{
+				return String.format("The EPC %1$s is not in the right format. It doesn't contain a company prefix, item code, and lot number.", epcStr);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		// else if this is a GDST / IBM private class level identifier (GTIN + Lot Number)
+		else if (epcStr.startsWith("urn:") && epcStr.contains(":product:lot:class:"))
+		{
+			if (!StringExtensions.isURI(epcStr))
+			{
+				return ("The EPC contains non-compatiable characters for a URN format.");
+			}
+
+			String[] parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1);
+			String[] parts2 = StringExtensions.Last(parts).split("[.]", -1);
+
+			if (parts2.length < 3)
+			{
+				return String.format("The EPC %1$s is not in the right format. It doesn't contain a company prefix, item code, and serial number.", epcStr);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		// else if this is a GDST / IBM private instance level identifier (GTIN + Serial Number)
+		else if (epcStr.startsWith("urn:") && epcStr.contains(":product:serial:obj:"))
+		{
+			if (!StringExtensions.isURI(epcStr))
+			{
+				return ("The EPC contains non-compatiable characters for a URN format.");
+			}
+
+			String[] parts = epcStr.split(java.util.regex.Pattern.quote(":"), -1);
+			String[] parts2 = StringExtensions.Last(parts).split("[.]", -1);
+
+			if (parts2.length < 3)
+			{
+				return String.format("The EPC %1$s is not in the right format. It doesn't contain a company prefix, item code, and a serial number.", epcStr);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else if (epcStr.startsWith("urn:epc:id:sscc:"))
+		{
+			if (!StringExtensions.isURI(epcStr))
+			{
+				return ("The EPC contains non-compatiable characters for a URN format.");
+			}
+
+			return null;
+		}
+		else if (epcStr.startsWith("urn:epc:id:bic:"))
+		{
+			if (!StringExtensions.isURI(epcStr))
+			{
+				return ("The EPC contains non-compatiable characters for a URN format.");
+			}
+
+			return null;
+		}
+		else if (epcStr.startsWith("urn:") && epcStr.contains(":lpn:obj:"))
+		{
+			if (!StringExtensions.isURI(epcStr))
+			{
+				return ("The EPC contains non-compatiable characters for a URN format.");
+			}
+
+			return null;
+		}
+		else if (StringExtensions.isURI(epcStr) && epcStr.startsWith("http") && epcStr.contains("/obj/"))
+		{
+			return null;
+		}
+		else if (StringExtensions.isURI(epcStr) && epcStr.startsWith("http") && epcStr.contains("/class/"))
+		{
+			return null;
+		}
+		else if (StringExtensions.isURI(epcStr))
+		{
+			return null;
+		}
+		else
+		{
+			return "This EPC does not fit any of the allowed formats.";
 		}
 	}
 
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: public static bool TryParse(string? epcStr, out System.Nullable<EPC> epc, out string? error)
-	public static boolean TryParse(String epcStr, tangible.OutObject<EPC> epc, tangible.OutObject<String> error)
-	{
-		try
+	public static boolean TryParse(String epcStr, tangible.OutObject<EPC> epc, tangible.OutObject<String> error) throws Exception {
+		error.outArgValue = EPC.DetectEPCIssue(epcStr);
+		if ((error.outArgValue == null || error.outArgValue.isBlank()))
 		{
-			error.outArgValue = EPC.DetectEPCIssue(epcStr);
-			if ((error.outArgValue == null || error.outArgValue.isBlank()))
-			{
-				epc.outArgValue = new EPC(epcStr);
-				return true;
-			}
-			else
-			{
-				epc.outArgValue = null;
-				return false;
-			}
+			epc.outArgValue = new EPC(epcStr);
+			return true;
 		}
-		catch (RuntimeException Ex)
+		else
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			epc.outArgValue = null;
+			return false;
 		}
 	}
 
@@ -393,8 +359,7 @@ public class EPC
 		return false;
 	}
 
-	public final Object Clone()
-	{
+	public final Object Clone() throws Exception {
 		EPC epc = new EPC(this.toString());
 		return epc;
 	}
@@ -406,70 +371,54 @@ public class EPC
 //ORIGINAL LINE: public static bool operator ==(EPC? obj1, EPC? obj2)
 	public static boolean opEquals(EPC obj1, EPC obj2)
 	{
-		try
+		if (null == obj1 && null == obj2)
 		{
-			if (null == obj1 && null == obj2)
-			{
-				return true;
-			}
-
-			if (null != obj1 && null == obj2)
-			{
-				return false;
-			}
-
-			if (null == obj1 && null != obj2)
-			{
-				return false;
-			}
-
-			if (obj1 == null)
-			{
-				return false;
-			}
-
-			return obj1.equals(obj2);
+			return true;
 		}
-		catch (RuntimeException Ex)
+
+		if (null != obj1 && null == obj2)
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			return false;
 		}
+
+		if (null == obj1 && null != obj2)
+		{
+			return false;
+		}
+
+		if (obj1 == null)
+		{
+			return false;
+		}
+
+		return obj1.equals(obj2);
 	}
 
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: public static bool operator !=(EPC? obj1, EPC? obj2)
 	public static boolean opNotEquals(EPC obj1, EPC obj2)
 	{
-		try
+		if (null == obj1 && null == obj2)
 		{
-			if (null == obj1 && null == obj2)
-			{
-				return false;
-			}
-
-			if (null != obj1 && null == obj2)
-			{
-				return true;
-			}
-
-			if (null == obj1 && null != obj2)
-			{
-				return true;
-			}
-
-			if (obj1 == null)
-			{
-				return true;
-			}
-
-			return !obj1.equals(obj2);
+			return false;
 		}
-		catch (RuntimeException Ex)
+
+		if (null != obj1 && null == obj2)
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			return true;
 		}
+
+		if (null == obj1 && null != obj2)
+		{
+			return true;
+		}
+
+		if (obj1 == null)
+		{
+			return true;
+		}
+
+		return !obj1.equals(obj2);
 	}
 
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
@@ -477,155 +426,90 @@ public class EPC
 	@Override
 	public boolean equals(Object obj)
 	{
-		try
+		if (null == obj)
 		{
-			if (null == obj)
-			{
-				return false;
-			}
-
-			if (this == obj)
-			{
-				return true;
-			}
-
-			if (obj.getClass() != this.getClass())
-			{
-				return false;
-			}
-
-			return this.IsEquals((EPC)obj);
+			return false;
 		}
-		catch (RuntimeException Ex)
+
+		if (this == obj)
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			return true;
 		}
+
+		if (obj.getClass() != this.getClass())
+		{
+			return false;
+		}
+
+		return this.IsEquals((EPC)obj);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		try
-		{
-			int hash = ObjectExtensions.GetInt32HashCode(this.toString());
-			return hash;
-		}
-		catch (RuntimeException Ex)
-		{
-			OTLogger.Error(Ex);
-			throw Ex;
-		}
+		int hash = HashCodeUtility.getInt32HashCode(this.toString());
+		return hash;
 	}
 
 	@Override
 	public String toString()
 	{
-		try
-		{
-			return _epcStr.toLowerCase();
-		}
-		catch (RuntimeException Ex)
-		{
-			OTLogger.Error(Ex);
-			throw Ex;
-		}
+		return _epcStr.toLowerCase();
 	}
 
-//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
-		///#endregion Overrides
-
-//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
-		///#region IEquatable<EPC>
-
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: public bool Equals(EPC? epc)
 	public final boolean equals(EPC epc)
 	{
-		try
+		if (null == epc)
 		{
-			if (null == epc)
-			{
-				return false;
-			}
-
-			if (this == epc)
-			{
-				return true;
-			}
-
-			return this.IsEquals(epc);
+			return false;
 		}
-		catch (RuntimeException Ex)
+
+		if (this == epc)
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			return true;
 		}
+
+		return this.IsEquals(epc);
 	}
 
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: private bool IsEquals(EPC? epc)
 	private boolean IsEquals(EPC epc)
 	{
-		try
+		if (null == epc)
 		{
-			if (null == epc)
-			{
-				return false;
-			}
-
-			if (Objects.equals(this.toString().toLowerCase(), epc.toString().toLowerCase()))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return false;
 		}
-		catch (RuntimeException Ex)
+
+		if (Objects.equals(this.toString().toLowerCase(), epc.toString().toLowerCase()))
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
-
-//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
-		///#endregion IEquatable<EPC>
-
-//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
-		///#region IComparable
 
 	public final int CompareTo(EPC epc)
 	{
-		try
+		if (null == epc)
 		{
-			if (null == epc)
-			{
-				throw new NullPointerException("epc");
-			}
-
-			long myInt64Hash = ObjectExtensions.GetInt64HashCode(this.toString());
-			long otherInt64Hash = ObjectExtensions.GetInt64HashCode(epc.toString());
-
-			if (myInt64Hash > otherInt64Hash)
-			{
-				return -1;
-			}
-			if (myInt64Hash == otherInt64Hash)
-			{
-				return 0;
-			}
-
-			return 1;
+			throw new NullPointerException("epc");
 		}
-		catch (RuntimeException Ex)
+
+		long myInt64Hash = HashCodeUtility.getInt64HashCode(this.toString());
+		long otherInt64Hash = HashCodeUtility.getInt64HashCode(epc.toString());
+
+		if (myInt64Hash > otherInt64Hash)
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			return -1;
 		}
+		if (myInt64Hash == otherInt64Hash)
+		{
+			return 0;
+		}
+
+		return 1;
 	}
-
-//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
-		///#endregion IComparable
 }

@@ -29,6 +29,11 @@
             <artifactId>json-schema-validator</artifactId>
             <version>1.0.72</version>
         </dependency>
+        <dependency>
+        <dependency>
+            <groupId>org.openengsb.wrapped.csharp</groupId>
+            <artifactId>Newtonsoft.Json</artifactId>
+            <version>5.0_2</version>
+        </dependency>
     </dependencies>
-
 </project>

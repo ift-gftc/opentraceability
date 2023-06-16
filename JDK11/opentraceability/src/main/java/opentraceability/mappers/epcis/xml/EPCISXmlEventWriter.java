@@ -18,7 +18,7 @@ public class EPCISXmlEventWriter
 		ArrayList<EPCISMappingKDE> kdes = EPCISMappingKDE.getMappingKDEs().get("Base");
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: Type? eventType = null;
-		java.lang.Class eventType = null;
+		Type eventType = null;
 		XElement xEvent = null;
 
 		if (e instanceof ObjectEvent)
@@ -97,8 +97,8 @@ public class EPCISXmlEventWriter
 						case "EventTimeZoneOffset":
 							WriteEventTimeZoneOffset(x, kde, value instanceof Double ? (Double)value : null);
 							break;
-						case "DateTimeOffset":
-							WriteDateTimeOffset(x, kde, value instanceof DateTimeOffset ? (DateTimeOffset)value : null);
+						case "OffsetDateTime":
+							WriteDateTimeOffset(x, kde, value instanceof OffsetDateTime ? (OffsetDateTime)value : null);
 							break;
 						case "URI":
 						case "Action":
@@ -206,8 +206,8 @@ public class EPCISXmlEventWriter
 //ORIGINAL LINE: PropertyInfo p = o.GetType().GetProperty(pName) ?? throw new Exception(string.Format("Failed to find property on {0} with name {1}", o.GetType().FullName, pName));
 			PropertyInfo p = (o.getClass().GetProperty(pName)) != null ? o.getClass().GetProperty(pName) : throw new RuntimeException(String.format("Failed to find property on %1$s with name %2$s", o.getClass().getName(), pName));
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? o2 = p.GetValue(o);
-			Object o2 = p.GetValue(o);
+//ORIGINAL LINE: object? o2 = p.get(o);
+			Object o2 = p.get(o);
 			if (o2 == null)
 			{
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
@@ -222,7 +222,7 @@ public class EPCISXmlEventWriter
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: PropertyInfo prop = o.GetType().GetProperty(parts.First()) ?? throw new Exception(string.Format("Failed to find property on {0} with name {1}", o.GetType().FullName, parts.First()));
 		PropertyInfo prop = (o.getClass().GetProperty(parts.get(0))) != null ? o.getClass().GetProperty(parts.get(0)) : throw new RuntimeException(String.format("Failed to find property on %1$s with name %2$s", o.getClass().getName(), parts.get(0)));
-		v = prop.GetValue(o);
+		v = prop.get(o);
 		return v;
 	}
 
@@ -245,7 +245,7 @@ public class EPCISXmlEventWriter
 		}
 	}
 
-	private static void WriteDateTimeOffset(XElement x, EPCISMappingKDE kde, DateTimeOffset value)
+	private static void WriteDateTimeOffset(XElement x, EPCISMappingKDE kde, OffsetDateTime value)
 	{
 		if (value != null)
 		{
@@ -295,9 +295,9 @@ public class EPCISXmlEventWriter
 			XElement xEPCList = new XElement(xName);
 			for (EventProduct prod : products)
 			{
-				if (prod.getEPC() != null)
+				if (prod.EPC != null)
 				{
-					xEPCList.Add(new XElement("epc", prod.getEPC().toString()));
+					xEPCList.Add(new XElement("epc", prod.EPC.toString()));
 				}
 			}
 			x.Add(xEPCList);
@@ -328,13 +328,13 @@ public class EPCISXmlEventWriter
 			XElement xQuantityList = new XElement(xName);
 			for (EventProduct product : products)
 			{
-				if (product.getEPC() != null && product.getQuantity() != null)
+				if (product.EPC != null && product.Quantity != null)
 				{
-					XElement xQuantity = new XElement("quantityElement", new XElement("epcClass", product.getEPC().toString()), new XElement("quantity", product.getQuantity().getValue()));
+					XElement xQuantity = new XElement("quantityElement", new XElement("epcClass", product.EPC.toString()), new XElement("quantity", product.Quantity.getValue()));
 
-					if (!Objects.equals(product.getQuantity().getUoM().getUNCode(), "EA"))
+					if (!Objects.equals(product.Quantity.getUoM().getUNCode(), "EA"))
 					{
-						xQuantity.Add(new XElement("uom", product.getQuantity().getUoM().getUNCode()));
+						xQuantity.Add(new XElement("uom", product.Quantity.getUoM().getUNCode()));
 					}
 
 					xQuantityList.Add(xQuantity);
@@ -352,7 +352,7 @@ public class EPCISXmlEventWriter
 		EventProduct parent = e.getProducts().FirstOrDefault(p -> p.Type == EventProductType.Parent);
 		if ((parent == null ? null : parent.getEPC()) != null)
 		{
-			x.Add(new XElement(xName, parent.getEPC().toString()));
+			x.Add(new XElement(xName, parent.EPC.toString()));
 		}
 	}
 
@@ -395,7 +395,7 @@ public class EPCISXmlEventWriter
 		//        OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetTypeInfo(t);
 		//        foreach (var kvp in typeInfo.XmlAttributes)
 		//        {
-		//            object? obj = kvp.Value.GetValue(value);
+		//            object? obj = kvp.Value.get(value);
 		//            if (obj != null)
 		//            {
 		//                string xchildname = kvp.Key.Name.ToString();
@@ -461,7 +461,7 @@ public class EPCISXmlEventWriter
 
 		//        if (typeInfo.ExtensionKDEs != null)
 		//        {
-		//            object? obj = typeInfo.ExtensionKDEs.GetValue(value);
+		//            object? obj = typeInfo.ExtensionKDEs.get(value);
 		//            if (obj != null && obj is IList<IEventKDE>)
 		//            {
 		//                IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
@@ -481,7 +481,7 @@ public class EPCISXmlEventWriter
 
 		//        if (typeInfo.ExtensionAttributes != null)
 		//        {
-		//            object? obj = typeInfo.ExtensionAttributes.GetValue(value);
+		//            object? obj = typeInfo.ExtensionAttributes.get(value);
 		//            if (obj != null && obj is IList<IEventKDE>)
 		//            {
 		//                IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
@@ -505,9 +505,9 @@ public class EPCISXmlEventWriter
 
 	private static String WriteObjectToString(Object obj)
 	{
-		if (obj instanceof DateTimeOffset)
+		if (obj instanceof OffsetDateTime)
 		{
-			DateTimeOffset dt = (DateTimeOffset)obj;
+			OffsetDateTime dt = (OffsetDateTime)obj;
 			return dt.toString("O");
 		}
 		else if (obj instanceof UOM)

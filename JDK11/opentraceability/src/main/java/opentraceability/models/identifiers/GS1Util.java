@@ -7,21 +7,13 @@ public final class GS1Util
 {
 	private static boolean IsEven(int i)
 	{
-		try
+		if ((i % 2) == 0)
 		{
-			if ((i % 2) == 0)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return true;
 		}
-		catch (RuntimeException Ex)
+		else
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			return false;
 		}
 	}
 	public static int CharToInt32(char charInt)
@@ -120,127 +112,93 @@ public final class GS1Util
 	}
 	public static int[] BreakIntoDigits(String strInt)
 	{
-		try
-		{
-			ArrayList<Integer> rtnInts = new ArrayList<Integer>();
+		ArrayList<Integer> rtnInts = new ArrayList<Integer>();
 
-			for (int i = 0; i < strInt.length(); i++)
-			{
-				rtnInts.add(CharToInt32(strInt.charAt(i)));
-			}
-
-			return tangible.IntegerLists.toArray(rtnInts);
-		}
-		catch (RuntimeException Ex)
+		for (int i = 0; i < strInt.length(); i++)
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			rtnInts.add(CharToInt32(strInt.charAt(i)));
 		}
+
+		return tangible.IntegerLists.toArray(rtnInts);
 	}
 	public static char CalculateGTIN14CheckSum(String strGS)
 	{
-		try
+		if (strGS == null)
 		{
-			if (strGS == null)
-			{
-				throw new NullPointerException("strGS");
-			}
-
-			if (strGS.length() == 14)
-			{
-				strGS = strGS.substring(0, 13);
-			}
-
-			int[] gsDigits = BreakIntoDigits(strGS);
-			int sum = 0;
-
-			for (int i = 0; i < (gsDigits.length); i++)
-			{
-				if (IsEven(i))
-				{
-					sum += gsDigits[i] * 3;
-				}
-				else
-				{
-					sum += gsDigits[i];
-				}
-			}
-
-			// Get the higher multiple of ten;
-			int higherMultipleOfTen = 10;
-			while (higherMultipleOfTen < sum)
-			{
-				higherMultipleOfTen += 10;
-			}
-			if (sum == 0)
-			{
-				higherMultipleOfTen = 0;
-			}
-
-			int determinedCheckSum = higherMultipleOfTen - sum;
-			char charCheckSum = Int32ToChar(determinedCheckSum);
-			return (charCheckSum);
+			throw new NullPointerException("strGS");
 		}
-		catch (NullPointerException anEx)
+
+		if (strGS.length() == 14)
 		{
-			OTLogger.Error(anEx);
-			throw anEx;
+			strGS = strGS.substring(0, 13);
 		}
-		catch (RuntimeException Ex)
+
+		int[] gsDigits = BreakIntoDigits(strGS);
+		int sum = 0;
+
+		for (int i = 0; i < (gsDigits.length); i++)
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			if (IsEven(i))
+			{
+				sum += gsDigits[i] * 3;
+			}
+			else
+			{
+				sum += gsDigits[i];
+			}
 		}
+
+		// Get the higher multiple of ten;
+		int higherMultipleOfTen = 10;
+		while (higherMultipleOfTen < sum)
+		{
+			higherMultipleOfTen += 10;
+		}
+		if (sum == 0)
+		{
+			higherMultipleOfTen = 0;
+		}
+
+		int determinedCheckSum = higherMultipleOfTen - sum;
+		char charCheckSum = Int32ToChar(determinedCheckSum);
+		return (charCheckSum);
 	}
 	public static char CalculateGLN13CheckSum(String strGS)
 	{
-		try
+		if (strGS == null)
 		{
-			if (strGS == null)
-			{
-				throw new NullPointerException("strGS");
-			}
-
-			if (strGS.length() == 13)
-			{
-				strGS = strGS.substring(0, 12);
-			}
-
-			int[] gsDigits = BreakIntoDigits(strGS);
-			int sum = 0;
-
-			for (int i = 0; i < (gsDigits.length); i++)
-			{
-				if (IsEven(i))
-				{
-					sum += gsDigits[i];
-				}
-				else
-				{
-					sum += gsDigits[i] * 3;
-				}
-			}
-
-			// Get the higher multiple of ten;
-			int higherMultipleOfTen = 10;
-			while (higherMultipleOfTen < sum)
-			{
-				higherMultipleOfTen += 10;
-			}
-
-			int determinedCheckSum = higherMultipleOfTen - sum;
-			char charCheckSum = Int32ToChar(determinedCheckSum);
-			return (charCheckSum);
+			throw new NullPointerException("strGS");
 		}
-		catch (NullPointerException anEx)
+
+		if (strGS.length() == 13)
 		{
-			OTLogger.Error(anEx);
-			throw anEx;
+			strGS = strGS.substring(0, 12);
 		}
-		catch (RuntimeException Ex)
+
+		int[] gsDigits = BreakIntoDigits(strGS);
+		int sum = 0;
+
+		for (int i = 0; i < (gsDigits.length); i++)
 		{
-			OTLogger.Error(Ex);
-			throw Ex;
+			if (IsEven(i))
+			{
+				sum += gsDigits[i];
+			}
+			else
+			{
+				sum += gsDigits[i] * 3;
+			}
 		}
+
+		// Get the higher multiple of ten;
+		int higherMultipleOfTen = 10;
+		while (higherMultipleOfTen < sum)
+		{
+			higherMultipleOfTen += 10;
+		}
+
+		int determinedCheckSum = higherMultipleOfTen - sum;
+		char charCheckSum = Int32ToChar(determinedCheckSum);
+		return (charCheckSum);
 	}
 }

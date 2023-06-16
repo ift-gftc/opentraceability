@@ -41,7 +41,7 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 				EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.getEPCISVersion());
 			}
 
-			XNamespace epcisQueryXName = (document.getEPCISVersion() == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
+			String epcisQueryXName = (document.getEPCISVersion() == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
 
 			// read the query name
 			XElement xQueryName = xDoc.Root == null ? null : ((xDoc.Root.Element("EPCISBody") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults") == null ? null : xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("queryName")))));
@@ -63,7 +63,7 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 					{
 						x = xEvent.Element("TransformationEvent");
 					}
-					java.lang.Class eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(x);
+					Type eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(x);
 					IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(x, eventType, document.getEPCISVersion());
 					document.getEvents().add(e);
 				}
@@ -81,12 +81,12 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 
 	public final String Map(EPCISQueryDocument doc)
 	{
-		if (doc.getEPCISVersion() == null)
+		if (doc.epcisVersion == null)
 		{
 			throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
 		}
 
-		XNamespace epcisNS = (doc.getEPCISVersion() == EPCISVersion.V2) ? Constants.EPCISQUERY_2_NAMESPACE : Constants.EPCISQUERY_1_NAMESPACE;
+		String epcisNS = (doc.epcisVersion == EPCISVersion.V2) ? Constants.EPCISQUERY_2_NAMESPACE : Constants.EPCISQUERY_1_NAMESPACE;
 
 		XDocument xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, epcisNS, "EPCISQueryDocument");
 		if (xDoc.Root == null)
@@ -94,7 +94,7 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 			throw new RuntimeException("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.");
 		}
 
-		XNamespace epcisQueryXName = (doc.getEPCISVersion() == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
+		String epcisQueryXName = (doc.epcisVersion == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
 
 		// write the query name
 		xDoc.Root.Add(new XElement("EPCISBody", new XElement(epcisQueryXName + "QueryResults", new XElement("queryName"), new XElement("resultsBody", new XElement("EventList")))));
@@ -112,8 +112,8 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 		for (IEvent e : doc.getEvents())
 		{
 			String xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
-			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.getEPCISVersion());
-			if (e.getEventType() == EventType.TransformationEvent && doc.getEPCISVersion() == EPCISVersion.V1)
+			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.epcisVersion);
+			if (e.eventType == EventType.TransformationEvent && doc.epcisVersion == EPCISVersion.V1)
 			{
 				xEvent = new XElement("extension", xEvent);
 			}
@@ -123,7 +123,7 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 			}
 		}
 
-		EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.getEPCISVersion());
+		EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.epcisVersion);
 
 		return xDoc.toString();
 	}

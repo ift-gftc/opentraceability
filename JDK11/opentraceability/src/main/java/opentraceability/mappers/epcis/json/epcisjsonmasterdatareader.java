@@ -6,12 +6,20 @@ import opentraceability.models.events.kdes.*;
 import opentraceability.models.events.*;
 import opentraceability.models.identifiers.*;
 import opentraceability.models.masterdata.*;
+import opentraceability.models.masterdata.kdes.MasterDataKDEObject;
+import opentraceability.models.masterdata.kdes.MasterDataKDEString;
 import opentraceability.utility.attributes.*;
 import opentraceability.utility.*;
-import Newtonsoft.Json.Linq.*;
 import opentraceability.*;
 import opentraceability.mappers.*;
 import opentraceability.mappers.epcis.*;
+import org.apache.commons.codec.language.bm.Lang;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.net.URI;
 import java.util.*;
 
 /** 
@@ -19,37 +27,41 @@ import java.util.*;
 */
 public final class EPCISJsonMasterDataReader
 {
-	public static void ReadMasterData(EPCISBaseDocument doc, JObject jMasterData)
-	{
-		if (jMasterData["vocabularyList"] instanceof JArray)
+	private static Field p;
+
+	public static void ReadMasterData(EPCISBaseDocument doc, JSONObject jMasterData) throws Exception {
+		JSONArray jVocabList = jMasterData.getJSONArray("vocabularyList");
+		if (jVocabList != null)
 		{
-		JArray jVocabList = (JArray)jMasterData["vocabularyList"];
-			for (JObject jVocabListItem : jVocabList)
+			for (int i = 0; i < jVocabList.length(); i++)
 			{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: string? type = jVocabListItem["type"] == null ? null : ((jVocabListItem["type"].ToString() == null ? null : jVocabListItem["type"].ToString().ToLower()));
-				String type = jVocabListItem["type"] == null ? null : ((jVocabListItem["type"].toString() == null ? null : jVocabListItem["type"].toString().toLowerCase()));
-				if (type != null)
+				JSONObject jVocabListItem = jVocabList.getJSONObject(i);
+				if (jVocabListItem != null)
 				{
-					if (jVocabListItem["vocabularyElementList"] instanceof JArray)
+					String type = jVocabListItem.getString("type").toLowerCase();
+					if (type != null)
 					{
-					JArray jVocabElementaryList = (JArray)jVocabListItem["vocabularyElementList"];
-						for (JObject jVocabEle : jVocabElementaryList)
+						JSONArray jVocabElementaryList = jVocabListItem.getJSONArray("vocabularyElementList");
+						if (jVocabElementaryList != null)
 						{
-							switch (type)
+							for (int k = 0; k < jVocabElementaryList.length(); k++)
 							{
-								case "urn:epcglobal:epcis:vtype:epcclass":
-									ReadTradeitem(doc, jVocabEle, type);
-									break;
-								case "urn:epcglobal:epcis:vtype:location":
-									ReadLocation(doc, jVocabEle, type);
-									break;
-								case "urn:epcglobal:epcis:vtype:party":
-									ReadTradingParty(doc, jVocabEle, type);
-									break;
-								default:
-									ReadUnknown(doc, jVocabEle, type);
-									break;
+								JSONObject jVocabEle = jVocabElementaryList.getJSONObject(k);
+								switch (type)
+								{
+									case "urn:epcglobal:epcis:vtype:epcclass":
+										ReadTradeitem(doc, jVocabEle, type);
+										break;
+									case "urn:epcglobal:epcis:vtype:location":
+										ReadLocation(doc, jVocabEle, type);
+										break;
+									case "urn:epcglobal:epcis:vtype:party":
+										ReadTradingParty(doc, jVocabEle, type);
+										break;
+									default:
+										ReadUnknown(doc, jVocabEle, type);
+										break;
+								}
 							}
 						}
 					}
@@ -58,196 +70,253 @@ public final class EPCISJsonMasterDataReader
 		}
 	}
 
-	private static void ReadTradeitem(EPCISBaseDocument doc, JObject xTradeitem, String type)
-	{
-		// read the GTIN from the id
-		String id = xTradeitem["id"] == null ? null : ((xTradeitem["id"].toString()) != null ? xTradeitem["id"].toString() : "");
-		Tradeitem tradeitem = new Tradeitem();
-		tradeitem.setGTIN(new models.identifiers.GTIN(id));
-		tradeitem.setEPCISType(type);
-
-		// read the object
-		ReadMasterDataObject(tradeitem, xTradeitem);
-		doc.getMasterData().add(tradeitem);
-	}
-
-	private static void ReadLocation(EPCISBaseDocument doc, JObject xLocation, String type)
-	{
-		// read the GLN from the id
-		String id = xLocation["id"] == null ? null : ((xLocation["id"].toString()) != null ? xLocation["id"].toString() : "");
-		java.lang.Class t = Setup.MasterDataTypes.get(type);
-		if (!(t.newInstance() instanceof Location))
+	private static void ReadTradeitem(EPCISBaseDocument doc, JSONObject jTradeItem, String type) throws Exception {
+		Type javaType = Setup.MasterDataTypes.get(type);
+		if (javaType == null)
 		{
-		Location loc = (Location)t.newInstance();
-			throw new RuntimeException(String.format("Failed to activate instance Location of %1$s", t));
+			throw new Exception("Failed to read java type.");
+		}
+
+		Object o = javaType.getClass().newInstance();
+		if (o instanceof  TradeItem)
+		{
+			TradeItem md = (TradeItem)o;
+			md.id = jTradeItem.getString("id");
+			md.gtin = new opentraceability.models.identifiers.GTIN(md.id);
+			md.epcisType = type;
+
+			// read the object
+			ReadMasterDataObject(md, jTradeItem);
+			doc.masterData.add(md);
 		}
 		else
 		{
-			loc.GLN = new models.identifiers.GLN(id);
-			loc.EPCISType = type;
-
-			// read the object
-			ReadMasterDataObject(loc, xLocation);
-			doc.getMasterData().add(loc);
+			throw new Exception(javaType.getTypeName() + " is not instance of TradeItem.");
 		}
 	}
 
-	private static void ReadTradingParty(EPCISBaseDocument doc, JObject xTradingParty, String type)
-	{
-		// read the PGLN from the id
-		String id = xTradingParty["id"] == null ? null : ((xTradingParty["id"].toString()) != null ? xTradingParty["id"].toString() : "");
-		TradingParty tp = new TradingParty();
-		tp.setPGLN(new models.identifiers.PGLN(id));
-		tp.setEPCISType(type);
+	private static void ReadLocation(EPCISBaseDocument doc, JSONObject jLoc, String type) throws Exception {
+		Type javaType = Setup.MasterDataTypes.get(type);
+		if (javaType == null)
+		{
+			throw new Exception("Failed to read java type.");
+		}
 
-		// read the object
-		ReadMasterDataObject(tp, xTradingParty);
-		doc.getMasterData().add(tp);
+		Object o = javaType.getClass().newInstance();
+		if (o instanceof  Location)
+		{
+			Location md = (Location)o;
+			md.id = jLoc.getString("id");
+			md.gln = new opentraceability.models.identifiers.GLN(md.id);
+			md.epcisType = type;
+
+			// read the object
+			ReadMasterDataObject(md, jLoc);
+			doc.masterData.add(md);
+		}
+		else
+		{
+			throw new Exception(javaType.getTypeName() + " is not instance of Location.");
+		}
 	}
 
-	private static void ReadUnknown(EPCISBaseDocument doc, JObject xVocabElement, String type)
-	{
-		// read the PGLN from the id
-		String id = xVocabElement["id"] == null ? null : ((xVocabElement["id"].toString()) != null ? xVocabElement["id"].toString() : "");
+	private static void ReadTradingParty(EPCISBaseDocument doc, JSONObject jTradingParty, String type) throws Exception {
+		Type javaType = Setup.MasterDataTypes.get(type);
+		if (javaType == null)
+		{
+			throw new Exception("Failed to read java type.");
+		}
+
+		Object o = javaType.getClass().newInstance();
+		if (o instanceof  TradingParty)
+		{
+			TradingParty md = (TradingParty)o;
+			md.id = jTradingParty.getString("id");
+			md.pgln = new opentraceability.models.identifiers.PGLN(md.id);
+			md.epcisType = type;
+
+			// read the object
+			ReadMasterDataObject(md, jTradingParty);
+			doc.masterData.add(md);
+		}
+		else
+		{
+			throw new Exception(javaType.getTypeName() + " is not instance of TradingParty.");
+		}
+	}
+
+	private static void ReadUnknown(EPCISBaseDocument doc, JSONObject jVocabEle, String type) throws Exception {
+		// read the pgln from the id
+		String id = jVocabEle.getString("id");
 		VocabularyElement ele = new VocabularyElement();
-		ele.ID = id;
-		ele.setEPCISType(type);
+		ele.id = id;
+		ele.epcisType = type;
 
 		// read the object
-		ReadMasterDataObject(ele, xVocabElement);
-		doc.getMasterData().add(ele);
+		ReadMasterDataObject(ele, jVocabEle);
+		doc.masterData.add(ele);
 	}
 
 
-	private static void ReadMasterDataObject(IVocabularyElement md, JObject jMasterData)
-	{
+	private static void ReadMasterDataObject(IVocabularyElement md, JSONObject jMasterData) throws Exception {
 		ReadMasterDataObject(md, jMasterData, true);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: private static void ReadMasterDataObject(IVocabularyElement md, JObject jMasterData, bool readKDEs = true)
-	private static void ReadMasterDataObject(IVocabularyElement md, JObject jMasterData, boolean readKDEs)
-	{
-		var mappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(md.getClass());
+//ORIGINAL LINE: private static void ReadMasterDataObject(IVocabularyElement md, JSONObject jMasterData, bool readKDEs = true)
+	private static void ReadMasterDataObject(IVocabularyElement md, JSONObject jMasterData, boolean readKDEs) throws Exception {
+		var mappedProperties = OTMappingTypeInformation.getMasterDataJsonTypeInfo(md.getClass());
+
+		JSONArray jAttributes = JSONExtensions.queryForArray(jMasterData,"attributes");
+		if (jAttributes == null)
+		{
+			return;
+		}
 
 		// work on expanded objects...
 		// these are objects on the vocab element represented by one or more attributes in the EPCIS master data
 		ArrayList<String> ignoreAttributes = new ArrayList<String>();
-		for (var property : mappedProperties.getProperties().Where(p -> p.Name.equals("")))
+		for (var property : mappedProperties.properties)
 		{
-			var subMappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(property.Property.PropertyType);
+			var subMappedProperties = OTMappingTypeInformation.getMasterDataJsonTypeInfo(property.field.getType());
 			boolean setAttribute = false;
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? subObject = Activator.CreateInstance(property.Property.PropertyType);
-			Object subObject = property.Property.PropertyType.newInstance();
+
+			Object subObject = property.field.getType().newInstance();
 			if (subObject != null)
 			{
-				for (JObject jAtt : jMasterData["attributes"] instanceof JArray ? (JArray)jMasterData["attributes"] : null)
+				for (Object item : jAttributes)
 				{
-					String id = jAtt["id"] == null ? null : ((jAtt["id"].toString()) != null ? jAtt["id"].toString() : "");
-					var propMapping = subMappedProperties.get(id);
-					if (propMapping != null)
+					if (item instanceof  JSONObject)
 					{
-						if (!TrySetValueType((jAtt["attribute"] == null ? null : jAtt["attribute"].toString()) != null ? (jAtt["attribute"] == null ? null : jAtt["attribute"].toString()) : "", propMapping.Property, subObject))
+						JSONObject jAtt = (JSONObject) item;
+						String id = jAtt.getString("id");
+
+						var propMapping = subMappedProperties.get(id);
+						if (propMapping != null)
 						{
-							Object value = ReadKDEObject(jAtt, propMapping.Property.PropertyType);
-							propMapping.Property.SetValue(subObject, value);
+							if (!TrySetValueType(jAtt.get("attribute").toString(), propMapping.field, subObject))
+							{
+								Object value = ReadKDEObject(jAtt, propMapping.field.getType());
+								propMapping.field.set(subObject, value);
+							}
+							setAttribute = true;
+							ignoreAttributes.add(id);
 						}
-						setAttribute = true;
-						ignoreAttributes.add(id);
 					}
 				}
 				if (setAttribute)
 				{
-					property.Property.SetValue(md, subObject);
+					property.field.set(md, subObject);
 				}
 			}
 		}
 
 		// go through each standard attribute...
-		for (JObject jAtt : jMasterData["attributes"] instanceof JArray ? (JArray)jMasterData["attributes"] : null)
+		for (Object item : jAttributes)
 		{
-			String id = jAtt["id"] == null ? null : ((jAtt["id"].toString()) != null ? jAtt["id"].toString() : "");
+			if (item instanceof  JSONObject) {
+				JSONObject jAtt = (JSONObject) item;
+				String id = jAtt.getString("id");
 
-			if (ignoreAttributes.contains(id))
-			{
-				continue;
-			}
-
-			var propMapping = mappedProperties.get(id);
-			if (propMapping != null)
-			{
-				if (!TrySetValueType((jAtt["attribute"] == null ? null : jAtt["attribute"].toString()) != null ? (jAtt["attribute"] == null ? null : jAtt["attribute"].toString()) : "", propMapping.Property, md))
-				{
-					Object value = ReadKDEObject(jAtt, propMapping.Property.PropertyType);
-					propMapping.Property.SetValue(md, value);
+				if (ignoreAttributes.contains(id)) {
+					continue;
 				}
-			}
-			else if (readKDEs)
-			{
-				JToken jAttValue = jAtt["attribute"];
-				if (jAttValue != null)
-				{
-					if (jAttValue instanceof JObject)
+
+				var propMapping = mappedProperties.get(id);
+				if (propMapping != null) {
+					if (!TrySetValueType(jAtt.get("attribute").toString(), propMapping.field, md))
 					{
-						// serialize into object kde...
-						IMasterDataKDE kdeObject = new MasterDataKDEObject("", id);
-						kdeObject.SetFromGS1WebVocabJson(jAttValue);
-						md.getKDEs().add(kdeObject);
+						Object value = ReadKDEObject(jAtt, propMapping.field.getType());
+						propMapping.field.set(md, value);
 					}
-					else
-					{
-						// serialize into string kde
-						IMasterDataKDE kdeString = new MasterDataKDEString("", id);
-						kdeString.SetFromGS1WebVocabJson(jAttValue);
-						md.getKDEs().add(kdeString);
+				}
+				else if (readKDEs)
+				{
+					Object jAttValue = jAtt.get("attribute");
+					if (jAttValue != null) {
+						if (jAttValue instanceof JSONObject)
+						{
+							// serialize into object kde...
+							IMasterDataKDE kdeObject = new MasterDataKDEObject("", id);
+							kdeObject.setFromGS1WebVocabJson((JSONObject)jAttValue);
+							md.kdes.add(kdeObject);
+						} else
+						{
+							// serialize into string kde
+							MasterDataKDEString kdeString = new MasterDataKDEString("", id);
+							kdeString.value = jAttValue.toString();
+							md.kdes.add(kdeString);
+						}
 					}
 				}
 			}
 		}
 	}
 
-	private static Object ReadKDEObject(JToken j, java.lang.Class t)
-	{
+	private static Object ReadKDEObject(Object j, Type t) throws Exception {
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: object value = Activator.CreateInstance(t) ?? throw new Exception("Failed to create instance of " + t.FullName);
-		Object value = t.newInstance() != null ? t.newInstance() : throw new RuntimeException("Failed to create instance of " + t.FullName);
+		Object value = ReflectionUtility.constructType(t);
+		if (value == null)
+		{
+			throw new RuntimeException("Failed to create instance of " + t.getName());
+		}
 
 		if (value instanceof List)
 		{
 			List list = (List)value;
-			if (j instanceof JArray)
+			if (j instanceof JSONArray)
 			{
-				for (JObject xchild : (JArray)j)
+				for (Object item : (JSONArray)j)
 				{
-					Object child = ReadKDEObject(xchild, t.GenericTypeArguments[0]);
-					list.add(child);
+					if (item instanceof JSONObject)
+					{
+						Type itemType = ReflectionUtility.getItemType(t);
+						if (itemType == null)
+						{
+							throw new Exception("Failed to read generic item type of list.");
+						}
+
+						JSONObject xchild = (JSONObject) item;
+						Object child = ReadKDEObject(xchild, itemType.getClass());
+						list.add(child);
+					}
 				}
 			}
 		}
 		else
 		{
+			JSONObject jobj = null;
+			if (j instanceof JSONObject)
+			{
+				jobj = (JSONObject)j;
+			}
+			else
+			{
+				throw new Exception("expecting j to be JSONObject.");
+			}
+
 			// go through each property...
-			for (PropertyInfo p : t.GetProperties())
+			for (Field p : t.getFields())
 			{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: OpenTraceabilityAttribute? xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
-				OpenTraceabilityAttribute xmlAtt = p.<OpenTraceabilityAttribute>GetCustomAttribute();
+				OpenTraceabilityAttribute xmlAtt = ReflectionUtility.getFieldAnnotation(p, OpenTraceabilityAttribute.class);
 				if (xmlAtt != null)
 				{
-					JToken x = j[xmlAtt.getName()];
+					Object x = jobj.get(xmlAtt.name());
 					if (x != null)
 					{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: OpenTraceabilityObjectAttribute? objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
-						OpenTraceabilityObjectAttribute objAtt = p.<OpenTraceabilityObjectAttribute>GetCustomAttribute();
+						OpenTraceabilityObjectAttribute objAtt = ReflectionUtility.getFieldAnnotation(p, OpenTraceabilityObjectAttribute.class);
 						if (objAtt != null)
 						{
-							Object o = ReadKDEObject(x, p.PropertyType);
+							Object o = ReadKDEObject(x, p.getType());
 						}
 						else if (!TrySetValueType(x.toString(), p, value))
 						{
-							throw new RuntimeException(String.format("Failed to set value type while reading KDE object. property = %1$s, type = %2$s, json = %3$s", p.Name, t.FullName, x.toString()));
+							throw new RuntimeException(String.format("Failed to set value type while reading KDE object. property = %1$s, type = %2$s, json = %3$s", p.getName(), t.getName(), x.toString()));
 						}
 					}
 				}
@@ -257,65 +326,62 @@ public final class EPCISJsonMasterDataReader
 		return value;
 	}
 
-	private static boolean TrySetValueType(String val, PropertyInfo p, Object o)
-	{
-		if (p.PropertyType == String.class)
+	private static boolean TrySetValueType(String val, Field p, Object o) throws IllegalAccessException {
+		if (p.getType() == String.class)
 		{
-			p.SetValue(o, val);
+			p.set(o, val);
 			return true;
 		}
-		else if (p.PropertyType == ArrayList<String>.class)
+		else if (ReflectionUtility.isListOf(p.getType(), String.class))
 		{
-			Object tempVar = p.GetValue(o);
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: List<string>? cur = tempVar instanceof java.util.ArrayList<string> ? (java.util.ArrayList<string>)tempVar : null;
+			Object tempVar = p.get(o);
 			ArrayList<String> cur = tempVar instanceof ArrayList<String> ? (ArrayList<String>)tempVar : null;
 			if (cur == null)
 			{
 				cur = new ArrayList<String>();
-				p.SetValue(o, cur);
+				p.set(o, cur);
 			}
 			cur.add(val);
 			return true;
 		}
-		else if (p.PropertyType == Boolean.class || p.PropertyType == Boolean.class)
+		else if (p.getType() == Boolean.class || p.getType() == Boolean.class)
 		{
 			boolean v = Boolean.parseBoolean(val);
-			p.SetValue(o, v);
+			p.set(o, v);
 			return true;
 		}
-		else if (p.PropertyType == Double.class || p.PropertyType == Double.class)
+		else if (p.getType() == Double.class || p.getType() == Double.class)
 		{
 			double v = Double.parseDouble(val);
-			p.SetValue(o, v);
+			p.set(o, v);
 			return true;
 		}
-		else if (p.PropertyType == Uri.class)
+		else if (p.getType() == URI.class)
 		{
-			Uri v = new Uri(val);
-			p.SetValue(o, v);
+			URI v = URI.create((val);
+			p.set(o, v);
 			return true;
 		}
-		else if (p.PropertyType == ArrayList<LanguageString>.class)
+		else if (ReflectionUtility.isListOf(p.getType(), LanguageString.class))
 		{
 			ArrayList<LanguageString> l = new ArrayList<LanguageString>();
 			LanguageString tempVar2 = new LanguageString();
-			tempVar2.setLanguage("en-US");
-			tempVar2.setValue(val);
+			tempVar2.language = "en-US";
+			tempVar2.value = val;
 			l.add(tempVar2);
-			p.SetValue(o, l);
+			p.set(o, l);
 			return true;
 		}
-		else if (p.PropertyType == Country.class)
+		else if (p.getType() == Country.class)
 		{
-			Country v = Countries.Parse(val);
-			p.SetValue(o, v);
+			Country v = Countries.parse(val);
+			p.set(o, v);
 			return true;
 		}
-		else if (p.PropertyType == PGLN.class)
+		else if (p.getType() == PGLN.class)
 		{
 			PGLN v = new PGLN(val);
-			p.SetValue(o, v);
+			p.set(o, v);
 			return true;
 		}
 		else

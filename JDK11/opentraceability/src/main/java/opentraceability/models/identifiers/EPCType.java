@@ -1,6 +1,5 @@
 package opentraceability.models.identifiers;
 
-import Newtonsoft.Json.*;
 import opentraceability.utility.*;
 import opentraceability.*;
 import java.util.*;

@@ -13,7 +13,7 @@ public abstract class IEventKDE {
     public Type valueType = null;
 
 
-    public abstract void setFromJson(JSONObject json) throws Exception;
+    public abstract void setFromJson(Object json) throws Exception;
 
     public abstract Object getJson() throws Exception;
 

@@ -15,25 +15,25 @@ import java.util.*;
 */
 public final class EPCISJsonMasterDataWriter
 {
-	public static void WriteMasterData(JObject jDoc, EPCISBaseDocument doc)
+	public static void WriteMasterData(JSONObject jDoc, EPCISBaseDocument doc)
 	{
-		if (!doc.getMasterData().isEmpty())
+		if (!doc.masterData.isEmpty())
 		{
-			JObject xEPCISHeader = jDoc["epcisHeader"] instanceof JObject ? (JObject)jDoc["epcisHeader"] : null;
+			JSONObject xEPCISHeader = jDoc["epcisHeader"] instanceof JSONObject ? (JSONObject)jDoc["epcisHeader"] : null;
 			if (xEPCISHeader == null)
 			{
-				jDoc["epcisHeader"] = new JObject(new JProperty("epcisMasterData", new JObject(new JProperty("vocabularyList", new JArray()))));
+				jDoc["epcisHeader"] = new JSONObject(new JProperty("epcisMasterData", new JSONObject(new JProperty("vocabularyList", new JSONArray()))));
 			}
 			else
 			{
-				xEPCISHeader["epcisMasterData"] = new JObject(new JProperty("vocabularyList", new JArray()));
+				xEPCISHeader["epcisMasterData"] = new JSONObject(new JProperty("vocabularyList", new JSONArray()));
 			}
 			Object tempVar = ((jDoc["epcisHeader"]["epcisMasterData"] == null ? null : jDoc["epcisHeader"]["epcisMasterData"]["vocabularyList"]));
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: JArray jVocabList = jDoc["epcisHeader"] == null ? null : tempVar instanceof JArray ? (JArray)tempVar : null ?? throw new Exception("Failed to grab json object epcisHeader.epcisMasterData.vocabularyList");
-			JArray jVocabList = jDoc["epcisHeader"] == null ? null : tempVar instanceof JArray ? (JArray)tempVar : (null != null ? null : throw new RuntimeException("Failed to grab json object epcisHeader.epcisMasterData.vocabularyList"));
+//ORIGINAL LINE: JSONArray jVocabList = jDoc["epcisHeader"] == null ? null : tempVar instanceof JSONArray ? (JSONArray)tempVar : null ?? throw new Exception("Failed to grab json object epcisHeader.epcisMasterData.vocabularyList");
+			JSONArray jVocabList = jDoc["epcisHeader"] == null ? null : tempVar instanceof JSONArray ? (JSONArray)tempVar : (null != null ? null : throw new RuntimeException("Failed to grab json object epcisHeader.epcisMasterData.vocabularyList"));
 
-			for (var mdList : doc.getMasterData().GroupBy(m -> m.EPCISType))
+			for (var mdList : doc.masterData.GroupBy(m -> m.EPCISType))
 			{
 				if (mdList.Key != null)
 				{
@@ -47,18 +47,18 @@ public final class EPCISJsonMasterDataWriter
 		}
 	}
 
-	private static void WriteMasterDataList(ArrayList<IVocabularyElement> data, JArray xVocabList, String type)
+	private static void WriteMasterDataList(ArrayList<IVocabularyElement> data, JSONArray xVocabList, String type)
 	{
 		if (!data.isEmpty())
 		{
-			JObject jVocab = new JObject(new JProperty("type", type), new JProperty("vocabularyElementList", new JArray()));
+			JSONObject jVocab = new JSONObject(new JProperty("type", type), new JProperty("vocabularyElementList", new JSONArray()));
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: JArray xVocabEleList = jVocab["vocabularyElementList"] instanceof JArray ? (JArray)jVocab["vocabularyElementList"] : null ?? throw new Exception("Failed to grab the array vocabularyElementList");
-			JArray xVocabEleList = jVocab["vocabularyElementList"] instanceof JArray ? (JArray)jVocab["vocabularyElementList"] : (null != null ? null : throw new RuntimeException("Failed to grab the array vocabularyElementList"));
+//ORIGINAL LINE: JSONArray xVocabEleList = jVocab["vocabularyElementList"] instanceof JSONArray ? (JSONArray)jVocab["vocabularyElementList"] : null ?? throw new Exception("Failed to grab the array vocabularyElementList");
+			JSONArray xVocabEleList = jVocab["vocabularyElementList"] instanceof JSONArray ? (JSONArray)jVocab["vocabularyElementList"] : (null != null ? null : throw new RuntimeException("Failed to grab the array vocabularyElementList"));
 
 			for (IVocabularyElement md : data)
 			{
-				JObject xMD = WriteMasterDataObject(md);
+				JSONObject xMD = WriteMasterDataObject(md);
 				xVocabEleList.Add(xMD);
 			}
 
@@ -66,12 +66,12 @@ public final class EPCISJsonMasterDataWriter
 		}
 	}
 
-	private static JObject WriteMasterDataObject(IVocabularyElement md)
+	private static JSONObject WriteMasterDataObject(IVocabularyElement md)
 	{
-		JObject jVocabElement = new JObject(new JProperty("id", md.getID() != null ? md.getID() : ""), new JProperty("attributes", new JArray()));
+		JSONObject jVocabElement = new JSONObject(new JProperty("id", md.getID() != null ? md.getID() : ""), new JProperty("attributes", new JSONArray()));
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: JArray jAttributes = jVocabElement["attributes"] instanceof JArray ? (JArray)jVocabElement["attributes"] : null ?? throw new Exception("Failed to grab attributes array.");
-		JArray jAttributes = jVocabElement["attributes"] instanceof JArray ? (JArray)jVocabElement["attributes"] : (null != null ? null : throw new RuntimeException("Failed to grab attributes array."));
+//ORIGINAL LINE: JSONArray jAttributes = jVocabElement["attributes"] instanceof JSONArray ? (JSONArray)jVocabElement["attributes"] : null ?? throw new Exception("Failed to grab attributes array.");
+		JSONArray jAttributes = jVocabElement["attributes"] instanceof JSONArray ? (JSONArray)jVocabElement["attributes"] : (null != null ? null : throw new RuntimeException("Failed to grab attributes array."));
 
 		var mappings = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(md.getClass());
 
@@ -81,8 +81,8 @@ public final class EPCISJsonMasterDataWriter
 			PropertyInfo p = mapping.getProperty();
 
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? o = p.GetValue(md);
-			Object o = p.GetValue(md);
+//ORIGINAL LINE: object? o = p.get(md);
+			Object o = p.get(md);
 			if (o != null)
 			{
 				if (Objects.equals(id, ""))
@@ -93,8 +93,8 @@ public final class EPCISJsonMasterDataWriter
 						String subID = subMapping.getName();
 						PropertyInfo subProperty = subMapping.getProperty();
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? subObj = subProperty.GetValue(o);
-						Object subObj = subProperty.GetValue(o);
+//ORIGINAL LINE: object? subObj = subProperty.get(o);
+						Object subObj = subProperty.get(o);
 						if (subObj != null)
 						{
 							if (subObj.getClass() == ArrayList<LanguageString>.class)
@@ -105,7 +105,7 @@ public final class EPCISJsonMasterDataWriter
 								String str = l.FirstOrDefault() == null ? null : l.FirstOrDefault().Value;
 								if (str != null)
 								{
-									JObject jAttribute = new JObject(new JProperty("id", subID), new JProperty("attribute", str));
+									JSONObject jAttribute = new JSONObject(new JProperty("id", subID), new JProperty("attribute", str));
 									jAttributes.Add(jAttribute);
 								}
 							}
@@ -116,7 +116,7 @@ public final class EPCISJsonMasterDataWriter
 								String str = subObj.toString();
 								if (str != null)
 								{
-									JObject jAttribute = new JObject(new JProperty("id", subID), new JProperty("attribute", str));
+									JSONObject jAttribute = new JSONObject(new JProperty("id", subID), new JProperty("attribute", str));
 									jAttributes.Add(jAttribute);
 								}
 							}
@@ -125,7 +125,7 @@ public final class EPCISJsonMasterDataWriter
 				}
 				else if (p.<OpenTraceabilityObjectAttribute>GetCustomAttribute() != null)
 				{
-					JObject jAttribute = new JObject(new JProperty("id", id), new JProperty("attribute", WriteObject(p.PropertyType, o)));
+					JSONObject jAttribute = new JSONObject(new JProperty("id", id), new JProperty("attribute", WriteObject(p.PropertyType, o)));
 					jAttributes.Add(jAttribute);
 				}
 				else if (p.<OpenTraceabilityArrayAttribute>GetCustomAttribute() != null)
@@ -138,7 +138,7 @@ public final class EPCISJsonMasterDataWriter
 						String str = i.toString();
 						if (str != null)
 						{
-							JObject jAttribute = new JObject(new JProperty("id", id), new JProperty("attribute", str));
+							JSONObject jAttribute = new JSONObject(new JProperty("id", id), new JProperty("attribute", str));
 							jAttributes.Add(jAttribute);
 						}
 					}
@@ -151,7 +151,7 @@ public final class EPCISJsonMasterDataWriter
 					String str = l.FirstOrDefault() == null ? null : l.FirstOrDefault().Value;
 					if (str != null)
 					{
-						JObject jAttribute = new JObject(new JProperty("id", id), new JProperty("attribute", str));
+						JSONObject jAttribute = new JSONObject(new JProperty("id", id), new JProperty("attribute", str));
 						jAttributes.Add(jAttribute);
 					}
 				}
@@ -162,7 +162,7 @@ public final class EPCISJsonMasterDataWriter
 					String str = o.toString();
 					if (str != null)
 					{
-						JObject jAttribute = new JObject(new JProperty("id", id), new JProperty("attribute", str));
+						JSONObject jAttribute = new JSONObject(new JProperty("id", id), new JProperty("attribute", str));
 						jAttributes.Add(jAttribute);
 					}
 				}
@@ -171,10 +171,10 @@ public final class EPCISJsonMasterDataWriter
 
 		for (IMasterDataKDE kde : md.getKDEs())
 		{
-			JToken jKDE = kde.GetGS1WebVocabJson();
+			Object jKDE = kde.GetGS1WebVocabJson();
 			if (jKDE != null)
 			{
-				JObject jAttribute = new JObject(new JProperty("id", kde.getName()), new JProperty("attribute", jKDE));
+				JSONObject jAttribute = new JSONObject(new JProperty("id", kde.getName()), new JProperty("attribute", jKDE));
 				jAttributes.Add(jAttribute);
 			}
 		}
@@ -182,14 +182,14 @@ public final class EPCISJsonMasterDataWriter
 		return jVocabElement;
 	}
 
-	private static JObject WriteObject(java.lang.Class t, Object o)
+	private static JSONObject WriteObject(Type t, Object o)
 	{
-		JObject j = new JObject();
+		JSONObject j = new JSONObject();
 		for (var property : t.GetProperties())
 		{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? value = property.GetValue(o);
-			Object value = property.GetValue(o);
+//ORIGINAL LINE: object? value = property.get(o);
+			Object value = property.get(o);
 			if (value != null)
 			{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:

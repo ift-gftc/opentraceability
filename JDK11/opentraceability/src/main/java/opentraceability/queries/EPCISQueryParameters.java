@@ -202,11 +202,11 @@ public class EPCISQueryParameters {
     }
 
     public String toJSON() {
-        JSONObject jobject = new JSONObject();
-        jobject.put("queryType", this.queryType.toString());
-        jobject.put("query", this.query.toJSON());
+        JSONObject JSONObject = new JSONObject();
+        JSONObject.put("queryType", this.queryType.toString());
+        JSONObject.put("query", this.query.toJSON());
 
-        return jobject.toString();
+        return JSONObject.toString();
     }
 
 }

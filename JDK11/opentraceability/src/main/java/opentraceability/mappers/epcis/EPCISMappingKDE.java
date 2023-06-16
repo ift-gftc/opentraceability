@@ -29,13 +29,13 @@ public class EPCISMappingKDE
 				_mappingKDEs = new HashMap<String, ArrayList<EPCISMappingKDE>>();
 				EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
 				String jsonStr = loader.ReadString("OpenTraceability", "OpenTraceability.Mappers.EPCIS.mappings.json");
-				JObject json = JObject.Parse(jsonStr);
-				JObject jEPCIS = json["EPCIS"] instanceof JObject ? (JObject)json["EPCIS"] : null;
+				JSONObject json = JSONObject.Parse(jsonStr);
+				JSONObject jEPCIS = json["EPCIS"] instanceof JSONObject ? (JSONObject)json["EPCIS"] : null;
 				if (jEPCIS != null)
 				{
 					for (JProperty jprop : jEPCIS.Properties())
 					{
-						JArray jarr = jEPCIS[jprop.Name] instanceof JArray ? (JArray)jEPCIS[jprop.Name] : null;
+						JSONArray jarr = jEPCIS[jprop.Name] instanceof JSONArray ? (JSONArray)jEPCIS[jprop.Name] : null;
 						if (jarr != null)
 						{
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:

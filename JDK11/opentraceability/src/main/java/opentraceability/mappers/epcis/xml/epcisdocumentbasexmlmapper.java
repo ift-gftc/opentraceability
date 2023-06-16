@@ -88,21 +88,21 @@ public class EPCISDocumentBaseXMLMapper
 		return document;
 	}
 
-	public static XDocument WriteXml(EPCISBaseDocument doc, XNamespace epcisNS, String rootEleName)
+	public static XDocument WriteXml(EPCISBaseDocument doc, String epcisNS, String rootEleName)
 	{
-		if (doc.getEPCISVersion() == null)
+		if (doc.epcisVersion == null)
 		{
 			throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
 		}
 
 		// create a new xdocument with all of the namespaces...
-		XDocument xDoc = new XDocument(new XElement(epcisNS + rootEleName, doc.getAttributes().Select(a -> new XAttribute(a.Key, a.Value))));
+		XDocument xDoc = new XDocument(new XElement(epcisNS + rootEleName, doc.attributes.Select(a -> new XAttribute(a.Key, a.Value))));
 		if (xDoc.Root == null)
 		{
 			throw new RuntimeException("Failed to convert EPCIS Document into XML because the XDoc.Root is NULL. This should not happen.");
 		}
 
-		for (var ns : doc.getNamespaces().entrySet())
+		for (var ns : doc.namespaces.entrySet())
 		{
 			if (Objects.equals(ns.getValue(), Constants.CBVMDA_NAMESPACE) || Objects.equals(ns.getValue(), Constants.EPCISQUERY_1_NAMESPACE) || Objects.equals(ns.getValue(), Constants.EPCISQUERY_2_NAMESPACE) || Objects.equals(ns.getValue(), Constants.EPCIS_1_NAMESPACE) || Objects.equals(ns.getValue(), Constants.EPCIS_2_NAMESPACE))
 			{
@@ -115,15 +115,15 @@ public class EPCISDocumentBaseXMLMapper
 		}
 
 		// set the creation date
-		if (doc.getCreationDate() != null)
+		if (doc.creationDate != null)
 		{
-			xDoc.Root.Add(new XAttribute("creationDate", doc.getCreationDate().getValue().toString("o")));
+			xDoc.Root.Add(new XAttribute("creationDate", doc.creationDate.getValue().toString("o")));
 		}
 
 		xDoc.Root.SetAttributeValue(Constants.XMLNS_XNAMESPACE + "epcis", null);
 		xDoc.Root.SetAttributeValue(Constants.XMLNS_XNAMESPACE + "cbvmda", null);
 
-		if (doc.getEPCISVersion() == EPCISVersion.V2)
+		if (doc.epcisVersion == EPCISVersion.V2)
 		{
 			xDoc.Root.Add(new XAttribute("schemaVersion", "2.0"));
 			if (doc instanceof EPCISQueryDocument)
@@ -137,7 +137,7 @@ public class EPCISDocumentBaseXMLMapper
 				xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + "cbvmda", Constants.CBVMDA_NAMESPACE));
 			}
 		}
-		else if (doc.getEPCISVersion() == EPCISVersion.V1)
+		else if (doc.epcisVersion == EPCISVersion.V1)
 		{
 			xDoc.Root.Add(new XAttribute("schemaVersion", "1.2"));
 			if (doc instanceof EPCISQueryDocument)
@@ -153,10 +153,10 @@ public class EPCISDocumentBaseXMLMapper
 		}
 
 		// write the standard business document header
-		if (doc.getHeader() != null)
+		if (doc.header != null)
 		{
 			String xname = ((Constants.SBDH_XNAMESPACE) + "StandardBusinessDocumentHeader");
-			XElement xHeader = OpenTraceabilityXmlMapper.ToXml(xname, doc.getHeader(), doc.getEPCISVersion());
+			XElement xHeader = OpenTraceabilityXmlMapper.ToXml(xname, doc.header, doc.epcisVersion);
 			if (xHeader != null)
 			{
 				xDoc.Root.Add(new XElement("EPCISHeader", xHeader));
@@ -169,7 +169,7 @@ public class EPCISDocumentBaseXMLMapper
 		return xDoc;
 	}
 
-	public static java.lang.Class GetEventTypeFromProfile(XElement xEvent)
+	public static Type GetEventTypeFromProfile(XElement xEvent)
 	{
 		var action;
 //C# TO JAVA CONVERTER TASK: The following method call contained an unresolved 'out' keyword - these cannot be converted using the 'OutObject' helper class unless the method is within the code being modified:
@@ -213,23 +213,23 @@ public class EPCISDocumentBaseXMLMapper
 
 	public static String GetEventXName(IEvent e)
 	{
-		if (e.getEventType() == EventType.ObjectEvent)
+		if (e.eventType == EventType.ObjectEvent)
 		{
 			return "ObjectEvent";
 		}
-		else if (e.getEventType() == EventType.TransformationEvent)
+		else if (e.eventType == EventType.TransformationEvent)
 		{
 			return "TransformationEvent";
 		}
-		else if (e.getEventType() == EventType.TransactionEvent)
+		else if (e.eventType == EventType.TransactionEvent)
 		{
 			return "TransactionEvent";
 		}
-		else if (e.getEventType() == EventType.AggregationEvent)
+		else if (e.eventType == EventType.AggregationEvent)
 		{
 			return "AggregationEvent";
 		}
-		else if (e.getEventType() == EventType.AssociationEvent)
+		else if (e.eventType == EventType.AssociationEvent)
 		{
 			return "AssociationEvent";
 		}

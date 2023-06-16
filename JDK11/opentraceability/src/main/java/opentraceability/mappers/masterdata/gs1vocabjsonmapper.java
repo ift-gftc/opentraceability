@@ -13,7 +13,7 @@ public class GS1VocabJsonMapper implements IMasterDataMapper
 	{
 		if (vocab.getContext() == null)
 		{
-			vocab.setContext(JObject.Parse("{" + "\r\n" + 
+			vocab.setContext(JSONObject.Parse("{" + "\r\n" + 
 "                                    \"cbvmda\": \"urn:epcglobal:cbvmda:mda\"," + "\r\n" + 
 "                                    \"xsd\": \"http://www.w3.org/2001/XMLSchema#\"," + "\r\n" + 
 "                                    \"gs1\": \"http://gs1.org/voc/\"," + "\r\n" + 
@@ -25,10 +25,10 @@ public class GS1VocabJsonMapper implements IMasterDataMapper
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: Dictionary<string, string> namespaces = GetNamespaces(vocab.Context ?? throw new Exception("vocab.Context is null."));
 		HashMap<String, String> namespaces = GetNamespaces(vocab.getContext() != null ? vocab.getContext() : throw new RuntimeException("vocab.Context is null."));
-		System.Nullable<JToken> tempVar = OpenTraceabilityJsonLDMapper.ToJson(vocab, namespaces.Reverse());
+		System.Nullable<Object> tempVar = OpenTraceabilityJsonLDMapper.ToJson(vocab, namespaces.Reverse());
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: JObject json = tempVar instanceof JObject ? (JObject)tempVar : null ?? throw new Exception("Failed to map master data into GS1 web vocab.");
-		JObject json = tempVar instanceof JObject ? (JObject)tempVar : (null != null ? null : throw new RuntimeException("Failed to map master data into GS1 web vocab."));
+//ORIGINAL LINE: JSONObject json = tempVar instanceof JSONObject ? (JSONObject)tempVar : null ?? throw new Exception("Failed to map master data into GS1 web vocab.");
+		JSONObject json = tempVar instanceof JSONObject ? (JSONObject)tempVar : (null != null ? null : throw new RuntimeException("Failed to map master data into GS1 web vocab."));
 		json["@context"] = vocab.getContext();
 		return json.toString();
 	}
@@ -38,9 +38,9 @@ public class GS1VocabJsonMapper implements IMasterDataMapper
 		return Map(T.class, value);
 	}
 
-	public final IVocabularyElement Map(java.lang.Class type, String value)
+	public final IVocabularyElement Map(Type type, String value)
 	{
-		JObject json = JObject.Parse(value);
+		JSONObject json = JSONObject.Parse(value);
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: Dictionary<string, string> namespaces = GetNamespaces(json["@context"] ?? throw new Exception("@context is null on the JSON-LD when deserializing GS1 Web Vocab. " + value));
 		HashMap<String, String> namespaces = GetNamespaces(json["@context"] != null ? json["@context"] : throw new RuntimeException("@context is null on the JSON-LD when deserializing GS1 Web Vocab. " + value));
@@ -49,19 +49,19 @@ public class GS1VocabJsonMapper implements IMasterDataMapper
 		return obj;
 	}
 
-	private HashMap<String, String> GetNamespaces(JToken jContext)
+	private HashMap<String, String> GetNamespaces(Object jContext)
 	{
 		// build our namespaces
 		HashMap<String, String> namespaces = new HashMap<String, String>();
 		if (jContext != null)
 		{
-			if (jContext instanceof JObject)
+			if (jContext instanceof JSONObject)
 			{
-				namespaces = JsonContextHelper.ScrapeNamespaces((JObject)jContext);
+				namespaces = JsonContextHelper.ScrapeNamespaces((JSONObject)jContext);
 			}
-			else if (jContext instanceof JArray)
+			else if (jContext instanceof JSONArray)
 			{
-				for (JObject j : (JArray)jContext)
+				for (JSONObject j : (JSONArray)jContext)
 				{
 					var ns = JsonContextHelper.ScrapeNamespaces(j);
 					for (var kvp : ns.entrySet())

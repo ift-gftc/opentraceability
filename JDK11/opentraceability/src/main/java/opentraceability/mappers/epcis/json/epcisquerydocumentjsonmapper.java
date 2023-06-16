@@ -37,7 +37,7 @@ public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper
 		try
 		{
 //C# TO JAVA CONVERTER TASK: Java has no equivalent to C# deconstruction declarations:
-			(EPCISQueryDocument doc, JObject json) = await EPCISDocumentBaseJsonMapper.<EPCISQueryDocument>ReadJSONAsync(strValue, "EPCISQueryDocument", checkSchema);
+			(EPCISQueryDocument doc, JSONObject json) = await EPCISDocumentBaseJsonMapper.<EPCISQueryDocument>ReadJSONAsync(strValue, "EPCISQueryDocument", checkSchema);
 
 			if (doc.EPCISVersion != EPCISVersion.V2)
 			{
@@ -50,12 +50,12 @@ public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper
 
 			// read the events
 			Object tempVar = ((json["epcisBody"]["queryResults"] == null ? null : ((json["epcisBody"]["queryResults"]["resultsBody"] == null ? null : json["epcisBody"]["queryResults"]["resultsBody"]["eventList"]))));
-			JArray jEventsList = json["epcisBody"] == null ? null : tempVar instanceof JArray ? (JArray)tempVar : null;
+			JSONArray jEventsList = json["epcisBody"] == null ? null : tempVar instanceof JSONArray ? (JSONArray)tempVar : null;
 			if (jEventsList != null)
 			{
-				for (JObject jEvent : jEventsList)
+				for (JSONObject jEvent : jEventsList)
 				{
-					java.lang.Class eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
+					Type eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
 					IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType, doc.Namespaces);
 					doc.Events.Add(e);
 				}
@@ -80,21 +80,21 @@ public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper
 //ORIGINAL LINE: public async Task<string> MapAsync(EPCISQueryDocument doc)
 	public final Task<String> MapAsync(EPCISQueryDocument doc)
 	{
-		if (doc.getEPCISVersion() != EPCISVersion.V2)
+		if (doc.epcisVersion != EPCISVersion.V2)
 		{
 			throw new RuntimeException("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
 		}
 
-		XNamespace epcisNS = (doc.getEPCISVersion() == EPCISVersion.V2) ? Constants.EPCISQUERY_2_NAMESPACE : Constants.EPCISQUERY_1_NAMESPACE;
+		String epcisNS = (doc.epcisVersion == EPCISVersion.V2) ? Constants.EPCISQUERY_2_NAMESPACE : Constants.EPCISQUERY_1_NAMESPACE;
 
-		var namespacesReversed = doc.getNamespaces().Reverse();
+		var namespacesReversed = doc.namespaces.Reverse();
 
 		// write the events
-		JArray jEventsList = new JArray();
+		JSONArray jEventsList = new JSONArray();
 		for (IEvent e : doc.getEvents())
 		{
-			System.Nullable<JToken> tempVar = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed);
-			JObject jEvent = tempVar instanceof JObject ? (JObject)tempVar : null;
+			System.Nullable<Object> tempVar = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed);
+			JSONObject jEvent = tempVar instanceof JSONObject ? (JSONObject)tempVar : null;
 			if (jEvent != null)
 			{
 				EPCISDocumentBaseJsonMapper.PostWriteEventCleanUp(jEvent);
@@ -103,11 +103,11 @@ public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper
 		}
 
 //C# TO JAVA CONVERTER TASK: There is no equivalent to 'await' in Java:
-		JObject json = await EPCISDocumentBaseJsonMapper.WriteJsonAsync(doc, epcisNS, "EPCISQueryDocument");
+		JSONObject json = await EPCISDocumentBaseJsonMapper.WriteJsonAsync(doc, epcisNS, "EPCISQueryDocument");
 
-		JObject jEPCISBody = new JObject();
-		JObject jQueryResults = new JObject();
-		JObject jResultsBody = new JObject();
+		JSONObject jEPCISBody = new JSONObject();
+		JSONObject jQueryResults = new JSONObject();
+		JSONObject jResultsBody = new JSONObject();
 
 		jQueryResults["queryName"] = doc.getQueryName();
 		jQueryResults["subscriptionID"] = doc.getSubscriptionID();
@@ -118,7 +118,7 @@ public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper
 		json["epcisBody"] = jEPCISBody;
 
 		// conform the JSON-LD to the compacted version with CURIE's that EPCIS 2.0 likes
-		EPCISDocumentBaseJsonMapper.ConformEPCISJsonLD(json, doc.getNamespaces());
+		EPCISDocumentBaseJsonMapper.ConformEPCISJsonLD(json, doc.namespaces);
 
 		// validate the JSON-LD schema
 //C# TO JAVA CONVERTER TASK: There is no equivalent to 'await' in Java:

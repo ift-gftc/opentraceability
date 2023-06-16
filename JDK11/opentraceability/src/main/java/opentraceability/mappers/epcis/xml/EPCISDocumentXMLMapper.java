@@ -18,12 +18,12 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 			EPCISDocument doc = EPCISDocumentBaseXMLMapper.<EPCISDocument>ReadXml(strValue, tempOut_xDoc);
 		xDoc = tempOut_xDoc.outArgValue;
 
-			if (doc.getEPCISVersion() == null)
+			if (doc.epcisVersion == null)
 			{
 				throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
 			}
 
-			EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.getEPCISVersion());
+			EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.epcisVersion);
 
 			// read the events
 			XElement xEventList = xDoc.Root == null ? null : ((xDoc.Root.Element("EPCISBody") == null ? null : xDoc.Root.Element("EPCISBody").Element("EventList")));
@@ -31,8 +31,8 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 			{
 				for (XElement xEvent : xEventList.Elements())
 				{
-					java.lang.Class eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(xEvent);
-					IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(xEvent, eventType, doc.getEPCISVersion());
+					Type eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(xEvent);
+					IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(xEvent, eventType, doc.epcisVersion);
 					doc.getEvents().add(e);
 				}
 			}
@@ -49,12 +49,12 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 
 	public final String Map(EPCISDocument doc)
 	{
-		if (doc.getEPCISVersion() == null)
+		if (doc.epcisVersion == null)
 		{
 			throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
 		}
 
-		XNamespace epcisNS = (doc.getEPCISVersion() == EPCISVersion.V2) ? Constants.EPCIS_2_NAMESPACE : Constants.EPCIS_1_NAMESPACE;
+		String epcisNS = (doc.epcisVersion == EPCISVersion.V2) ? Constants.EPCIS_2_NAMESPACE : Constants.EPCIS_1_NAMESPACE;
 
 		XDocument xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, epcisNS, "EPCISDocument");
 		if (xDoc.Root == null)
@@ -70,8 +70,8 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 		for (IEvent e : doc.getEvents())
 		{
 			String xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
-			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.getEPCISVersion());
-			if (e.getEventType() == EventType.TransformationEvent && doc.getEPCISVersion() == EPCISVersion.V1)
+			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.epcisVersion);
+			if (e.eventType == EventType.TransformationEvent && doc.epcisVersion == EPCISVersion.V1)
 			{
 				xEvent = new XElement("extension", xEvent);
 			}
@@ -81,7 +81,7 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 			}
 		}
 
-		EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.getEPCISVersion());
+		EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.epcisVersion);
 
 		return xDoc.toString();
 	}

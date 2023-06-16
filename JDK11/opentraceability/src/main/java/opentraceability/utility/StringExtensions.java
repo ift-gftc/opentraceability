@@ -23,7 +23,40 @@ public class StringExtensions {
         return DIGITS_ONLY_REGEX.matcher(str).matches();
     }
 
-    public static boolean isURICompatibleChars(String str) {
+    public static String Last(String[] strArray) throws Exception
+    {
+        if (strArray.length == 0)
+        {
+            throw new Exception("Array is empty when calling Last.");
+        }
+        else {
+            return strArray[strArray.length - 1];
+        }
+    }
+
+    public static String First(String[] strArray) throws Exception
+    {
+        if (strArray.length == 0)
+        {
+            throw new Exception("Array is empty when calling Last.");
+        }
+        else {
+            return strArray[0];
+        }
+    }
+
+    public static String LastOrDefault(String[] strArray)
+    {
+        if (strArray.length == 0)
+        {
+            return null;
+        }
+        else {
+            return strArray[strArray.length - 1];
+        }
+    }
+
+    public static boolean isURI(String str) {
         try {
             new URI(str);
         } catch (URISyntaxException e) {

@@ -70,14 +70,14 @@ public final class EPCISXmlMasterDataReader
 
 		// read the object
 		ReadMasterDataObject(tradeitem, xTradeitem);
-		doc.getMasterData().add(tradeitem);
+		doc.masterData.add(tradeitem);
 	}
 
 	private static void ReadLocation(EPCISBaseDocument doc, XElement xLocation, String type)
 	{
 		// read the GLN from the id
 		String id = xLocation.Attribute("id") == null ? null : ((xLocation.Attribute("id").Value) != null ? xLocation.Attribute("id").Value : "");
-		java.lang.Class t = Setup.MasterDataTypes.get(type);
+		Type t = Setup.MasterDataTypes.get(type);
 		if (!(t.newInstance() instanceof Location))
 		{
 		Location loc = (Location)t.newInstance();
@@ -90,7 +90,7 @@ public final class EPCISXmlMasterDataReader
 
 			// read the object
 			ReadMasterDataObject(loc, xLocation);
-			doc.getMasterData().add(loc);
+			doc.masterData.add(loc);
 		}
 	}
 
@@ -104,7 +104,7 @@ public final class EPCISXmlMasterDataReader
 
 		// read the object
 		ReadMasterDataObject(tp, xTradingParty);
-		doc.getMasterData().add(tp);
+		doc.masterData.add(tp);
 	}
 
 	private static void ReadUnknown(EPCISBaseDocument doc, XElement xVocabElement, String type)
@@ -117,7 +117,7 @@ public final class EPCISXmlMasterDataReader
 
 		// read the object
 		ReadMasterDataObject(ele, xVocabElement);
-		doc.getMasterData().add(ele);
+		doc.masterData.add(ele);
 	}
 
 
@@ -205,7 +205,7 @@ public final class EPCISXmlMasterDataReader
 		}
 	}
 
-	private static Object ReadKDEObject(XElement xeAtt, java.lang.Class t)
+	private static Object ReadKDEObject(XElement xeAtt, Type t)
 	{
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: object value = Activator.CreateInstance(t) ?? throw new Exception("Failed to create instance of " + t.FullName);
@@ -261,7 +261,7 @@ public final class EPCISXmlMasterDataReader
 		}
 		else if (p.PropertyType == ArrayList<String>.class)
 		{
-			Object tempVar = p.GetValue(o);
+			Object tempVar = p.get(o);
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: List<string>? cur = tempVar instanceof java.util.ArrayList<string> ? (java.util.ArrayList<string>)tempVar : null;
 			ArrayList<String> cur = tempVar instanceof ArrayList<String> ? (ArrayList<String>)tempVar : null;
