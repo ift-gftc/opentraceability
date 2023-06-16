@@ -1,237 +1,428 @@
 package opentraceability.models.identifiers;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import opentraceability.OTLogger;
-import opentraceability.utility.GS1Util;
+import Newtonsoft.Json.*;
+import opentraceability.utility.*;
+import opentraceability.*;
+import java.util.*;
 
-// [DataContract]
-// [JsonConverter(typeof(GLNConverter))]
-public class GLN {
+/** 
+ Global Location Number - used for identifying SCE's in Full Chain Traceability.
+*/
+//C# TO JAVA CONVERTER TASK: Java annotations will not correspond to .NET attributes:
+//ORIGINAL LINE: [DataContract][JsonConverter(typeof(GLNConverter))] public class GLN : IEquatable<GLN>, IComparable<GLN>
+public class GLN implements IEquatable<GLN>, java.lang.Comparable<GLN>
+{
+	private String _glnStr = "";
 
-    String _glnStr = "";
+	public GLN()
+	{
+	}
 
-    public GLN(){
-    }
+	public GLN(String glnStr)
+	{
+		try
+		{
+			String error = GLN.DetectGLNIssue(glnStr);
+			if (!(error == null || error.isBlank()))
+			{
+				throw new RuntimeException(String.format("The GLN %1$s is invalid. %2$s", glnStr, error));
+			}
+			this._glnStr = glnStr;
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
 
-    public GLN(String glnStr) {
-        try {
-            String error = GLN.DetectGLNIssue(glnStr);
-            if (error != null && !error.trim().equals("")) {
-                throw new Exception("The GLN " + glnStr + " is invalid. " + error);
-            }
-            this._glnStr = glnStr;
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
+	public final boolean IsGS1PGLN()
+	{
+		return (_glnStr.contains(":id:sgln:"));
+	}
 
-    }
+	public final String ToDigitalLinkURL()
+	{
+		try
+		{
+			if (IsGS1PGLN())
+			{
+				String[] gtinParts = _glnStr.split("[:]", -1).Last().split("[.]", -1);
+				String pgln = gtinParts[0] + gtinParts[1];
+				pgln = pgln + GS1Util.CalculateGLN13CheckSum(pgln);
+				return String.format("414/%1$s", pgln);
+			}
+			else
+			{
+				return String.format("414/%1$s", this._glnStr);
+			}
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
 
-    public String ToDigitalLinkURL() {
-        try {
-            if (IsGS1PGLN()) {
-                String[] gtinParts = _glnStr.split(":")[1].split("\\.");
-                String pgln = gtinParts[0] + gtinParts[1] + GS1Util.CalculateGLN13CheckSum(gtinParts[0] + gtinParts[1]);
-                return "414/" + pgln;
-            } else {
-                return "414/" + _glnStr;
-            }
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
-    }
+	public static boolean IsGLN(String glnStr)
+	{
+		try
+		{
+			if (DetectGLNIssue(glnStr) == null)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
 
-    public Boolean IsGS1PGLN() {
-        return _glnStr.contains(":id:sgln:");
-    }
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: public static string? DetectGLNIssue(string glnStr)
+	public static String DetectGLNIssue(String glnStr)
+	{
+		try
+		{
+			if (tangible.StringHelper.isNullOrEmpty(glnStr))
+			{
+				return ("The GLN is NULL or EMPTY.");
+			}
+			else if (StringExtensions.IsURICompatibleChars(glnStr) == false)
+			{
+				return ("The GLN contains non-compatiable characters for a URI.");
+			}
+			else if (glnStr.contains(" "))
+			{
+				return ("GLN cannot contain spaces.");
+			}
+			else if (glnStr.length() == 13 && StringExtensions.IsOnlyDigits(glnStr))
+			{
+				// we don't care about validating the company prefix anymore
+				// string cp = GCPLookUp.DetermineCompanyPrefix(glnStr);
+				// if (string.IsNullOrWhiteSpace(cp))
+				// {
+				//     return "Invalid Company Prefix.";
+				// }
 
-    public Object Clone() {
-        GLN gln = new GLN(toString());
-        return gln;
-    }
+				// validate the checksum
+				char checksum = GS1Util.CalculateGLN13CheckSum(glnStr);
+				if (checksum != glnStr.toCharArray().Last())
+				{
+					return String.format("The check sum did not calculate correctly. The expected check sum was %1$s. " + "Please make sure to validate that you typed the GLN correctly. It's possible the check sum " + "was typed correctly but another number was entered wrong.", checksum);
+				}
 
-    public Boolean equals(GLN obj1, GLN obj2) {
-        try {
-            if (obj1 == null && obj2 == null) {
-                return true;
-            }
+				return (null);
+			}
+			else if (glnStr.startsWith("urn:") && glnStr.contains(":location:loc:"))
+			{
+				return (null);
+			}
+			else if (glnStr.startsWith("urn:") && glnStr.contains(":location:extension:loc:"))
+			{
+				return (null);
+			}
+			else if (glnStr.contains(":id:sgln:"))
+			{
+				String[] pieces = glnStr.split("[:]", -1).Last().split("[.]", -1);
+				if (pieces.length < 2)
+				{
+					throw new RuntimeException(String.format("The GLN %1$s is not valid.", glnStr));
+				}
 
-            if (obj1 == null || obj2 == null) {
-                return false;
-            }
+				String lastPiece = pieces[0] + pieces[1];
+				if (!StringExtensions.IsOnlyDigits(lastPiece))
+				{
+					return ("This is supposed to be a GS1 GLN based on the System Prefix and " + "Data Type Prefix. That means the Company Prefix and Serial Numbers " + "should only be digits. Found non-digit characters in the Company Prefix " + "or Serial Number.");
+				}
+				else if (lastPiece.length() != 12)
+				{
+					return ("This is supposed to be a GS1 GLN based on the System Prefix and Data Type " + "Prefix. That means the Company Prefix and Serial Numbers should contain a maximum " + "total of 12 digits between the two. The total number of digits when combined " + "is " + lastPiece.length() + ".");
+				}
 
-            return obj1.equals(obj2);
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
-    }
+				return (null);
+			}
+			else
+			{
+				return ("The GLN is not in a valid EPCIS URI format or in GS1 GLN-13 format. Value = " + glnStr);
+			}
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
 
-    public Boolean notEquals(GLN obj1, GLN obj2) {
-        try {
-            if (obj1 == null && obj2 == null) {
-                return false;
-            }
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: public static bool TryParse(string glnStr, out GLN? gln, out System.Nullable<string> error)
+	public static boolean TryParse(String glnStr, tangible.OutObject<GLN> gln, tangible.OutObject<String> error)
+	{
+		try
+		{
+			error.outArgValue = GLN.DetectGLNIssue(glnStr);
+			if ((error.outArgValue == null || error.outArgValue.isBlank()))
+			{
+				gln.outArgValue = new GLN(glnStr);
+				return true;
+			}
+			else
+			{
+				gln.outArgValue = null;
+				return false;
+			}
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
 
-            if (obj1 == null || obj2 == null) {
-                return true;
-            }
+	public final Object Clone()
+	{
+		GLN gln = new GLN(this.toString());
+		return gln;
+	}
 
-            return !obj1.equals(obj2);
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
-    }
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+		///#region Overrides
 
-    @Override
-    public boolean equals(Object obj) {
-        try {
-            if (obj == null) {
-                return false;
-            }
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: public static bool operator ==(GLN? obj1, GLN? obj2)
+	public static boolean opEquals(GLN obj1, GLN obj2)
+	{
+		try
+		{
+			if (null == obj1 && null == obj2)
+			{
+				return true;
+			}
 
-            if (this == obj) {
-                return true;
-            }
+			if (null == obj1 && null == obj2)
+			{
+				return false;
+			}
 
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
+			if (null == obj1 && null != obj2)
+			{
+				return false;
+			}
 
-            return isEquals((GLN) obj);
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
-    }
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+///#pragma warning disable CS8602 // Dereference of a possibly null reference.
+			return obj1.equals(obj2);
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+///#pragma warning restore CS8602 // Dereference of a possibly null reference.
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
 
-    @Override
-    public int hashCode() {
-        try {
-            int hash = toString().hashCode();
-            return hash;
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
-    }
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: public static bool operator !=(GLN? obj1, GLN? obj2)
+	public static boolean opNotEquals(GLN obj1, GLN obj2)
+	{
+		try
+		{
+			if (null == obj1 && null == obj2)
+			{
+				return false;
+			}
 
-    @Override
-    public String toString() {
-        try {
-            return _glnStr.toLowerCase();
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
-    }
+			if (null != obj1 && null == obj2)
+			{
+				return true;
+			}
 
-    public Boolean equals(GLN gln) {
-        try {
-            if (gln == null) {
-                return false;
-            }
+			if (null == obj1 && null != obj2)
+			{
+				return true;
+			}
 
-            if (this == gln) {
-                return true;
-            }
+			if (obj1 == null)
+			{
+				return true;
+			}
 
-            return toString().equals(gln.toString());
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
-    }
+			return !obj1.equals(obj2);
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
 
-    public Boolean isEquals(GLN gln) {
-        try {
-            if (gln == null) {
-                return false;
-            }
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: public override bool Equals(object? obj)
+	@Override
+	public boolean equals(Object obj)
+	{
+		try
+		{
+			if (null == obj)
+			{
+				return false;
+			}
 
-            return toString().toLowerCase().equals(gln.toString().toLowerCase());
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
-    }
+			if (this == obj)
+			{
+				return true;
+			}
 
-    public int compareTo(GLN gln) {
-        try {
-            if (gln == null) {
-                throw new NullPointerException("gln");
-            }
+			if (obj.getClass() != this.getClass())
+			{
+				return false;
+			}
 
-            long myInt64Hash = toString().hashCode();
-            long otherInt64Hash = gln.toString().hashCode();
+			return this.IsEquals((GLN)obj);
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
 
-            if (myInt64Hash > otherInt64Hash) {
-                return -1;
-            } else if (myInt64Hash < otherInt64Hash) {
-                return 1;
-            } else {
-                return 0;
-            }
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
-    }
+	@Override
+	public int hashCode()
+	{
+		try
+		{
+			int hash = ObjectExtensions.GetInt32HashCode(this.toString());
+			return hash;
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
 
-    public static String DetectGLNIssue(String gln) throws Exception {
-        if (gln == null || gln.isEmpty()) {
-            return "The GLN is NULL or EMPTY.";
-        } else if (!IsURICompatibleChars(gln)) {
-            return "The GLN contains non-compatiable characters for a URI.";
-        } else if (gln.contains(" ")) {
-            return "GLN cannot contain spaces.";
-        } else if (gln.length() == 13 && IsOnlyDigits(gln)) {
-            String checksum = GS1Util.CalculateGLN13CheckSum(gln);
-            if (checksum.charAt(0) != gln.charAt(12)) {
-                return "The check sum did not calculate correctly. The expected check sum was " + checksum
-                        + ".  Please make sure to validate that you typed the GLN correctly. It's possible the check sum "
-                        + "was typed correctly but another number was entered wrong.";
-            }
-            return null;
-        } else if (gln.startsWith("urn:") && gln.contains(":location:loc:")) {
-            return null;
-        } else if (gln.startsWith("urn:") && gln.contains(":location:extension:loc:")) {
-            return null;
-        } else if (gln.contains(":id:sgln:")) {
-            String[] pieces = gln.split(":")[gln.split(":").length - 1].split("\\.");
-            if (pieces.length < 2) {
-                throw new Exception("The GLN " + gln + " is not valid.");
-            }
-            String lastPiece = pieces[0] + pieces[1];
-            if (!IsOnlyDigits(lastPiece)) {
-                return "This is supposed to be a GS1 GLN based on the System Prefix and "
-                        + "Data Type Prefix. That means the Company Prefix and Serial Numbers "
-                        + "should only be digits. Found non-digit characters in the Company Prefix "
-                        + "or Serial Number.";
-            } else if (lastPiece.length() != 12) {
-                return "This is supposed to be a GS1 GLN based on the System Prefix and Data Type "
-                        + "Prefix. That means the Company Prefix and Serial Numbers should contain a maximum "
-                        + "total of 12 digits between the two. The total number of digits when combined "
-                        + "is " + lastPiece.length() + ".";
-            }
-            return null;
-        } else {
-            return "The GLN is not in a valid EPCIS URI format or in GS1 GLN-13 format. Value = " + gln;
-        }
-    }
+	@Override
+	public String toString()
+	{
+		try
+		{
+			return _glnStr.toLowerCase();
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
 
-    public static Boolean isGLN(String gln) {
-        try {
-            String error = DetectGLNIssue(gln);
-            return error == null || error.trim().equals("");
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
-    }
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+		///#endregion Overrides
 
-    public static Boolean IsURICompatibleChars(String input) {
-        String reservedChars = ":
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+		///#region IEquatable<GLN>
+
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: public bool Equals(GLN? gln)
+	public final boolean equals(GLN gln)
+	{
+		try
+		{
+			if (null == gln)
+			{
+				return false;
+			}
+
+			if (this == gln)
+			{
+				return true;
+			}
+
+			if (gln == null)
+			{
+				return false;
+			}
+			else
+			{
+				return Objects.equals(this.toString(), gln.toString());
+			}
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
+
+	private boolean IsEquals(GLN gln)
+	{
+		try
+		{
+			if (null == gln)
+			{
+				return false;
+			}
+
+			if (Objects.equals(this.toString().toLowerCase(), gln.toString().toLowerCase()))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
+
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+		///#endregion IEquatable<GLN>
+
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+		///#region IComparable
+
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: public int CompareTo(GLN? gln)
+	public final int compareTo(GLN gln)
+	{
+		try
+		{
+			if (null == gln)
+			{
+				throw new NullPointerException("gln");
+			}
+
+			long myInt64Hash = ObjectExtensions.GetInt64HashCode(this.toString());
+			long otherInt64Hash = ObjectExtensions.GetInt64HashCode(gln.toString());
+
+			if (myInt64Hash > otherInt64Hash)
+			{
+				return -1;
+			}
+			if (myInt64Hash == otherInt64Hash)
+			{
+				return 0;
+			}
+			return 1;
+		}
+		catch (RuntimeException Ex)
+		{
+			OTLogger.Error(Ex);
+			throw Ex;
+		}
+	}
+
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+		///#endregion IComparable
+}

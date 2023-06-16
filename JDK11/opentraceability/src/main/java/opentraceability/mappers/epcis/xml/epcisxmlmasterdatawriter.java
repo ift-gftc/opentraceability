@@ -1,185 +1,220 @@
 package opentraceability.mappers.epcis.xml;
 
-import opentraceability.interfaces.IMasterDataKDE;
-import opentraceability.interfaces.IVocabularyElement;
-import opentraceability.mappers.OTMappingTypeInformation;
-import opentraceability.models.common.LanguageString;
-import opentraceability.models.events.EPCISBaseDocument;
-import opentraceability.utility.*;
+import Newtonsoft.Json.Linq.*;
+import opentraceability.interfaces.*;
+import opentraceability.models.common.*;
+import opentraceability.models.events.*;
+import opentraceability.models.identifiers.*;
+import opentraceability.models.masterdata.*;
 import opentraceability.utility.attributes.*;
-import org.w3c.dom.Element;
-import kotlin.reflect.KClass;
-import kotlin.reflect.full.KTypeProjection;
-import kotlin.reflect.full.KotlinReflectionInternalError;
-import kotlin.reflect.full.KotlinType;
-import kotlin.reflect.full.starProjectedType;
-import kotlin.reflect.typeOf;
+import opentraceability.*;
+import opentraceability.mappers.*;
+import opentraceability.mappers.epcis.*;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
+public class EPCISXmlMasterDataWriter
+{
+	public static void WriteMasterData(XElement xDocument, EPCISBaseDocument doc)
+	{
+		if (!doc.getMasterData().isEmpty())
+		{
+			XElement xEPCISHeader = xDocument.Element("EPCISHeader");
+			if (xEPCISHeader == null)
+			{
+				xDocument.Add(new XElement("EPCISHeader", new XElement("extension", new XElement("EPCISMasterData", new XElement("VocabularyList")))));
+			}
+			else
+			{
+				xEPCISHeader.Add(new XElement("extension", new XElement("EPCISMasterData", new XElement("VocabularyList"))));
+			}
+//C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
+//ORIGINAL LINE: XElement xVocabList = xDocument.XPathSelectElement("EPCISHeader/extension/EPCISMasterData/VocabularyList") ?? throw new Exception("Failed to grab the element EPCISHeader/extension/EPCISMasterData/VocabularyList.");
+			XElement xVocabList = xDocument.XPathSelectElement("EPCISHeader/extension/EPCISMasterData/VocabularyList") != null ? xDocument.XPathSelectElement("EPCISHeader/extension/EPCISMasterData/VocabularyList") : throw new RuntimeException("Failed to grab the element EPCISHeader/extension/EPCISMasterData/VocabularyList.");
 
-public class EPCISXmlMasterDataWriter {
-    public static void WriteMasterData(Element xDocument, EPCISBaseDocument doc) throws Exception {
-        if (doc.masterData.size() > 0) {
-            Element xEPCISHeader = xDocument.element("EPCISHeader");
-            if (xEPCISHeader == null) {
-                xDocument.addElement("EPCISHeader")
-                        .addElement("extension")
-                        .addElement("EPCISMasterData")
-                        .addElement("VocabularyList");
-            } else {
-                xEPCISHeader.addElement("extension")
-                        .addElement("EPCISMasterData")
-                        .addElement("VocabularyList");
-            }
+			for (var mdList : doc.getMasterData().GroupBy(m -> m.EPCISType))
+			{
+				if (mdList.Key != null)
+				{
+					WriteMasterDataList(mdList.ToList(), xVocabList, mdList.Key);
+				}
+				else
+				{
+					throw new RuntimeException("There are master data vocabulary elements where the Type is NULL.");
+				}
+			}
+		}
+	}
 
-            Element xVocabList = xDocument.getFirstElementByXPath("EPCISHeader/extension/EPCISMasterData/VocabularyList");
-            if (xVocabList == null) {
-                throw new Exception("Failed to grab the element EPCISHeader/extension/EPCISMasterData/VocabularyList");
-            }
+	private static void WriteMasterDataList(ArrayList<IVocabularyElement> data, XElement xVocabList, String type)
+	{
+		if (!data.isEmpty())
+		{
+			XElement xVocab = new XElement("Vocabulary", new XAttribute("type", type), new XElement("VocabularyElementList"));
+//C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
+//ORIGINAL LINE: XElement xVocabEleList = xVocab.Element("VocabularyElementList") ?? throw new Exception("Failed to grab the element VocabularyElementList");
+			XElement xVocabEleList = xVocab.Element("VocabularyElementList") != null ? xVocab.Element("VocabularyElementList") : throw new RuntimeException("Failed to grab the element VocabularyElementList");
 
-            for (IVocabularyElement v : doc.masterData.groupBy(IVocabularyElement::getEpcisType)
-            .values()) {
-                if (v.getEpcisType() != null) {
-                    WriteMasterDataList(v, xVocabList, v.getEpcisType());
-                } else {
-                    throw new Exception("There are master data vocabulary elements where the Type is NULL.");
-                }
-            }
-        }
-    }
+			for (IVocabularyElement md : data)
+			{
+				XElement xMD = WriteMasterDataObject(md);
+				xVocabEleList.Add(xMD);
+			}
 
-    public static void WriteMasterDataList(List<IVocabularyElement> data, Element xVocabList, String type) throws Exception {
-        if (data.size() > 0) {
-            Element xVocab = createXmlElement(("Vocabulary"));
-            xVocab.setAttribute("type", type);
-            Element xVocabEleList = xVocab.addElement("VocabularyElementList");
+			xVocabList.Add(xVocab);
+		}
+	}
 
-            for (IVocabularyElement md : data) {
-                Element xMD = WriteMasterDataObject(md);
-                xVocabEleList.addElement(xMD);
-            }
+	private static XElement WriteMasterDataObject(IVocabularyElement md)
+	{
+		XElement xVocabEle = new XElement("VocabularyElement");
+		xVocabEle.Add(new XAttribute("id", md.getID() != null ? md.getID() : ""));
 
-            xVocabList.addElement(xVocab);
-        }
-    }
+		var mappings = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(md.getClass());
 
-    public static Element WriteMasterDataObject(IVocabularyElement md) throws Exception {
-        Element xVocabEle = OTXmlUtil.createXmlElement("VocabularyElement");
-        xVocabEle.setAttribute("id", md.id);
+		for (var mapping : mappings.getProperties())
+		{
+			String id = mapping.getName();
+			PropertyInfo p = mapping.getProperty();
 
-        List<OTMappingTypeInformation> mappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md.getClass());
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: object? o = p.GetValue(md);
+			Object o = p.GetValue(md);
+			if (o != null)
+			{
+				if (Objects.equals(id, ""))
+				{
+					var subMappings = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(o.getClass());
+					for (var subMapping : subMappings.getProperties())
+					{
+						String subID = subMapping.getName();
+						PropertyInfo subProperty = subMapping.getProperty();
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: object? subObj = subProperty.GetValue(o);
+						Object subObj = subProperty.GetValue(o);
+						if (subObj != null)
+						{
+							if (subObj.getClass() == ArrayList<LanguageString>.class)
+							{
+								ArrayList<LanguageString> l = (ArrayList<LanguageString>)subObj;
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: string? str = l.FirstOrDefault() == null ? null : l.FirstOrDefault().Value;
+								String str = l.FirstOrDefault() == null ? null : l.FirstOrDefault().Value;
+								if (str != null)
+								{
+									XElement xAtt = new XElement("attribute", new XAttribute("id", subID));
+									xAtt.Value = str;
+									xVocabEle.Add(xAtt);
+								}
+							}
+							else
+							{
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: string? str = subObj.ToString();
+								String str = subObj.toString();
+								if (str != null)
+								{
+									XElement xAtt = new XElement("attribute", new XAttribute("id", subID));
+									xAtt.Value = str;
+									xVocabEle.Add(xAtt);
+								}
+							}
+						}
+					}
+				}
+				else if (p.<OpenTraceabilityObjectAttribute>GetCustomAttribute() != null)
+				{
+					XElement xAtt = new XElement("attribute", new XAttribute("id", id));
+					WriteObject(xAtt, p.PropertyType, o);
+					xVocabEle.Add(xAtt);
+				}
+				else if (p.<OpenTraceabilityArrayAttribute>GetCustomAttribute() != null)
+				{
+					List l = (List)o;
+					for (var i : l)
+					{
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: string? str = i.ToString();
+						String str = i.toString();
+						if (str != null)
+						{
+							XElement xAtt = new XElement("attribute", new XAttribute("id", id));
+							xAtt.Value = str;
+							xVocabEle.Add(xAtt);
+						}
+					}
+				}
+				else if (o.getClass() == ArrayList<LanguageString>.class)
+				{
+					ArrayList<LanguageString> l = (ArrayList<LanguageString>)o;
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: string? str = l.FirstOrDefault() == null ? null : l.FirstOrDefault().Value;
+					String str = l.FirstOrDefault() == null ? null : l.FirstOrDefault().Value;
+					if (str != null)
+					{
+						XElement xAtt = new XElement("attribute", new XAttribute("id", id));
+						xAtt.Value = str;
+						xVocabEle.Add(xAtt);
+					}
+				}
+				else
+				{
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: string? str = o.ToString();
+					String str = o.toString();
+					if (str != null)
+					{
+						XElement xAtt = new XElement("attribute", new XAttribute("id", id));
+						xAtt.Value = str;
+						xVocabEle.Add(xAtt);
+					}
+				}
+			}
+		}
 
-        for (OTMappingTypeInformation.PropertyMapping mapping : mappings) {
-            String id = mapping.Name;
-            kotlin.reflect.KProperty1 p = mapping.Property;
+		for (IMasterDataKDE kde : md.getKDEs())
+		{
+			XElement xKDE = kde.GetEPCISXml();
+			if (xKDE != null)
+			{
+				xVocabEle.Add(xKDE);
+			}
+		}
 
-            Object o = p.get(md);
-            if (o != null) {
-                if (id.isEmpty()) {
-                    List<OTMappingTypeInformation.PropertyMapping> subMappings = null;
-                    try {
-                        subMappings = OTMappingTypeInformation.
-                                getMasterDataXmlTypeInfo(o.getClass()
-                                .asSubclass(Object.class)
-                                .kotlin
-                                .starProjectedType);
-                    } catch (KotlinReflectionInternalError e) {
-                        subMappings = OTMappingTypeInformation
-                                .getMasterDataXmlTypeInfo(o.getClass());
-                    }
-                    for (OTMappingTypeInformation.PropertyMapping subMapping : subMappings) {
-                        String subID = subMapping.Name;
-                        kotlin.reflect.KProperty1<?> subProperty = subMapping.Property;
-                        Object subObj = subProperty.get(o);
-                        if (subObj != null) {
-                            if (subObj.getClass().asSubclass(Object.class)
-                                    .kotlin.starProjectedType == typeOf(ArrayList.class,
-                                    new KTypeProjection(null, typeOf(LanguageString.class)))) {
-                                ArrayList<LanguageString> l = (ArrayList<LanguageString>) subObj;
-                                
-                                String str = l.isEmpty() ? null : l.get(0).value;
+		return xVocabEle;
+	}
 
-                                if (str != null) {
-                                    Element xAtt = xVocabEle.addElement("attribute");
-                                    xAtt.nodeValue = str;
-                                    xAtt.setAttribute("id", subID);
-                                }
-                            } else {
-                                String str = subObj.toString();
-                                if (!str.isEmpty()) {
-                                    Element xAtt = xVocabEle.addElement("attribute");
-                                    xAtt.nodeValue = str;
-                                    xAtt.setAttribute("id", subID);
-                                }
-                            }
-                        }
-                    }
-                } else if (p.isAnnotationPresent(OpenTraceabilityObjectAttribute.class).size() > 0) {
-                    Element xAtt = xVocabEle.addElement("attribute");
-                    xAtt.setAttribute("id", id);
-                    WriteObject(xAtt, (Type) p.getReturnType(), o);
-                } else if (p.getAnnotations().filterIsInstance(OpenTraceabilityArrayAttribute.class).size() > 0) {
-                    ArrayList l = (ArrayList) o;
-                    for (Object i : l) {
-                        String str = i.toString();
-                        if (!str.isEmpty()) {
-                            Element xAtt = OTXmlUtil.addElement(xVocabEle, "attribute");
-                            xAtt.setAttribute("id", id);
-                            xAtt.setTextContent(str);
-                        }
-                    }
-                } else if (o.getClass().asSubclass(Object.class)
-                        .kotlin.starProjectedType == typeOf(ArrayList.class,
-                        new KTypeProjection(null, typeOf(LanguageString.class)))) {
-                    ArrayList<LanguageString> l = (ArrayList<LanguageString>) o;
-                    String str = l.isEmpty() ? null : l.get(0).value;
-                    if (str != null) {
-                        Element xAtt = OTXmlUtil.addElement(xVocabEle, "attribute");
-                        xAtt.setAttribute("id", id);
-                        xAtt.setTextContent(str);
-                    }
-                } else {
-                    String str = o.toString();
-                    if (!str.isEmpty()) {
-                        Element xAtt = OTXmlUtil.addElement(xVocabEle, "attribute");
-                        xAtt.setAttribute("id", id);
-                        xAtt.setTextContent(str);
-                    }
-                }
-            }
-        }
-
-        for (IMasterDataKDE kde : md.kdes) {
-            Element xKDE = kde.getEPCISXml();
-            if (xKDE != null) {
-                OTXmlUtil.addElement(xVocabEle, xKDE);
-            }
-        }
-
-        return xVocabEle;
-    }
-
-    public static void WriteObject(Element x, Type t, Object o) throws Exception {
-        for (kotlin.reflect.KProperty1 property : t.getMemberProperties()) {
-            Object value = property.get(o);
-            if (value != null) {
-                OpenTraceabilityAttribute xmlAtt = property.getAnnotations()
-                        .filterIsInstance(OpenTraceabilityAttribute.class)
-                        .stream()
-                        .findFirst().orElse(null);
-                if (xmlAtt != null) {
-                    Element xChild = x.addElementNS(xmlAtt.ns(), xmlAtt.name());
-                    if (property.getAnnotations().filterIsInstance(OpenTraceabilityObjectAttribute.class).size() > 0) {
-                        WriteObject(xChild, (Type) property.getReturnType(), value);
-                    } else {
-                        String str = value.toString();
-                        if (str != null) {
-                            xChild.nodeValue = str;
-                        }
-                    }
-                }
-            }
-        }
-    }
+	private static void WriteObject(XElement x, java.lang.Class t, Object o)
+	{
+		for (var property : t.GetProperties())
+		{
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: object? value = property.GetValue(o);
+			Object value = property.GetValue(o);
+			if (value != null)
+			{
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: OpenTraceabilityAttribute? xmlAtt = property.GetCustomAttribute<OpenTraceabilityAttribute>();
+				OpenTraceabilityAttribute xmlAtt = property.<OpenTraceabilityAttribute>GetCustomAttribute();
+				if (xmlAtt != null)
+				{
+					XElement xchild = new XElement(xmlAtt.getName());
+					if (property.<OpenTraceabilityObjectAttribute>GetCustomAttribute() != null)
+					{
+						WriteObject(xchild, property.PropertyType, value);
+					}
+					else
+					{
+//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
+//ORIGINAL LINE: string? str = value.ToString();
+						String str = value.toString();
+						if (str != null)
+						{
+							xchild.Value = str;
+						}
+					}
+					x.Add(xchild);
+				}
+			}
+		}
+	}
 }

@@ -1,10 +1,14 @@
 package opentraceability.mappers;
 
-import opentraceability.interfaces.IEPCISQueryDocumentMapper;
-import opentraceability.mappers.epcis.json.EPCISQueryDocumentJsonMapper;
-import opentraceability.mappers.epcis.xml.EPCISQueryDocumentXMLMapper;
+import gs1.mappers.epcis.*;
+import opentraceability.interfaces.*;
+import opentraceability.mappers.epcis.json.*;
+import opentraceability.mappers.masterdata.*;
+import opentraceability.models.events.*;
+import opentraceability.*;
 
-public class EPCISQueryDocumentMappers {
-    public IEPCISQueryDocumentMapper XML = new EPCISQueryDocumentXMLMapper();
-    public IEPCISQueryDocumentMapper JSON = new EPCISQueryDocumentJsonMapper();
+public class EPCISQueryDocumentMappers
+{
+	public IEPCISQueryDocumentMapper XML = new EPCISQueryDocumentXMLMapper();
+	public IEPCISQueryDocumentMapper JSON = new EPCISQueryDocumentJsonMapper();
 }

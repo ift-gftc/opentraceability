@@ -1,82 +1,129 @@
 package opentraceability.mappers.epcis.json;
 
-import opentraceability.Constants;
-import opentraceability.OTLogger;
-import opentraceability.interfaces.IEvent;
-import opentraceability.interfaces.IEPCISQueryDocumentMapper;
-import opentraceability.mappers.EPCISDocumentBaseJsonMapper;
-import opentraceability.mappers.OpenTraceabilityJsonLDMapper;
-import opentraceability.models.events.EPCISQueryDocument;
-import opentraceability.models.events.EPCISVersion;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import Newtonsoft.Json.Linq.*;
+import opentraceability.interfaces.*;
+import opentraceability.models.events.*;
+import opentraceability.utility.*;
+import opentraceability.*;
+import opentraceability.mappers.*;
+import opentraceability.mappers.epcis.*;
 
-import java.util.Map;
+public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper
+{
 
-public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper {
+	public final EPCISQueryDocument Map(String strValue)
+	{
+		return Map(strValue, true);
+	}
 
-    @Override
-    public EPCISQueryDocument map(String strValue, boolean checkSchema) {
-        try {
-            Map<EPCISDocumentBaseJsonMapper.Field, Object> result = EPCISDocumentBaseJsonMapper.readJSON(strValue, checkSchema);
-            EPCISQueryDocument doc = (EPCISQueryDocument) result.get(EPCISDocumentBaseJsonMapper.Field.DOC);
-            JSONObject json = (JSONObject) result.get(EPCISDocumentBaseJsonMapper.Field.JSON);
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public EPCISQueryDocument Map(string strValue, bool checkSchema = true)
+	public final EPCISQueryDocument Map(String strValue, boolean checkSchema)
+	{
+		return MapAsync(strValue, checkSchema).GetAwaiter().GetResult();
+	}
 
-            if (doc.epcisVersion != EPCISVersion.V2) {
-                throw new Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
-            }
 
-            doc.setQueryName(json.getJSONObject("epcisBody").getJSONObject("queryResults").getString("queryName"));
-            doc.setSubscriptionID(json.getJSONObject("epcisBody").getJSONObject("queryResults").getString("subscriptionID"));
+	public final Task<EPCISQueryDocument> MapAsync(String strValue)
+	{
+		return MapAsync(strValue, true);
+	}
 
-            JSONArray jEventsList = json.getJSONObject("epcisBody").getJSONObject("queryResults").getJSONObject("resultsBody").getJSONArray("eventList");
-            if (jEventsList != null) {
-                for (int i = 0; i < jEventsList.length(); i++) {
-                    JSONObject jEvent = jEventsList.getJSONObject(i);
-                    String eventType = EPCISDocumentBaseJsonMapper.getEventTypeFromProfile(jEvent);
-                    IEvent e = (IEvent) OpenTraceabilityJsonLDMapper.fromJson(jEvent, eventType, doc.getNamespaces());
-                    doc.events.add(e);
-                }
-            }
-            return doc;
-        } catch (Exception ex) {
-            Exception exception = new Exception("Failed to parse the EPCIS document from the XML. xml=" + strValue, ex);
-            OTLogger.error(exception);
-            throw exception;
-        }
-    }
+//C# TO JAVA CONVERTER TASK: There is no equivalent in Java to the 'async' keyword:
+//ORIGINAL LINE: public async Task<EPCISQueryDocument> MapAsync(string strValue, bool checkSchema = true)
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+	public final Task<EPCISQueryDocument> MapAsync(String strValue, boolean checkSchema)
+	{
+		try
+		{
+//C# TO JAVA CONVERTER TASK: Java has no equivalent to C# deconstruction declarations:
+			(EPCISQueryDocument doc, JObject json) = await EPCISDocumentBaseJsonMapper.<EPCISQueryDocument>ReadJSONAsync(strValue, "EPCISQueryDocument", checkSchema);
 
-    @Override
-    public String map(EPCISQueryDocument doc) {
-        if (doc.getEpcisVersion() != EPCISVersion.V2) {
-            throw new Exception("doc.epcisVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
-        }
-        String epcisNS = doc.getEpcisVersion() == EPCISVersion.V2 ? Constants.EPCISQUERY_2_NAMESPACE : Constants.EPCISQUERY_1_NAMESPACE;
+			if (doc.EPCISVersion != EPCISVersion.V2)
+			{
+				throw new RuntimeException("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
+			}
 
-        Map<String, String> namespacesReversed = EPCISDocumentBaseJsonMapper.reverseNamespaces(doc.getNamespaces());
+			// read the query name
+			doc.QueryName = json["epcisBody"] == null ? null : (((json["epcisBody"]["queryResults"] == null ? null : ((json["epcisBody"]["queryResults"]["queryName"] == null ? null : json["epcisBody"]["queryResults"]["queryName"].toString())))) != null ? ((json["epcisBody"]["queryResults"] == null ? null : ((json["epcisBody"]["queryResults"]["queryName"] == null ? null : json["epcisBody"]["queryResults"]["queryName"].toString())))) : "");
+			doc.SubscriptionID = json["epcisBody"] == null ? null : (((json["epcisBody"]["queryResults"] == null ? null : ((json["epcisBody"]["queryResults"]["subscriptionID"] == null ? null : json["epcisBody"]["queryResults"]["subscriptionID"].toString())))) != null ? ((json["epcisBody"]["queryResults"] == null ? null : ((json["epcisBody"]["queryResults"]["subscriptionID"] == null ? null : json["epcisBody"]["queryResults"]["subscriptionID"].toString())))) : "");
 
-        JSONArray jEventsList = new JSONArray();
-        for (IEvent e : doc.events) {
-            JSONObject jEvent = (JSONObject) OpenTraceabilityJsonLDMapper.toJson(e, namespacesReversed);
-            if (jEvent != null) {
-                jEventsList.put(jEvent);
-            }
-        }
+			// read the events
+			Object tempVar = ((json["epcisBody"]["queryResults"] == null ? null : ((json["epcisBody"]["queryResults"]["resultsBody"] == null ? null : json["epcisBody"]["queryResults"]["resultsBody"]["eventList"]))));
+			JArray jEventsList = json["epcisBody"] == null ? null : tempVar instanceof JArray ? (JArray)tempVar : null;
+			if (jEventsList != null)
+			{
+				for (JObject jEvent : jEventsList)
+				{
+					java.lang.Class eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
+					IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType, doc.Namespaces);
+					doc.Events.Add(e);
+				}
+			}
 
-        JSONObject json = EPCISDocumentBaseJsonMapper.writeJson(doc, epcisNS, "EPCISQueryDocument");
-        JSONObject jEPCISBody = new JSONObject();
-        JSONObject jQueryResults = new JSONObject();
-        JSONObject jResultsBody = new JSONObject();
+			return doc;
+		}
+		catch (RuntimeException Ex)
+		{
+			RuntimeException exception = new RuntimeException("Failed to parse the EPCIS document from the XML. xml=" + strValue, Ex);
+			OTLogger.Error(exception);
+			throw Ex;
+		}
+	}
 
-        jQueryResults.put("queryName", doc.getQueryName().toString());
-        jQueryResults.put("subscriptionID", doc.getSubscriptionID().toString());
-        jResultsBody.put("eventList", jEventsList);
-        jQueryResults.put("resultsBody", jResultsBody);
-        jEPCISBody.put("queryResults", jQueryResults);
-        json.put("epcisBody", jEPCISBody);
+	public final String Map(EPCISQueryDocument doc)
+	{
+		return MapAsync(doc).GetAwaiter().GetResult();
+	}
 
-        EPCISDocumentBaseJsonMapper.conformEPCISJsonLD(json, doc.getNamespaces());
-        EPCISDocumentBaseJsonMapper.checkSchema(json);
-        return json.toString();
-    }
+//C# TO JAVA CONVERTER TASK: There is no equivalent in Java to the 'async' keyword:
+//ORIGINAL LINE: public async Task<string> MapAsync(EPCISQueryDocument doc)
+	public final Task<String> MapAsync(EPCISQueryDocument doc)
+	{
+		if (doc.getEPCISVersion() != EPCISVersion.V2)
+		{
+			throw new RuntimeException("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
+		}
+
+		XNamespace epcisNS = (doc.getEPCISVersion() == EPCISVersion.V2) ? Constants.EPCISQUERY_2_NAMESPACE : Constants.EPCISQUERY_1_NAMESPACE;
+
+		var namespacesReversed = doc.getNamespaces().Reverse();
+
+		// write the events
+		JArray jEventsList = new JArray();
+		for (IEvent e : doc.getEvents())
+		{
+			System.Nullable<JToken> tempVar = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed);
+			JObject jEvent = tempVar instanceof JObject ? (JObject)tempVar : null;
+			if (jEvent != null)
+			{
+				EPCISDocumentBaseJsonMapper.PostWriteEventCleanUp(jEvent);
+				jEventsList.Add(jEvent);
+			}
+		}
+
+//C# TO JAVA CONVERTER TASK: There is no equivalent to 'await' in Java:
+		JObject json = await EPCISDocumentBaseJsonMapper.WriteJsonAsync(doc, epcisNS, "EPCISQueryDocument");
+
+		JObject jEPCISBody = new JObject();
+		JObject jQueryResults = new JObject();
+		JObject jResultsBody = new JObject();
+
+		jQueryResults["queryName"] = doc.getQueryName();
+		jQueryResults["subscriptionID"] = doc.getSubscriptionID();
+
+		jResultsBody["eventList"] = jEventsList;
+		jQueryResults["resultsBody"] = jResultsBody;
+		jEPCISBody["queryResults"] = jQueryResults;
+		json["epcisBody"] = jEPCISBody;
+
+		// conform the JSON-LD to the compacted version with CURIE's that EPCIS 2.0 likes
+		EPCISDocumentBaseJsonMapper.ConformEPCISJsonLD(json, doc.getNamespaces());
+
+		// validate the JSON-LD schema
+//C# TO JAVA CONVERTER TASK: There is no equivalent to 'await' in Java:
+		await EPCISDocumentBaseJsonMapper.CheckSchemaAsync(json);
+
+		return json.toString();
+	}
 }
