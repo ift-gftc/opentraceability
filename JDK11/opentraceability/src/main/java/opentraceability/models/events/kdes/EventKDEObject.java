@@ -2,6 +2,9 @@ package opentraceability.models.events.kdes;
 
 import opentraceability.Constants;
 import opentraceability.interfaces.IEventKDE;
+import opentraceability.utility.XElement;
+import opentraceability.utility.XmlToJsonConverter;
+import org.apache.commons.lang3.NotImplementedException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.w3c.dom.Document;
@@ -17,7 +20,7 @@ public class EventKDEObject extends IEventKDE {
     public Type valueType = Object.class;
 
     public Object value = null;
-    public Element _xml = null;
+    public XElement _xml = null;
     public JSONObject _json = null;
 
     public EventKDEObject() {}
@@ -28,19 +31,10 @@ public class EventKDEObject extends IEventKDE {
     }
 
 
-    public JSONObject getJson() {
+    public Object getJson() {
         if (_xml != null) {
-            try {
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                Document xmlDoc = builder.parse(new InputSource(new StringReader(_xml.toString())));
-
-                JSONObject json = XML.toJSONObject(xmlDoc.toString());
-                return new JSONObject(json.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+            JSONObject j = XmlToJsonConverter.toJSON(_xml);
+            return j;
         } else if (_json != null) {
             return _json;
         } else {
@@ -49,36 +43,31 @@ public class EventKDEObject extends IEventKDE {
     }
 
 
-    public Element getXml() {
+    public XElement getXml() {
         if (_xml != null) {
             return _xml;
-        } else if (_json != null) {
-            try {
-                JSONObject xmlDoc = XML.toJSONObject(_json.toString());
-                String xmlStr = xmlDoc.toString();
-                if (!xmlStr.isEmpty()) {
-                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder builder = factory.newDocumentBuilder();
-                    Document document = builder.parse(new InputSource(new StringReader(xmlStr)));
-                    return document.getDocumentElement();
-                }
-
-                return null;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        } else {
+        }
+        else if (_json != null)
+        {
+            XElement x = XmlToJsonConverter.toXML(_json);
+            return x;
+        }
+        else
+        {
             return null;
         }
     }
 
-    public void setFromJson(JSONObject json) {
+    public void setFromJson(Object json) throws Exception {
         _xml = null;
-        _json = json;
+        if (json instanceof JSONObject)
+        {
+            _json = (JSONObject)json;
+        }
+        else throw new Exception("_json is not JSONObject");
     }
 
-    public void setFromXml(Element xml) {
+    public void setFromXml(XElement xml) {
         _xml = xml;
         _json = null;
     }

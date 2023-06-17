@@ -156,7 +156,7 @@ public class EPCISBaseDocument {
             for (EventProduct product : evt.getProducts()) {
                 if (allowedTypes.length == 0
                         || (product.Type != null && isInAllowedTypes(product.Type.toString(), allowedTypes))) {
-                    if (epcMatch.matches(product.EPC)) {
+                    if (epcMatch.Matches(product.EPC)) {
                         return true;
                     }
                 }

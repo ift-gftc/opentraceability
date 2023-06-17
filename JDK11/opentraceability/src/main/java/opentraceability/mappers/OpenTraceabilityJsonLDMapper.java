@@ -7,6 +7,7 @@ import opentraceability.models.identifiers.*;
 import opentraceability.utility.*;
 import opentraceability.models.common.*;
 import opentraceability.*;
+import org.apache.commons.codec.language.bm.Lang;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,15 +24,14 @@ public final class OpenTraceabilityJsonLDMapper
 	 Converts an object into JSON.
 	*/
 
-	public static Object ToJson(Object value, java.util.HashMap<String, String> namespacesReversed)
-	{
+	public static Object ToJson(Object value, java.util.Map<String, String> namespacesReversed) throws Exception {
 		return ToJson(value, namespacesReversed, false);
 	}
 
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: public static System.Nullable<Object> ToJson(object? value, Dictionary<string, string> namespacesReversed, bool required = false)
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-	public static Object ToJson(Object value, HashMap<String, String> namespacesReversed, boolean required) throws IllegalAccessException {
+	public static Object ToJson(Object value, Map<String, String> namespacesReversed, boolean required) throws Exception {
 		if (value != null)
 		{
 			JSONObject json = new JSONObject();
@@ -41,80 +41,78 @@ public final class OpenTraceabilityJsonLDMapper
 			OTMappingTypeInformation typeInfo = OTMappingTypeInformation.getJsonTypeInfo(t);
 			for (var property : typeInfo.properties.stream().filter(p -> p.version == null || p.version == EPCISVersion.V2).collect(Collectors.toList()))
 			{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? obj = property.Property.get(value);
 				Object obj = property.field.get(value);
 				if (obj != null)
 				{
-					Object jvaluepointer = jpointer;
-					String xchildname = property.name;
+					JSONObject jvaluepointer = jpointer;
+					String jChildName = property.name;
 
 					if (property.isQuantityList)
 					{
 						ArrayList<EventProduct> products = (ArrayList<EventProduct>)obj;
-						products = products.stream().filter(p -> p.Quantity != null && p.Type == property.ProductType).collect(Collectors.toList());
-						if (!products.isEmpty())
+						var quantityProducts = products.stream().filter(p -> p.Quantity != null && p.Type == property.productType).collect(Collectors.toList());
+						if (!quantityProducts.isEmpty())
 						{
-							JSONArray xQuantityList = new JSONArray();
-							for (var product : products)
+							JSONArray jQuantityList = new JSONArray();
+							for (var product : quantityProducts)
 							{
 								if (product.EPC != null && product.Quantity != null)
 								{
 									JSONObject jQuantity = new JSONObject();
-									jQuantity["epcClass"] = product.EPC.toString();
-									jQuantity["quantity"] = product.Quantity.getValue();
-									if (!Objects.equals(product.Quantity.getUoM().getUNCode(), "EA"))
+									jQuantity.put("epcClass", product.EPC.toString());
+									jQuantity.put("quantity", product.Quantity.value);
+									if (!Objects.equals(product.Quantity.uom.UNCode, "EA"))
 									{
-										jQuantity["uom"] = product.Quantity.getUoM().getUNCode();
+										jQuantity.put("uom", product.Quantity.uom.UNCode);
 									}
-									xQuantityList.Add(xQuantity);
+									jQuantityList.put(jQuantity);
 								}
 							}
-							jvaluepointer[xchildname] = xQuantityList;
+							jvaluepointer.put(jChildName, jQuantityList);
 						}
 					}
-					else if (property.IsEPCList)
+					else if (property.isEPCList)
 					{
 						ArrayList<EventProduct> products = (ArrayList<EventProduct>)obj;
-						products = products.stream().filter(p -> p.Quantity == null && p.Type == property.ProductType).collect(Collectors.toList());
-						if (!products.isEmpty() || property.Required)
+						var epcProducts = products.stream().filter(p -> p.Quantity == null && p.Type == property.productType).collect(Collectors.toList());
+						if (!epcProducts.isEmpty() || property.required)
 						{
-							JSONArray xEPCList = new JSONArray();
-							for (var product : products)
+							JSONArray jEPCList = new JSONArray();
+							for (var product : epcProducts)
 							{
 								if (product.EPC != null)
 								{
-									xEPCList.Add(product.EPC.toString());
+									jEPCList.put(product.EPC.toString());
 								}
 							}
-							jvaluepointer[xchildname] = xEPCList;
+							jvaluepointer.put(jChildName, jEPCList);
 						}
 					}
-					else if (property.IsArray)
+					else if (property.isArray)
 					{
 						List list = (List)obj;
-						JSONArray xlist = new JSONArray();
+						JSONArray jList = new JSONArray();
 
-						if (!list.isEmpty() || property.Required == true)
+						if (!list.isEmpty() || property.required == true)
 						{
-							if (property.IsRepeating && list.size() == 1)
+							if (property.isRepeating && list.size() == 1)
 							{
 								Object jt = WriteObjectToJToken(list.get(0));
 								if (jt != null)
 								{
-									jvaluepointer[xchildname] = jt;
+									jvaluepointer.put(jChildName, jt);
 								}
 							}
 							else
 							{
 								for (var o : list)
 								{
-									if (property.IsObject)
+									if (property.isObject)
 									{
-										Object xchild = ToJson(o, namespacesReversed, property.Required);
-										if (xchild != null)
+										Object jListChild = ToJson(o, namespacesReversed, property.required);
+										if (jListChild != null)
 										{
-											xlist.Add(xchild);
+											jList.put(jListChild);
 										}
 									}
 									else
@@ -122,21 +120,21 @@ public final class OpenTraceabilityJsonLDMapper
 										Object jt = WriteObjectToJToken(o);
 										if (jt != null)
 										{
-											xlist.Add(jt);
+											jList.put(jt);
 										}
 									}
 								}
 
-								jvaluepointer[xchildname] = xlist;
+								jvaluepointer.put(jChildName, jList);
 							}
 						}
 					}
-					else if (property.IsObject)
+					else if (property.isObject)
 					{
-						Object xchild = ToJson(obj, namespacesReversed, property.Required);
-						if (xchild != null)
+						Object jChild = ToJson(obj, namespacesReversed, property.required);
+						if (jChild != null)
 						{
-							jvaluepointer[xchildname] = xchild;
+							jvaluepointer.put(jChildName, jChild);
 						}
 					}
 					else
@@ -144,7 +142,7 @@ public final class OpenTraceabilityJsonLDMapper
 						Object jt = WriteObjectToJToken(obj);
 						if (jt != null)
 						{
-							jvaluepointer[xchildname] = jt;
+							jvaluepointer.put(jChildName, jt);
 						}
 					}
 				}
@@ -152,71 +150,63 @@ public final class OpenTraceabilityJsonLDMapper
 
 			if (typeInfo.extensionKDEs != null)
 			{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? obj = typeInfo.ExtensionKDEs.get(value);
 				Object obj = typeInfo.extensionKDEs.get(value);
-				if (obj != null && obj instanceof List<IEventKDE>)
+				if (obj != null)
 				{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: IList<IEventKDE>? kdes = obj instanceof java.util.List<IEventKDE> ? (java.util.List<IEventKDE>)obj : null;
-					List<IEventKDE> kdes = obj instanceof List<IEventKDE> ? (List<IEventKDE>)obj : null;
+					ArrayList<IEventKDE> kdes = (ArrayList<IEventKDE>)obj;
 					if (kdes != null)
 					{
 						for (var kde : kdes)
 						{
-							Object xchild = kde.getJson();
-							if (xchild != null)
+							Object jChild = kde.getJson();
+							if (jChild != null)
 							{
-								String name = kde.getName();
-								if (kde.namespaces != null)
+								String name = kde.name;
+								if (kde.namespace != null)
 								{
-									if (!namespacesReversed.containsKey(kde.getNamespace()))
+									if (!namespacesReversed.containsKey(kde.namespace))
 									{
-										throw new RuntimeException(String.format("The namespace %1$s is not recognized in the EPCIS Document / EPCIS Query Document.", kde.getNamespace()));
+										throw new RuntimeException(String.format("The namespace %1$s is not recognized in the EPCIS Document / EPCIS Query Document.", kde.namespace));
 									}
-									name = namespacesReversed.get(kde.getNamespace()) + ":" + name;
+									name = namespacesReversed.get(kde.namespace) + ":" + name;
 								}
 
-								jpointer[name] = xchild;
+								jpointer.put(name, jChild);
 							}
 						}
 					}
 				}
 			}
 
-			if (typeInfo.getExtensionAttributes() != null)
+			if (typeInfo.extensionAttributes != null)
 			{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: object? obj = typeInfo.ExtensionAttributes.get(value);
-				Object obj = typeInfo.getExtensionAttributes().get(value);
-				if (obj != null && obj instanceof List<IEventKDE>)
+				Object obj = typeInfo.extensionAttributes.get(value);
+				if (obj != null)
 				{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: IList<IEventKDE>? kdes = obj instanceof java.util.List<IEventKDE> ? (java.util.List<IEventKDE>)obj : null;
-					List<IEventKDE> kdes = obj instanceof List<IEventKDE> ? (List<IEventKDE>)obj : null;
-					if (kdes != null)
-					{
-						for (IEventKDE kde : kdes)
+					ArrayList<IEventKDE> kdes = (ArrayList<IEventKDE>)obj;
+						if (kdes != null)
 						{
-							Object xchild = kde.GetJson();
-							if (xchild != null)
+							for (IEventKDE kde : kdes)
 							{
-								String name = kde.getName();
-								if (kde.namespaces != null)
+								Object jChild = kde.getJson();
+								if (jChild != null)
 								{
-									if (!namespacesReversed.containsKey(kde.getNamespace()))
+									String name = kde.name;
+									if (kde.namespace != null)
 									{
-										throw new RuntimeException(String.format("The namespace %1$s is not recognized in the EPCIS Document / EPCIS Query Document.", kde.getNamespace()));
+										if (!namespacesReversed.containsKey(kde.namespace))
+										{
+											throw new RuntimeException(String.format("The namespace %1$s is not recognized in the EPCIS Document / EPCIS Query Document.", kde.namespace));
+										}
+										name = namespacesReversed.get(kde.namespace) + ":" + name;
 									}
-									name = namespacesReversed.get(kde.getNamespace()) + ":" + name;
-								}
 
-								jpointer[name] = xchild;
+									jpointer.put(name, jChild);
+								}
 							}
 						}
 					}
 				}
-			}
 
 			return json;
 		}
@@ -229,16 +219,15 @@ public final class OpenTraceabilityJsonLDMapper
 	/** 
 	 Converts a JSON object into the generic type specified.
 	*/
-	public static <T> T FromJson(Object json, HashMap<String, String> namespaces)
-	{
-		T o = (T)FromJson(json, T.class, namespaces);
+	public static <T> T FromJson(Object json, Map<String, String> namespaces, Class<T> clazz) throws Exception {
+		T o = (T)FromJson(json, clazz.getClass(), namespaces);
 		return o;
 	}
 
 	/** 
 	 Converts a JSON object into the type specified.
 	*/
-	public static Object FromJson(Object json, Type type, HashMap<String, String> namespaces) throws Exception {
+	public static Object FromJson(Object json, Type type, Map<String, String> namespaces) throws Exception {
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: object value = Activator.CreateInstance(type) ?? throw new Exception("Failed to create instance of type " + type.FullName);
 		Object value = ReflectionUtility.constructType(type);
@@ -303,18 +292,36 @@ public final class OpenTraceabilityJsonLDMapper
 		return value;
 	}
 
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: private static System.Nullable<Object> WriteObjectToJToken(object? obj)
 	private static Object WriteObjectToJToken(Object obj)
 	{
 		if (obj == null)
 		{
 			return null;
 		}
-		else if (obj instanceof ArrayList<LanguageString>)
+		// check if obj is ArrayList<LanguageString>...
+		else if (obj instanceof ArrayList)
 		{
-			String json = JsonConvert.SerializeObject(obj);
-			return JSONArray.Parse(json);
+			ArrayList l = (ArrayList)obj;
+			if (!l.isEmpty())
+			{
+				JSONArray jArr = new JSONArray();
+				for (Object o: l)
+				{
+					if (o instanceof LanguageString)
+					{
+						JSONObject j = ((LanguageString)o).toJSON();
+						jArr.put(j);
+					}
+					else {
+						jArr.put(o);
+					}
+				}
+				return jArr;
+			}
+			else
+			{
+				return null;
+			}
 		}
 		else if (obj instanceof OffsetDateTime)
 		{
@@ -342,14 +349,14 @@ public final class OpenTraceabilityJsonLDMapper
 		else if (obj instanceof Duration)
 		{
 			Duration timespan = (Duration)obj;
-			String timeStr = (new Double(timespan.toHoursPart())).toString() + ":" + (new Integer(timespan.Minutes)).toString("00");
+			String timeStr = timespan.toHoursPart() + ":" + timespan.toMinutesPart();
 			if (timespan.isNegative())
 			{
 				return "-" + timeStr;
 			}
 			else
 			{
-				return "-" + timeStr;
+				return "+" + timeStr;
 			}
 		}
 		else
@@ -358,7 +365,7 @@ public final class OpenTraceabilityJsonLDMapper
 		}
 	}
 
-	private static void ReadPropertyMapping(OTMappingTypeInformationProperty mappingProp, Object json, Object value, HashMap<String, String> namespaces) throws Exception {
+	private static void ReadPropertyMapping(OTMappingTypeInformationProperty mappingProp, Object json, Object value, Map<String, String> namespaces) throws Exception {
 		if (mappingProp.isQuantityList)
 		{
 			IEvent e = (IEvent)value;
@@ -370,7 +377,7 @@ public final class OpenTraceabilityJsonLDMapper
 					if (o instanceof JSONObject)
 					{
 						JSONObject jQuantity = (JSONObject) o;
-						EPC epc = new EPC((jQuantity.getString("epcClass"));
+						EPC epc = new EPC((jQuantity.getString("epcClass")));
 
 						EventProduct product = new EventProduct(epc);
 						product.Type = mappingProp.productType;
@@ -436,15 +443,9 @@ public final class OpenTraceabilityJsonLDMapper
 			Object o = FromJson(json, mappingProp.field.getType(), namespaces);
 			mappingProp.field.set(value, o);
 		}
-		else if (mappingProp.field.getType() == ArrayList<LanguageString>.class)
+		else if (ReflectionUtility.isListOf(mappingProp.field.getType(), LanguageString.class))
 		{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: List<LanguageString>? languageStrings = JsonConvert.DeserializeObject<List<LanguageString>>(json.ToString());
-			ArrayList<LanguageString> languageStrings = JsonConvert.<ArrayList<LanguageString>>DeserializeObject(json.toString());
-			if (languageStrings != null)
-			{
-				mappingProp.field.set(value, languageStrings);
-			}
+
 		}
 		else
 		{
@@ -457,12 +458,11 @@ public final class OpenTraceabilityJsonLDMapper
 		}
 	}
 
-	private static Object ReadObjectFromString(String value, Type t)
-	{
+	private static Object ReadObjectFromString(String value, Type t) throws Exception {
 		return ReflectionUtility.parseFromString(t, value);
 	}
 
-	private static IEventKDE ReadKDE(String name, Object value, HashMap<String, String> namespaces) throws Exception {
+	private static IEventKDE ReadKDE(String name, Object value, Map<String, String> namespaces) throws Exception {
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
 //ORIGINAL LINE: IEventKDE? kde = null;
 		IEventKDE kde = null;

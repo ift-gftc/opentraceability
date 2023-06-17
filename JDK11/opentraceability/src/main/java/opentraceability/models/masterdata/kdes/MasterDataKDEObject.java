@@ -1,6 +1,7 @@
 package opentraceability.models.masterdata.kdes;
 
 import opentraceability.interfaces.IMasterDataKDE;
+import opentraceability.utility.XElement;
 import opentraceability.utility.XmlToJsonConverter;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
@@ -42,28 +43,28 @@ public class MasterDataKDEObject extends IMasterDataKDE  {
 
     public JSONObject getGS1WebVocabJson() {
         if (_xml != null) {
-            JSONObject json = XmlToJsonConverter.toJSON(_xml);
+            JSONObject json = XmlToJsonConverter.toJSON(new XElement(_xml));
             return json;
         } else {
             return _json;
         }
     }
 
-    public void setFromEPCISXml(Element xml) {
-        _xml = xml;
+    public void setFromEPCISXml(XElement xml) {
+        _xml = xml.element;
         _json = null;
     }
 
-    public Element getEPCISXml() {
+    public XElement getEPCISXml() {
         Element xml;
         if (_xml != null) {
             xml = _xml;
         } else if (_json != null) {
-            xml = XmlToJsonConverter.toXML(_json);
+            xml = XmlToJsonConverter.toXML(_json).element;
         } else {
             xml = null;
         }
         
-        return xml;
+        return new XElement(xml);
     }
 }

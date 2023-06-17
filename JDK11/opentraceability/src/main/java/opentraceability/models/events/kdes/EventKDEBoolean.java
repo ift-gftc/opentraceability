@@ -2,6 +2,7 @@ package opentraceability.models.events.kdes;
 
 import opentraceability.Constants;
 import opentraceability.interfaces.IEventKDE;
+import opentraceability.utility.XElement;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
 
@@ -31,29 +32,37 @@ public class EventKDEBoolean extends IEventKDE {
         }
     }
 
-    public Element getXml() throws Exception {
+    public XElement getXml() throws Exception {
         if (value != null) {
-            var documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            var documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            var document = documentBuilder.newDocument();
-            var element = document.createElementNS(namespace, name);
-            element.setAttributeNS(Constants.XSI_NAMESPACE, "type", "boolean");
-            element.setTextContent(value.toString());
+            var element = new XElement(namespace, name);
+            element.SetAttributeValue(Constants.XSI_NAMESPACE, "type", "boolean");
+            element.setValue(value.toString());
             return element;
         } else {
             return null;
         }
     }
 
-    public void setFromJson(JSONObject json) {
-        if (json.has("value")) {
-            this.value = json.getBoolean("value");
+    public void setFromJson(Object json) {
+        if (json instanceof JSONObject)
+        {
+            if (((JSONObject)json).has("value")) {
+                this.value = ((JSONObject)json).getBoolean("value");
+            }
+        }
+        else if (json instanceof Boolean)
+        {
+            this.value = (Boolean) json;
+        }
+        else if (json instanceof String)
+        {
+            this.value = Boolean.parseBoolean((String)json);
         }
     }
 
-    public void setFromXml(Element xml) {
+    public void setFromXml(XElement xml) {
         if (xml != null) {
-            this.value = Boolean.parseBoolean(xml.getTextContent());
+            this.value = Boolean.parseBoolean(xml.getValue());
         }
     }
 

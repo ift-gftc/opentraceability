@@ -1,5 +1,6 @@
 package opentraceability.interfaces;
 
+import opentraceability.utility.XElement;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
 
@@ -17,13 +18,13 @@ public abstract class IEventKDE {
 
     public abstract Object getJson() throws Exception;
 
-    public abstract void setFromXml(Element xml) throws Exception;
+    public abstract void setFromXml(XElement xml) throws Exception;
 
-    public abstract Element getXml() throws Exception;
+    public abstract XElement getXml() throws Exception;
 
     static HashMap<String, Type> registeredKDEs = new HashMap<String, Type>();
 
-    static void RegisterKDE(Type type, String ns, String name) throws Exception {
+    public static void RegisterKDE(Type type, String ns, String name) throws Exception {
         String key = ns + ":" + name;
 
         if (!registeredKDEs.containsKey(key)) {
@@ -34,7 +35,7 @@ public abstract class IEventKDE {
         }
     }
 
-    static IEventKDE initializeKDE(String ns, String name) {
+    public static IEventKDE initializeKDE(String ns, String name) {
         IEventKDE kde = null;
 
         String key = ns + ":" + name;

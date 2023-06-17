@@ -6,6 +6,7 @@ import opentraceability.models.identifiers.EPC;
 import opentraceability.models.identifiers.GLN;
 import opentraceability.models.identifiers.GTIN;
 import opentraceability.models.identifiers.PGLN;
+import opentraceability.utility.attributes.OpenTraceabilityAttribute;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -104,7 +105,7 @@ public class ReflectionUtility
 
     public static Type getItemType(Type t) {
         if (t instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) type;
+            ParameterizedType parameterizedType = (ParameterizedType)t;
             Type rawType = parameterizedType.getRawType();
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
 
@@ -136,8 +137,7 @@ public class ReflectionUtility
         return false;
     }
 
-    public static Object parseFromString(Type t, String value)
-    {
+    public static Object parseFromString(Type t, String value) throws Exception {
         if (t == OffsetDateTime.class || t == OffsetDateTime.class)
         {
             OffsetDateTime o = OffsetDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME);
@@ -206,5 +206,16 @@ public class ReflectionUtility
         {
             return value;
         }
+    }
+
+    public static <T extends Annotation> T getAnnotation(Type type, Class<T> annotationClass) {
+        Annotation[] annotations = type.getClass().getDeclaredAnnotations();
+        List<Annotation> annotationList = new ArrayList<>();
+
+        for (Annotation annotation : annotations) {
+            return (T)annotation;
+        }
+
+        return null;
     }
 }

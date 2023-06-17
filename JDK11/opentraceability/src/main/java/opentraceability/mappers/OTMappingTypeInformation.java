@@ -1,11 +1,13 @@
 package opentraceability.mappers;
 
+import opentraceability.utility.ReflectionUtility;
 import opentraceability.utility.attributes.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -23,56 +25,57 @@ public class OTMappingTypeInformation {
 
         for (Field prop : type.getClass().getFields()) {
             if (prop != null) {
-                if (format == EPCISDataFormat.XML && prop.getAnnotations().first(OpenTraceabilityXmlIgnoreAttribute.class)
-                        .size() > 0) {
+                if (format == EPCISDataFormat.XML && ReflectionUtility.getFieldAnnotation(prop, OpenTraceabilityXmlIgnoreAttribute.class) != null) {
                     continue;
                 }
 
                 if (isMasterDataMapping) {
-                    OpenTraceabilityMasterDataAttribute[] mdAtt = prop.getAnnotations().filterIsInstance(OpenTraceabilityMasterDataAttribute.class).toArray(new OpenTraceabilityMasterDataAttribute[0]);
-                    if (mdAtt != null && mdAtt.length > 0) {
-                        OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(prop, mdAtt[0], format);
+                    List<OpenTraceabilityMasterDataAttribute> mdAtt = ReflectionUtility.getFieldAnnotations(prop, OpenTraceabilityMasterDataAttribute.class);
+                    if (mdAtt != null && mdAtt.size() > 0) {
+                        OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(prop, mdAtt.get(0), format);
                         this.properties.add(property);
-                        dic.put(property.Name, property);
+                        dic.put(property.name, property);
                     }
                 } else {
-                    OpenTraceabilityAttribute[] atts = prop.getAnnotations().filterIsInstance(OpenTraceabilityAttribute.class).toArray(new OpenTraceabilityAttribute[0]);
-                    OpenTraceabilityJsonAttribute[] jsonAtt = prop.getAnnotations().filterIsInstance(OpenTraceabilityJsonAttribute.class).toArray(new OpenTraceabilityJsonAttribute[0]);
-                    OpenTraceabilityProductsAttribute[] productAtts = prop.getAnnotations().filterIsInstance(OpenTraceabilityProductsAttribute.class).toArray(new OpenTraceabilityProductsAttribute[0]);
+                    List<OpenTraceabilityAttribute> atts = ReflectionUtility.getFieldAnnotations(prop, OpenTraceabilityAttribute.class);
+                    List<OpenTraceabilityJsonAttribute> jsonAtt = ReflectionUtility.getFieldAnnotations(prop, OpenTraceabilityJsonAttribute.class);
+                    List<OpenTraceabilityProductsAttribute> productAtts = ReflectionUtility.getFieldAnnotations(prop, OpenTraceabilityProductsAttribute.class);
 
-                    if (atts.length > 0) {
+                    if (atts.size() > 0) {
                         for (OpenTraceabilityAttribute att : atts) {
                             OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(prop, att, format);
-                            if (!dic.containsKey(property.Name)) {
+                            if (!dic.containsKey(property.name)) {
                                 this.properties.add(property);
-                                dic.put(property.Name, property);
+                                dic.put(property.name, property);
                             }
                         }
-                    } else if (jsonAtt != null && jsonAtt.length > 0 && format == EPCISDataFormat.JSON) {
-                        OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(prop, jsonAtt[0], format);
-                        if (!dic.containsKey(property.Name)) {
+                    } else if (jsonAtt != null && jsonAtt.size() > 0 && format == EPCISDataFormat.JSON) {
+                        OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(prop, jsonAtt.get(0), format);
+                        if (!dic.containsKey(property.name)) {
                             this.properties.add(property);
-                            dic.put(property.Name, property);
+                            dic.put(property.name, property);
                         }
-                    } else if (productAtts.length > 0) {
+                    } else if (productAtts.size() > 0) {
                         for (OpenTraceabilityProductsAttribute att : productAtts) {
                             OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(prop, att, format);
-                            if (!dic.containsKey(property.Name)) {
+                            if (!dic.containsKey(property.name)) {
                                 this.properties.add(property);
-                                dic.put(property.Name, property);
+                                dic.put(property.name, property);
                             }
                         }
-                    } else if (prop.getAnnotations().f(OpenTraceabilityExtensionElementsAttribute.class)
-                            .size() > 0) {
+                    }
+                    else if (ReflectionUtility.getFieldAnnotation(prop, OpenTraceabilityExtensionElementsAttribute.class) != null)
+                    {
                         extensionKDEs = prop;
-                    } else if (prop.getAnnotations().filterIsInstance(OpenTraceabilityExtensionAttributesAttribute.class)
-                            .size() > 0) {
+                    }
+                    else if (ReflectionUtility.getFieldAnnotation(prop, OpenTraceabilityExtensionAttributesAttribute.class) != null)
+                    {
                         extensionAttributes = prop;
                     }
 
-                    properties.sort((a, b) -> Boolean.compare(a.SequenceOrder == null, b.SequenceOrder == null) != 0
-                            ? a.SequenceOrder == null ? 1 : -1
-                            : a.SequenceOrder - b.SequenceOrder);
+                    properties.sort((a, b) -> Boolean.compare(a.sequenceOrder == null, b.sequenceOrder == null) != 0
+                            ? a.sequenceOrder == null ? 1 : -1
+                            : a.sequenceOrder - b.sequenceOrder);
                 }
             }
         }

@@ -1,6 +1,7 @@
 package opentraceability.models.events.kdes;
 
 import opentraceability.interfaces.IEventKDE;
+import opentraceability.utility.XElement;
 import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.time.OffsetDateTime;
@@ -20,22 +21,22 @@ public class EventKDEDateTime extends IEventKDE {
     }
 
     @Override
-    public JSONObject getJson() {
+    public Object getJson() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public Element getXml() {
+    public XElement getXml() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public void setFromJson(JSONObject json) {
+    public void setFromJson(Object json) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public void setFromXml(Element xml) {
+    public void setFromXml(XElement xml) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

@@ -1,5 +1,6 @@
 package opentraceability.interfaces;
 
+import opentraceability.utility.XElement;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
 
@@ -12,6 +13,6 @@ public abstract class IMasterDataKDE {
 
     public abstract void setFromGS1WebVocabJson(JSONObject json);
     public abstract JSONObject getGS1WebVocabJson();
-    public abstract void setFromEPCISXml(Element xml);
-    public abstract Element getEPCISXml() throws Exception;
+    public abstract void setFromEPCISXml(XElement xml);
+    public abstract XElement getEPCISXml() throws Exception;
 }

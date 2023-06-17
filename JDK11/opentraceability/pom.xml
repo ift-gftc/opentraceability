@@ -30,10 +30,14 @@
             <version>1.0.72</version>
         </dependency>
         <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>2.7.5</version>
+        </dependency>
         <dependency>
-            <groupId>org.openengsb.wrapped.csharp</groupId>
-            <artifactId>Newtonsoft.Json</artifactId>
-            <version>5.0_2</version>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
         </dependency>
     </dependencies>
 </project>

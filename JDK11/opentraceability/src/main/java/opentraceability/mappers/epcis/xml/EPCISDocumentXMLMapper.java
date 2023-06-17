@@ -1,4 +1,4 @@
-package gs1.mappers.epcis;
+package opentraceability.mappers.epcis.xml;
 
 import opentraceability.*;
 import opentraceability.interfaces.*;
@@ -7,15 +7,15 @@ import opentraceability.mappers.epcis.xml.*;
 import opentraceability.models.events.*;
 import opentraceability.utility.*;
 
+import javax.xml.xpath.XPathExpressionException;
+import java.lang.reflect.Type;
+
 public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 {
-	public final EPCISDocument Map(String strValue)
-	{
-		try
-		{
-			XDocument xDoc;
-			tangible.OutObject<XDocument> tempOut_xDoc = new tangible.OutObject<XDocument>();
-			EPCISDocument doc = EPCISDocumentBaseXMLMapper.<EPCISDocument>ReadXml(strValue, tempOut_xDoc);
+	public EPCISDocument map(String strValue) throws Exception {
+			XElement xDoc;
+			tangible.OutObject<XElement> tempOut_xDoc = new tangible.OutObject<XElement>();
+			EPCISDocument doc = EPCISDocumentBaseXMLMapper.ReadXml(strValue, tempOut_xDoc, EPCISDocument.class);
 		xDoc = tempOut_xDoc.outArgValue;
 
 			if (doc.epcisVersion == null)
@@ -26,29 +26,21 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 			EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.epcisVersion);
 
 			// read the events
-			XElement xEventList = xDoc.Root == null ? null : ((xDoc.Root.Element("EPCISBody") == null ? null : xDoc.Root.Element("EPCISBody").Element("EventList")));
-			if (xEventList != null)
+			XElement xEventList = xDoc.Element("EPCISBody/EventList");
+			if (xEventList.IsNull == false)
 			{
 				for (XElement xEvent : xEventList.Elements())
 				{
 					Type eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(xEvent);
 					IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(xEvent, eventType, doc.epcisVersion);
-					doc.getEvents().add(e);
+					doc.events.add(e);
 				}
 			}
 
 			return doc;
-		}
-		catch (RuntimeException Ex)
-		{
-			RuntimeException exception = new RuntimeException("Failed to parse the EPCIS document from the XML. xml=" + strValue, Ex);
-			OTLogger.Error(exception);
-			throw Ex;
-		}
 	}
 
-	public final String Map(EPCISDocument doc)
-	{
+	public String map(EPCISDocument doc) throws Exception {
 		if (doc.epcisVersion == null)
 		{
 			throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
@@ -56,21 +48,21 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 
 		String epcisNS = (doc.epcisVersion == EPCISVersion.V2) ? Constants.EPCIS_2_NAMESPACE : Constants.EPCIS_1_NAMESPACE;
 
-		XDocument xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, epcisNS, "EPCISDocument");
-		if (xDoc.Root == null)
+		XElement xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, epcisNS, "EPCISDocument");
+		if (xDoc == null)
 		{
-			throw new RuntimeException("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.");
+			throw new RuntimeException("Failed to parse EPCISQueryDocument from xml string because after parsing the XElement the Root property was null.");
 		}
 
 		// write the events
-		xDoc.Root.Add(new XElement("EPCISBody", new XElement("EventList")));
+		xDoc.Add(new XElement("EPCISBody", new XElement("EventList")));
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: XElement xEventList = xDoc.Root == null ? null : ((xDoc.Root.Element("EPCISBody") == null ? null : xDoc.Root.Element("EPCISBody").Element("EventList"))) ?? throw new Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root");
-		XElement xEventList = xDoc.Root == null ? null : (((xDoc.Root.Element("EPCISBody") == null ? null : xDoc.Root.Element("EPCISBody").Element("EventList"))) != null ? ((xDoc.Root.Element("EPCISBody") == null ? null : xDoc.Root.Element("EPCISBody").Element("EventList"))) : throw new RuntimeException("Failed to get EPCISBody/EventList after adding it to the XDoc.Root"));
-		for (IEvent e : doc.getEvents())
+//ORIGINAL LINE: XElement xEventList = xDoc == null ? null : ((xDoc.XElement("EPCISBody") == null ? null : xDoc.XElement("EPCISBody").XElement("EventList"))) ?? throw new Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root");
+		XElement xEventList = xDoc.Element("EPCISBody/EventList");
+		for (IEvent e : doc.events)
 		{
 			String xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
-			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.epcisVersion);
+			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(null, xname, e, doc.epcisVersion);
 			if (e.eventType == EventType.TransformationEvent && doc.epcisVersion == EPCISVersion.V1)
 			{
 				xEvent = new XElement("extension", xEvent);
@@ -84,15 +76,5 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 		EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.epcisVersion);
 
 		return xDoc.toString();
-	}
-
-	public final Task<EPCISDocument> MapAsync(String strValue)
-	{
-		return Task.FromResult(Map(strValue));
-	}
-
-	public final Task<String> MapAsync(EPCISDocument doc)
-	{
-		return Task.FromResult(Map(doc));
 	}
 }

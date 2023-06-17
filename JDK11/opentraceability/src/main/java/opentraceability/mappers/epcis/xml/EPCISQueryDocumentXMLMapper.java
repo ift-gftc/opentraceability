@@ -1,4 +1,4 @@
-package gs1.mappers.epcis;
+package opentraceability.mappers.epcis.xml;
 
 import opentraceability.*;
 import opentraceability.interfaces.*;
@@ -7,80 +7,60 @@ import opentraceability.mappers.epcis.xml.*;
 import opentraceability.models.events.*;
 import opentraceability.utility.*;
 
+import javax.xml.xpath.XPathExpressionException;
+import java.lang.reflect.Type;
+
 public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 {
-
-	public final EPCISQueryDocument Map(String strValue)
-	{
-		return Map(strValue, true);
-	}
-
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public EPCISQueryDocument Map(string strValue, bool checkSchema = true)
-	public final EPCISQueryDocument Map(String strValue, boolean checkSchema)
-	{
-		try
-		{
-			// TODO: validate the schema depending on the version in the document
-
-			XDocument xDoc;
-			tangible.OutObject<XDocument> tempOut_xDoc = new tangible.OutObject<XDocument>();
-			EPCISQueryDocument document = EPCISDocumentBaseXMLMapper.<EPCISQueryDocument>ReadXml(strValue, tempOut_xDoc);
+	public EPCISQueryDocument map(String strValue, boolean checkSchema) throws Exception {
+		XElement xDoc;
+		tangible.OutObject<XElement> tempOut_xDoc = new tangible.OutObject<XElement>();
+		EPCISQueryDocument document = EPCISDocumentBaseXMLMapper.ReadXml(strValue, tempOut_xDoc, EPCISQueryDocument.class);
 		xDoc = tempOut_xDoc.outArgValue;
-			if (xDoc.Root == null)
-			{
-				throw new RuntimeException("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.");
-			}
-			if (document.getEPCISVersion() == null)
-			{
-				throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
-			}
-
-			if (checkSchema)
-			{
-				EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.getEPCISVersion());
-			}
-
-			String epcisQueryXName = (document.getEPCISVersion() == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
-
-			// read the query name
-			XElement xQueryName = xDoc.Root == null ? null : ((xDoc.Root.Element("EPCISBody") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults") == null ? null : xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("queryName")))));
-			if (xQueryName != null)
-			{
-				document.setQueryName(xQueryName.getValue());
-			}
-
-			// read the events
-//C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: System.Nullable<XElement> xEventList = xDoc.Root == null ? null : ((xDoc.Root.Element("EPCISBody") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody") == null ? null : xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody").Element("EventList"))))))) ?? throw new Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root");
-			XElement xEventList = xDoc.Root == null ? null : (((xDoc.Root.Element("EPCISBody") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody") == null ? null : xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody").Element("EventList"))))))) != null ? ((xDoc.Root.Element("EPCISBody") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody") == null ? null : xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody").Element("EventList"))))))) : throw new RuntimeException("Failed to get EPCISBody/EventList after adding it to the XDoc.Root"));
-			if (xEventList != null)
-			{
-				for (XElement xEvent : xEventList.Elements())
-				{
-					XElement x = xEvent;
-					if (document.getEPCISVersion() == EPCISVersion.V1 && x.Element("TransformationEvent") != null)
-					{
-						x = xEvent.Element("TransformationEvent");
-					}
-					Type eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(x);
-					IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(x, eventType, document.getEPCISVersion());
-					document.getEvents().add(e);
-				}
-			}
-
-			return document;
-		}
-		catch (RuntimeException Ex)
+		if (xDoc == null)
 		{
-			RuntimeException exception = new RuntimeException("Failed to parse the EPCIS document from the XML. xml=" + strValue, Ex);
-			OTLogger.Error(exception);
-			throw Ex;
+			throw new RuntimeException("Failed to parse EPCISQueryDocument from xml string because after parsing the XElement the Root property was null.");
 		}
+		if (document.epcisVersion == null)
+		{
+			throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
+		}
+
+		if (checkSchema)
+		{
+			EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, document.epcisVersion);
+		}
+
+		String epcisQueryXName = (document.epcisVersion == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
+
+		// read the query name
+		XElement xQueryName = xDoc.Element("EPCISBody/QueryResults/queryName");
+		if (xQueryName.IsNull == false)
+		{
+			document.QueryName = xQueryName.getValue();
+		}
+
+		// read the events
+		XElement xEventList = xDoc.Element("EPCISBody/QueryResults/resultsBody/EventList");
+		if (xEventList.IsNull == false)
+		{
+			for (XElement xEvent : xEventList.Elements())
+			{
+				XElement x = xEvent;
+				if (document.epcisVersion == EPCISVersion.V1 && x.Element("TransformationEvent") != null)
+				{
+					x = xEvent.Element("TransformationEvent");
+				}
+				Type eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(x);
+				IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(x, eventType, document.epcisVersion);
+				document.events.add(e);
+			}
+		}
+
+		return document;
 	}
 
-	public final String Map(EPCISQueryDocument doc)
-	{
+	public String map(EPCISQueryDocument doc) throws Exception {
 		if (doc.epcisVersion == null)
 		{
 			throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
@@ -88,31 +68,28 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 
 		String epcisNS = (doc.epcisVersion == EPCISVersion.V2) ? Constants.EPCISQUERY_2_NAMESPACE : Constants.EPCISQUERY_1_NAMESPACE;
 
-		XDocument xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, epcisNS, "EPCISQueryDocument");
-		if (xDoc.Root == null)
+		XElement xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, epcisNS, "EPCISQueryDocument");
+		if (xDoc == null)
 		{
-			throw new RuntimeException("Failed to parse EPCISQueryDocument from xml string because after parsing the XDocument the Root property was null.");
+			throw new RuntimeException("Failed to parse EPCISQueryDocument from xml string because after parsing the XElement the Root property was null.");
 		}
 
 		String epcisQueryXName = (doc.epcisVersion == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
 
 		// write the query name
-		xDoc.Root.Add(new XElement("EPCISBody", new XElement(epcisQueryXName + "QueryResults", new XElement("queryName"), new XElement("resultsBody", new XElement("EventList")))));
+		xDoc.Add(new XElement("EPCISBody", new XElement(epcisQueryXName, "QueryResults", new XElement("queryName"), new XElement("resultsBody", new XElement("EventList")))));
 
-		XElement xQueryName = xDoc.Root == null ? null : ((xDoc.Root.Element("EPCISBody") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults") == null ? null : xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("queryName")))));
-		if (xQueryName != null)
+		XElement xQueryName = xDoc.Element("EPCISBody/QueryResults/queryName");
+		if (xQueryName.IsNull == false)
 		{
-			xQueryName.getValue() = doc.getQueryName();
+			xQueryName.setValue(doc.QueryName);
 		}
 
-		// write the events
-//C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: System.Nullable<XElement> xEventList = xDoc.Root == null ? null : ((xDoc.Root.Element("EPCISBody") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody") == null ? null : xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody").Element("EventList"))))))) ?? throw new Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root");
-		XElement xEventList = xDoc.Root == null ? null : (((xDoc.Root.Element("EPCISBody") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody") == null ? null : xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody").Element("EventList"))))))) != null ? ((xDoc.Root.Element("EPCISBody") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults") == null ? null : ((xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody") == null ? null : xDoc.Root.Element("EPCISBody").Element(epcisQueryXName + "QueryResults").Element("resultsBody").Element("EventList"))))))) : throw new RuntimeException("Failed to get EPCISBody/EventList after adding it to the XDoc.Root"));
-		for (IEvent e : doc.getEvents())
+		XElement xEventList = xDoc.Element("EPCISBody/QueryResults/resultsBody/EventList");
+		for (IEvent e : doc.events)
 		{
 			String xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
-			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.epcisVersion);
+			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(null, xname, e, doc.epcisVersion);
 			if (e.eventType == EventType.TransformationEvent && doc.epcisVersion == EPCISVersion.V1)
 			{
 				xEvent = new XElement("extension", xEvent);
@@ -126,23 +103,5 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 		EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.epcisVersion);
 
 		return xDoc.toString();
-	}
-
-
-	public final Task<EPCISQueryDocument> MapAsync(String strValue)
-	{
-		return MapAsync(strValue, true);
-	}
-
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public Task<EPCISQueryDocument> MapAsync(string strValue, bool checkSchema = true)
-	public final Task<EPCISQueryDocument> MapAsync(String strValue, boolean checkSchema)
-	{
-		return Task.FromResult(Map(strValue, checkSchema));
-	}
-
-	public final Task<String> MapAsync(EPCISQueryDocument doc)
-	{
-		return Task.FromResult(Map(doc));
 	}
 }

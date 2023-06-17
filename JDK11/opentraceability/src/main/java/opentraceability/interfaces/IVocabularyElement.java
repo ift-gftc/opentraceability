@@ -15,4 +15,9 @@ public abstract class IVocabularyElement {
     public VocabularyType vocabularyType = null;
 
     public ArrayList<IMasterDataKDE> kdes = new ArrayList<IMasterDataKDE>();
+
+    public String getEpcisType()
+    {
+        return epcisType;
+    }
 }

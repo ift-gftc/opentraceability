@@ -25,9 +25,8 @@ public class XmlSchemaChecker {
     private static final Map<String, CachedXmlSchema> cache = new HashMap<>();
     private static final Object lock = new Object();
 
-    public static Pair<Boolean, String> validate(Document xml, String schemaURL) {
+    public static Boolean validate(XElement xml, String schemaURL, tangible.OutObject<String> error) {
         StringBuilder validationError = new StringBuilder();
-        String error = null;
         boolean isFileOk = false;
 
         try {
@@ -35,7 +34,7 @@ public class XmlSchemaChecker {
             factory.setNamespaceAware(true);
             javax.xml.parsers.DocumentBuilder builder = factory.newDocumentBuilder();
             InputSource reader = new InputSource();
-            reader.setCharacterStream(new StringReader(xml.toString()));
+            reader.setCharacterStream(new StringReader(xml.element.getOwnerDocument().toString()));
 
             Document doc = builder.parse(reader);
 
@@ -79,11 +78,11 @@ public class XmlSchemaChecker {
         } catch (Exception e) {
             OTLogger.error(e);
         } finally {
-            error = validationError.toString();
-            isFileOk = error == null || error.isBlank();
+            error.outArgValue = validationError.toString();
+            isFileOk = error == null || error.outArgValue.isBlank();
         }
 
-        return new Pair<>(isFileOk, error);
+        return isFileOk;
     }
 
     public static Schema getSchema(String url) {

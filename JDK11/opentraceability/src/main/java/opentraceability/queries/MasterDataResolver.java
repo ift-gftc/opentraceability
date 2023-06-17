@@ -1,41 +1,46 @@
 package opentraceability.queries;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import opentraceability.interfaces.IEvent;
 import opentraceability.interfaces.IVocabularyElement;
 import opentraceability.mappers.OpenTraceabilityMappers;
-import opentraceability.models.events.EPCISBaseDocument;
-import opentraceability.models.events.EventDestinationType;
-import opentraceability.models.events.EventProduct;
-import opentraceability.models.events.EventSourceType;
+import opentraceability.models.events.*;
+import opentraceability.models.masterdata.DigitalLink;
 import opentraceability.models.masterdata.Location;
 import opentraceability.models.masterdata.TradeItem;
 import opentraceability.models.masterdata.TradingParty;
 import opentraceability.models.identifiers.*;
+import opentraceability.utility.URLHelper;
+
+import java.lang.reflect.Type;
 import java.net.URI;
+import java.util.List;
 
 public class MasterDataResolver {
     public static void resolveMasterData(DigitalLinkQueryOptions options, EPCISBaseDocument doc, OkHttpClient client) throws Exception {
         for (IEvent evt : doc.events) {
-            for (EventProduct p : evt.products) {
-                if (p.EPC.Type == EPCType.Class || p.EPC.Type == EPCType.Instance) {
-                    resolveTradeitem(options, p.EPC.GTIN, doc, client);
+            for (EventProduct p : evt.getProducts()) {
+                if (p.EPC.getType() == EPCType.Class || p.EPC.getType() == EPCType.Instance) {
+                    resolveTradeitem(options, p.EPC.getGTIN(), doc, client);
                 }
             }
 
             resolveLocation(options, evt.location.gln, doc, client);
 
-            for (EPCISBaseExtension source : evt.sourceList) {
-                if (source.ParsedType == EventSourceType.Owner) {
-                    PGLN pgln = new PGLN(source.Value);
+            for (EventSource source : evt.sourceList) {
+                if (source.getParsedType() == EventSourceType.Owner) {
+                    PGLN pgln = new PGLN(source.value);
                     if (pgln != null) {
                         resolveTradingParty(options, pgln, doc, client);
                     }
                 }
             }
 
-            for (EPCISBaseExtension dest : evt.destinationList) {
-                if (dest.ParsedType == EventDestinationType.Owner) {
+            for (EventDestination dest : evt.destinationList) {
+                if (dest.getParsedType() == EventDestinationType.Owner) {
                     PGLN pgln = new PGLN(dest.value);
                     if (pgln != null) {
                         resolveTradingParty(options, pgln, doc, client);
@@ -47,10 +52,10 @@ public class MasterDataResolver {
 
     public static void resolveTradeitem(DigitalLinkQueryOptions options, GTIN gtin, EPCISBaseDocument doc, OkHttpClient client) throws Exception {
         if (gtin != null) {
-            if (doc.searchMasterData(gtin.toString()) == null) {
-                KClass<TradeItem> type = typeOf(TradeItem.class);
-                TradeItem t = opentraceability.Setup.getMasterDataTypeDefault(type) != null ? throw new Exception("failed to find master data type for Trade Item") : null;
-                TradeItem ti = resolveMasterDataItem(t, options, "/01/" + gtin.toString() + "?linkType=gs1:masterData", client);
+            if (doc.searchMasterData(gtin.toString(), TradeItem.class) == null) {
+                Type type = TradeItem.class;
+                type = opentraceability.Setup.getMasterDataTypeDefault(type);
+                IVocabularyElement ti = resolveMasterDataItem(type, options, "/01/" + gtin.toString() + "?linkType=gs1:masterData", client);
                 if (ti != null) {
                     doc.masterData.add(ti);
                 }
@@ -60,10 +65,10 @@ public class MasterDataResolver {
 
     public static void resolveLocation(DigitalLinkQueryOptions options, GLN gln, EPCISBaseDocument doc, OkHttpClient client) throws Exception {
         if (gln != null) {
-            if (doc.searchMasterData(gln.toString()) == null) {
-                KClass<Location> type = typeOf(Location.class);
-                Location t = opentraceability.Setup.getMasterDataTypeDefault(type) != null ? throw new Exception("failed to find master data type for Location") : null;
-                Location l = resolveMasterDataItem(t, options, "/414/" + gln.toString() + "?linkType=gs1:masterData", client);
+            if (doc.searchMasterData(gln.toString(), Location.class) == null) {
+                Type type = Location.class;
+                type = opentraceability.Setup.getMasterDataTypeDefault(type);
+                IVocabularyElement l = resolveMasterDataItem(type, options, "/414/" + gln.toString() + "?linkType=gs1:masterData", client);
                 if (l != null) {
                     doc.masterData.add(l);
                 }
@@ -73,10 +78,10 @@ public class MasterDataResolver {
 
     public static void resolveTradingParty(DigitalLinkQueryOptions options, PGLN pgln, EPCISBaseDocument doc, OkHttpClient client) throws Exception {
         if (pgln != null) {
-            if (doc.searchMasterData(pgln.toString()) == null) {
-                KClass<TradingParty> type = typeOf(TradingParty.class);
-                TradingParty t = opentraceability.Setup.getMasterDataTypeDefault(type) != null ? throw new Exception("failed to find master data type for Trading Party") : null;
-                TradingParty tp = resolveMasterDataItem(t, options, "/417/" + pgln.toString() + "?linkType=gs1:masterData", client);
+            if (doc.searchMasterData(pgln.toString(), TradingParty.class) == null) {
+                Type type = TradingParty.class;
+                type = opentraceability.Setup.getMasterDataTypeDefault(type);
+                IVocabularyElement tp = resolveMasterDataItem(type, options, "/417/" + pgln.toString() + "?linkType=gs1:masterData", client);
                 if (tp != null) {
                     doc.masterData.add(tp);
                 }
@@ -84,24 +89,22 @@ public class MasterDataResolver {
         }
     }
 
-    public static IVocabularyElement resolverMasterDataItem(DigitalLinkQueryOptions options, String relativeURL, OkHttpClient client, List<KClass<IVocabularyElement>> kClasses) throws Exception {
+    public static IVocabularyElement resolverMasterDataItem(DigitalLinkQueryOptions options, String relativeURL, OkHttpClient client, List<Type> kClasses) throws Exception {
         IVocabularyElement response = null;
-        for (KClass<IVocabularyElement> clazz : kClasses) {
-            response = resolveMasterDataItem(clazz, options, relativeURL, client);
+        for (var type : kClasses) {
+            response = resolveMasterDataItem(type, options, relativeURL, client);
             if (response != null) break;
         }
         return response;
     }
 
-    public static IVocabularyElement resolveMasterDataItem(KClass<IVocabularyElement> type, DigitalLinkQueryOptions options, String relativeURL, OkHttpClient client) throws Exception {
-        if (options.URL == null) {
+    public static IVocabularyElement resolveMasterDataItem(Type type, DigitalLinkQueryOptions options, String relativeURL, OkHttpClient client) throws Exception {
+        if (options.url == null) {
             throw new Exception("options.Uri is null on the DigitalLinkQueryOptions");
         }
 
-        OkHttpClient client = new OkHttpClient();
-
         Request request = new Request.Builder()
-                .url(new URI(options.URL.toString().trim() + "/" + relativeURL.trimStart("/")).toURL())
+                .url(new URI(URLHelper.Combine(options.url.toString(), relativeURL)).toURL())
                 .get()
                 .build();
 

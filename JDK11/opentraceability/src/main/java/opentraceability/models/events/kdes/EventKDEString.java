@@ -1,6 +1,8 @@
 package opentraceability.models.events.kdes;
 
 import opentraceability.interfaces.IEventKDE;
+import opentraceability.utility.XAttribute;
+import opentraceability.utility.XElement;
 import org.json.JSONObject;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -23,8 +25,7 @@ public class EventKDEString extends IEventKDE {
         this.name = name;
     }
 
-    @Override
-    public JSONObject getJson() {
+    public Object getJson() {
         if (value == null || value.isEmpty()) {
             return null;
         } else {
@@ -34,39 +35,31 @@ public class EventKDEString extends IEventKDE {
         }
     }
 
-    @Override
-    public Element getXml() throws Exception {
+    public XElement getXml() throws Exception {
         if (value == null || value.isEmpty()) {
             return null;
         } else {
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            Document document = docFactory.newDocumentBuilder().newDocument();
+            XElement element = new XElement(namespace, name);
+            element.setValue(value);
 
-            Element element = document.createElementNS(namespace, name);
-            element.setTextContent(value);
-
-            for (Map.Entry<String, String> entry : attributes.entrySet()) {
-                Attr attr = document.createAttributeNS(namespace, entry.getKey());
-                attr.setValue(entry.getValue());
-                element.setAttributeNodeNS(attr);
+            for (Map.Entry<String, String> entry : attributes.entrySet())
+            {
+                element.SetAttributeValue(namespace, entry.getKey(), entry.getValue());
             }
 
             return element;
         }
     }
 
-    @Override
-    public void setFromJson(JSONObject json) {
+    public void setFromJson(Object json) {
         value = json.toString();
     }
 
-    @Override
-    public void setFromXml(Element xml) {
-        value = xml.getTextContent();
+    public void setFromXml(XElement xml) throws Exception {
+        value = xml.getValue();
 
-        for (int i = 0; i < xml.getAttributes().getLength(); i++) {
-            Attr attr = (Attr) xml.getAttributes().item(i);
-            attributes.put(attr.getNodeName(), attr.getNodeValue());
+        for (XAttribute xatt: xml.Attributes()) {
+            attributes.put(xatt.Name, xatt.Value);
         }
     }
 

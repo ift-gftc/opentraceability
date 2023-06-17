@@ -5,8 +5,6 @@ import opentraceability.models.common.*;
 import opentraceability.models.events.*;
 import opentraceability.utility.*;
 import opentraceability.*;
-import opentraceability.mappers.*;
-import opentraceability.mappers.epcis.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import tangible.StringHelper;
@@ -276,12 +274,12 @@ public final class EPCISDocumentBaseJsonMapper
 				}
 			}
 
-			if (profiles.count() == 0)
+			if (finalProfiles.size() == 0)
 			{
 				throw new RuntimeException("Failed to create event from profile. Type=" + eventType + " and BizStep=" + bizStep + " and Action=" + action);
 			}
 
-			return ((OpenTraceabilityEventProfile)profiles.toArray()[0]).EventClassType;
+			return ((OpenTraceabilityEventProfile)finalProfiles.toArray()[0]).EventClassType;
 		}
 	}
 

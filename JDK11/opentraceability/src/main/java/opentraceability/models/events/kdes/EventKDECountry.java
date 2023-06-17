@@ -3,6 +3,7 @@ package opentraceability.models.events.kdes;
 import opentraceability.interfaces.IEventKDE;
 import opentraceability.utility.Countries;
 import opentraceability.utility.Country;
+import opentraceability.utility.XElement;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
 
@@ -28,15 +29,12 @@ public class EventKDECountry extends IEventKDE {
     }
 
     @Override
-    public Element getXml() {
+    public XElement getXml() {
         Country value = this.value;
         if (value == null) return null;
         try {
-            // you would typically use a XML parser here
-            var documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            var document = documentBuilder.newDocument();
-            var element = document.createElement(this.name);
-            element.setTextContent(Integer.toString(value.iso));
+            var element = new XElement(this.name);
+            element.setValue(Integer.toString(value.iso));
             return element;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -45,14 +43,14 @@ public class EventKDECountry extends IEventKDE {
     }
 
     @Override
-    public void setFromJson(JSONObject json) {
+    public void setFromJson(Object json) {
         String strValue = json.toString();
         this.value = Countries.parse(strValue);
     }
 
     @Override
-    public void setFromXml(Element xml) {
-        String strValue = xml.getTextContent();
+    public void setFromXml(XElement xml) {
+        String strValue = xml.getValue();
         this.value = Countries.parse(strValue);
     }
 

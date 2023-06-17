@@ -157,13 +157,10 @@ public final class EPCISJsonMasterDataReader
 		doc.masterData.add(ele);
 	}
 
-
 	private static void ReadMasterDataObject(IVocabularyElement md, JSONObject jMasterData) throws Exception {
 		ReadMasterDataObject(md, jMasterData, true);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: private static void ReadMasterDataObject(IVocabularyElement md, JSONObject jMasterData, bool readKDEs = true)
 	private static void ReadMasterDataObject(IVocabularyElement md, JSONObject jMasterData, boolean readKDEs) throws Exception {
 		var mappedProperties = OTMappingTypeInformation.getMasterDataJsonTypeInfo(md.getClass());
 
@@ -254,12 +251,10 @@ public final class EPCISJsonMasterDataReader
 	}
 
 	private static Object ReadKDEObject(Object j, Type t) throws Exception {
-//C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: object value = Activator.CreateInstance(t) ?? throw new Exception("Failed to create instance of " + t.FullName);
 		Object value = ReflectionUtility.constructType(t);
 		if (value == null)
 		{
-			throw new RuntimeException("Failed to create instance of " + t.getName());
+			throw new RuntimeException("Failed to create instance of " + t.getTypeName());
 		}
 
 		if (value instanceof List)
@@ -297,18 +292,14 @@ public final class EPCISJsonMasterDataReader
 			}
 
 			// go through each property...
-			for (Field p : t.getFields())
+			for (Field p : t.getClass().getFields())
 			{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: OpenTraceabilityAttribute? xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
 				OpenTraceabilityAttribute xmlAtt = ReflectionUtility.getFieldAnnotation(p, OpenTraceabilityAttribute.class);
 				if (xmlAtt != null)
 				{
 					Object x = jobj.get(xmlAtt.name());
 					if (x != null)
 					{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: OpenTraceabilityObjectAttribute? objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
 						OpenTraceabilityObjectAttribute objAtt = ReflectionUtility.getFieldAnnotation(p, OpenTraceabilityObjectAttribute.class);
 						if (objAtt != null)
 						{
@@ -316,7 +307,7 @@ public final class EPCISJsonMasterDataReader
 						}
 						else if (!TrySetValueType(x.toString(), p, value))
 						{
-							throw new RuntimeException(String.format("Failed to set value type while reading KDE object. property = %1$s, type = %2$s, json = %3$s", p.getName(), t.getName(), x.toString()));
+							throw new RuntimeException(String.format("Failed to set value type while reading KDE object. property = %1$s, type = %2$s, json = %3$s", p.getName(), t.getTypeName(), x.toString()));
 						}
 					}
 				}
@@ -335,8 +326,8 @@ public final class EPCISJsonMasterDataReader
 		else if (ReflectionUtility.isListOf(p.getType(), String.class))
 		{
 			Object tempVar = p.get(o);
-			ArrayList<String> cur = tempVar instanceof ArrayList<String> ? (ArrayList<String>)tempVar : null;
-			if (cur == null)
+			ArrayList cur = tempVar instanceof ArrayList ? (ArrayList)tempVar : null;
+			if (cur == null || cur.isEmpty())
 			{
 				cur = new ArrayList<String>();
 				p.set(o, cur);
@@ -358,17 +349,13 @@ public final class EPCISJsonMasterDataReader
 		}
 		else if (p.getType() == URI.class)
 		{
-			URI v = URI.create((val);
+			URI v = URI.create(val);
 			p.set(o, v);
 			return true;
 		}
 		else if (ReflectionUtility.isListOf(p.getType(), LanguageString.class))
 		{
-			ArrayList<LanguageString> l = new ArrayList<LanguageString>();
-			LanguageString tempVar2 = new LanguageString();
-			tempVar2.language = "en-US";
-			tempVar2.value = val;
-			l.add(tempVar2);
+			ArrayList<LanguageString> l = LanguageString.fromJSON(val);
 			p.set(o, l);
 			return true;
 		}

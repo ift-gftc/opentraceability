@@ -3,6 +3,8 @@ package opentraceability.models.events.kdes;
 import opentraceability.Constants;
 import opentraceability.interfaces.IEventKDE;
 import java.lang.reflect.Type;
+
+import opentraceability.utility.XElement;
 import org.json.JSONObject;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -32,46 +34,38 @@ public class EventKDEDouble extends IEventKDE {
     }
 
     @Override
-    public Element getXml() {
+    public XElement getXml() throws Exception {
         Double value = this.value;
         if (value == null) {
             return null;
         }
 
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        Document document;
-        try {
-            document = docFactory.newDocumentBuilder().newDocument();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-
-        Element element = document.createElementNS(this.namespace, this.name);
-        element.setTextContent(value.toString());
-
-        Attr xsiTypeAttr = document.createAttributeNS(Constants.XSI_NAMESPACE, "type");
-        xsiTypeAttr.setValue("number");
-        element.setAttributeNodeNS(xsiTypeAttr);
+        XElement element = new XElement(this.namespace, this.name);
+        element.setValue(value.toString());
+        element.SetAttributeValue(Constants.XSI_NAMESPACE, "type", "number");
 
         return element;
     }
 
-    @Override
-    public void setFromJson(JSONObject json) {
-        this.value = json.getDouble("value");
-    }
-
-    @Override
-    public void setFromXml(Element xml) {
-        try {
-            this.value = Double.parseDouble(xml.getTextContent());
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void setFromJson(Object json) {
+        if (json instanceof JSONObject)
+        {
+            this.value = ((JSONObject)json).getDouble("value");
+        }
+        else if (json instanceof Double)
+        {
+            this.value = (Double)json;
+        }
+        else if (json instanceof String)
+        {
+            this.value = Double.parseDouble((String)json);
         }
     }
 
-    @Override
+    public void setFromXml(XElement xml) {
+        this.value = Double.parseDouble(xml.getValue());
+    }
+
     public String toString() {
         return value == null ? "" : value.toString();
     }
