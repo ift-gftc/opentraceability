@@ -268,7 +268,7 @@ public final class EPCISXmlMasterDataReader
 						}
 						else if (!TrySetValueType(x.getValue(), p, value))
 						{
-							throw new RuntimeException(String.format("Failed to set value type while reading KDE object. property = %1$s, type = %2$s, xml = %3$s", p.getName(), t.getTypeName(), x.toString()));
+							throw new RuntimeException(String.format("Failed to set value type while reading KDE object. property = %1$s, type = %2$s, xml = %3$s", p.getName(), t.getTypeName(), x));
 						}
 					}
 				}

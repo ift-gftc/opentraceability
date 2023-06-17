@@ -4,7 +4,7 @@ public enum EPCISQueryType {
     Unknown(0),
     events(1);
 
-    private int value;
+    private final int value;
 
     EPCISQueryType(int value) {
         this.value = value;

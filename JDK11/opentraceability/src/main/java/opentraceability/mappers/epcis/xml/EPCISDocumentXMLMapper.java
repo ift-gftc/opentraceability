@@ -27,7 +27,7 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 
 			// read the events
 			XElement xEventList = xDoc.Element("EPCISBody/EventList");
-			if (xEventList.IsNull == false)
+			if (!xEventList.IsNull)
 			{
 				for (XElement xEvent : xEventList.Elements())
 				{

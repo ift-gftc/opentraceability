@@ -7,7 +7,7 @@ public enum EventProductType {
     Parent(4),
     Child(5);
 
-    private int value;
+    private final int value;
 
     EventProductType(int value) {
         this.value = value;

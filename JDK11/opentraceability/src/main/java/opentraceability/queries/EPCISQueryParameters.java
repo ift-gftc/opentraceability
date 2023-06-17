@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.http.HttpRequest;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EPCISQueryParameters {
-    private static Map<String, Field> propMapping = initializePropertyMapping();
+    private static final Map<String, Field> propMapping = initializePropertyMapping();
     private static Map<String, Field> initializePropertyMapping() {
         Map<String, Field> mapping = new HashMap<>();
         for (Field field : EPCISQuery.class.getFields())
@@ -52,7 +53,7 @@ public class EPCISQueryParameters {
         List<NameValuePair> queryParameters = uriBuilder.getQueryParams();
         for (NameValuePair param : queryParameters) {
             String key = param.getName();
-            String value = URLDecoder.decode(param.getValue(), "UTF-8");
+            String value = URLDecoder.decode(param.getValue(), StandardCharsets.UTF_8);
 
             Field prop = propMapping.get(key);
             if (prop != null) {
@@ -107,17 +108,13 @@ public class EPCISQueryParameters {
             Object value = prop.get(query);
             if (value instanceof OffsetDateTime) {
                 OffsetDateTime offsetDateTime = ((OffsetDateTime) value);
-                queryParameters.add(prop.getName() + "=" + URLEncoder.encode(offsetDateTime.toString(), "UTF-8"));
+                queryParameters.add(prop.getName() + "=" + URLEncoder.encode(offsetDateTime.toString(), StandardCharsets.UTF_8));
             } else if (value instanceof List) {
                 List<?> list = (List<?>) value;
                 if (!list.isEmpty()) {
                     List<String> encodedValues = list.stream().map(Object::toString)
                             .map(it -> {
-                                try {
-                                    return URLEncoder.encode(it, "UTF-8");
-                                } catch (UnsupportedEncodingException e) {
-                                    throw new RuntimeException(e);
-                                }
+                                return URLEncoder.encode(it, StandardCharsets.UTF_8);
                             })
                             .collect(Collectors.toList());
                     queryParameters.add(prop.getName() + "=" + String.join("|", encodedValues));
@@ -159,7 +156,7 @@ public class EPCISQueryParameters {
             if (value instanceof String) {
                 String stringValue = ((String) value);
                 if (!stringValue.isBlank()) {
-                    String encodedValue = URLEncoder.encode(stringValue, "UTF-8");
+                    String encodedValue = URLEncoder.encode(stringValue, StandardCharsets.UTF_8);
                     String queryParam = prop.getName() + "=" + encodedValue;
                     queryParameters.add(queryParam);
                 }
@@ -170,7 +167,7 @@ public class EPCISQueryParameters {
                             .map(Object::toString)
                             .map(it -> {
                                 try {
-                                    return URLEncoder.encode(it.toString(), "UTF-8");
+                                    return URLEncoder.encode(it, StandardCharsets.UTF_8);
                                 } catch (Exception e) {
                                     return "";
                                 }
@@ -182,7 +179,7 @@ public class EPCISQueryParameters {
                 }
             } else if (value instanceof URI) {
                 URI uriValue = ((URI) value);
-                String encodedValue = URLEncoder.encode(uriValue.toString(), "UTF-8");
+                String encodedValue = URLEncoder.encode(uriValue.toString(), StandardCharsets.UTF_8);
                 String queryParam = prop.getName() + "=" + encodedValue;
                 queryParameters.add(queryParam);
             } else if (value instanceof OffsetDateTime) {
@@ -191,7 +188,7 @@ public class EPCISQueryParameters {
                     DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
                     String isoString = offsetDateTime.format(formatter);
 
-                    String queryParam = prop.getName() + "=" + URLEncoder.encode(isoString, "UTF-8");
+                    String queryParam = prop.getName() + "=" + URLEncoder.encode(isoString, StandardCharsets.UTF_8);
                     queryParameters.add(queryParam);
                 }
             }

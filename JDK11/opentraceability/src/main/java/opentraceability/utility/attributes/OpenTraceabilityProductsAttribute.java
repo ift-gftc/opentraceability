@@ -12,10 +12,10 @@ import java.lang.annotation.Target;
 @Repeatable(OpenTraceabilityProductsAttributes.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OpenTraceabilityProductsAttribute {
-    public String name();
-    public EPCISVersion version();
-    public EventProductType productType();
-    public OpenTraceabilityProductsListType listType();
-    public boolean required() default false;
+    String name();
+    EPCISVersion version() default EPCISVersion.Any;
+    EventProductType productType();
+    OpenTraceabilityProductsListType listType();
+    boolean required() default false;
 }
 

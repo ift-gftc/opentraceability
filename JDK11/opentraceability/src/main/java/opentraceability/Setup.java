@@ -123,6 +123,6 @@ public class Setup {
     }
 
     public static Type getMasterDataTypeDefault(Type type) {
-        return (Type) MasterDataTypeDefault.get(type);
+        return MasterDataTypeDefault.get(type);
     }
 }

@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ReflectionUtility
@@ -64,9 +65,7 @@ public class ReflectionUtility
         Annotation[] annotations = field.getDeclaredAnnotations();
         List<Annotation> annotationList = new ArrayList<>();
 
-        for (Annotation annotation : annotations) {
-            annotationList.add(annotation);
-        }
+        Collections.addAll(annotationList, annotations);
 
         return annotationList;
     }
@@ -127,10 +126,7 @@ public class ReflectionUtility
 
             if (rawType.equals(ArrayList.class) && typeArguments.length == 1) {
                 Type genericType = typeArguments[0];
-                if (genericType.getClass().equals(itemType))
-                {
-                    return true;
-                }
+                return genericType.getClass().equals(itemType);
             }
         }
 

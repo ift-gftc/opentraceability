@@ -99,7 +99,7 @@ public class UOM {
     }
 
     private static List<UOM> uomList = null;
-    private static ReentrantLock uomListLock = new ReentrantLock();
+    private static final ReentrantLock uomListLock = new ReentrantLock();
 
     public static List<UOM> getUOMList() {
         if (uomList == null) {

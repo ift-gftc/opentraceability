@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EmbeddedResourceLoader {
-    private Map<String, ClassLoader> assemblyMap = new HashMap<>();
+    private final Map<String, ClassLoader> assemblyMap = new HashMap<>();
 
     private ClassLoader getAssembly(String assemblyName) {
         ClassLoader classLoader = assemblyMap.get(assemblyName);

@@ -93,9 +93,9 @@ public class Countries {
                 loop:
                 for (Map.Entry<String, Country> element : _dirNameCountries.entrySet()) {
                     if (element.getValue().alternativeName != null) {
-                        if (element.getValue().alternativeName.toUpperCase().equals(name.toUpperCase())) {
+                        if (element.getValue().alternativeName.equalsIgnoreCase(name)) {
                             country = element.getValue();
-                            break loop;
+                            break;
                         }
                     }
                 }
@@ -114,7 +114,7 @@ public class Countries {
             for (Map.Entry<String, Country> element : _dirCountries.entrySet()) {
                 if (element.getValue().iso == iso) {
                     country = element.getValue();
-                    break loop;
+                    break;
                 }
             }
 

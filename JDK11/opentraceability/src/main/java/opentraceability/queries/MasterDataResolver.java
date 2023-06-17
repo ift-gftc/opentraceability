@@ -55,7 +55,7 @@ public class MasterDataResolver {
             if (doc.searchMasterData(gtin.toString(), TradeItem.class) == null) {
                 Type type = TradeItem.class;
                 type = opentraceability.Setup.getMasterDataTypeDefault(type);
-                IVocabularyElement ti = resolveMasterDataItem(type, options, "/01/" + gtin.toString() + "?linkType=gs1:masterData", client);
+                IVocabularyElement ti = resolveMasterDataItem(type, options, "/01/" + gtin + "?linkType=gs1:masterData", client);
                 if (ti != null) {
                     doc.masterData.add(ti);
                 }
@@ -68,7 +68,7 @@ public class MasterDataResolver {
             if (doc.searchMasterData(gln.toString(), Location.class) == null) {
                 Type type = Location.class;
                 type = opentraceability.Setup.getMasterDataTypeDefault(type);
-                IVocabularyElement l = resolveMasterDataItem(type, options, "/414/" + gln.toString() + "?linkType=gs1:masterData", client);
+                IVocabularyElement l = resolveMasterDataItem(type, options, "/414/" + gln + "?linkType=gs1:masterData", client);
                 if (l != null) {
                     doc.masterData.add(l);
                 }
@@ -81,7 +81,7 @@ public class MasterDataResolver {
             if (doc.searchMasterData(pgln.toString(), TradingParty.class) == null) {
                 Type type = TradingParty.class;
                 type = opentraceability.Setup.getMasterDataTypeDefault(type);
-                IVocabularyElement tp = resolveMasterDataItem(type, options, "/417/" + pgln.toString() + "?linkType=gs1:masterData", client);
+                IVocabularyElement tp = resolveMasterDataItem(type, options, "/417/" + pgln + "?linkType=gs1:masterData", client);
                 if (tp != null) {
                     doc.masterData.add(tp);
                 }
@@ -114,27 +114,25 @@ public class MasterDataResolver {
         if (response.code() == 200) {
             ObjectMapper objectMapper = new ObjectMapper();
             DigitalLink[] links = objectMapper.readValue(responseStr, DigitalLink[].class);
-            if (links.length > 0) {
-                for (DigitalLink link : links) {
-                    try {
-                        Request.Builder secondRequest = new Request.Builder().url(new URI(link.link).toURL()).get();
-                        Response itemResponse = client.newCall(secondRequest.build()).execute();
-                        String itemResponseStr = itemResponse.body().string();
+            for (DigitalLink link : links) {
+                try {
+                    Request.Builder secondRequest = new Request.Builder().url(new URI(link.link).toURL()).get();
+                    Response itemResponse = client.newCall(secondRequest.build()).execute();
+                    String itemResponseStr = itemResponse.body().string();
 
-                        if (itemResponse.code() == 200) {
-                            IVocabularyElement item = OpenTraceabilityMappers.MasterData.GS1WebVocab.map(type, itemResponseStr);
-                            if (item != null) {
-                                if (item.id == null) {
-                                    throw new Exception("While resolve a " + type + " through the GS1 Digital Link Resolver, the " + type + " returned " +
-                                            "had an empty or invalid Identifier. The link that was resolved was " + link + " and the results was " + itemResponseStr);
-                                } else {
-                                    return item;
-                                }
+                    if (itemResponse.code() == 200) {
+                        IVocabularyElement item = OpenTraceabilityMappers.MasterData.GS1WebVocab.map(type, itemResponseStr);
+                        if (item != null) {
+                            if (item.id == null) {
+                                throw new Exception("While resolve a " + type + " through the GS1 Digital Link Resolver, the " + type + " returned " +
+                                        "had an empty or invalid Identifier. The link that was resolved was " + link + " and the results was " + itemResponseStr);
+                            } else {
+                                return item;
                             }
                         }
-                    } catch (Exception e) {
-                        System.out.println(e);
                     }
+                } catch (Exception e) {
+                    System.out.println(e);
                 }
             }
         } else {

@@ -3,6 +3,7 @@ package opentraceability.models.masterdata.kdes;
 import opentraceability.interfaces.IMasterDataKDE;
 import opentraceability.utility.Countries;
 import opentraceability.utility.Country;
+import opentraceability.utility.XElement;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
 
@@ -15,15 +16,15 @@ public class MasterDataKDECountry extends IMasterDataKDE {
 
     public Type getValueType() {
         return Country.class;
-    };
+    }
 
-    public Element getEPCISXml() throws Exception {
+    public XElement getEPCISXml() throws Exception {
         if (value == null) {
             return null;
         } else {
-            Element x = createXmlElement("attribute");
-            x.setAttribute("id", this.name);
-            x.setTextContent(value.alpha3);
+            XElement x = new XElement("attribute");
+            x.SetAttributeValue("id", this.name);
+            x.setValue(value.alpha3);
             return x;
         }
     }
@@ -32,10 +33,10 @@ public class MasterDataKDECountry extends IMasterDataKDE {
         throw new UnsupportedOperationException("Not Implemented Exception");
     }
 
-    public void setFromEPCISXml(Element xml) {
-        Country country = Countries.parse(xml.getNodeValue());
+    public void setFromEPCISXml(XElement xml) throws Exception {
+        Country country = Countries.parse(xml.getValue());
         value = country;
-        name = xml.getAttribute("id") != null ? xml.getAttribute("id") : "";
+        name = xml.Attribute("id");
     }
 
     public void setFromGS1WebVocabJson(JSONObject json) {

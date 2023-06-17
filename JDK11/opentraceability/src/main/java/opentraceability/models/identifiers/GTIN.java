@@ -83,7 +83,7 @@ public class GTIN implements java.lang.Comparable<GTIN>
 		{
 			return ("GTIN is NULL or EMPTY.");
 		}
-		else if (StringExtensions.isURI(gtinStr) == false)
+		else if (!StringExtensions.isURI(gtinStr))
 		{
 			return ("The GTIN contains non-compatiable characters for a URI.");
 		}
@@ -141,14 +141,7 @@ public class GTIN implements java.lang.Comparable<GTIN>
 	*/
 	public static boolean IsGTIN(String gtinStr)
 	{
-		if (DetectGTINIssue(gtinStr) == null)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return DetectGTINIssue(gtinStr) == null;
 	}
 
 	public final Object Clone()
@@ -271,14 +264,7 @@ public class GTIN implements java.lang.Comparable<GTIN>
 			return false;
 		}
 
-		if (this.toString().toLowerCase() == gtin.toString().toLowerCase())
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return this.toString().toLowerCase() == gtin.toString().toLowerCase();
 	}
 
 	public final int compareTo(GTIN gtin)

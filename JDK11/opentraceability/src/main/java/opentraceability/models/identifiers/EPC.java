@@ -159,7 +159,7 @@ public class EPC
 			}
 			else
 			{
-				throw new RuntimeException("Unrecognized GTIN pattern. " + gtin.toString());
+				throw new RuntimeException("Unrecognized GTIN pattern. " + gtin);
 			}
 			this.setType(type);
 			this.setGTIN(gtin);
@@ -179,7 +179,7 @@ public class EPC
 			}
 			else
 			{
-				throw new RuntimeException("Unrecognized GTIN pattern. " + gtin.toString());
+				throw new RuntimeException("Unrecognized GTIN pattern. " + gtin);
 			}
 			this.setType(type);
 			this.setGTIN(gtin);
@@ -352,11 +352,7 @@ public class EPC
 		{
 			return true;
 		}
-		else if (Objects.equals(this.getSerialLotNumber(), "*") && opentraceability.models.identifiers.GTIN.opEquals(this.getGTIN(), targetEPC.getGTIN()))
-		{
-			return true;
-		}
-		return false;
+		else return Objects.equals(this.getSerialLotNumber(), "*") && opentraceability.models.identifiers.GTIN.opEquals(this.getGTIN(), targetEPC.getGTIN());
 	}
 
 	public final Object Clone() throws Exception {
@@ -481,14 +477,7 @@ public class EPC
 			return false;
 		}
 
-		if (Objects.equals(this.toString().toLowerCase(), epc.toString().toLowerCase()))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return Objects.equals(this.toString().toLowerCase(), epc.toString().toLowerCase());
 	}
 
 	public final int CompareTo(EPC epc)

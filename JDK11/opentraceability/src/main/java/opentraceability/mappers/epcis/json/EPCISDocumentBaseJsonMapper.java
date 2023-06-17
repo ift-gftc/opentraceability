@@ -25,7 +25,7 @@ public final class EPCISDocumentBaseJsonMapper
 //C# TO JAVA CONVERTER TASK: Methods returning tuples are not converted by C# to Java Converter:
 	public static Pair<EPCISBaseDocument, JSONObject> ReadJSONAsync(String strValue, String expectedType, Boolean checkSchema) throws Exception {
 			// validate the JSON...
-			if (checkSchema == true)
+			if (checkSchema)
 			{
 				checkSchema(new JSONObject(strValue));
 			}
@@ -49,11 +49,11 @@ public final class EPCISDocumentBaseJsonMapper
 			EPCISBaseDocument document = null;
 			if (expectedType == "EPCISDocument")
 			{
-				document = (EPCISBaseDocument)(new EPCISDocument());
+				document = new EPCISDocument();
 			}
 			else
 			{
-				document = (EPCISBaseDocument)(new EPCISQueryDocument());
+				document = new EPCISQueryDocument();
 			}
 
 			document.attributes.put("schemaVersion", json.getString("schemaVersion"));
@@ -166,10 +166,7 @@ public final class EPCISDocumentBaseJsonMapper
 				var ns = JsonContextHelper.scrapeNamespaces(jc);
 				for (var n : ns.entrySet())
 				{
-					if (doc.namespaces.containsKey(n.getKey()))
-					{
-						doc.namespaces.remove(n.getKey());
-					}
+					doc.namespaces.remove(n.getKey());
 				}
 
 				jContext.put(context);
@@ -291,7 +288,7 @@ public final class EPCISDocumentBaseJsonMapper
 		Pair<Boolean, List<String>> results = JsonSchemaChecker.isValid(jsonStr, "https://ref.gs1.org/standards/epcis/epcis-json-schema.json");
 		if (!results.getSecond().isEmpty())
 		{
-			throw new OpenTraceabilitySchemaException("Failed to validate JSON schema with errors:\n" + tangible.StringHelper.join("\n", results.getSecond().toArray(new String[0])) + "\n\n and json " + json.toString());
+			throw new OpenTraceabilitySchemaException("Failed to validate JSON schema with errors:\n" + tangible.StringHelper.join("\n", results.getSecond().toArray(new String[0])) + "\n\n and json " + json);
 		}
 	}
 
@@ -336,7 +333,7 @@ public final class EPCISDocumentBaseJsonMapper
 				Object jvalue = jobj.get(jprop);
 				if (jvalue instanceof JSONObject)
 				{
-					jobj.put(jprop, CompressVocab((JSONObject)jvalue));
+					jobj.put(jprop, CompressVocab(jvalue));
 				}
 				else if (jvalue instanceof JSONArray)
 				{

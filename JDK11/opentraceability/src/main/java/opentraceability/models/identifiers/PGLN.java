@@ -57,14 +57,7 @@ public class PGLN implements java.lang.Comparable<PGLN>
 
 	public static boolean IsPGLN(String pglnStr)
 	{
-		if (PGLN.DetectPGLNIssue(pglnStr) == null)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return PGLN.DetectPGLNIssue(pglnStr) == null;
 	}
 
 //C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
@@ -79,7 +72,7 @@ public class PGLN implements java.lang.Comparable<PGLN>
 		{
 			return ("PGLN cannot contain spaces.");
 		}
-		else if (StringExtensions.isURI(pglnStr) == false)
+		else if (!StringExtensions.isURI(pglnStr))
 		{
 			return ("The PGLN contains non-compatiable characters for a URI.");
 		}
@@ -264,14 +257,7 @@ public class PGLN implements java.lang.Comparable<PGLN>
 			throw new NullPointerException("pgln");
 		}
 
-		if (Objects.equals(this.toString().toLowerCase(), pgln.toString().toLowerCase()))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return Objects.equals(this.toString().toLowerCase(), pgln.toString().toLowerCase());
 	}
 
 	public final int compareTo(PGLN pgln)

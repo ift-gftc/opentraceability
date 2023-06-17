@@ -45,7 +45,7 @@ public class Country implements Comparable<Country> {
 
     @Override
     public String toString() {
-        return abbreviation.toString();
+        return abbreviation;
     }
 
     @Override

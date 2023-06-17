@@ -32,7 +32,7 @@ public class EPCISTraceabilityResolver {
                 relativeUrl = epc.getGTIN().ToDigitalLinkURL() + "/21/" + epc.getSerialLotNumber();
                 break;
             case SSCC:
-                relativeUrl = "00/" + epc.toString();
+                relativeUrl = "00/" + epc;
                 break;
             default:
                 throw new Exception("Cannot build Digital Link URL with EPC " + epc + ". We need either GTIN+LOT, GTIN+SERIAL, or SSCC.");

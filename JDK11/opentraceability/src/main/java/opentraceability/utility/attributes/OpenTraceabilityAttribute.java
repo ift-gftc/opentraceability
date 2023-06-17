@@ -15,6 +15,6 @@ public @interface OpenTraceabilityAttribute {
 
     int sequenceOrder() default -1;
 
-    EPCISVersion version() default EPCISVersion.V1;
+    EPCISVersion version() default EPCISVersion.Any;
 }
 

@@ -13,6 +13,7 @@ import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -216,7 +217,7 @@ public class XElement
 
     public static XElement Parse(String xml) throws Exception {
         var documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        ByteArrayInputStream input = new ByteArrayInputStream(xml.toString().getBytes("UTF-8"));
+        ByteArrayInputStream input = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
         var document = documentBuilder.parse(input);
 
         XElement e = new XElement(document.getDocumentElement());

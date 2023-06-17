@@ -4,6 +4,7 @@ import opentraceability.OTLogger;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class EnumUtil {
@@ -34,9 +35,7 @@ public class EnumUtil {
             Field field = value.getClass().getField(value.name());
             A[] annotations = field.getAnnotationsByType(annotationClass);
             List<A> annotationList = new ArrayList<>();
-            for (A annotation : annotations) {
-                annotationList.add(annotation);
-            }
+            Collections.addAll(annotationList, annotations);
             return annotationList;
         } catch (Exception ex) {
             OTLogger.error(ex);
@@ -48,9 +47,7 @@ public class EnumUtil {
         List<T> valuesList = new ArrayList<>();
         T[] enumValues = enumClass.getEnumConstants();
 
-        for (T value : enumValues) {
-            valuesList.add(value);
-        }
+        Collections.addAll(valuesList, enumValues);
 
         return valuesList;
     }

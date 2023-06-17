@@ -93,7 +93,7 @@ public final class OpenTraceabilityJsonLDMapper
 						List list = (List)obj;
 						JSONArray jList = new JSONArray();
 
-						if (!list.isEmpty() || property.required == true)
+						if (!list.isEmpty() || property.required)
 						{
 							if (property.isRepeating && list.size() == 1)
 							{

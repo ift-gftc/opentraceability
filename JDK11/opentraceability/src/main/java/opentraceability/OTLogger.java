@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OTLogger {
-    private static List<OnLogDelegate> listeners = new ArrayList<>();
+    private static final List<OnLogDelegate> listeners = new ArrayList<>();
 
     public static void addListener(OnLogDelegate listener) {
         listeners.add(listener);

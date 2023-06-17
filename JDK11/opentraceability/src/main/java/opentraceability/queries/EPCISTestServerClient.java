@@ -17,9 +17,9 @@ import opentraceability.models.identifiers.*;
 
 public class EPCISTestServerClient {
 
-    private String _baseURL;
-    private EPCISDataFormat _format;
-    private EPCISVersion _version;
+    private final String _baseURL;
+    private final EPCISDataFormat _format;
+    private final EPCISVersion _version;
 
     public EPCISTestServerClient(String baseURL, EPCISDataFormat format, EPCISVersion version) {
         _baseURL = baseURL;

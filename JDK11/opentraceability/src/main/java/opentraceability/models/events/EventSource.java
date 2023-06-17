@@ -21,7 +21,7 @@ public class EventSource {
         EventSourceType type = EventSourceType.Unknown;
         for (EventSourceType e : EnumSet.allOf(EventSourceType.class)) {
             EventSourceType finalType = type;
-            if (EnumUtil.GetEnumAttributes(e, CBVAttribute.class).stream().anyMatch(it -> it.value().toLowerCase().equals(finalType.toString().toLowerCase()))) {
+            if (EnumUtil.GetEnumAttributes(e, CBVAttribute.class).stream().anyMatch(it -> it.value().equalsIgnoreCase(finalType.toString()))) {
                 type = e;
                 break;
             }

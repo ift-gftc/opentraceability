@@ -35,14 +35,14 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 
 		// read the query name
 		XElement xQueryName = xDoc.Element("EPCISBody/QueryResults/queryName");
-		if (xQueryName.IsNull == false)
+		if (!xQueryName.IsNull)
 		{
 			document.QueryName = xQueryName.getValue();
 		}
 
 		// read the events
 		XElement xEventList = xDoc.Element("EPCISBody/QueryResults/resultsBody/EventList");
-		if (xEventList.IsNull == false)
+		if (!xEventList.IsNull)
 		{
 			for (XElement xEvent : xEventList.Elements())
 			{
@@ -80,7 +80,7 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 		xDoc.Add(new XElement("EPCISBody", new XElement(epcisQueryXName, "QueryResults", new XElement("queryName"), new XElement("resultsBody", new XElement("EventList")))));
 
 		XElement xQueryName = xDoc.Element("EPCISBody/QueryResults/queryName");
-		if (xQueryName.IsNull == false)
+		if (!xQueryName.IsNull)
 		{
 			xQueryName.setValue(doc.QueryName);
 		}

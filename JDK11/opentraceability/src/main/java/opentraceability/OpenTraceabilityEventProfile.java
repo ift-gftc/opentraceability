@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class OpenTraceabilityEventProfile {
 
-    private int SpecificityScore = 0;
+    private final int SpecificityScore = 0;
 
     public int getSpecificityScore() {
         int score = 1;
@@ -102,7 +102,7 @@ public class OpenTraceabilityEventProfile {
         if (KDEProfiles != null && KDEProfiles.size() > 0) {
             List<String> kdeProfileNames = new ArrayList<String>();
             for (OpenTraceabilityEventKDEProfile profile : KDEProfiles) {
-                kdeProfileNames.add("\'" + profile.toString() + "\'");
+                kdeProfileNames.add("'" + profile.toString() + "'");
             }
             eventTypes = String.join(":", kdeProfileNames);
         }

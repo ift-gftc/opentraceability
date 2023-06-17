@@ -34,6 +34,6 @@ public class ObjectEvent<T extends EventILMD> extends IILMDEvent<T> {
 
     @Override
     public EventILMD grabILMD() {
-        return (EventILMD) ilmd;
+        return ilmd;
     }
 }

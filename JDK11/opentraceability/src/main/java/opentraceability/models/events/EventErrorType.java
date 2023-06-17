@@ -5,7 +5,7 @@ public enum EventErrorType {
     IncorrectData(1),
     DidNotOccur(0);
 
-    private int value;
+    private final int value;
 
     EventErrorType(int value) {
         this.value = value;

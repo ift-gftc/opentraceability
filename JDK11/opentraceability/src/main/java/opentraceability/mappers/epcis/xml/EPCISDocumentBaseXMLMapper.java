@@ -4,15 +4,12 @@ package opentraceability.mappers.epcis.xml;
 import opentraceability.interfaces.*;
 import opentraceability.models.common.*;
 import opentraceability.models.events.*;
-import opentraceability.models.events.kdes.*;
 import opentraceability.utility.*;
 import opentraceability.*;
 import opentraceability.mappers.*;
-import opentraceability.mappers.epcis.*;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.lang.reflect.Type;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,17 +41,17 @@ public class EPCISDocumentBaseXMLMapper
 				}
 				else
 				{
-					document.attributes.put(xatt.Name.toString(), xatt.Value);
+					document.attributes.put(xatt.Name, xatt.Value);
 				}
 			}
 		}
 
 		// determine epcis version
-		if (document.namespaces.values().contains(Constants.EPCIS_2_NAMESPACE) || document.namespaces.values().contains(Constants.EPCISQUERY_2_NAMESPACE))
+		if (document.namespaces.containsValue(Constants.EPCIS_2_NAMESPACE) || document.namespaces.containsValue(Constants.EPCISQUERY_2_NAMESPACE))
 		{
 			document.epcisVersion = EPCISVersion.V2;
 		}
-		else if (document.namespaces.values().contains(Constants.EPCIS_1_NAMESPACE) || document.namespaces.values().contains(Constants.EPCISQUERY_1_NAMESPACE))
+		else if (document.namespaces.containsValue(Constants.EPCIS_1_NAMESPACE) || document.namespaces.containsValue(Constants.EPCISQUERY_1_NAMESPACE))
 		{
 			document.epcisVersion = EPCISVersion.V1;
 		}
@@ -73,7 +70,7 @@ public class EPCISDocumentBaseXMLMapper
 		XElement xHeader = xDoc.outArgValue.Element("EPCISHeader")
 				                           .Element(Constants.SBDH_XNAMESPACE, "StandardBusinessDocumentHeader");
 
-		if (xHeader.IsNull == false)
+		if (!xHeader.IsNull)
 		{
 			document.header = (StandardBusinessDocumentHeader)OpenTraceabilityXmlMapper.FromXml(xHeader, StandardBusinessDocumentHeader.class, document.epcisVersion);
 		}
@@ -191,7 +188,7 @@ public class EPCISDocumentBaseXMLMapper
 			{
 				for (var kdeProfile : profile.KDEProfiles)
 				{
-					if (xEvent.Element(kdeProfile.XPath_V1).IsNull == true)
+					if (xEvent.Element(kdeProfile.XPath_V1).IsNull)
 					{
 						finalProfiles.remove(profile);
 					}
@@ -246,7 +243,7 @@ public class EPCISDocumentBaseXMLMapper
 			if (!XmlSchemaChecker.validate(xdoc, "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-1_2.xsd", tempOut_error))
 			{
 			error = tempOut_error.outArgValue;
-				throw new OpenTraceabilitySchemaException(String.format("Failed to validate the XML schema for the EPCIS XML.\n") + error);
+				throw new OpenTraceabilitySchemaException("Failed to validate the XML schema for the EPCIS XML.\n" + error);
 			}
 		else
 		{
@@ -263,7 +260,7 @@ public class EPCISDocumentBaseXMLMapper
 			if (!XmlSchemaChecker.validate(xdoc, "https://ref.gs1.org/standards/epcis/epcglobal-epcis-2_0.xsd", tempOut_error2))
 			{
 			error = tempOut_error2.outArgValue;
-				throw new OpenTraceabilitySchemaException(String.format("Failed to validate the XML schema for the EPCIS XML.\n") + error);
+				throw new OpenTraceabilitySchemaException("Failed to validate the XML schema for the EPCIS XML.\n" + error);
 			}
 		else
 		{
@@ -284,7 +281,7 @@ public class EPCISDocumentBaseXMLMapper
 			if (!XmlSchemaChecker.validate(xdoc, "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-query-1_2.xsd", tempOut_error))
 			{
 			error = tempOut_error.outArgValue;
-				throw new RuntimeException(String.format("Failed to validate the XML schema for the EPCIS XML.\n") + error);
+				throw new RuntimeException("Failed to validate the XML schema for the EPCIS XML.\n" + error);
 			}
 		else
 		{
@@ -301,7 +298,7 @@ public class EPCISDocumentBaseXMLMapper
 			if (!XmlSchemaChecker.validate(xdoc, "https://ref.gs1.org/standards/epcis/epcglobal-epcis-query-2_0.xsd", tempOut_error2))
 			{
 			error = tempOut_error2.outArgValue;
-				throw new RuntimeException(String.format("Failed to validate the XML schema for the EPCIS XML.\n") + error);
+				throw new RuntimeException("Failed to validate the XML schema for the EPCIS XML.\n" + error);
 			}
 		else
 		{

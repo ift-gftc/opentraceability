@@ -13,7 +13,7 @@ public enum EPCType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	private int intValue;
+	private final int intValue;
 	private static java.util.HashMap<Integer, EPCType> mappings;
 	private static java.util.HashMap<Integer, EPCType> getMappings()
 	{
@@ -30,7 +30,7 @@ public enum EPCType
 		return mappings;
 	}
 
-	private EPCType(int value)
+	EPCType(int value)
 	{
 		intValue = value;
 		getMappings().put(value, this);

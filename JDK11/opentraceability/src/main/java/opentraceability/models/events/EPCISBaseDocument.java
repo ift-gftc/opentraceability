@@ -109,7 +109,7 @@ public class EPCISBaseDocument {
                 boolean found = false;
                 for (URI eqBiz : parameters.query.EQ_bizLocation) {
                     if (evt.location != null && evt.location.gln != null
-                            && eqBiz.toString().toLowerCase().equals(evt.location.gln.toString().toLowerCase())) {
+                            && eqBiz.toString().equalsIgnoreCase(evt.location.gln.toString())) {
                         found = true;
                         break;
                     }
@@ -186,13 +186,10 @@ public class EPCISBaseDocument {
                 filterUris.add(URI.create(s));
             }
             URI finalBizStep = bizStep;
-            if (!filterUris.stream().anyMatch(u -> u.toString().toLowerCase().equals(finalBizStep.toString().toLowerCase()))) {
-                return false;
-            }
+            return filterUris.stream().anyMatch(u -> u.toString().equalsIgnoreCase(finalBizStep.toString()));
         } else {
             return false;
         }
-        return true;
     }
 
     private boolean isInAllowedTypes(String type, EventProductType... allowedTypes) {

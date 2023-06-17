@@ -20,7 +20,7 @@ public enum EventDestinationType {
     @CBVAttribute(value = "urn:epcglobal:cbv:sdt:location")
     Location(3);
 
-    private int value;
+    private final int value;
 
     EventDestinationType(int value) {
         this.value = value;

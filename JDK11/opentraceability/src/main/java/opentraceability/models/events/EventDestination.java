@@ -20,7 +20,7 @@ public class EventDestination {
         EventDestinationType type = EventDestinationType.Unknown;
         for (EventDestinationType e : EventDestinationType.values()) {
             for (CBVAttribute attribute : EnumUtil.GetEnumAttributes(e, CBVAttribute.class)) {
-                if (attribute.value().toLowerCase().equals(type.toString().toLowerCase())) {
+                if (attribute.value().equalsIgnoreCase(type.toString())) {
                     return e;
                 }
             }

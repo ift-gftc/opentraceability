@@ -1,6 +1,5 @@
 package opentraceability.mappers;
 
-import gs1.mappers.epcis.*;
 import opentraceability.interfaces.*;
 import opentraceability.mappers.epcis.json.*;
 import opentraceability.mappers.masterdata.*;

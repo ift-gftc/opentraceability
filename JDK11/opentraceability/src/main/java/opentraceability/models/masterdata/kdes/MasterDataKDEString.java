@@ -1,6 +1,7 @@
 package opentraceability.models.masterdata.kdes;
 
 import opentraceability.interfaces.IMasterDataKDE;
+import opentraceability.utility.XElement;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -94,18 +95,17 @@ public class MasterDataKDEString extends IMasterDataKDE {
     }
 
     @Override
-    public void setFromEPCISXml(Element xml) {
-        name = xml.getAttribute("id") != null ? xml.getAttribute("id") : "";
-        value = xml.getTextContent();
+    public void setFromEPCISXml(XElement xml) throws Exception {
+        name = xml.Attribute("id");
+        value = xml.getValue();
     }
 
     @Override
-    public Element getEPCISXml() throws Exception {
+    public XElement getEPCISXml() throws Exception {
         if (value != null) {
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            Element element = document.createElement("attribute");
-            element.setAttribute("id", name);
-            element.setTextContent(value);
+            XElement element = new XElement("attribute");
+            element.SetAttributeValue("id", name);
+            element.setValue(value);
             return element;
         } else {
             return null;

@@ -173,7 +173,7 @@ public final class OpenTraceabilityXmlMapper
 								if (property.isObject)
 								{
 									XElement xchild = ToXml(null, property.itemName != null ? property.itemName : xchildname, o, version, property.required);
-									if (xchild.IsNull == false)
+									if (!xchild.IsNull)
 									{
 										xlist.Add(xchild);
 									}
@@ -194,7 +194,7 @@ public final class OpenTraceabilityXmlMapper
 						else if (property.isObject)
 						{
 							XElement xchild = ToXml(null, xchildname, obj, version, property.required);
-							if (xchild.IsNull == false)
+							if (!xchild.IsNull)
 							{
 								xvaluepointer.Add(xchild);
 							}
@@ -270,7 +270,7 @@ public final class OpenTraceabilityXmlMapper
 
 			return x;
 		}
-		else if (required == true)
+		else if (required)
 		{
 			XElement x = new XElement(ns, name);
 			return x;
@@ -341,7 +341,7 @@ public final class OpenTraceabilityXmlMapper
 				mappingProp = typeInfo.get("@" + xatt.Name);
 				if (mappingProp != null)
 				{
-					String xchildname = mappingProp.name.toString();
+					String xchildname = mappingProp.name;
 					String attValue = x.Attribute(tangible.StringHelper.trimStart(xchildname, '@')) == null ? null : x.Attribute(tangible.StringHelper.trimStart(xchildname, '@'));
 					if (!tangible.StringHelper.isNullOrEmpty(attValue))
 					{
@@ -372,7 +372,7 @@ public final class OpenTraceabilityXmlMapper
 				{
 					XElement xchild = xc;
 
-					mappingProp = typeInfo.get(xchild.getTagName().toString());
+					mappingProp = typeInfo.get(xchild.getTagName());
 					if (mappingProp == null && tangible.ListHelper.exists(typeInfo.getClass().getFields(), p -> StringExtensions.splitXPath(p.name).get(0) == xchild.getTagName()))
 					{
 						// see if we have a parent matching way...
@@ -643,7 +643,7 @@ public final class OpenTraceabilityXmlMapper
 		}
 		else
 		{
-			throw new RuntimeException("Failed to initialize KDE from XML Attribute = " + ns.toString() + " and name is " + name.toString() + " and value is " + value);
+			throw new RuntimeException("Failed to initialize KDE from XML Attribute = " + ns + " and name is " + name + " and value is " + value);
 		}
 
 		return kde;

@@ -110,7 +110,7 @@ public class Measurement implements Comparable<Measurement> {
     @Override
     public String toString() {
         try {
-            String str = value + "";
+            String str = String.valueOf(value);
             str += " " + uom.UNCode;
             return str;
         } catch (Exception ex) {
@@ -121,7 +121,7 @@ public class Measurement implements Comparable<Measurement> {
 
     public String toStringEx() {
         try {
-            String str = value + "";
+            String str = String.valueOf(value);
             str += " " + uom.Abbreviation;
             return str;
         } catch (Exception ex) {
@@ -162,7 +162,7 @@ public class Measurement implements Comparable<Measurement> {
             UOM uom = UOMS.getUOMFromUNCode(uomStr);
             if (uom == null) {
                 for (UOM tempUOM : uoms) {
-                    if (tempUOM.Abbreviation.toLowerCase().equals(uomStr.toLowerCase()) || uomStr.toLowerCase().equals(tempUOM.Name.toLowerCase())) {
+                    if (tempUOM.Abbreviation.equalsIgnoreCase(uomStr) || uomStr.equalsIgnoreCase(tempUOM.Name)) {
                         uom = tempUOM;
                         break;
                     }
@@ -199,9 +199,7 @@ public class Measurement implements Comparable<Measurement> {
     public boolean equals(Object other) {
         if (other != null && other instanceof Measurement) {
             Measurement otherMeasurement = (Measurement) other;
-            if (value == otherMeasurement.value && uom == otherMeasurement.uom) {
-                return true;
-            }
+            return value == otherMeasurement.value && uom == otherMeasurement.uom;
         }
         return false;
     }

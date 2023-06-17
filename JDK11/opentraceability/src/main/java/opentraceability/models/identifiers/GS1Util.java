@@ -7,14 +7,7 @@ public final class GS1Util
 {
 	private static boolean IsEven(int i)
 	{
-		if ((i % 2) == 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+        return (i % 2) == 0;
 	}
 	public static int CharToInt32(char charInt)
 	{

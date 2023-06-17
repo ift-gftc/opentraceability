@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface CBVAttributes {
-    public CBVAttribute[] value();
+    CBVAttribute[] value();
 }

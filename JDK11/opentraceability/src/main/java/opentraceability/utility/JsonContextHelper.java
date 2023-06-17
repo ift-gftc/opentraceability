@@ -11,7 +11,6 @@ import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.impl.client.*;
 import org.apache.http.ssl.*;
 import org.apache.http.util.EntityUtils;
-import org.apache.karaf.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

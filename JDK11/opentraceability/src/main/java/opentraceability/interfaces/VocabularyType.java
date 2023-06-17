@@ -6,7 +6,7 @@ public enum VocabularyType {
     Location(2),
     TradingParty(3);
 
-    private int value;
+    private final int value;
 
     VocabularyType(int value) {
         this.value = value;

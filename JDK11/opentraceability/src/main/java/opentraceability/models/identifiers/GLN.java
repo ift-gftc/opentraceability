@@ -50,14 +50,7 @@ public class GLN implements java.lang.Comparable<GLN>
 
 	public static boolean IsGLN(String glnStr)
 	{
-		if (DetectGLNIssue(glnStr) == null)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return DetectGLNIssue(glnStr) == null;
 	}
 
 	public static String DetectGLNIssue(String glnStr)
@@ -66,7 +59,7 @@ public class GLN implements java.lang.Comparable<GLN>
 		{
 			return ("The GLN is NULL or EMPTY.");
 		}
-		else if (StringExtensions.isURI(glnStr) == false)
+		else if (!StringExtensions.isURI(glnStr))
 		{
 			return ("The GLN contains non-compatible characters for a URI.");
 		}
@@ -249,14 +242,7 @@ public class GLN implements java.lang.Comparable<GLN>
 			return false;
 		}
 
-		if (Objects.equals(this.toString().toLowerCase(), gln.toString().toLowerCase()))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return Objects.equals(this.toString().toLowerCase(), gln.toString().toLowerCase());
 	}
 
 	public final int compareTo(GLN gln)
