@@ -2,6 +2,7 @@ package opentraceability.queries;
 
 import opentraceability.models.identifiers.EPC;
 import opentraceability.models.identifiers.EPCType;
+import opentraceability.utility.ReflectionUtility;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONObject;
@@ -9,7 +10,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -40,7 +41,7 @@ public class EPCISQueryParameters {
 
     public EPCISQueryParameters(EPC... epcs) {
         for (EPC epc : epcs) {           
-            if (epc.Type == EPCType.Class) {
+            if (epc.getType() == EPCType.Class) {
                 query.MATCH_anyEPCClass.add(epc.toString());
             } else {
                 query.MATCH_anyEPC.add(epc.toString());
@@ -57,42 +58,31 @@ public class EPCISQueryParameters {
 
             Field prop = propMapping.get(key);
             if (prop != null) {
-                if (OffsetDateTime.class.isAssignableFrom(prop.getType())) {
+                if (OffsetDateTime.class.isAssignableFrom(prop.getDeclaringClass())) {
                     String fixedStr = value.replace(" ", "+");
                     OffsetDateTime dt = OffsetDateTime.parse(fixedStr);
                     prop.set(query, dt);
                 }
                 else if (List.class.isAssignableFrom(prop.getType())) {
-                    if (prop.getType() == List.class) {
-                        // Generic type of the list is not specified, which is not supported.
-                        throw new Exception("Unsupported List type in property: " + key);
+                    Class itemType = ReflectionUtility.getItemType(prop.getDeclaringClass());
+                    List<Object> listValues = new ArrayList<>();
+                    if (itemType == String.class)
+                    {
+                        // Split value by '|' and assign to prop
+                        listValues = Arrays.asList(value.split("\\|"));
                     }
-                    else if (prop.getGenericType() instanceof ParameterizedType) {
-                        ParameterizedType parameterizedType = (ParameterizedType) prop.getGenericType();
-                        Type[] typeArguments = parameterizedType.getActualTypeArguments();
-                        if (typeArguments.length == 1 && typeArguments[0] instanceof Class<?>) {
-                            Class<?> listType = (Class<?>) typeArguments[0];
-                            List<Object> listValues = new ArrayList<>();
-                            if (listType == String.class) {
-                                // Split value by '|' and assign to prop
-                                listValues = Arrays.asList(value.split("\\|"));
-                            }
-                            else if (listType == URI.class) {
-                                // Split value by '|', construct URIs, and assign to prop
-                                String[] uriStrings = value.split("\\|");
-                                for (String uriString : uriStrings) {
-                                    listValues.add(new URI(uriString));
-                                }
-                            }
-                            else {
-                                // Unsupported list type
-                                throw new Exception("Unsupported List type in property: " + key);
-                            }
-                            prop.set(query, listValues);
+                    else if (itemType == URI.class) {
+                        // Split value by '|', construct URIs, and assign to prop
+                        String[] uriStrings = value.split("\\|");
+                        for (String uriString : uriStrings) {
+                            listValues.add(new URI(uriString));
                         }
                     }
+                    else {
+                        // Unsupported list type
+                        throw new Exception("Unsupported List type in property: " + key);
+                    }
                 }
-                // Add more else-if conditions for other supported property types if needed
             }
         }
     }

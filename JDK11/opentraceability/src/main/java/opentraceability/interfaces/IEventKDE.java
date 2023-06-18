@@ -1,17 +1,18 @@
 package opentraceability.interfaces;
 
+import opentraceability.utility.ReflectionUtility;
 import opentraceability.utility.XElement;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
 
-import java.lang.reflect.Type;
+
 import java.util.HashMap;
 
 public abstract class IEventKDE {
 
     public String namespace = "";
     public String name = "";
-    public Type valueType = null;
+    public Class valueType = null;
 
 
     public abstract void setFromJson(Object json) throws Exception;
@@ -22,9 +23,9 @@ public abstract class IEventKDE {
 
     public abstract XElement getXml() throws Exception;
 
-    static HashMap<String, Type> registeredKDEs = new HashMap<String, Type>();
+    static HashMap<String, Class> registeredKDEs = new HashMap<String, Class>();
 
-    public static void RegisterKDE(Type type, String ns, String name) throws Exception {
+    public static void RegisterKDE(Class type, String ns, String name) throws Exception {
         String key = ns + ":" + name;
 
         if (!registeredKDEs.containsKey(key)) {
@@ -40,13 +41,15 @@ public abstract class IEventKDE {
 
         String key = ns + ":" + name;
 
-        Type kdeType = registeredKDEs.get(key);
+        Class kdeType = registeredKDEs.get(key);
 
         if (kdeType != null) {
             try {
-                kde = (IEventKDE) Class.forName(key).newInstance();
+                kde = (IEventKDE) ReflectionUtility.constructType(kdeType);
             } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
 

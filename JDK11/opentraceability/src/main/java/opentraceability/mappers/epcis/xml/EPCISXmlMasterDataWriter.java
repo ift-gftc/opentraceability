@@ -11,11 +11,10 @@ import opentraceability.utility.XElement;
 import opentraceability.utility.attributes.*;
 import opentraceability.*;
 import opentraceability.mappers.*;
-import opentraceability.mappers.epcis.*;
 import org.json.JSONObject;
 
 import javax.xml.xpath.XPathExpressionException;
-import java.lang.reflect.Type;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -117,7 +116,7 @@ public class EPCISXmlMasterDataWriter
 				{
 					XElement x = xVocabEle.Add("attribute");
 					x.SetAttributeValue("id", mapping.name);
-					WriteObject(x, mapping.field.getType(), o);
+					WriteObject(x, mapping.field.getDeclaringClass(), o);
 				}
 				else if (ReflectionUtility.getFieldAnnotation(mapping.field, OpenTraceabilityArrayAttribute.class) != null)
 				{
@@ -173,7 +172,7 @@ public class EPCISXmlMasterDataWriter
 		return xVocabEle;
 	}
 
-	private static void WriteObject(XElement x, Type t, Object o) throws Exception
+	private static void WriteObject(XElement x, Class t, Object o) throws Exception
 	{
 		for (var property : t.getClass().getFields())
 		{

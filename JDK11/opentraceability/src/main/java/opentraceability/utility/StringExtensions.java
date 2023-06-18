@@ -11,7 +11,9 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringExtensions {
@@ -57,9 +59,12 @@ public class StringExtensions {
     }
 
     public static boolean isURI(String str) {
-        try {
-            new URI(str);
-        } catch (URISyntaxException e) {
+        try
+        {
+            URI.create(str);
+        }
+        catch (Exception e)
+        {
             return false;
         }
         return true;
@@ -78,21 +83,39 @@ public class StringExtensions {
         String[] parts = str.split(":");
         long hours = Long.parseLong(parts[0]);
         long minutes = Long.parseLong(parts[1]);
-        return Duration.ofHours(hours).plusMinutes(minutes);
+        Duration duration = Duration.ofHours(hours);
+        if (hours < 0)
+        {
+            duration = duration.minusMinutes(minutes);
+        }
+        else
+        {
+            duration = duration.plusMinutes(minutes);
+        }
+        return duration;
+    }
+
+    public static String fromDuration(Duration duration)
+    {
+        String timeStr = String.format("%02d", Math.abs(duration.toHoursPart())) + ":" + String.format("%02d", Math.abs(duration.toMinutesPart()));
+        if (duration.isNegative())
+        {
+            return "-" + timeStr;
+        }
+        else
+        {
+            return "+" + timeStr;
+        }
     }
 
     public static List<String> splitXPath(String str) {
-        String regex = "(?=[^{}]*(?:{[^{}]*}[^{}]*)*$)";
-        str = str.replaceAll(regex, "%SLASH%");
-        return List.of(str.split("%SLASH%"));
-    }
-
-    public static Document parseXmlToDocument(String str) throws Exception {
-        String cleanedXml = removeBOM(str);
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        InputSource inputSource = new InputSource(new StringReader(cleanedXml));
-        return factory.newDocumentBuilder().parse(inputSource);
+        Pattern pattern = Pattern.compile("(?=[^{}]*(?:\\{[^{}]*\\}[^{}]*\\})*$)/");
+        Matcher matcher = pattern.matcher(str);
+        while (matcher.find()) {
+            str = matcher.replaceAll("%SLASH%");
+        }
+        List<String> resultList = new ArrayList<>(List.of(str.split("%SLASH%")));
+        return resultList;
     }
 
     public static String removeBOM(String str) {

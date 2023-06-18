@@ -7,13 +7,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.lang.reflect.Type;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class MasterDataKDEString extends IMasterDataKDE {
 
-    public Type valueType = String.class;
+    public Class valueType = String.class;
 
     public String value = null;
     public String type = null;
@@ -22,7 +22,7 @@ public class MasterDataKDEString extends IMasterDataKDE {
     public MasterDataKDEString() {
     }
 
-    public MasterDataKDEString(Type valueType) {
+    public MasterDataKDEString(Class valueType) {
         // Default constructor
         this.valueType = valueType;
     }

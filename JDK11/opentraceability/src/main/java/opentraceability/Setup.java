@@ -5,9 +5,11 @@ import opentraceability.models.events.*;
 import opentraceability.models.masterdata.Location;
 import opentraceability.models.masterdata.TradeItem;
 import opentraceability.models.masterdata.TradingParty;
+import opentraceability.utility.Countries;
 import opentraceability.utility.ReflectionUtility;
+import opentraceability.utility.UOMS;
 
-import java.lang.reflect.Type;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,17 +17,19 @@ import java.util.Map;
 
 public class Setup {
     public static List<OpenTraceabilityEventProfile> Profiles = new ArrayList<>();
-    public static Map<String, Type> MasterDataTypes = new HashMap<>();
-    public static Map<Type, Type> MasterDataTypeDefault = new HashMap<>();
+    public static Map<String, Class> MasterDataTypes = new HashMap<>();
+    public static Map<Class, Class> MasterDataTypeDefault = new HashMap<>();
     private static volatile boolean _isInitialized = false;
 
-    public static synchronized void Initialize() {
-
+    public static synchronized void Initialize() throws Exception
+    {
         if (!_isInitialized) {
+            UOMS.load();
+            Countries.load();
 
             registerEventProfile(
                 new OpenTraceabilityEventProfile(
-                    EventILMD.class,
+                    ObjectEvent.class,
                     EventType.ObjectEvent
                 )
             );
@@ -80,7 +84,7 @@ public class Setup {
         Profiles.add(profile);
     }
 
-    public static void registerMasterDataType(Type type, Type defaultFor) throws Exception {
+    public static void registerMasterDataType(Class type, Class defaultFor) throws Exception {
 
         if (!ReflectionUtility.isTypeInherited(defaultFor, IVocabularyElement.class))
         {
@@ -118,11 +122,7 @@ public class Setup {
         }
     }
 
-    public static <T extends TDefaultFor, TDefaultFor extends IVocabularyElement> void registerMasterDataType(Class<T> type, Class<TDefaultFor> defaultFor) {
-        registerMasterDataType(type, defaultFor);
-    }
-
-    public static Type getMasterDataTypeDefault(Type type) {
+    public static Class getMasterDataTypeDefault(Class type) {
         return MasterDataTypeDefault.get(type);
     }
 }

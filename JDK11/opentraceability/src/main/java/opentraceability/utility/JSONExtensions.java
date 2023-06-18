@@ -19,10 +19,10 @@ public class JSONExtensions {
             return json;
         }
 
-        if (jpath.contains(":"))
+        if (jpath.contains("[.]"))
         {
-            String[] parts = jpath.split(":");
-            String newJPath = String.join(":", Arrays.stream(parts).skip(1).collect(Collectors.toList()));
+            String[] parts = jpath.split("[.]");
+            String newJPath = String.join(".", Arrays.stream(parts).skip(1).collect(Collectors.toList()));
             JSONObject newJSON = json.getJSONObject(parts[0]);
             return query(newJSON, newJPath);
         }

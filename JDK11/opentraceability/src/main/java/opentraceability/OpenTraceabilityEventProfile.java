@@ -4,7 +4,7 @@ import opentraceability.interfaces.IEvent;
 import opentraceability.models.events.EventAction;
 import opentraceability.models.events.EventType;
 
-import java.lang.reflect.Type;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -33,44 +33,44 @@ public class OpenTraceabilityEventProfile {
     public EventType EventType;
     public EventAction Action = null;
     public String BusinessStep = "";
-    public Type EventClassType;
+    public Class EventClassType;
     public List<OpenTraceabilityEventKDEProfile> KDEProfiles = null;
 
     public OpenTraceabilityEventProfile() {
     }
 
-    public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType) {
+    public OpenTraceabilityEventProfile(Class eventClassType, EventType eventType) {
         EventType = eventType;
         EventClassType = eventClassType;
     }
 
-    public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, String businessStep) {
+    public OpenTraceabilityEventProfile(Class eventClassType, EventType eventType, String businessStep) {
         EventType = eventType;
         EventClassType = eventClassType;
         BusinessStep = businessStep;
     }
 
-    public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, EventAction action) {
+    public OpenTraceabilityEventProfile(Class eventClassType, EventType eventType, EventAction action) {
         EventType = eventType;
         EventClassType = eventClassType;
         Action = action;
     }
 
-    public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, String businessStep, EventAction action) {
+    public OpenTraceabilityEventProfile(Class eventClassType, EventType eventType, String businessStep, EventAction action) {
         EventType = eventType;
         EventClassType = eventClassType;
         Action = action;
         BusinessStep = businessStep;
     }
 
-    public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, List<OpenTraceabilityEventKDEProfile> kdeProfiles) {
+    public OpenTraceabilityEventProfile(Class eventClassType, EventType eventType, List<OpenTraceabilityEventKDEProfile> kdeProfiles) {
         KDEProfiles = new ArrayList<OpenTraceabilityEventKDEProfile>();
         KDEProfiles.addAll(kdeProfiles);
         EventType = eventType;
         EventClassType = eventClassType;
     }
 
-    public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, String businessStep, List<OpenTraceabilityEventKDEProfile> kdeProfiles) {
+    public OpenTraceabilityEventProfile(Class eventClassType, EventType eventType, String businessStep, List<OpenTraceabilityEventKDEProfile> kdeProfiles) {
         KDEProfiles = new ArrayList<OpenTraceabilityEventKDEProfile>();
         KDEProfiles.addAll(kdeProfiles);
         EventType = eventType;
@@ -78,7 +78,7 @@ public class OpenTraceabilityEventProfile {
         BusinessStep = businessStep;
     }
 
-    public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, EventAction action, List<OpenTraceabilityEventKDEProfile> kdeProfiles) {
+    public OpenTraceabilityEventProfile(Class eventClassType, EventType eventType, EventAction action, List<OpenTraceabilityEventKDEProfile> kdeProfiles) {
         KDEProfiles = new ArrayList<OpenTraceabilityEventKDEProfile>();
         KDEProfiles.addAll(kdeProfiles);
         EventType = eventType;
@@ -86,7 +86,7 @@ public class OpenTraceabilityEventProfile {
         Action = action;
     }
 
-    public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType, String businessStep, EventAction action, List<OpenTraceabilityEventKDEProfile> kdeProfiles) {
+    public OpenTraceabilityEventProfile(Class eventClassType, EventType eventType, String businessStep, EventAction action, List<OpenTraceabilityEventKDEProfile> kdeProfiles) {
         KDEProfiles = new ArrayList<OpenTraceabilityEventKDEProfile>();
         KDEProfiles.addAll(kdeProfiles);
         EventType = eventType;

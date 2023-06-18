@@ -3,12 +3,12 @@ package opentraceability.models.events.kdes;
 import opentraceability.interfaces.IEventKDE;
 import opentraceability.utility.XElement;
 import org.json.JSONObject;
-import java.lang.reflect.Type;
+
 import java.time.OffsetDateTime;
 import org.w3c.dom.Element;
 
 public class EventKDEDateTime extends IEventKDE {
-    public Type valueType = OffsetDateTime.class;
+    public Class valueType = OffsetDateTime.class;
 
     public OffsetDateTime value = null;
 

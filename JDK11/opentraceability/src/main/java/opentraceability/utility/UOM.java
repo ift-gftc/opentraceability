@@ -45,20 +45,17 @@ public class UOM {
         this.Abbreviation = juom.has("symbol") ? juom.getString("symbol") : null;
         this.UnitDimension = juom.has("type") ? juom.getString("type") : null;
 
-        String offsetString = juom.has("offset") ? juom.getString("offset") : null;
-        if (offsetString != null) {
-            Offset = Double.valueOf(offsetString);
-        }
+        Offset = juom.has("offset") ? juom.getDouble("offset") : 0.0;
 
-        String multiplierString = juom.has("multiplier") ? juom.getString("multiplier") : null;
-        if (multiplierString.contains("/")) {
+        Object multiplier = juom.has("multiplier") ? juom.get("multiplier") : null;
+        if (multiplier instanceof String) {
+            String multiplierString = (String)multiplier;
             int numerator = Integer.parseInt(multiplierString.split("/")[0]);
             int denominator = Integer.parseInt(multiplierString.split("/")[1]);
             B = numerator;
             C = denominator;
         } else {
-            String multiplier = juom.has("multiplier") ? juom.getString("multiplier") : null;
-            B = Double.valueOf(multiplier);
+            B = Double.parseDouble(multiplier.toString());
         }
     }
 

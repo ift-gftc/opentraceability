@@ -11,7 +11,7 @@ import org.apache.commons.codec.language.bm.Lang;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
+
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,7 +37,7 @@ public final class OpenTraceabilityJsonLDMapper
 			JSONObject json = new JSONObject();
 			JSONObject jpointer = json;
 
-			Type t = value.getClass();
+			Class t = value.getClass();
 			OTMappingTypeInformation typeInfo = OTMappingTypeInformation.getJsonTypeInfo(t);
 			for (var property : typeInfo.properties.stream().filter(p -> p.version == null || p.version == EPCISVersion.V2).collect(Collectors.toList()))
 			{
@@ -227,7 +227,7 @@ public final class OpenTraceabilityJsonLDMapper
 	/** 
 	 Converts a JSON object into the type specified.
 	*/
-	public static Object FromJson(Object json, Type type, Map<String, String> namespaces) throws Exception {
+	public static Object FromJson(Object json, Class type, Map<String, String> namespaces) throws Exception {
 //C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
 //ORIGINAL LINE: object value = Activator.CreateInstance(type) ?? throw new Exception("Failed to create instance of type " + type.FullName);
 		Object value = ReflectionUtility.constructType(type);
@@ -405,8 +405,8 @@ public final class OpenTraceabilityJsonLDMapper
 		}
 		else if (mappingProp.isArray)
 		{
-			List list = (List)ReflectionUtility.constructType(mappingProp.field.getType());
-			Type itemType = ReflectionUtility.getItemType(mappingProp.field.getType());
+			List list = (List)ReflectionUtility.constructType(mappingProp.field.getDeclaringClass());
+			Class itemType = ReflectionUtility.getItemType(mappingProp.field.getDeclaringClass());
 
 			if (mappingProp.isRepeating && !(json instanceof JSONArray))
 			{
@@ -440,10 +440,10 @@ public final class OpenTraceabilityJsonLDMapper
 		}
 		else if (mappingProp.isObject)
 		{
-			Object o = FromJson(json, mappingProp.field.getType(), namespaces);
+			Object o = FromJson(json, mappingProp.field.getDeclaringClass(), namespaces);
 			mappingProp.field.set(value, o);
 		}
-		else if (ReflectionUtility.isListOf(mappingProp.field.getType(), LanguageString.class))
+		else if (ReflectionUtility.isListOf(mappingProp.field.getDeclaringClass(), LanguageString.class))
 		{
 
 		}
@@ -452,13 +452,13 @@ public final class OpenTraceabilityJsonLDMapper
 			String v = json.toString();
 			if (!(v == null || v.isBlank()))
 			{
-				Object o = ReadObjectFromString(v, mappingProp.field.getType());
+				Object o = ReadObjectFromString(v, mappingProp.field.getDeclaringClass());
 				mappingProp.field.set(value, o);
 			}
 		}
 	}
 
-	private static Object ReadObjectFromString(String value, Type t) throws Exception {
+	private static Object ReadObjectFromString(String value, Class t) throws Exception {
 		return ReflectionUtility.parseFromString(t, value);
 	}
 

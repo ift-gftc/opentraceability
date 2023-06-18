@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import tangible.StringHelper;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
@@ -233,7 +233,7 @@ public final class EPCISDocumentBaseJsonMapper
 		}
 	}
 
-	public static Type GetEventTypeFromProfile(JSONObject jEvent)
+	public static Class GetEventTypeFromProfile(JSONObject jEvent)
 	{
 		String action = jEvent.getString("action");
 		String bizStep = jEvent.getString("bizStep");

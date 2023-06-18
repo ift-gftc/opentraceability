@@ -17,33 +17,31 @@ public class UOMS {
     public static Map<String, UOM> uomsUNCodeDict = new HashMap<>();
 
     public static void load() throws Exception {
-        try {
-            // Load the subscriptions JSON
-            EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-            String jsonText = loader.readString("OpenTraceability", "OpenTraceability.Utility.Data.uoms.json");
-            JSONArray jarr = new JSONArray(jsonText);
+        uomsAbbrevDict = new HashMap<>();
+        uomsUNCodeDict = new HashMap<>();
 
-            for (int i = 0; i < jarr.length(); i++) {
-                JSONObject juom = jarr.getJSONObject(i);
-                UOM uom = new UOM(juom);
-                String lowerCaseAbbreviation = uom.Abbreviation.toLowerCase();
-                String upperCaseUNCode = uom.UNCode.toUpperCase();
+        // Load the subscriptions JSON
+        EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+        String jsonText = loader.readString(UOMS.class, "/uoms.json");
+        JSONArray jarr = new JSONArray(jsonText);
 
-                if (!uomsAbbrevDict.containsKey(lowerCaseAbbreviation)) {
-                    uomsAbbrevDict.put(lowerCaseAbbreviation, uom);
-                } else {
-                    System.out.println("Duplicate Unit abbreviation detected: " + uom.Abbreviation);
-                }
+        for (int i = 0; i < jarr.length(); i++) {
+            JSONObject juom = jarr.getJSONObject(i);
+            UOM uom = new UOM(juom);
+            String lowerCaseAbbreviation = uom.Abbreviation.toLowerCase();
+            String upperCaseUNCode = uom.UNCode.toUpperCase();
 
-                if (!uomsUNCodeDict.containsKey(upperCaseUNCode)) {
-                    uomsUNCodeDict.put(upperCaseUNCode, uom);
-                } else {
-                    System.out.println("Duplicate Unit UNCode detected: " + uom.UNCode);
-                }
+            if (!uomsAbbrevDict.containsKey(lowerCaseAbbreviation)) {
+                uomsAbbrevDict.put(lowerCaseAbbreviation, uom);
+            } else {
+                System.out.println("Duplicate Unit abbreviation detected: " + uom.Abbreviation);
             }
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
+
+            if (!uomsUNCodeDict.containsKey(upperCaseUNCode)) {
+                uomsUNCodeDict.put(upperCaseUNCode, uom);
+            } else {
+                System.out.println("Duplicate Unit UNCode detected: " + uom.UNCode);
+            }
         }
     }
 

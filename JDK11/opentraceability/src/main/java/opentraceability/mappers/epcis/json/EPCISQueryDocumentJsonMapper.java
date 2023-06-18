@@ -5,7 +5,7 @@ import opentraceability.models.events.*;
 import opentraceability.utility.*;
 import opentraceability.*;
 import opentraceability.mappers.*;
-import opentraceability.mappers.epcis.*;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -39,7 +39,7 @@ public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper
 				if (o instanceof JSONObject)
 				{
 					JSONObject jEvent = (JSONObject)o;
-					java.lang.reflect.Type eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
+					Class eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
 					IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType, doc.namespaces);
 					doc.events.add(e);
 				}

@@ -4,11 +4,9 @@ import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,15 +41,22 @@ public class EmbeddedResourceLoader {
         return raw;
     }
 
-    public String readString(String assemblyName, String resourceName) {
+    public String readString(Class<?> clazz, String resourceName) {
         String result;
         try {
-            ClassLoader classLoader = getAssembly(assemblyName);
-            InputStream stream = classLoader.getResourceAsStream(resourceName);
+            InputStream stream = clazz.getResourceAsStream(resourceName);
             if (stream == null) {
-                throw new Exception("Failed to find the resource in the assembly " + assemblyName + " with the resource name " + resourceName + ".");
+                throw new Exception("Failed to find the resource with the resource name " + resourceName + ".");
             }
-            result = new BufferedReader(new InputStreamReader(stream)).readLine();
+
+            int bufferSize = 1024;
+            char[] buffer = new char[bufferSize];
+            StringBuilder out = new StringBuilder();
+            Reader in = new InputStreamReader(stream, StandardCharsets.UTF_8);
+            for (int numRead; (numRead = in.read(buffer, 0, buffer.length)) > 0; ) {
+                out.append(buffer, 0, numRead);
+            }
+            result = out.toString();
         } catch (Exception ex) {
             System.out.println(ex);
             throw new RuntimeException(ex);
@@ -59,8 +64,8 @@ public class EmbeddedResourceLoader {
         return result;
     }
 
-    public Document readXML(String assemblyName, String resourceName) {
-        String xmlStr = readString(assemblyName, resourceName);
+    public Document readXML(Class<?> clazz, String resourceName) {
+        String xmlStr = readString(clazz, resourceName);
 
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

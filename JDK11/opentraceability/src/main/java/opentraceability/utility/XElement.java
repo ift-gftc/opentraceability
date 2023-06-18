@@ -210,7 +210,7 @@ public class XElement
         for (int i = 0; i < result.getLength(); i++)
         {
             XElement xe = new XElement((Element) result.item(i));
-            return xelements;
+            xelements.add(xe);
         }
         return xelements;
     }
@@ -287,7 +287,11 @@ public class XElement
         var children = this.element.getChildNodes();
         for (int i = 0; i < children.getLength(); i++)
         {
-            eles.add(new XElement((Element)children.item(i)));
+            var child = children.item(i);
+            if (child instanceof Element)
+            {
+                eles.add(new XElement((Element)children.item(i)));
+            }
         }
         return eles;
     }

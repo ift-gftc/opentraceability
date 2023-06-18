@@ -8,12 +8,10 @@ import opentraceability.utility.ReflectionUtility;
 import opentraceability.utility.attributes.*;
 import opentraceability.*;
 import opentraceability.mappers.*;
-import opentraceability.mappers.epcis.*;
-import org.apache.commons.codec.language.bm.Lang;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -128,7 +126,7 @@ public final class EPCISJsonMasterDataWriter
 				}
 				else if (ReflectionUtility.getFieldAnnotation(mapping.field, OpenTraceabilityObjectAttribute.class) != null)
 				{
-					Object val = WriteObject(mapping.field.getType(), o);
+					Object val = WriteObject(mapping.field.getDeclaringClass(), o);
 
 					JSONObject jAtt = new JSONObject();
 					jAtt.put("id", mapping.name);
@@ -195,7 +193,7 @@ public final class EPCISJsonMasterDataWriter
 		return jVocabElement;
 	}
 
-	private static JSONObject WriteObject(Type t, Object o) throws Exception {
+	private static JSONObject WriteObject(Class t, Object o) throws Exception {
 		JSONObject j = new JSONObject();
 		for (var property : t.getClass().getFields())
 		{

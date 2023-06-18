@@ -9,7 +9,7 @@ import opentraceability.*;
 import opentraceability.mappers.*;
 
 import javax.xml.xpath.XPathExpressionException;
-import java.lang.reflect.Type;
+
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,7 +72,7 @@ public class EPCISDocumentBaseXMLMapper
 
 		if (!xHeader.IsNull)
 		{
-			document.header = (StandardBusinessDocumentHeader)OpenTraceabilityXmlMapper.FromXml(xHeader, StandardBusinessDocumentHeader.class, document.epcisVersion);
+			document.header = (StandardBusinessDocumentHeader)OpenTraceabilityXmlMapper.FromXml(xHeader, document.epcisVersion, StandardBusinessDocumentHeader.class);
 		}
 
 		// read the master data
@@ -161,7 +161,7 @@ public class EPCISDocumentBaseXMLMapper
 		return xDoc;
 	}
 
-	public static Type GetEventTypeFromProfile(XElement xEvent) throws XPathExpressionException {
+	public static Class GetEventTypeFromProfile(XElement xEvent) throws XPathExpressionException {
 		String action = xEvent.Element("action").getValue();
 		String bizStep = xEvent.Element("bizStep").getValue();
 		String eventType = xEvent.Element("type").getValue();

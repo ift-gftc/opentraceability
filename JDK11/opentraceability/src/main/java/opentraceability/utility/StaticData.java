@@ -14,21 +14,8 @@ public class StaticData {
      * @throws Exception Throws an exception if it fails to find the embedded resource file.
      */
     public static String readData(String path) throws Exception {
-        StringBuilder result = new StringBuilder();
-        InputStream inputStream = StaticData.class.getClassLoader().getResourceAsStream("opentraceability.utility.data." + path);
-
-        if (inputStream == null) {
-            throw new Exception("Failed to read static data from embedded resource at path " + path);
-        }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = reader.readLine();
-
-        while (line != null) {
-            result.append(line);
-            line = reader.readLine();
-        }
-
-        return result.toString();
+        EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+        String result = loader.readString(StaticData.class, path);
+        return result;
     }
 }

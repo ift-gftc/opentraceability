@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class EnumUtil {
+
     public static <T extends Enum<T>> String GetEnumDescription(T value) throws NoSuchFieldException {
         try {
             Field field = value.getClass().getField(value.name());

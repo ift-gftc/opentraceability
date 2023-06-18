@@ -35,7 +35,7 @@ public class GS1VocabJsonMapper implements IMasterDataMapper
 		return map(clazz, value);
 	}
 
-	public final IVocabularyElement map(java.lang.reflect.Type type, String value) throws Exception {
+	public final IVocabularyElement map(Class type, String value) throws Exception {
 		JSONObject json = new JSONObject(value);
 
 		JSONObject jContext = JSONExtensions.queryForObject(json,"@context");

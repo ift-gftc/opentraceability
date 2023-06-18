@@ -13,11 +13,11 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
-import java.lang.reflect.Type;
+
 import org.xml.sax.InputSource;
 
 public class EventKDEObject extends IEventKDE {
-    public Type valueType = Object.class;
+    public Class valueType = Object.class;
 
     public Object value = null;
     public XElement _xml = null;

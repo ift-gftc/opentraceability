@@ -12,13 +12,11 @@ import opentraceability.utility.attributes.*;
 import opentraceability.utility.*;
 import opentraceability.*;
 import opentraceability.mappers.*;
-import opentraceability.mappers.epcis.*;
-import org.apache.commons.codec.language.bm.Lang;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
+
 import java.net.URI;
 import java.util.*;
 
@@ -71,13 +69,13 @@ public final class EPCISJsonMasterDataReader
 	}
 
 	private static void ReadTradeitem(EPCISBaseDocument doc, JSONObject jTradeItem, String type) throws Exception {
-		Type javaType = Setup.MasterDataTypes.get(type);
+		Class javaType = Setup.MasterDataTypes.get(type);
 		if (javaType == null)
 		{
 			throw new Exception("Failed to read java type.");
 		}
 
-		Object o = javaType.getClass().newInstance();
+		Object o = ReflectionUtility.constructType(javaType);
 		if (o instanceof  TradeItem)
 		{
 			TradeItem md = (TradeItem)o;
@@ -96,13 +94,13 @@ public final class EPCISJsonMasterDataReader
 	}
 
 	private static void ReadLocation(EPCISBaseDocument doc, JSONObject jLoc, String type) throws Exception {
-		Type javaType = Setup.MasterDataTypes.get(type);
+		Class javaType = Setup.MasterDataTypes.get(type);
 		if (javaType == null)
 		{
 			throw new Exception("Failed to read java type.");
 		}
 
-		Object o = javaType.getClass().newInstance();
+		Object o = ReflectionUtility.constructType(javaType);
 		if (o instanceof  Location)
 		{
 			Location md = (Location)o;
@@ -121,13 +119,13 @@ public final class EPCISJsonMasterDataReader
 	}
 
 	private static void ReadTradingParty(EPCISBaseDocument doc, JSONObject jTradingParty, String type) throws Exception {
-		Type javaType = Setup.MasterDataTypes.get(type);
+		Class javaType = Setup.MasterDataTypes.get(type);
 		if (javaType == null)
 		{
 			throw new Exception("Failed to read java type.");
 		}
 
-		Object o = javaType.getClass().newInstance();
+		Object o = ReflectionUtility.constructType(javaType);
 		if (o instanceof  TradingParty)
 		{
 			TradingParty md = (TradingParty)o;
@@ -175,10 +173,10 @@ public final class EPCISJsonMasterDataReader
 		ArrayList<String> ignoreAttributes = new ArrayList<String>();
 		for (var property : mappedProperties.properties)
 		{
-			var subMappedProperties = OTMappingTypeInformation.getMasterDataJsonTypeInfo(property.field.getType());
+			var subMappedProperties = OTMappingTypeInformation.getMasterDataJsonTypeInfo(property.field.getDeclaringClass());
 			boolean setAttribute = false;
 
-			Object subObject = property.field.getType().newInstance();
+			Object subObject = ReflectionUtility.constructType(property.field.getDeclaringClass());
 			if (subObject != null)
 			{
 				for (Object item : jAttributes)
@@ -193,7 +191,7 @@ public final class EPCISJsonMasterDataReader
 						{
 							if (!TrySetValueType(jAtt.get("attribute").toString(), propMapping.field, subObject))
 							{
-								Object value = ReadKDEObject(jAtt, propMapping.field.getType());
+								Object value = ReadKDEObject(jAtt, propMapping.field.getDeclaringClass());
 								propMapping.field.set(subObject, value);
 							}
 							setAttribute = true;
@@ -223,7 +221,7 @@ public final class EPCISJsonMasterDataReader
 				if (propMapping != null) {
 					if (!TrySetValueType(jAtt.get("attribute").toString(), propMapping.field, md))
 					{
-						Object value = ReadKDEObject(jAtt, propMapping.field.getType());
+						Object value = ReadKDEObject(jAtt, propMapping.field.getDeclaringClass());
 						propMapping.field.set(md, value);
 					}
 				}
@@ -250,7 +248,7 @@ public final class EPCISJsonMasterDataReader
 		}
 	}
 
-	private static Object ReadKDEObject(Object j, Type t) throws Exception {
+	private static Object ReadKDEObject(Object j, Class t) throws Exception {
 		Object value = ReflectionUtility.constructType(t);
 		if (value == null)
 		{
@@ -266,7 +264,7 @@ public final class EPCISJsonMasterDataReader
 				{
 					if (item instanceof JSONObject)
 					{
-						Type itemType = ReflectionUtility.getItemType(t);
+						Class itemType = ReflectionUtility.getItemType(t);
 						if (itemType == null)
 						{
 							throw new Exception("Failed to read generic item type of list.");

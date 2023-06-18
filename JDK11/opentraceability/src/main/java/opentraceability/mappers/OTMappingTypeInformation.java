@@ -4,7 +4,7 @@ import opentraceability.utility.ReflectionUtility;
 import opentraceability.utility.attributes.*;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class OTMappingTypeInformation {
-    public java.lang.reflect.Type Type;
+    public Class Class;
     public ArrayList<OTMappingTypeInformationProperty> properties = new ArrayList<>();
     public Map<String, OTMappingTypeInformationProperty> dic = new HashMap<>();
     public Field extensionKDEs = null;
@@ -20,10 +20,8 @@ public class OTMappingTypeInformation {
 
     public OTMappingTypeInformation() { }
 
-    public OTMappingTypeInformation(Type type, EPCISDataFormat format, Boolean isMasterDataMapping) {
-        Type = type;
-
-        for (Field prop : type.getClass().getFields()) {
+    public OTMappingTypeInformation(Class<?> type, EPCISDataFormat format, Boolean isMasterDataMapping) {
+        for (Field prop : type.getFields()) {
             if (prop != null) {
                 if (format == EPCISDataFormat.XML && ReflectionUtility.getFieldAnnotation(prop, OpenTraceabilityXmlIgnoreAttribute.class) != null) {
                     continue;
@@ -82,12 +80,12 @@ public class OTMappingTypeInformation {
     }
 
     private static final ReentrantLock locker = new ReentrantLock();
-    private static final Map<Type, OTMappingTypeInformation> xmlTypeInfos = new HashMap<>();
-    private static final Map<Type, OTMappingTypeInformation> jsonTypeInfos = new HashMap<>();
-    private static final Map<Type, OTMappingTypeInformation> masterDataXmlTypeInfos = new HashMap<>();
-    private static final Map<Type, OTMappingTypeInformation> masterDataJsonTypeInfos = new HashMap<>();
+    private static final Map<Class, OTMappingTypeInformation> xmlTypeInfos = new HashMap<>();
+    private static final Map<Class, OTMappingTypeInformation> jsonTypeInfos = new HashMap<>();
+    private static final Map<Class, OTMappingTypeInformation> masterDataXmlTypeInfos = new HashMap<>();
+    private static final Map<Class, OTMappingTypeInformation> masterDataJsonTypeInfos = new HashMap<>();
 
-    public static OTMappingTypeInformation getXmlTypeInfo(Type t) {
+    public static OTMappingTypeInformation getXmlTypeInfo(Class<?> t) {
         if (!xmlTypeInfos.containsKey(t)) {
             locker.lock();
             if (!xmlTypeInfos.containsKey(t)) {
@@ -99,7 +97,7 @@ public class OTMappingTypeInformation {
         return xmlTypeInfos.get(t);
     }
 
-    public static OTMappingTypeInformation getJsonTypeInfo(Type t) {
+    public static OTMappingTypeInformation getJsonTypeInfo(Class t) {
         if (!jsonTypeInfos.containsKey(t)) {
             locker.lock();
             if (!jsonTypeInfos.containsKey(t)) {
@@ -111,7 +109,7 @@ public class OTMappingTypeInformation {
         return jsonTypeInfos.get(t);
     }
 
-    public static OTMappingTypeInformation getMasterDataXmlTypeInfo(Type t) {
+    public static OTMappingTypeInformation getMasterDataXmlTypeInfo(Class t) {
         if (!masterDataXmlTypeInfos.containsKey(t)) {
             locker.lock();
             if (!masterDataXmlTypeInfos.containsKey(t)) {
@@ -123,7 +121,7 @@ public class OTMappingTypeInformation {
         return masterDataXmlTypeInfos.get(t);
     }
 
-    public static OTMappingTypeInformation getMasterDataJsonTypeInfo(Type t) {
+    public static OTMappingTypeInformation getMasterDataJsonTypeInfo(Class t) {
         if (!masterDataJsonTypeInfos.containsKey(t)) {
             locker.lock();
             if (!masterDataJsonTypeInfos.containsKey(t)) {

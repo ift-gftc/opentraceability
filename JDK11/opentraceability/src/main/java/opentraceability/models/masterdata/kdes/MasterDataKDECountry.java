@@ -5,16 +5,14 @@ import opentraceability.utility.Countries;
 import opentraceability.utility.Country;
 import opentraceability.utility.XElement;
 import org.json.JSONObject;
-import org.w3c.dom.Element;
 
-import java.lang.reflect.Type;
 
-import static opentraceability.utility.OTXmlUtil.*;
+
 
 public class MasterDataKDECountry extends IMasterDataKDE {
     public Country value = null;
 
-    public Type getValueType() {
+    public Class getValueType() {
         return Country.class;
     }
 

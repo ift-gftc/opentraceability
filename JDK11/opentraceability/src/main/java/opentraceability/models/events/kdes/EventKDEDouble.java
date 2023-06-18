@@ -2,7 +2,7 @@ package opentraceability.models.events.kdes;
 
 import opentraceability.Constants;
 import opentraceability.interfaces.IEventKDE;
-import java.lang.reflect.Type;
+
 
 import opentraceability.utility.XElement;
 import org.json.JSONObject;
@@ -12,7 +12,7 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 public class EventKDEDouble extends IEventKDE {
-    public Type valueType = Double.class;
+    public Class valueType = Double.class;
     public Double value = null;
 
     public EventKDEDouble(){}

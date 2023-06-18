@@ -15,7 +15,7 @@ import opentraceability.models.masterdata.TradingParty;
 import opentraceability.models.identifiers.*;
 import opentraceability.utility.URLHelper;
 
-import java.lang.reflect.Type;
+
 import java.net.URI;
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class MasterDataResolver {
     public static void resolveTradeitem(DigitalLinkQueryOptions options, GTIN gtin, EPCISBaseDocument doc, OkHttpClient client) throws Exception {
         if (gtin != null) {
             if (doc.searchMasterData(gtin.toString(), TradeItem.class) == null) {
-                Type type = TradeItem.class;
+                Class type = TradeItem.class;
                 type = opentraceability.Setup.getMasterDataTypeDefault(type);
                 IVocabularyElement ti = resolveMasterDataItem(type, options, "/01/" + gtin + "?linkType=gs1:masterData", client);
                 if (ti != null) {
@@ -66,7 +66,7 @@ public class MasterDataResolver {
     public static void resolveLocation(DigitalLinkQueryOptions options, GLN gln, EPCISBaseDocument doc, OkHttpClient client) throws Exception {
         if (gln != null) {
             if (doc.searchMasterData(gln.toString(), Location.class) == null) {
-                Type type = Location.class;
+                Class type = Location.class;
                 type = opentraceability.Setup.getMasterDataTypeDefault(type);
                 IVocabularyElement l = resolveMasterDataItem(type, options, "/414/" + gln + "?linkType=gs1:masterData", client);
                 if (l != null) {
@@ -79,7 +79,7 @@ public class MasterDataResolver {
     public static void resolveTradingParty(DigitalLinkQueryOptions options, PGLN pgln, EPCISBaseDocument doc, OkHttpClient client) throws Exception {
         if (pgln != null) {
             if (doc.searchMasterData(pgln.toString(), TradingParty.class) == null) {
-                Type type = TradingParty.class;
+                Class type = TradingParty.class;
                 type = opentraceability.Setup.getMasterDataTypeDefault(type);
                 IVocabularyElement tp = resolveMasterDataItem(type, options, "/417/" + pgln + "?linkType=gs1:masterData", client);
                 if (tp != null) {
@@ -89,7 +89,7 @@ public class MasterDataResolver {
         }
     }
 
-    public static IVocabularyElement resolverMasterDataItem(DigitalLinkQueryOptions options, String relativeURL, OkHttpClient client, List<Type> kClasses) throws Exception {
+    public static IVocabularyElement resolverMasterDataItem(DigitalLinkQueryOptions options, String relativeURL, OkHttpClient client, List<Class> kClasses) throws Exception {
         IVocabularyElement response = null;
         for (var type : kClasses) {
             response = resolveMasterDataItem(type, options, relativeURL, client);
@@ -98,7 +98,7 @@ public class MasterDataResolver {
         return response;
     }
 
-    public static IVocabularyElement resolveMasterDataItem(Type type, DigitalLinkQueryOptions options, String relativeURL, OkHttpClient client) throws Exception {
+    public static IVocabularyElement resolveMasterDataItem(Class type, DigitalLinkQueryOptions options, String relativeURL, OkHttpClient client) throws Exception {
         if (options.url == null) {
             throw new Exception("options.Uri is null on the DigitalLinkQueryOptions");
         }

@@ -8,7 +8,7 @@ import opentraceability.models.events.*;
 import opentraceability.utility.*;
 
 import javax.xml.xpath.XPathExpressionException;
-import java.lang.reflect.Type;
+
 
 public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 {
@@ -31,8 +31,8 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 			{
 				for (XElement xEvent : xEventList.Elements())
 				{
-					Type eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(xEvent);
-					IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(xEvent, eventType, doc.epcisVersion);
+					Class eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(xEvent);
+					IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(xEvent, doc.epcisVersion, eventType);
 					doc.events.add(e);
 				}
 			}

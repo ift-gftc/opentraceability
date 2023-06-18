@@ -24,23 +24,18 @@ public class Country implements Comparable<Country> {
     }
 
     public Country(Element xmlCountry) {
-        this.name = xmlCountry.getAttribute("name") != null ? xmlCountry.getAttribute("name") : "";
-        this.alternativeName = xmlCountry.getAttribute("alternativeName") != null ? xmlCountry.getAttribute("alternativeName") : "";
-        this.abbreviation = xmlCountry.getAttribute("abbreviation") != null ? xmlCountry.getAttribute("abbreviation") : "";
-        this.alpha3 = xmlCountry.getAttribute("alpha3") != null ? xmlCountry.getAttribute("alpha3") : "";
-        String isoValue = xmlCountry.getAttribute("iso");
+        this.name = xmlCountry.getAttribute("Name") != null ? xmlCountry.getAttribute("Name") : "";
+        this.alternativeName = xmlCountry.getAttribute("AlternativeName") != null ? xmlCountry.getAttribute("AlternativeName") : "";
+        this.abbreviation = xmlCountry.getAttribute("Abbreviation") != null ? xmlCountry.getAttribute("Abbreviation") : "";
+        this.alpha3 = xmlCountry.getAttribute("Alpha3") != null ? xmlCountry.getAttribute("Alpha3") : "";
+        String isoValue = xmlCountry.getAttribute("ISO");
         this.iso = isoValue != null ? Integer.parseInt(isoValue) : 0;
-        this.cultureInfoCode = xmlCountry.getAttribute("cultureInfoCode") != null ? xmlCountry.getAttribute("cultureInfoCode") : "";
+        this.cultureInfoCode = xmlCountry.getAttribute("CultureInfoCode") != null ? xmlCountry.getAttribute("CultureInfoCode") : "";
     }
 
     public Country clone() {
-        try {
-            Country c = this;
-            return c;
-        } catch (Exception ex) {
-            OTLogger.error(ex);
-            throw ex;
-        }
+        Country c = this;
+        return c;
     }
 
     @Override

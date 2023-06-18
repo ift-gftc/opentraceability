@@ -18,8 +18,10 @@ public class Countries {
     }
 
     public static void load() throws Exception {
-        String data = StaticData.readData("Countries.xml");
-
+        String data = StaticData.readData("/Countries.xml");
+        _dirCountries = new HashMap<>();
+        _dirNameCountries = new HashMap<>();
+        _dirAlpha3Countries = new HashMap<>();
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -72,9 +74,9 @@ public class Countries {
         Country country = null;
 
         if (!code.isEmpty()) {
-            if (_dirCountries != null) {
+            if (_dirAlpha3Countries != null) {
                 if (_dirAlpha3Countries.containsKey((code.toUpperCase()))) {
-                    country = _dirCountries.get(code.toUpperCase());
+                    country = _dirAlpha3Countries.get(code.toUpperCase());
                 }
             }
         }
@@ -88,7 +90,7 @@ public class Countries {
         if (_dirCountries != null && !name.isEmpty()) {
 
             if (_dirNameCountries.containsKey((name.toUpperCase()))) {
-                country = _dirCountries.get(name.toUpperCase());
+                country = _dirNameCountries.get(name.toUpperCase());
             } else {
                 loop:
                 for (Map.Entry<String, Country> element : _dirNameCountries.entrySet()) {

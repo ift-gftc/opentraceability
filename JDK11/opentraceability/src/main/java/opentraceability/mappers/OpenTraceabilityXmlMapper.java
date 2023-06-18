@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
 
-import java.lang.reflect.Type;
+
 import java.sql.Ref;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 */
 public final class OpenTraceabilityXmlMapper
 {
-
 	public static XElement ToXml(String ns, String name, Object value, EPCISVersion version) throws Exception {
 		return ToXml(ns, name, value, version, false);
 	}
@@ -55,7 +54,7 @@ public final class OpenTraceabilityXmlMapper
 				List list = (List)value;
 				if (!list.isEmpty())
 				{
-					Type t = list.get(0).getClass();
+					Class t = list.get(0).getClass();
 					OpenTraceabilityAttribute childAtt = ReflectionUtility.getAnnotation(t, OpenTraceabilityAttribute.class);
 					for (var v : list)
 					{
@@ -73,7 +72,7 @@ public final class OpenTraceabilityXmlMapper
 			}
 			else
 			{
-				Type t = value.getClass();
+				Class t = value.getClass();
 				OTMappingTypeInformation typeInfo = OTMappingTypeInformation.getXmlTypeInfo(t);
 				for (var property : typeInfo.properties.stream().filter(p -> p.version == null || p.version == version).collect(Collectors.toList()))
 				{
@@ -281,12 +280,7 @@ public final class OpenTraceabilityXmlMapper
 		}
 	}
 
-	public static <T> T FromXml(XElement x, EPCISVersion version, Class<T> clazz) throws Exception {
-		T o = (T)FromXml(x, clazz, version);
-		return o;
-	}
-
-	public static Object FromXml(XElement x, Type type, EPCISVersion version) throws Exception
+	public static Object FromXml(XElement x, EPCISVersion version, Class type) throws Exception
 	{
 		Object value = ReflectionUtility.constructType(type);
 
@@ -301,8 +295,8 @@ public final class OpenTraceabilityXmlMapper
 			{
 				for (XElement xchild : x.Elements(att.name()))
 				{
-					Type itemType = ReflectionUtility.getItemType(type);
-					Object childvalue = FromXml(xchild, itemType, version);
+					Class itemType = ReflectionUtility.getItemType(type);
+					Object childvalue = FromXml(xchild, version, itemType);
 					list.add(childvalue);
 				}
 			}
@@ -310,8 +304,8 @@ public final class OpenTraceabilityXmlMapper
 			{
 				for (XElement xchild : x.Elements())
 				{
-					Type itemType = ReflectionUtility.getItemType(type);
-					Object childvalue = FromXml(xchild, itemType, version);
+					Class itemType = ReflectionUtility.getItemType(type);
+					Object childvalue = FromXml(xchild, version, itemType);
 					list.add(childvalue);
 				}
 			}
@@ -345,7 +339,7 @@ public final class OpenTraceabilityXmlMapper
 					String attValue = x.Attribute(tangible.StringHelper.trimStart(xchildname, '@')) == null ? null : x.Attribute(tangible.StringHelper.trimStart(xchildname, '@'));
 					if (!tangible.StringHelper.isNullOrEmpty(attValue))
 					{
-						Object o = ReadObjectFromString(attValue, mappingProp.field.getType());
+						Object o = ReadObjectFromString(attValue, mappingProp.field.getDeclaringClass());
 						mappingProp.field.set(value, o);
 					}
 				}
@@ -362,7 +356,7 @@ public final class OpenTraceabilityXmlMapper
 				String eleText = x.getNodeValue();
 				if (!(eleText == null || eleText.isBlank()))
 				{
-					Object o = ReadObjectFromString(eleText, mappingProp.field.getType());
+					Object o = ReadObjectFromString(eleText, mappingProp.field.getDeclaringClass());
 					mappingProp.field.set(value, o);
 				}
 			}
@@ -371,14 +365,15 @@ public final class OpenTraceabilityXmlMapper
 				for (XElement xc : x.Elements())
 				{
 					XElement xchild = xc;
+					String tagName = xchild.getTagName();
 
 					mappingProp = typeInfo.get(xchild.getTagName());
-					if (mappingProp == null && tangible.ListHelper.exists(typeInfo.getClass().getFields(), p -> StringExtensions.splitXPath(p.name).get(0) == xchild.getTagName()))
+					if (mappingProp == null && tangible.ListHelper.exists(typeInfo.properties, p -> StringExtensions.splitXPath(p.name).get(0) == tagName))
 					{
 						// see if we have a parent matching way...
-						for (var mp : Arrays.stream(typeInfo.getClass().getFields()).filter(p -> StringExtensions.splitXPath(p.getName()).get(0) == xchild.getTagName()).collect(Collectors.toList()))
+						for (var mp : typeInfo.properties.stream().filter(p -> StringExtensions.splitXPath(p.name).get(0) == tagName).collect(Collectors.toList()))
 						{
-							XElement xgrandchild = x.Element(mp.Name);
+							XElement xgrandchild = x.Element(mp.name);
 							if (xgrandchild != null)
 							{
 								ReadPropertyMapping(mp, xgrandchild, value, version);
@@ -461,16 +456,8 @@ public final class OpenTraceabilityXmlMapper
 		}
 		else if (obj instanceof Duration)
 		{
-			Duration timespan = (Duration)obj;
-			String timeStr = timespan.toHoursPart() + ":" + timespan.toMinutesPart();
-			if (timespan.isNegative())
-			{
-				return "-" + timeStr;
-			}
-			else
-			{
-				return "+" + timeStr;
-			}
+			String timeStr = StringExtensions.fromDuration((Duration)obj);
+			return timeStr;
 		}
 		else
 		{
@@ -516,18 +503,18 @@ public final class OpenTraceabilityXmlMapper
 			List list = tempVar instanceof List ? (List)tempVar : null;
 			if (list == null)
 			{
-				list = (List)ReflectionUtility.constructType(mappingProp.field.getType());
+				list = (List)ReflectionUtility.constructType(mappingProp.field.getDeclaringClass());
 				mappingProp.field.set(value, list);
 			}
 
-			Type itemType = ReflectionUtility.getItemType(mappingProp.field.getType());
+			Class itemType = ReflectionUtility.getItemType(mappingProp.field.getDeclaringClass());
 			if (mappingProp.itemName != null)
 			{
 				for (XElement xitem : xchild.Elements(mappingProp.itemName))
 				{
 					if (mappingProp.isObject)
 					{
-						Object o = FromXml(xitem, itemType, version);
+						Object o = FromXml(xitem, version, itemType);
 						list.add(o);
 					}
 					else
@@ -541,7 +528,7 @@ public final class OpenTraceabilityXmlMapper
 			{
 				if (mappingProp.isObject)
 				{
-					Object o = FromXml(xchild, itemType, version);
+					Object o = FromXml(xchild, version, itemType);
 					list.add(o);
 				}
 				else
@@ -553,7 +540,7 @@ public final class OpenTraceabilityXmlMapper
 		}
 		else if (mappingProp.isObject)
 		{
-			Object o = FromXml(xchild, mappingProp.field.getType(), version);
+			Object o = FromXml(xchild, version, mappingProp.field.getDeclaringClass());
 			mappingProp.field.set(value, o);
 		}
 		else
@@ -561,13 +548,13 @@ public final class OpenTraceabilityXmlMapper
 			String eleText = xchild.getValue();
 			if (!(eleText == null || eleText.isBlank()))
 			{
-				Object o = ReadObjectFromString(eleText, mappingProp.field.getType());
+				Object o = ReadObjectFromString(eleText, mappingProp.field.getDeclaringClass());
 				mappingProp.field.set(value, o);
 			}
 		}
 	}
 
-	private static Object ReadObjectFromString(String value, Type t) throws Exception {
+	private static Object ReadObjectFromString(String value, Class t) throws Exception {
 		return ReflectionUtility.parseFromString(t, value);
 	}
 

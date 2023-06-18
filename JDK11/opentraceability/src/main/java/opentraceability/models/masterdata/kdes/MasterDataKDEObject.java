@@ -5,13 +5,12 @@ import opentraceability.utility.XElement;
 import opentraceability.utility.XmlToJsonConverter;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
-import java.lang.reflect.Type;
+
 
 public class MasterDataKDEObject extends IMasterDataKDE  {
     private Element _xml = null;
     private JSONObject _json = null;
-
-    Type valueType = Object.class;
+    Class valueType = Object.class;
 
     public Object getValue() {
         return _xml != null ? _xml : _json;

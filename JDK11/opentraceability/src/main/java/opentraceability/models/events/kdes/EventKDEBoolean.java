@@ -8,11 +8,11 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.lang.reflect.Type;
+
 
 public class EventKDEBoolean extends IEventKDE {
 
-    public Type valueType = Boolean.class;
+    public Class valueType = Boolean.class;
 
     public Boolean value;
 

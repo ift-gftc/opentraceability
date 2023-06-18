@@ -9,11 +9,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.lang.reflect.Type;
+
 import java.util.Map;
 
 public class EventKDEString extends IEventKDE {
-    public Type valueType = String.class;
+    public Class valueType = String.class;
     public String value;
     public String type;
     public Map<String, String> attributes;

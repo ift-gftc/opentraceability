@@ -8,10 +8,10 @@ import org.json.JSONObject;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.lang.reflect.Type;
+
 
 public class EventKDECountry extends IEventKDE {
-    public Type valueType = Country.class;
+    public Class valueType = Country.class;
 
     public Country value = null;
 

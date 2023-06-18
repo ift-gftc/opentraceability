@@ -2,6 +2,7 @@ package opentraceability.utility;
 
 import opentraceability.models.events.EventAction;
 import opentraceability.models.events.EventProduct;
+import opentraceability.models.events.ObjectEvent;
 import opentraceability.models.identifiers.EPC;
 import opentraceability.models.identifiers.GLN;
 import opentraceability.models.identifiers.GTIN;
@@ -11,6 +12,7 @@ import opentraceability.utility.attributes.OpenTraceabilityAttribute;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.time.Duration;
@@ -22,10 +24,10 @@ import java.util.List;
 
 public class ReflectionUtility
 {
-    public static Object constructType(Type type) throws Exception
+    public static Object constructType(Class type) throws Exception
     {
-        if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) type;
+        if (type.getGenericSuperclass() instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType)type.getGenericSuperclass();
             Type rawType = parameterizedType.getRawType();
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
 
@@ -43,6 +45,10 @@ public class ReflectionUtility
                     throw new IllegalArgumentException("Error constructing ArrayList with generic type: " + genericType.getTypeName());
                 }
             }
+            else if (rawType.equals(ObjectEvent.class) && typeArguments.length == 1)
+            {
+
+            }
         }
 
         try {
@@ -54,7 +60,7 @@ public class ReflectionUtility
         }
     }
 
-    public static boolean isTypeInherited(Type childType, Type baseType) {
+    public static boolean isTypeInherited(Class childType, Class baseType) {
         Class<?> childClass = (Class<?>) childType;
         Class<?> parentClass = (Class<?>) baseType;
 
@@ -102,14 +108,14 @@ public class ReflectionUtility
         }
     }
 
-    public static Type getItemType(Type t) {
-        if (t instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType)t;
+    public static Class getItemType(Class t) {
+        if (t.getGenericSuperclass() instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType)t.getGenericSuperclass();
             Type rawType = parameterizedType.getRawType();
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
 
             if (rawType.equals(ArrayList.class) && typeArguments.length == 1) {
-                Type genericType = typeArguments[0];
+                Class genericType = (Class)typeArguments[0];
                 return genericType;
             }
         }
@@ -117,10 +123,10 @@ public class ReflectionUtility
         return null;
     }
 
-    public static Boolean isListOf(Type type, Class<?> itemType)
+    public static Boolean isListOf(Class type, Class<?> itemType)
     {
-        if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) type;
+        if (type.getGenericSuperclass() instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType)type.getGenericSuperclass();
             Type rawType = parameterizedType.getRawType();
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
 
@@ -133,7 +139,7 @@ public class ReflectionUtility
         return false;
     }
 
-    public static Object parseFromString(Type t, String value) throws Exception {
+    public static Object parseFromString(Class t, String value) throws Exception {
         if (t == OffsetDateTime.class || t == OffsetDateTime.class)
         {
             OffsetDateTime o = OffsetDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME);
@@ -204,7 +210,7 @@ public class ReflectionUtility
         }
     }
 
-    public static <T extends Annotation> T getAnnotation(Type type, Class<T> annotationClass) {
+    public static <T extends Annotation> T getAnnotation(Class type, Class<T> annotationClass) {
         Annotation[] annotations = type.getClass().getDeclaredAnnotations();
         List<Annotation> annotationList = new ArrayList<>();
 
