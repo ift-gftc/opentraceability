@@ -126,7 +126,7 @@ public final class EPCISJsonMasterDataWriter
 				}
 				else if (ReflectionUtility.getFieldAnnotation(mapping.field, OpenTraceabilityObjectAttribute.class) != null)
 				{
-					Object val = WriteObject(mapping.field.getDeclaringClass(), o);
+					Object val = WriteObject(mapping.field.getType(), o);
 
 					JSONObject jAtt = new JSONObject();
 					jAtt.put("id", mapping.name);

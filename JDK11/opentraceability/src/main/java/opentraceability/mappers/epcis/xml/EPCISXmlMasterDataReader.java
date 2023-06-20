@@ -30,7 +30,7 @@ public final class EPCISXmlMasterDataReader
 		//        <Vocabulary type="urn:epcglobal:epcis:vtype:Party">
 
 		XElement xVocabList = xMasterData.Element("VocabularyList");
-		if (xVocabList != null)
+		if (!xVocabList.IsNull)
 		{
 			for (XElement xVocab : xVocabList.Elements())
 			{
@@ -38,7 +38,7 @@ public final class EPCISXmlMasterDataReader
 				if (type != null)
 				{
 					XElement xVocabElementaryList = xVocab.Element("VocabularyElementList");
-					if (xVocabElementaryList != null)
+					if (!xVocabElementaryList.IsNull)
 					{
 						for (XElement xVocabElement : xVocabElementaryList.Elements())
 						{
@@ -75,7 +75,7 @@ public final class EPCISXmlMasterDataReader
 		if (o instanceof  TradeItem)
 		{
 			TradeItem md = (TradeItem)o;
-			md.id = xTradeitem.Element("id").getValue();
+			md.id = xTradeitem.Attribute("id");
 			md.gtin = new opentraceability.models.identifiers.GTIN(md.id);
 			md.epcisType = type;
 
@@ -100,7 +100,7 @@ public final class EPCISXmlMasterDataReader
 		if (o instanceof  Location)
 		{
 			Location md = (Location)o;
-			md.id = xLocation.Element("id").getValue();
+			md.id = xLocation.Attribute("id");
 			md.gln = new opentraceability.models.identifiers.GLN(md.id);
 			md.epcisType = type;
 
@@ -125,7 +125,7 @@ public final class EPCISXmlMasterDataReader
 		if (o instanceof  TradingParty)
 		{
 			TradingParty md = (TradingParty)o;
-			md.id = xTradingParty.Element("id").getValue();
+			md.id = xTradingParty.Attribute("id");
 			md.pgln = new opentraceability.models.identifiers.PGLN(md.id);
 			md.epcisType = type;
 
@@ -164,21 +164,21 @@ public final class EPCISXmlMasterDataReader
 		ArrayList<String> ignoreAttributes = new ArrayList<String>();
 		for (var property : mappedProperties.properties.stream().filter(p -> p.name.equals("")).collect(Collectors.toList()))
 		{
-			var subMappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(property.field.getDeclaringClass());
+			var subMappedProperties = OTMappingTypeInformation.getMasterDataXmlTypeInfo(property.field.getType());
 			boolean setAttribute = false;
 
-			Object subObject = ReflectionUtility.constructType(property.field.getDeclaringClass());
+			Object subObject = ReflectionUtility.constructType(property.field.getType());
 			if (subObject != null)
 			{
 				for (XElement xeAtt : xMasterData.Elements("attribute"))
 				{
 					String id = xeAtt.Attribute("id");
-					var propMapping = subMappedProperties.get(id);
+					var propMapping = subMappedProperties.get(id, null);
 					if (propMapping != null)
 					{
 						if (!TrySetValueType(xeAtt.getValue(), propMapping.field, subObject))
 						{
-							Object value = ReadKDEObject(xeAtt, propMapping.field.getDeclaringClass());
+							Object value = ReadKDEObject(xeAtt, propMapping.field.getType(), propMapping.itemType);
 							propMapping.field.set(subObject, value);
 						}
 						setAttribute = true;
@@ -202,12 +202,12 @@ public final class EPCISXmlMasterDataReader
 				continue;
 			}
 
-			var propMapping = mappedProperties.get(id);
+			var propMapping = mappedProperties.get(id, null);
 			if (propMapping != null)
 			{
 				if (!TrySetValueType(xeAtt.getValue(), propMapping.field, md))
 				{
-					Object value = ReadKDEObject(xeAtt, propMapping.field.getDeclaringClass());
+					Object value = ReadKDEObject(xeAtt, propMapping.field.getType(), propMapping.itemType);
 					propMapping.field.set(md, value);
 				}
 			}
@@ -231,7 +231,7 @@ public final class EPCISXmlMasterDataReader
 		}
 	}
 
-	private static Object ReadKDEObject(XElement xeAtt, Class t) throws Exception {
+	private static Object ReadKDEObject(XElement xeAtt, Class t, Class itemType) throws Exception {
 		Object value = ReflectionUtility.constructType(t);
 
 		if (value instanceof List)
@@ -239,13 +239,12 @@ public final class EPCISXmlMasterDataReader
 			List list = (List)value;
 			for (XElement xchild : xeAtt.Elements())
 			{
-				Class itemType = ReflectionUtility.getItemType(t);
 				if (itemType == null)
 				{
 					throw new Exception("Failed to read generic item type of list.");
 				}
 
-				Object child = ReadKDEObject(xchild, itemType);
+				Object child = ReadKDEObject(xchild, itemType, null);
 				list.add(child);
 			}
 		}
@@ -263,7 +262,7 @@ public final class EPCISXmlMasterDataReader
 						OpenTraceabilityObjectAttribute objAtt = ReflectionUtility.getFieldAnnotation(p, OpenTraceabilityObjectAttribute.class);
 						if (objAtt != null)
 						{
-							Object o = ReadKDEObject(x, p.getType());
+							Object o = ReadKDEObject(x, p.getType(), null);
 						}
 						else if (!TrySetValueType(x.getValue(), p, value))
 						{

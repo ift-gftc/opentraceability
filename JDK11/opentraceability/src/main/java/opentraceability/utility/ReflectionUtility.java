@@ -8,6 +8,9 @@ import opentraceability.models.identifiers.GLN;
 import opentraceability.models.identifiers.GTIN;
 import opentraceability.models.identifiers.PGLN;
 import opentraceability.utility.attributes.OpenTraceabilityAttribute;
+import opentraceability.utility.attributes.OpenTraceabilityAttributes;
+import opentraceability.utility.attributes.OpenTraceabilityProductsAttribute;
+import opentraceability.utility.attributes.OpenTraceabilityProductsAttributes;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -26,35 +29,19 @@ public class ReflectionUtility
 {
     public static Object constructType(Class type) throws Exception
     {
-        if (type.getGenericSuperclass() instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType)type.getGenericSuperclass();
-            Type rawType = parameterizedType.getRawType();
-            Type[] typeArguments = parameterizedType.getActualTypeArguments();
+        if (type == null)
+        {
+            return null;
+        }
 
-            if (rawType.equals(ArrayList.class) && typeArguments.length == 1) {
-                Type genericType = typeArguments[0];
-
-                if (genericType.equals(String.class)) {
-                    // Construct and return an ArrayList<String> object
-                    return new ArrayList<String>();
-                } else if (genericType.equals(EventProduct.class)) {
-                    // Construct and return an ArrayList<EventProduct> object
-                    return new ArrayList<EventProduct>();
-                }
-                else {
-                    throw new IllegalArgumentException("Error constructing ArrayList with generic type: " + genericType.getTypeName());
-                }
-            }
-            else if (rawType.equals(ObjectEvent.class) && typeArguments.length == 1)
-            {
-
-            }
+        if (List.class.isAssignableFrom(type)) {
+            return (ArrayList.class).getDeclaredConstructor().newInstance();
         }
 
         try {
             // Construct and return the type using reflection
             Class<?> clazz = Class.forName(type.getTypeName());
-            return clazz.newInstance();
+            return clazz.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             throw new IllegalArgumentException("Error constructing object of type: " + type.getTypeName(), ex);
         }
@@ -78,11 +65,36 @@ public class ReflectionUtility
 
     public static <T extends Annotation> List<T> getFieldAnnotations(Field field, Class<T> annotationClass) {
         List<T> matchingAnnotations = new ArrayList<>();
-
-        Annotation[] annotations = field.getDeclaredAnnotations();
+        Annotation[] annotations = field.getAnnotations();
         for (Annotation annotation : annotations) {
-            if (annotation.annotationType().equals(annotationClass)) {
+            if (annotationClass.isInstance(annotation))
+            {
                 matchingAnnotations.add(annotationClass.cast(annotation));
+            }
+            else
+            {
+                if (annotationClass.equals(OpenTraceabilityAttribute.class))
+                {
+                    if (annotation.annotationType().equals(OpenTraceabilityAttributes.class))
+                    {
+                        OpenTraceabilityAttributes att = (OpenTraceabilityAttributes)annotation;
+                        for (var a: att.value())
+                        {
+                            matchingAnnotations.add((T)a);
+                        }
+                    }
+                }
+                else if (annotationClass.equals(OpenTraceabilityProductsAttribute.class))
+                {
+                    if (annotation.annotationType().equals(OpenTraceabilityProductsAttributes.class))
+                    {
+                        OpenTraceabilityProductsAttributes att = (OpenTraceabilityProductsAttributes)annotation;
+                        for (var a: att.value())
+                        {
+                            matchingAnnotations.add((T)a);
+                        }
+                    }
+                }
             }
         }
 
@@ -90,14 +102,7 @@ public class ReflectionUtility
     }
 
     public static <T extends Annotation> T getFieldAnnotation(Field field, Class<T> annotationClass) {
-        List<T> matchingAnnotations = new ArrayList<>();
-
-        Annotation[] annotations = field.getDeclaredAnnotations();
-        for (Annotation annotation : annotations) {
-            if (annotation.annotationType().equals(annotationClass)) {
-                matchingAnnotations.add(annotationClass.cast(annotation));
-            }
-        }
+        List<T> matchingAnnotations = getFieldAnnotations(field, annotationClass);
 
         if (matchingAnnotations.isEmpty())
         {
@@ -147,7 +152,7 @@ public class ReflectionUtility
         }
         else if (t == UOM.class)
         {
-            UOM uom = UOM.lookUpFromUNCode(value);
+            UOM uom = UOMS.getUOMFromUNCode(value);
             return uom;
         }
         else if (t == Boolean.class || t == Boolean.class)
@@ -167,11 +172,7 @@ public class ReflectionUtility
         }
         else if (t == Duration.class)
         {
-            if (value.startsWith("+"))
-            {
-                value = value.substring(1);
-            }
-            Duration ts = Duration.parse(value);
+            Duration ts = StringExtensions.toDuration(value);
             return ts;
         }
         else if (t == EventAction.class)

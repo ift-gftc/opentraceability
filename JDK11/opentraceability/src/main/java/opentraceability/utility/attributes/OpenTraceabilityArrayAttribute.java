@@ -6,4 +6,5 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OpenTraceabilityArrayAttribute {
     String itemName() default "";
+    Class itemType();
 }

@@ -87,7 +87,7 @@ public class EPCISXmlMasterDataWriter
 							if (subObj instanceof ArrayList)
 							{
 								ArrayList list = (ArrayList)subObj;
-								if (list.isEmpty())
+								if (!list.isEmpty())
 								{
 									var i = list.get(0);
 									if (i instanceof LanguageString)
@@ -116,7 +116,7 @@ public class EPCISXmlMasterDataWriter
 				{
 					XElement x = xVocabEle.Add("attribute");
 					x.SetAttributeValue("id", mapping.name);
-					WriteObject(x, mapping.field.getDeclaringClass(), o);
+					WriteObject(x, mapping.field.getType(), o);
 				}
 				else if (ReflectionUtility.getFieldAnnotation(mapping.field, OpenTraceabilityArrayAttribute.class) != null)
 				{
@@ -135,7 +135,7 @@ public class EPCISXmlMasterDataWriter
 				else if (o instanceof ArrayList)
 				{
 					ArrayList list = (ArrayList)o;
-					if (list.isEmpty())
+					if (!list.isEmpty())
 					{
 						var i = list.get(0);
 						if (i instanceof LanguageString)

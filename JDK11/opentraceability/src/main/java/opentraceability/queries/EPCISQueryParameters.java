@@ -58,13 +58,13 @@ public class EPCISQueryParameters {
 
             Field prop = propMapping.get(key);
             if (prop != null) {
-                if (OffsetDateTime.class.isAssignableFrom(prop.getDeclaringClass())) {
+                if (OffsetDateTime.class.isAssignableFrom(prop.getType())) {
                     String fixedStr = value.replace(" ", "+");
                     OffsetDateTime dt = OffsetDateTime.parse(fixedStr);
                     prop.set(query, dt);
                 }
                 else if (List.class.isAssignableFrom(prop.getType())) {
-                    Class itemType = ReflectionUtility.getItemType(prop.getDeclaringClass());
+                    Class itemType = ReflectionUtility.getItemType(prop.getType());
                     List<Object> listValues = new ArrayList<>();
                     if (itemType == String.class)
                     {

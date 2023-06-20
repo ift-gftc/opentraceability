@@ -7,6 +7,7 @@ import opentraceability.models.events.*;
 import opentraceability.utility.*;
 import opentraceability.*;
 import opentraceability.mappers.*;
+import tangible.StringHelper;
 
 import javax.xml.xpath.XPathExpressionException;
 
@@ -62,8 +63,6 @@ public class EPCISDocumentBaseXMLMapper
 		}
 
 		// read the creation date
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: string? creationDateAttributeStr = xDoc.Attribute("creationDate") == null ? null : xDoc.Attribute("creationDate").Value;
 		document.creationDate = xDoc.outArgValue.AttributeOffsetDateTime("creationDate");
 
 		// read the standard business document header
@@ -82,14 +81,14 @@ public class EPCISDocumentBaseXMLMapper
 		return document;
 	}
 
-	public static XElement WriteXml(EPCISBaseDocument doc, String epcisNS, String rootEleName) throws Exception {
+	public static XElement WriteXml(EPCISBaseDocument doc, String epcisPrefix, String rootEleName) throws Exception {
 		if (doc.epcisVersion == null)
 		{
 			throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
 		}
 
-		// create a new xdocument with all of the namespaces...
-		XElement xDoc = new XElement(epcisNS, rootEleName);
+		// create a new Document with all the namespaces...
+		XElement xDoc = new XElement(epcisPrefix + ":" + rootEleName);
 		for (var a: doc.attributes.entrySet())
 		{
 			xDoc.Add(new XAttribute(a.getKey(), a.getValue()));
@@ -97,13 +96,15 @@ public class EPCISDocumentBaseXMLMapper
 
 		for (var ns : doc.namespaces.entrySet())
 		{
-			if (Objects.equals(ns.getValue(), Constants.CBVMDA_NAMESPACE) || Objects.equals(ns.getValue(), Constants.EPCISQUERY_1_NAMESPACE) || Objects.equals(ns.getValue(), Constants.EPCISQUERY_2_NAMESPACE) || Objects.equals(ns.getValue(), Constants.EPCIS_1_NAMESPACE) || Objects.equals(ns.getValue(), Constants.EPCIS_2_NAMESPACE))
+			String prefix = ns.getKey();
+			String uri = ns.getValue();
+			if (uri.equals(Constants.CBVMDA_NAMESPACE) || uri.equals(Constants.EPCISQUERY_1_NAMESPACE) || uri.equals(Constants.EPCISQUERY_2_NAMESPACE) || uri.equals(Constants.EPCIS_1_NAMESPACE) || uri.equals(Constants.EPCIS_2_NAMESPACE))
 			{
 				continue;
 			}
 			else
 			{
-				xDoc.Add(new XAttribute(Constants.XMLNS_XNAMESPACE, ns.getKey(), ns.getValue()));
+				xDoc.AddNamespace(prefix, uri);
 			}
 		}
 
@@ -113,21 +114,21 @@ public class EPCISDocumentBaseXMLMapper
 			xDoc.Add(new XAttribute("creationDate", doc.creationDate.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
 		}
 
-		xDoc.SetAttributeValue(Constants.XMLNS_XNAMESPACE,  "epcis", null);
-		xDoc.SetAttributeValue(Constants.XMLNS_XNAMESPACE,  "cbvmda", null);
+		xDoc.RemoveNamespace("epcis");
+		xDoc.RemoveNamespace("cbvmda");
 
 		if (doc.epcisVersion == EPCISVersion.V2)
 		{
 			xDoc.Add(new XAttribute("schemaVersion", "2.0"));
 			if (doc instanceof EPCISQueryDocument)
 			{
-				xDoc.Add(new XAttribute(Constants.XMLNS_XNAMESPACE,  "epcisq", Constants.EPCISQUERY_2_NAMESPACE));
-				xDoc.Add(new XAttribute(Constants.XMLNS_XNAMESPACE,  "cbvmda", Constants.CBVMDA_NAMESPACE));
+				xDoc.AddNamespace("epcisq", Constants.EPCISQUERY_2_NAMESPACE);
+				xDoc.AddNamespace("cbvmda", Constants.CBVMDA_NAMESPACE);
 			}
 			else
 			{
-				xDoc.Add(new XAttribute(Constants.XMLNS_XNAMESPACE,  "epcis", Constants.EPCIS_2_NAMESPACE));
-				xDoc.Add(new XAttribute(Constants.XMLNS_XNAMESPACE,  "cbvmda", Constants.CBVMDA_NAMESPACE));
+				xDoc.AddNamespace("epcis", Constants.EPCIS_2_NAMESPACE);
+				xDoc.AddNamespace("cbvmda", Constants.CBVMDA_NAMESPACE);
 			}
 		}
 		else if (doc.epcisVersion == EPCISVersion.V1)
@@ -135,20 +136,21 @@ public class EPCISDocumentBaseXMLMapper
 			xDoc.Add(new XAttribute("schemaVersion", "1.2"));
 			if (doc instanceof EPCISQueryDocument)
 			{
-				xDoc.Add(new XAttribute(Constants.XMLNS_XNAMESPACE,  "epcisq", Constants.EPCISQUERY_1_NAMESPACE));
-				xDoc.Add(new XAttribute(Constants.XMLNS_XNAMESPACE,  "cbvmda", Constants.CBVMDA_NAMESPACE));
+				xDoc.AddNamespace("epcisq", Constants.EPCISQUERY_1_NAMESPACE);
+				xDoc.AddNamespace("cbvmda", Constants.CBVMDA_NAMESPACE);
 			}
 			else
 			{
-				xDoc.Add(new XAttribute(Constants.XMLNS_XNAMESPACE,  "epcis", Constants.EPCIS_1_NAMESPACE));
-				xDoc.Add(new XAttribute(Constants.XMLNS_XNAMESPACE,  "cbvmda", Constants.CBVMDA_NAMESPACE));
+				xDoc.AddNamespace("epcis", Constants.EPCIS_1_NAMESPACE);
+				xDoc.AddNamespace("cbvmda", Constants.CBVMDA_NAMESPACE);
 			}
 		}
 
 		// write the standard business document header
 		if (doc.header != null)
 		{
-			XElement xHeader = OpenTraceabilityXmlMapper.ToXml(Constants.SBDH_XNAMESPACE, "StandardBusinessDocumentHeader", doc.header, doc.epcisVersion);
+			String prefix = xDoc.GetNamespacesAndPrefixesMap().get(Constants.SBDH_XNAMESPACE);
+			XElement xHeader = OpenTraceabilityXmlMapper.ToXml(null,prefix + ":StandardBusinessDocumentHeader", doc.header, doc.epcisVersion, false);
 			if (xHeader != null)
 			{
 				xDoc.Add("EPCISHeader").Add(xHeader);
@@ -164,7 +166,7 @@ public class EPCISDocumentBaseXMLMapper
 	public static Class GetEventTypeFromProfile(XElement xEvent) throws XPathExpressionException {
 		String action = xEvent.Element("action").getValue();
 		String bizStep = xEvent.Element("bizStep").getValue();
-		String eventType = xEvent.Element("type").getValue();
+		String eventType = xEvent.getTagName();
 
 		if (bizStep == null)
 		{
@@ -172,9 +174,9 @@ public class EPCISDocumentBaseXMLMapper
 		}
 
 		String finalBizStep = bizStep;
-		var profiles = Setup.Profiles.stream().filter(p -> Objects.equals(p.EventType.toString(), eventType)
-				&& (p.Action == null || p.Action.toString() == action)
-				&& (p.BusinessStep == null || Objects.equals(p.BusinessStep.toLowerCase(), finalBizStep)));
+		var profiles = Setup.Profiles.stream().filter(p -> p.EventType.toString().toLowerCase().equals(eventType.toLowerCase())
+				&& (p.Action == null || p.Action.toString().equals(action))
+				&& (StringHelper.isNullOrEmpty(p.BusinessStep)|| p.BusinessStep.toLowerCase().equals(finalBizStep.toLowerCase())));
 
 		List<OpenTraceabilityEventProfile> finalProfiles = profiles.collect(Collectors.toList());
 

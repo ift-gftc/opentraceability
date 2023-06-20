@@ -11,6 +11,7 @@ import opentraceability.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
+import tangible.StringHelper;
 
 
 import java.sql.Ref;
@@ -25,15 +26,11 @@ import java.util.stream.Collectors;
 */
 public final class OpenTraceabilityXmlMapper
 {
-	public static XElement ToXml(String ns, String name, Object value, EPCISVersion version) throws Exception {
-		return ToXml(ns, name, value, version, false);
-	}
-
 	public static XElement ToXml(String ns, String name, Object value, EPCISVersion version, boolean required) throws Exception {
 		if (value != null)
 		{
-			XElement x = new XElement(ns, name);
-			XElement xvalue = x;
+			XElement xvalue = new XElement(ns, name);
+
 
 			// make sure we have created the xml XElement correctly.
 			List<String> xParts = StringExtensions.splitXPath(name);
@@ -67,14 +64,14 @@ public final class OpenTraceabilityXmlMapper
 				}
 				else if (!required)
 				{
-					x = null;
+					xvalue = null;
 				}
 			}
 			else
 			{
 				Class t = value.getClass();
 				OTMappingTypeInformation typeInfo = OTMappingTypeInformation.getXmlTypeInfo(t);
-				for (var property : typeInfo.properties.stream().filter(p -> p.version == null || p.version == version).collect(Collectors.toList()))
+				for (var property : typeInfo.properties.stream().filter(p -> p.version == EPCISVersion.Any || p.version.equals(version)).collect(Collectors.toList()))
 				{
 					Object obj = property.field.get(value);
 					if (obj != null)
@@ -87,7 +84,7 @@ public final class OpenTraceabilityXmlMapper
 							xParts.remove(0);
 							if (xvaluepointer.Element(p) == null)
 							{
-								xvaluepointer.Add(new XElement(p));
+								xvalue.Add(new XElement(p));
 							}
 							xvaluepointer = xvaluepointer.Element(p);
 						}
@@ -102,7 +99,7 @@ public final class OpenTraceabilityXmlMapper
 								xvaluepointer.Add(xatt);
 							}
 						}
-						else if (Objects.equals(xchildname, "text()"))
+						else if (xchildname.equals("text()"))
 						{
 							String objStr = WriteObjectToString(obj);
 							if (!(objStr == null || objStr.isBlank()))
@@ -113,7 +110,7 @@ public final class OpenTraceabilityXmlMapper
 						else if (property.isQuantityList)
 						{
 							ArrayList<EventProduct> products = (ArrayList<EventProduct>)obj;
-							var filteredProducts = products.stream().filter(p -> p.Quantity != null && p.Type == property.productType).collect(Collectors.toList());
+							var filteredProducts = products.stream().filter(p -> p.Quantity != null && p.Type.equals(property.productType)).collect(Collectors.toList());
 							if (!filteredProducts.isEmpty())
 							{
 								XElement xQuantityList = new XElement(xchildname);
@@ -121,11 +118,11 @@ public final class OpenTraceabilityXmlMapper
 								{
 									if (product.EPC != null && product.Quantity != null)
 									{
-										XElement xQuantity = new XElement("quantityXElement", new XElement("epcClass", product.EPC.toString()), new XElement("quantity", product.Quantity.value));
+										XElement xQuantity = new XElement("quantityElement", new XElement(null,"epcClass", product.EPC.toString()), new XElement(null, "quantity", product.Quantity.value));
 
-										if (!Objects.equals(product.Quantity.uom.UNCode, "EA"))
+										if (product.Quantity.uom == null || !product.Quantity.uom.UNCode.equals("EA"))
 										{
-											xQuantity.Add(new XElement("uom", product.Quantity.uom.UNCode));
+											xQuantity.Add(new XElement(null,"uom", product.Quantity.uom.UNCode));
 										}
 
 										xQuantityList.Add(xQuantity);
@@ -137,7 +134,7 @@ public final class OpenTraceabilityXmlMapper
 						else if (property.isEPCList)
 						{
 							ArrayList<EventProduct> products = (ArrayList<EventProduct>)obj;
-							var filteredProducts = products.stream().filter(p -> p.Quantity == null && p.Type == property.productType).collect(Collectors.toList());
+							var filteredProducts = products.stream().filter(p -> p.Quantity == null && p.Type.equals(property.productType)).collect(Collectors.toList());
 							if (!filteredProducts.isEmpty() || property.required)
 							{
 								XElement xEPCList = new XElement(property.name);
@@ -159,7 +156,7 @@ public final class OpenTraceabilityXmlMapper
 							XElement xlist = xvaluepointer;
 							if (!list.isEmpty() || property.required)
 							{
-								if (property.itemName != null)
+								if (!StringHelper.isNullOrEmpty(property.itemName))
 								{
 									XElement xl = new XElement(xchildname);
 									xvaluepointer.Add(xl);
@@ -171,7 +168,7 @@ public final class OpenTraceabilityXmlMapper
 							{
 								if (property.isObject)
 								{
-									XElement xchild = ToXml(null, property.itemName != null ? property.itemName : xchildname, o, version, property.required);
+									XElement xchild = ToXml(null, !StringHelper.isNullOrEmpty(property.itemName) ? property.itemName : xchildname, o, version, property.required);
 									if (!xchild.IsNull)
 									{
 										xlist.Add(xchild);
@@ -179,12 +176,10 @@ public final class OpenTraceabilityXmlMapper
 								}
 								else
 								{
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: string? objStr = WriteObjectToString(o);
 									String objStr = WriteObjectToString(o);
 									if (!(objStr == null || objStr.isBlank()))
 									{
-										XElement xchild = new XElement(property.itemName != null ? property.itemName : xchildname, objStr);
+										XElement xchild = new XElement(null, !StringHelper.isNullOrEmpty(property.itemName) ? property.itemName : xchildname, objStr);
 										xlist.Add(xchild);
 									}
 								}
@@ -203,10 +198,13 @@ public final class OpenTraceabilityXmlMapper
 							String objStr = WriteObjectToString(obj);
 							if (!(objStr == null || objStr.isBlank()))
 							{
-								XElement xchild = new XElement(xchildname, objStr);
+								XElement xchild = new XElement(xchildname);
+								xchild.setValue(objStr);
 								xvaluepointer.Add(xchild);
 							}
 						}
+
+						xvalue = xvaluepointer;
 					}
 					else if (property.required)
 					{
@@ -259,7 +257,7 @@ public final class OpenTraceabilityXmlMapper
 							for (var kde : kdes) {
 								XElement xKDE = kde.getXml();
 								if (xKDE != null) {
-									xvalue.Add(new XAttribute(xKDE.getNamespaceUri(), xKDE.getLocalName(), xKDE.getNodeValue()));
+									xvalue.Add(new XAttribute(xKDE.getNamespaceUri(), xKDE.getTagName(), xKDE.getValue()));
 								}
 							}
 						}
@@ -267,7 +265,7 @@ public final class OpenTraceabilityXmlMapper
 				}
 			}
 
-			return x;
+			return xvalue;
 		}
 		else if (required)
 		{
@@ -332,14 +330,14 @@ public final class OpenTraceabilityXmlMapper
 
 			for (var xatt : x.Attributes())
 			{
-				mappingProp = typeInfo.get("@" + xatt.Name);
+				mappingProp = typeInfo.get("@" + xatt.Name, null);
 				if (mappingProp != null)
 				{
 					String xchildname = mappingProp.name;
 					String attValue = x.Attribute(tangible.StringHelper.trimStart(xchildname, '@')) == null ? null : x.Attribute(tangible.StringHelper.trimStart(xchildname, '@'));
 					if (!tangible.StringHelper.isNullOrEmpty(attValue))
 					{
-						Object o = ReadObjectFromString(attValue, mappingProp.field.getDeclaringClass());
+						Object o = ReadObjectFromString(attValue, mappingProp.field.getType());
 						mappingProp.field.set(value, o);
 					}
 				}
@@ -350,13 +348,13 @@ public final class OpenTraceabilityXmlMapper
 				}
 			}
 
-			mappingProp = typeInfo.get("text()");
+			mappingProp = typeInfo.get("text()", null);
 			if (mappingProp != null)
 			{
 				String eleText = x.getNodeValue();
 				if (!(eleText == null || eleText.isBlank()))
 				{
-					Object o = ReadObjectFromString(eleText, mappingProp.field.getDeclaringClass());
+					Object o = ReadObjectFromString(eleText, mappingProp.field.getType());
 					mappingProp.field.set(value, o);
 				}
 			}
@@ -366,12 +364,13 @@ public final class OpenTraceabilityXmlMapper
 				{
 					XElement xchild = xc;
 					String tagName = xchild.getTagName();
+					String namespaceUri = xchild.getNamespaceUri();
 
-					mappingProp = typeInfo.get(xchild.getTagName());
-					if (mappingProp == null && tangible.ListHelper.exists(typeInfo.properties, p -> StringExtensions.splitXPath(p.name).get(0) == tagName))
+					mappingProp = typeInfo.get(xchild.getTagName(), namespaceUri);
+					if (mappingProp == null && tangible.ListHelper.exists(typeInfo.properties, p -> StringExtensions.splitXPath(p.name).get(0).equals(tagName)))
 					{
 						// see if we have a parent matching way...
-						for (var mp : typeInfo.properties.stream().filter(p -> StringExtensions.splitXPath(p.name).get(0) == tagName).collect(Collectors.toList()))
+						for (var mp : typeInfo.properties.stream().filter(p -> StringExtensions.splitXPath(p.name).get(0).equals(tagName)).collect(Collectors.toList()))
 						{
 							XElement xgrandchild = x.Element(mp.name);
 							if (xgrandchild != null)
@@ -406,8 +405,6 @@ public final class OpenTraceabilityXmlMapper
 		return value;
 	}
 
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: private static string? WriteObjectToString(object obj)
 	private static String WriteObjectToString(Object obj)
 	{
 		if (obj == null)
@@ -469,7 +466,7 @@ public final class OpenTraceabilityXmlMapper
 		if (mappingProp.isQuantityList)
 		{
 			IEvent e = (IEvent)value;
-			for (var xQuantity : xchild.Elements("quantityXElement"))
+			for (var xQuantity : xchild.Elements("quantityElement"))
 			{
 				EPC epc = new EPC(xQuantity.Element("epcClass").getValue());
 				EventProduct product = new EventProduct(epc);
@@ -503,23 +500,22 @@ public final class OpenTraceabilityXmlMapper
 			List list = tempVar instanceof List ? (List)tempVar : null;
 			if (list == null)
 			{
-				list = (List)ReflectionUtility.constructType(mappingProp.field.getDeclaringClass());
+				list = (List)ReflectionUtility.constructType(mappingProp.field.getType());
 				mappingProp.field.set(value, list);
 			}
 
-			Class itemType = ReflectionUtility.getItemType(mappingProp.field.getDeclaringClass());
-			if (mappingProp.itemName != null)
+			if (!StringHelper.isNullOrEmpty(mappingProp.itemName))
 			{
 				for (XElement xitem : xchild.Elements(mappingProp.itemName))
 				{
 					if (mappingProp.isObject)
 					{
-						Object o = FromXml(xitem, version, itemType);
+						Object o = FromXml(xitem, version, mappingProp.itemType);
 						list.add(o);
 					}
 					else
 					{
-						Object o = ReadObjectFromString(xitem.getValue(), itemType);
+						Object o = ReadObjectFromString(xitem.getValue(), mappingProp.itemType);
 						list.add(o);
 					}
 				}
@@ -528,27 +524,27 @@ public final class OpenTraceabilityXmlMapper
 			{
 				if (mappingProp.isObject)
 				{
-					Object o = FromXml(xchild, version, itemType);
+					Object o = FromXml(xchild, version, mappingProp.itemType);
 					list.add(o);
 				}
 				else
 				{
-					Object o = ReadObjectFromString(xchild.getValue(), itemType);
+					Object o = ReadObjectFromString(xchild.getValue(), mappingProp.itemType);
 					list.add(o);
 				}
 			}
 		}
 		else if (mappingProp.isObject)
 		{
-			Object o = FromXml(xchild, version, mappingProp.field.getDeclaringClass());
+			Object o = FromXml(xchild, version, mappingProp.field.getType());
 			mappingProp.field.set(value, o);
 		}
 		else
 		{
 			String eleText = xchild.getValue();
-			if (!(eleText == null || eleText.isBlank()))
+			if (!StringHelper.isNullOrEmpty(eleText))
 			{
-				Object o = ReadObjectFromString(eleText, mappingProp.field.getDeclaringClass());
+				Object o = ReadObjectFromString(eleText, mappingProp.field.getType());
 				mappingProp.field.set(value, o);
 			}
 		}
@@ -563,27 +559,6 @@ public final class OpenTraceabilityXmlMapper
 
 		// check if it is a registered KDE...
 		IEventKDE kde = IEventKDE.initializeKDE(x.getNamespaceUri(), x.getLocalName());
-
-		// if not, then check if the data type is specified and we recognize it
-		if (kde == null)
-		{
-			String xsiType = x.Attribute(Constants.XSI_NAMESPACE,"type");
-			if (xsiType != null)
-			{
-				switch (xsiType)
-				{
-					case "string":
-						kde = new EventKDEString(x.getNamespaceUri(), x.getLocalName());
-						break;
-					case "boolean":
-						kde = new EventKDEBoolean(x.getNamespaceUri(), x.getLocalName());
-						break;
-					case "number":
-						kde = new EventKDEDouble(x.getNamespaceUri(), x.getLocalName());
-						break;
-				}
-			}
-		}
 
 		// if not, check if it is a simple value or an object
 		if (kde == null)
@@ -626,6 +601,7 @@ public final class OpenTraceabilityXmlMapper
 		if (kde != null)
 		{
 			XElement xe = new XElement(ns, name);
+			xe.setValue(value);
 			kde.setFromXml(xe);
 		}
 		else

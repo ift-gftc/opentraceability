@@ -59,55 +59,12 @@ public class UOM {
         }
     }
 
-    public static UOM lookUpFromUNCode(String unCode) {
-        for (UOM uom : getUOMList()) {
-            if (uom.UNCode == unCode) {
-                return uom;
-            }
-        }
-        return null;
-    }
-
     public static boolean isNullOrEmpty(UOM uom) {
         return uom == null || uom.Abbreviation.isEmpty();
     }
 
-    public static UOM parseFromName(String name) throws Exception {
-        try {
-            if (name == null || name.isEmpty()) {
-                throw new IllegalArgumentException("name");
-            }
-
-            UOM uom = getUOMList().stream().filter(u -> u.Name == name).findFirst().orElse(null);
-            if (uom == null) {
-                uom = getUOMList().stream().filter(u -> u.UNCode.equalsIgnoreCase(name)).findFirst().orElse(null);
-            }
-            if (uom == null) {
-                throw new Exception("Failed to parse UOM");
-            }
-
-            return new UOM(uom);
-        }
-        catch (Exception ex)
-        {
-            OTLogger.error(ex);
-            throw ex; 
-        }
-    }
-
     private static List<UOM> uomList = null;
     private static final ReentrantLock uomListLock = new ReentrantLock();
-
-    public static List<UOM> getUOMList() {
-        if (uomList == null) {
-            uomList = loadUOMList();
-        }
-        return uomList;
-    }
-
-    public static List<UOM> loadUOMList() {
-        return new ArrayList<>();
-    }
 
     public void CopyFrom(UOM uom) {
         this.Abbreviation = uom.Abbreviation;

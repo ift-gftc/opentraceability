@@ -256,7 +256,7 @@ public final class OpenTraceabilityJsonLDMapper
 		{
 			for (String jprop : jobj.keySet())
 			{
-				mappingProp = typeInfo.get(jprop);
+				mappingProp = typeInfo.get(jprop, null);
 
 				if (jobj.has(jprop))
 				{
@@ -405,15 +405,14 @@ public final class OpenTraceabilityJsonLDMapper
 		}
 		else if (mappingProp.isArray)
 		{
-			List list = (List)ReflectionUtility.constructType(mappingProp.field.getDeclaringClass());
-			Class itemType = ReflectionUtility.getItemType(mappingProp.field.getDeclaringClass());
+			List list = (List)ReflectionUtility.constructType(mappingProp.field.getType());
 
 			if (mappingProp.isRepeating && !(json instanceof JSONArray))
 			{
 				String v = json.toString();
 				if (!(v == null || v.isBlank()))
 				{
-					Object o = ReadObjectFromString(v, itemType);
+					Object o = ReadObjectFromString(v, mappingProp.itemType);
 					list.add(o);
 				}
 			}
@@ -426,12 +425,12 @@ public final class OpenTraceabilityJsonLDMapper
 					{
 						if (mappingProp.isObject)
 						{
-							Object o = FromJson(j, itemType, namespaces);
+							Object o = FromJson(j, mappingProp.itemType, namespaces);
 							list.add(o);
 						}
 						else
 						{
-							Object o = ReadObjectFromString(j.toString(), itemType);
+							Object o = ReadObjectFromString(j.toString(), mappingProp.itemType);
 							list.add(o);
 						}
 					}
@@ -440,10 +439,10 @@ public final class OpenTraceabilityJsonLDMapper
 		}
 		else if (mappingProp.isObject)
 		{
-			Object o = FromJson(json, mappingProp.field.getDeclaringClass(), namespaces);
+			Object o = FromJson(json, mappingProp.field.getType(), namespaces);
 			mappingProp.field.set(value, o);
 		}
-		else if (ReflectionUtility.isListOf(mappingProp.field.getDeclaringClass(), LanguageString.class))
+		else if (ReflectionUtility.isListOf(mappingProp.field.getType(), LanguageString.class))
 		{
 
 		}
@@ -452,7 +451,7 @@ public final class OpenTraceabilityJsonLDMapper
 			String v = json.toString();
 			if (!(v == null || v.isBlank()))
 			{
-				Object o = ReadObjectFromString(v, mappingProp.field.getDeclaringClass());
+				Object o = ReadObjectFromString(v, mappingProp.field.getType());
 				mappingProp.field.set(value, o);
 			}
 		}

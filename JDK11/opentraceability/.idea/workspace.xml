@@ -5,67 +5,46 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a90cffd5-42a7-4393-b4db-8951db78ce91" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/ObjectEventBase.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/tests/object_event_all_possible_fields.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/OpenTraceabilityTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/opentraceability/SetupTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/OTMappingTypeInformationTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/OpenTraceabilityXmlMapperTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/opentraceability/utility/CountriesTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/opentraceability/utility/EnumUtilTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/opentraceability/utility/ReflectionUtilityTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/opentraceability/utility/StringExtensionsTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/opentraceability/utility/UOMTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/ListExtensions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/SimpleNamespaceContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XMLCompare.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/tests/all_events_query_doc_1_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/opentraceability/utility/XmlSchemaCheckerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/OpenTraceabilityEventProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/OpenTraceabilityEventProfile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/Setup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/Setup.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEventKDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEventKDE.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IMasterDataKDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IMasterDataKDE.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IMasterDataMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IMasterDataMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/EPCISQueryDocumentMappers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/EPCISQueryDocumentMappers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/OTMappingTypeInformation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/OTMappingTypeInformation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/OTMappingTypeInformationProperty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/OTMappingTypeInformationProperty.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/OpenTraceabilityJsonLDMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/OpenTraceabilityJsonLDMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISDocumentBaseJsonMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISDocumentBaseJsonMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISDocumentJsonMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISDocumentJsonMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/OpenTraceabilityXmlMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/OpenTraceabilityXmlMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISJsonMasterDataReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISJsonMasterDataReader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISJsonMasterDataWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISJsonMasterDataWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISQueryDocumentJsonMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISQueryDocumentJsonMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentBaseXMLMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentBaseXMLMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentXMLMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentXMLMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISQueryDocumentXMLMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISQueryDocumentXMLMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISXmlMasterDataReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISXmlMasterDataReader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISXmlMasterDataWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISXmlMasterDataWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/masterdata/GS1VocabJsonMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/masterdata/GS1VocabJsonMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/opentraceabilityxmlmapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/OpenTraceabilityXmlMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/ObjectEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/ObjectEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEBoolean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEBoolean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDECountry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDECountry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEDateTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEDateTime.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEDouble.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEDouble.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/ErrorDeclaration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/ErrorDeclaration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventILMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/EventILMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/PersistentDisposition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/PersistentDisposition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/SensorElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/SensorElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/CertificationList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/CertificationList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEString.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/kdes/EventKDEString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/MasterDataKDECountry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/MasterDataKDECountry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/MasterDataKDEObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/MasterDataKDEObject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/MasterDataKDEString.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/kdes/MasterDataKDEString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQueryError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQueryError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/TradeItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/masterdata/TradeItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQueryParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISQueryParameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/MasterDataResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/MasterDataResolver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/Countries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/Countries.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/Country.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/Country.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/EmbeddedResourceLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/EmbeddedResourceLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/EnumUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/EnumUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/JSONExtensions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/JSONExtensions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/JsonSchemaChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/JsonSchemaChecker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/Measurement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/Measurement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/ReflectionUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/ReflectionUtility.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/StaticData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/StaticData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/StringExtensions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/StringExtensions.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/UOM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/UOM.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/UOMS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/UOMS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XElement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/data/Countries.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/Countries.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/data/uoms.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/uoms.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tangible/ListHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tangible/ListHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XmlSchemaChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XmlSchemaChecker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityArrayAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityArrayAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityEventKDEOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityEventKDEOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityExtensionAttributesAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityExtensionAttributesAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityExtensionElementsAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityExtensionElementsAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityObjectAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityObjectAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityRepeatingAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/attributes/OpenTraceabilityRepeatingAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/OpenTraceabilityXmlMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/OpenTraceabilityXmlMapperTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,54 +117,16 @@
       <recent name="" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
-      <recent name="opentraceability.mappers" />
       <recent name="opentraceability.utility" />
+      <recent name="opentraceability.mappers" />
       <recent name="opentraceability" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="opentraceability.interfaces" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.OpenTraceabilityXmlMapperTest.objectEvent_to_from_xml">
-    <configuration name="All in opentraceability" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="opentraceability" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="EnumUtilTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="opentraceability" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="opentraceability.utility.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="opentraceability.utility" />
-      <option name="MAIN_CLASS_NAME" value="opentraceability.utility.EnumUtilTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="OTMappingTypeInformationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="opentraceability" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="opentraceability.mappers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="opentraceability.mappers" />
-      <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OTMappingTypeInformationTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="OpenTraceabilityXmlMapperTest.objectEvent_to_from_xml" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.OpenTraceabilityXmlMapperTest.epcisQueryDocument_to_from_xml_1_2">
+    <configuration name="OpenTraceabilityXmlMapperTest.epcisDocument_to_from_xml" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="opentraceability" />
       <extension name="coverage">
         <pattern>
@@ -195,34 +136,83 @@
       </extension>
       <option name="PACKAGE_NAME" value="opentraceability.mappers" />
       <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OpenTraceabilityXmlMapperTest" />
-      <option name="METHOD_NAME" value="objectEvent_to_from_xml" />
+      <option name="METHOD_NAME" value="epcisDocument_to_from_xml" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SetupTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="OpenTraceabilityXmlMapperTest.epcisDocument_to_from_xml_1000Times" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="opentraceability" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="opentraceability.*" />
+          <option name="PATTERN" value="opentraceability.mappers.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="opentraceability" />
-      <option name="MAIN_CLASS_NAME" value="opentraceability.SetupTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="opentraceability.mappers" />
+      <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OpenTraceabilityXmlMapperTest" />
+      <option name="METHOD_NAME" value="epcisDocument_to_from_xml_1000Times" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OpenTraceabilityXmlMapperTest.epcisQueryDocument_to_from_xml_1_2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="opentraceability" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="opentraceability.mappers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="opentraceability.mappers" />
+      <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OpenTraceabilityXmlMapperTest" />
+      <option name="METHOD_NAME" value="epcisQueryDocument_to_from_xml_1_2" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OpenTraceabilityXmlMapperTest.objectEvent_to_from_xml_1000Times" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="opentraceability" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="opentraceability.mappers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="opentraceability.mappers" />
+      <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OpenTraceabilityXmlMapperTest" />
+      <option name="METHOD_NAME" value="objectEvent_to_from_xml_1000Times" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="XmlSchemaCheckerTest.validate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="opentraceability" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="opentraceability.utility.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="opentraceability.utility" />
+      <option name="MAIN_CLASS_NAME" value="opentraceability.utility.XmlSchemaCheckerTest" />
+      <option name="METHOD_NAME" value="validate" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest.objectEvent_to_from_xml" />
-        <item itemvalue="JUnit.All in opentraceability" />
-        <item itemvalue="JUnit.OTMappingTypeInformationTest" />
-        <item itemvalue="JUnit.EnumUtilTest" />
-        <item itemvalue="JUnit.SetupTest" />
+        <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest.epcisQueryDocument_to_from_xml_1_2" />
+        <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest.epcisDocument_to_from_xml_1000Times" />
+        <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest.epcisDocument_to_from_xml" />
+        <item itemvalue="JUnit.XmlSchemaCheckerTest.validate" />
+        <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest.objectEvent_to_from_xml_1000Times" />
       </list>
     </recent_temporary>
   </component>
@@ -239,7 +229,7 @@
       <workItem from="1686777425246" duration="4199000" />
       <workItem from="1686808319475" duration="7453000" />
       <workItem from="1686837251164" duration="61035000" />
-      <workItem from="1687115641262" duration="2745000" />
+      <workItem from="1687115641262" duration="30082000" />
     </task>
     <servers />
   </component>
@@ -261,50 +251,6 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/OTMappingTypeInformationProperty.java</url>
-          <line>73</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/OTMappingTypeInformationProperty.java</url>
-          <line>100</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/utility/EmbeddedResourceLoader.java</url>
-          <line>20</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/opentraceability/utility/ReflectionUtilityTest.java</url>
-          <line>29</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/utility/JSONExtensions.java</url>
-          <line>47</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/opentraceability/mappers/OpenTraceabilityXmlMapperTest.java</url>
-          <line>25</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/OpenTraceabilityXmlMapper.java</url>
-          <line>286</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/OTMappingTypeInformation.java</url>
-          <line>24</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="java.lang.Module" memberName="loader" />

@@ -173,10 +173,10 @@ public final class EPCISJsonMasterDataReader
 		ArrayList<String> ignoreAttributes = new ArrayList<String>();
 		for (var property : mappedProperties.properties)
 		{
-			var subMappedProperties = OTMappingTypeInformation.getMasterDataJsonTypeInfo(property.field.getDeclaringClass());
+			var subMappedProperties = OTMappingTypeInformation.getMasterDataJsonTypeInfo(property.field.getType());
 			boolean setAttribute = false;
 
-			Object subObject = ReflectionUtility.constructType(property.field.getDeclaringClass());
+			Object subObject = ReflectionUtility.constructType(property.field.getType());
 			if (subObject != null)
 			{
 				for (Object item : jAttributes)
@@ -186,12 +186,12 @@ public final class EPCISJsonMasterDataReader
 						JSONObject jAtt = (JSONObject) item;
 						String id = jAtt.getString("id");
 
-						var propMapping = subMappedProperties.get(id);
+						var propMapping = subMappedProperties.get(id, null);
 						if (propMapping != null)
 						{
 							if (!TrySetValueType(jAtt.get("attribute").toString(), propMapping.field, subObject))
 							{
-								Object value = ReadKDEObject(jAtt, propMapping.field.getDeclaringClass());
+								Object value = ReadKDEObject(jAtt, propMapping.field.getType(), propMapping.itemType);
 								propMapping.field.set(subObject, value);
 							}
 							setAttribute = true;
@@ -217,11 +217,11 @@ public final class EPCISJsonMasterDataReader
 					continue;
 				}
 
-				var propMapping = mappedProperties.get(id);
+				var propMapping = mappedProperties.get(id, null);
 				if (propMapping != null) {
 					if (!TrySetValueType(jAtt.get("attribute").toString(), propMapping.field, md))
 					{
-						Object value = ReadKDEObject(jAtt, propMapping.field.getDeclaringClass());
+						Object value = ReadKDEObject(jAtt, propMapping.field.getType(), propMapping.itemType);
 						propMapping.field.set(md, value);
 					}
 				}
@@ -248,7 +248,7 @@ public final class EPCISJsonMasterDataReader
 		}
 	}
 
-	private static Object ReadKDEObject(Object j, Class t) throws Exception {
+	private static Object ReadKDEObject(Object j, Class t, Class itemType) throws Exception {
 		Object value = ReflectionUtility.constructType(t);
 		if (value == null)
 		{
@@ -264,14 +264,13 @@ public final class EPCISJsonMasterDataReader
 				{
 					if (item instanceof JSONObject)
 					{
-						Class itemType = ReflectionUtility.getItemType(t);
 						if (itemType == null)
 						{
 							throw new Exception("Failed to read generic item type of list.");
 						}
 
 						JSONObject xchild = (JSONObject) item;
-						Object child = ReadKDEObject(xchild, itemType.getClass());
+						Object child = ReadKDEObject(xchild, itemType, null);
 						list.add(child);
 					}
 				}
@@ -301,7 +300,7 @@ public final class EPCISJsonMasterDataReader
 						OpenTraceabilityObjectAttribute objAtt = ReflectionUtility.getFieldAnnotation(p, OpenTraceabilityObjectAttribute.class);
 						if (objAtt != null)
 						{
-							Object o = ReadKDEObject(x, p.getType());
+							Object o = ReadKDEObject(x, p.getType(), null);
 						}
 						else if (!TrySetValueType(x.toString(), p, value))
 						{

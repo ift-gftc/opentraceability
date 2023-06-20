@@ -30,6 +30,10 @@ public class Measurement implements Comparable<Measurement> {
     public Measurement(double value, String unitCode) {
         this.value = value;
         uom = UOMS.getUOMFromName(unitCode);
+        if (uom == null)
+        {
+            uom = UOMS.getUOMFromUNCode(unitCode);
+        }
     }
 
     public void add(Measurement measurement) throws Exception {

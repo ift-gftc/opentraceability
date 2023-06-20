@@ -16,7 +16,7 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 			XElement xDoc;
 			tangible.OutObject<XElement> tempOut_xDoc = new tangible.OutObject<XElement>();
 			EPCISDocument doc = EPCISDocumentBaseXMLMapper.ReadXml(strValue, tempOut_xDoc, EPCISDocument.class);
-		xDoc = tempOut_xDoc.outArgValue;
+			xDoc = tempOut_xDoc.outArgValue;
 
 			if (doc.epcisVersion == null)
 			{
@@ -46,9 +46,7 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 			throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
 		}
 
-		String epcisNS = (doc.epcisVersion == EPCISVersion.V2) ? Constants.EPCIS_2_NAMESPACE : Constants.EPCIS_1_NAMESPACE;
-
-		XElement xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, epcisNS, "EPCISDocument");
+		XElement xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, "epcis", "EPCISDocument");
 		if (xDoc == null)
 		{
 			throw new RuntimeException("Failed to parse EPCISQueryDocument from xml string because after parsing the XElement the Root property was null.");
@@ -56,13 +54,11 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 
 		// write the events
 		xDoc.Add(new XElement("EPCISBody", new XElement("EventList")));
-//C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: XElement xEventList = xDoc == null ? null : ((xDoc.XElement("EPCISBody") == null ? null : xDoc.XElement("EPCISBody").XElement("EventList"))) ?? throw new Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root");
 		XElement xEventList = xDoc.Element("EPCISBody/EventList");
 		for (IEvent e : doc.events)
 		{
 			String xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
-			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(null, xname, e, doc.epcisVersion);
+			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(null, xname, e, doc.epcisVersion, false);
 			if (e.eventType == EventType.TransformationEvent && doc.epcisVersion == EPCISVersion.V1)
 			{
 				xEvent = new XElement("extension", xEvent);

@@ -1,14 +1,13 @@
 package opentraceability.mappers;
 
+import opentraceability.utility.ListExtensions;
 import opentraceability.utility.ReflectionUtility;
 import opentraceability.utility.attributes.*;
+import tangible.StringHelper;
 
 import java.lang.reflect.Field;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class OTMappingTypeInformation {
@@ -34,7 +33,9 @@ public class OTMappingTypeInformation {
                         this.properties.add(property);
                         dic.put(property.name, property);
                     }
-                } else {
+                }
+                else
+                {
                     List<OpenTraceabilityAttribute> atts = ReflectionUtility.getFieldAnnotations(prop, OpenTraceabilityAttribute.class);
                     List<OpenTraceabilityJsonAttribute> jsonAtt = ReflectionUtility.getFieldAnnotations(prop, OpenTraceabilityJsonAttribute.class);
                     List<OpenTraceabilityProductsAttribute> productAtts = ReflectionUtility.getFieldAnnotations(prop, OpenTraceabilityProductsAttribute.class);
@@ -45,6 +46,11 @@ public class OTMappingTypeInformation {
                             if (!dic.containsKey(property.name)) {
                                 this.properties.add(property);
                                 dic.put(property.name, property);
+                                if (!StringHelper.isNullOrEmpty(att.ns()))
+                                {
+                                    String key = "{" + att.ns() + "}" + att.name();
+                                    dic.put(key, property);
+                                }
                             }
                         }
                     } else if (jsonAtt != null && jsonAtt.size() > 0 && format == EPCISDataFormat.JSON) {
@@ -54,7 +60,7 @@ public class OTMappingTypeInformation {
                             dic.put(property.name, property);
                         }
                     } else if (productAtts.size() > 0) {
-                        for (OpenTraceabilityProductsAttribute att : productAtts) {
+                        for (var att : productAtts) {
                             OTMappingTypeInformationProperty property = new OTMappingTypeInformationProperty(prop, att, format);
                             if (!dic.containsKey(property.name)) {
                                 this.properties.add(property);
@@ -71,9 +77,9 @@ public class OTMappingTypeInformation {
                         extensionAttributes = prop;
                     }
 
-                    properties.sort((a, b) -> Boolean.compare(a.sequenceOrder == null, b.sequenceOrder == null) != 0
-                            ? a.sequenceOrder == null ? 1 : -1
-                            : a.sequenceOrder - b.sequenceOrder);
+//                    properties.sort((a, b) -> Boolean.compare(a.sequenceOrder == null, b.sequenceOrder == null) != 0
+//                            ? a.sequenceOrder == null ? 1 : -1
+//                            : a.sequenceOrder - b.sequenceOrder);
                 }
             }
         }
@@ -133,7 +139,15 @@ public class OTMappingTypeInformation {
         return masterDataJsonTypeInfos.get(t);
     }
 
-    public OTMappingTypeInformationProperty get(String name) {
-        return dic.get(name);
+    public OTMappingTypeInformationProperty get(String name, String ns)
+    {
+        var prop = dic.get(name);
+        if (prop == null)
+        {
+            String localName = ListExtensions.LastOrDefault(Arrays.stream(name.split(":")));
+            String key = "{" + ns + "}" + localName;
+            prop = dic.get(key);
+        }
+        return prop;
     }
 }

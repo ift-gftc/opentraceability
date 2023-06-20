@@ -19,7 +19,7 @@ public class ErrorDeclaration {
     @OpenTraceabilityAttribute(ns="", name="declarationTime")
     public OffsetDateTime DeclarationTime = null;
 
-    @OpenTraceabilityArrayAttribute(itemName="correctiveEventID")
+    @OpenTraceabilityArrayAttribute(itemName="correctiveEventID", itemType = String.class)
     @OpenTraceabilityAttribute(ns="", name="correctiveEventIDs")
     public List<String> CorrectingEventIDs = null;
 

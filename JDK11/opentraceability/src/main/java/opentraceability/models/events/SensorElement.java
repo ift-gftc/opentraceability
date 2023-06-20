@@ -12,7 +12,7 @@ public class SensorElement {
     @OpenTraceabilityAttribute(ns = "", name ="sensorMetadata", sequenceOrder = 0)
     public SensorMetaData metaData;
 
-    @OpenTraceabilityArrayAttribute
+    @OpenTraceabilityArrayAttribute(itemType = SensorReport.class)
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute(ns = "", name = "sensorReport", sequenceOrder = 1)
     public List<SensorReport> reports;

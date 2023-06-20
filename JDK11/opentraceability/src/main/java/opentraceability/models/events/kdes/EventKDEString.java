@@ -10,19 +10,21 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class EventKDEString extends IEventKDE {
     public Class valueType = String.class;
     public String value;
     public String type;
-    public Map<String, String> attributes;
+    public Map<String, String> attributes = new HashMap<>();
 
     public EventKDEString() {}
 
     public EventKDEString(String ns, String name) {
         this.namespace = ns;
         this.name = name;
+        attributes = new HashMap<>();
     }
 
     public Object getJson() {
@@ -44,7 +46,7 @@ public class EventKDEString extends IEventKDE {
 
             for (Map.Entry<String, String> entry : attributes.entrySet())
             {
-                element.SetAttributeValue(namespace, entry.getKey(), entry.getValue());
+                element.SetAttributeValue(null, entry.getKey(), entry.getValue());
             }
 
             return element;
@@ -52,12 +54,16 @@ public class EventKDEString extends IEventKDE {
     }
 
     public void setFromJson(Object json) {
+        attributes = new HashMap<>();
         value = json.toString();
     }
 
     public void setFromXml(XElement xml) throws Exception {
         value = xml.getValue();
+        namespace = xml.getNamespaceUri();
+        name = xml.getTagName();
 
+        attributes = new HashMap<>();
         for (XAttribute xatt: xml.Attributes()) {
             attributes.put(xatt.Name, xatt.Value);
         }

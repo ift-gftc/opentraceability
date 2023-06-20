@@ -21,6 +21,7 @@ public class OTMappingTypeInformationProperty {
 
     public String name = "";
     public String itemName;
+    public Class itemType;
     public EPCISVersion version;
     public Integer sequenceOrder;
     public String curieMapping;
@@ -47,6 +48,7 @@ public class OTMappingTypeInformationProperty {
         if (arrayAttribute != null) {
             this.isArray = true;
             this.itemName = arrayAttribute.itemName();
+            this.itemType = arrayAttribute.itemType();
         }
     }
 
@@ -69,6 +71,7 @@ public class OTMappingTypeInformationProperty {
         if (arrayAttribute != null) {
             this.isArray = true;
             this.itemName = arrayAttribute.itemName();
+            this.itemType = arrayAttribute.itemType();
         }
 
         if (format == EPCISDataFormat.JSON) {
@@ -101,6 +104,7 @@ public class OTMappingTypeInformationProperty {
         if (arrayAttribute != null) {
             this.isArray = true;
             this.itemName = arrayAttribute.itemName();
+            this.itemType = arrayAttribute.itemType();
         }
 
         if (format == EPCISDataFormat.JSON) {

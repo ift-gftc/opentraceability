@@ -28,7 +28,7 @@ public class EventILMD {
     @OpenTraceabilityJsonAttribute(name="cbvmda:productionDate")
     public OffsetDateTime productionDate;
 
-    @OpenTraceabilityArrayAttribute
+    @OpenTraceabilityArrayAttribute(itemType = Country.class)
     @OpenTraceabilityRepeatingAttribute
     @OpenTraceabilityAttribute(ns = Constants.CBVMDA_NAMESPACE, name="countryOfOrigin")
     @OpenTraceabilityJsonAttribute(name="cbvmda:countryOfOrigin")

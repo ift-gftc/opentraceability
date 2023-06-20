@@ -127,11 +127,12 @@ public class Countries {
     }
 
     public static Country parse(String strValue) {
-        Integer parsedInt = Integer.parseInt(strValue);
-
-        if (parsedInt != null) {
+        try {
+            Integer parsedInt = Integer.parseInt(strValue);
             return fromCountryIso(parsedInt);
-        } else {
+        }
+        catch (Exception ex)
+        {
             return fromAbbreviation(strValue) != null ? fromAbbreviation(strValue) : fromAlpha3(strValue) != null ? fromAlpha3(strValue) : fromCountryName(strValue);
         }
     }

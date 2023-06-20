@@ -66,9 +66,7 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 			throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
 		}
 
-		String epcisNS = (doc.epcisVersion == EPCISVersion.V2) ? Constants.EPCISQUERY_2_NAMESPACE : Constants.EPCISQUERY_1_NAMESPACE;
-
-		XElement xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, epcisNS, "EPCISQueryDocument");
+		XElement xDoc = EPCISDocumentBaseXMLMapper.WriteXml(doc, "epcisq", "EPCISQueryDocument");
 		if (xDoc == null)
 		{
 			throw new RuntimeException("Failed to parse EPCISQueryDocument from xml string because after parsing the XElement the Root property was null.");
@@ -89,7 +87,7 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 		for (IEvent e : doc.events)
 		{
 			String xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
-			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(null, xname, e, doc.epcisVersion);
+			XElement xEvent = OpenTraceabilityXmlMapper.ToXml(null, xname, e, doc.epcisVersion, false);
 			if (e.eventType == EventType.TransformationEvent && doc.epcisVersion == EPCISVersion.V1)
 			{
 				xEvent = new XElement("extension", xEvent);

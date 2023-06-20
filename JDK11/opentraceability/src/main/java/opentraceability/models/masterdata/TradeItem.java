@@ -33,11 +33,11 @@ public class TradeItem extends IVocabularyElement {
     @OpenTraceabilityJsonAttribute(name = "cbvmda:informationProvider")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#informationProvider")
     public PGLN informationProvider = null;
-    @OpenTraceabilityArrayAttribute
+    @OpenTraceabilityArrayAttribute(itemType = String.class)
     @OpenTraceabilityJsonAttribute(name = "cbvmda:speciesForFisheryStatisticsPurposesName")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName")
     public List<String> fisherySpeciesScientificName = new ArrayList<String>();
-    @OpenTraceabilityArrayAttribute
+    @OpenTraceabilityArrayAttribute(itemType = String.class)
     @OpenTraceabilityJsonAttribute(name = "cbvmda:speciesForFisheryStatisticsPurposesCode")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode")
     public List<String> fisherySpeciesCode = new ArrayList<String>();

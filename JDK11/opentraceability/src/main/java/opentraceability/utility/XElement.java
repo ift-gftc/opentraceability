@@ -4,19 +4,27 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import tangible.StringHelper;
 
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.*;
 
 /*
     My custom element class for working with xml.
@@ -64,6 +72,18 @@ public class XElement
         this.Add(child2);
     }
 
+    public XElement(String ns, String name, String value) throws Exception {
+        this.element = createXmlElement(ns, name);
+        this.IsNull = false;
+        this.setValue(value);
+    }
+
+    public XElement(String ns, String name, Double value) throws Exception {
+        this.element = createXmlElement(ns, name);
+        this.IsNull = false;
+        this.setValue(Double.toString(value));
+    }
+
     public XElement(Element e)
     {
         this.element = e;
@@ -81,21 +101,47 @@ public class XElement
         this.element.setNodeValue(value.toString());
     }
 
-    private Element createXmlElement(String ns, String name) throws Exception
-    {
-        var documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        var document = documentBuilder.newDocument();
+    private Element createXmlElement(String ns, String name) {
+        DocumentBuilder documentBuilder = null;
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            documentBuilder = factory.newDocumentBuilder();
 
-        org.w3c.dom.Element ele;
-        if (tangible.StringHelper.isNullOrEmpty(ns))
-        {
-            ele = document.createElement(name);
+            var document = documentBuilder.newDocument();
+
+            org.w3c.dom.Element ele;
+            if (tangible.StringHelper.isNullOrEmpty(ns)) {
+                ele = document.createElement(name);
+            } else {
+                ele = document.createElementNS(ns, name);
+            }
+            document.appendChild(ele);
+            return ele;
         }
-        else
-        {
-            ele = document.createElementNS(ns, name);
+        catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return ele;
+    }
+
+    public XElement DeepClone()
+    {
+        DocumentBuilder documentBuilder = null;
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            documentBuilder = factory.newDocumentBuilder();
+
+            var document = documentBuilder.newDocument();
+            var ele = (Element)document.importNode(this.element, true);
+            document.appendChild(ele);
+            XElement xele = new XElement(ele);
+            this.copyNamespacesTo(xele);
+            return xele;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public XElement Add(String name) throws Exception {
@@ -115,6 +161,7 @@ public class XElement
             throw new Exception("Cannot Add(XElement) because is null.");
         }
 
+        xele.element = (Element) this.element.getOwnerDocument().importNode(xele.element, true);
         this.element.appendChild(xele.element);
         return xele;
     }
@@ -122,7 +169,10 @@ public class XElement
     public String getValue()
     {
         if (this.IsNull) return null;
-        else return this.element.getNodeValue();
+        else
+        {
+            return StringExtensions.trimString(this.element.getTextContent());
+        }
     }
 
     public XElement Add(XAttribute xAtt)
@@ -141,6 +191,11 @@ public class XElement
         return this;
     }
 
+    public void AddNamespace(String prefix, String uri)
+    {
+        this.element.getOwnerDocument().getDocumentElement().setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:" + prefix, uri);
+    }
+
     public XElement Add(String ns, String name) throws Exception {
         if (this.IsNull)
         {
@@ -154,19 +209,17 @@ public class XElement
 
     public XElement Element(String xpath) throws XPathExpressionException
     {
-        // return empty if is null so we can chain...
+        // return empty if is null, so we can chain...
         if (IsNull)
         {
             return new XElement();
         }
 
-        var xpathFactory = XPathFactory.newInstance();
-        var xp = xpathFactory.newXPath();
-        var result = (NodeList)xp.evaluate(xpath, this.element, XPathConstants.NODESET);
+        var result = this.queryByXpath(xpath);
 
         if (result.getLength() == 0)
         {
-            return null;
+            return new XElement();
         }
         else
         {
@@ -176,7 +229,7 @@ public class XElement
 
     public XElement Element(String namespaceURI, String nodeName) throws XPathExpressionException
     {
-        // return empty if is null so we can chain...
+        // return empty if is null, so we can chain...
         if (IsNull)
         {
             return new XElement();
@@ -196,15 +249,13 @@ public class XElement
 
     public ArrayList<XElement> Elements(String xpath) throws XPathExpressionException
     {
-        // return empty if is null so we can chain...
+        // return empty if is null, so we can chain...
         if (IsNull)
         {
             return new ArrayList<XElement>();
         }
 
-        var xpathFactory = XPathFactory.newInstance();
-        var xp = xpathFactory.newXPath();
-        var result = (NodeList) xp.evaluate(xpath, this.element, XPathConstants.NODESET);
+        var result = this.queryByXpath(xpath);
 
         ArrayList<XElement> xelements = new ArrayList<>();
         for (int i = 0; i < result.getLength(); i++)
@@ -215,8 +266,64 @@ public class XElement
         return xelements;
     }
 
+    private NodeList queryByXpath(String xpath) throws XPathExpressionException {
+        //var xpathFactory = XPathFactory.newInstance();
+        //var xp = xpathFactory.newXPath();
+
+        // Set up namespace context
+        Map prefixAndNamespacesMap = this.GetNamespacesAndPrefixesMap();
+        List<String> prefixes = this.GetPrefixes();
+        SimpleNamespaceContext nsContext = new SimpleNamespaceContext(prefixAndNamespacesMap, prefixes);
+
+        // Set the namespace context on the XPath object
+        //xp.setNamespaceContext(nsContext);
+
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPath xpathObj = xpathFactory.newXPath();
+        xpathObj.setNamespaceContext(nsContext);
+
+        XPathExpression expr = xpathObj.compile(xpath);
+        NodeList result = (NodeList) expr.evaluate(this.element, XPathConstants.NODESET);
+        return result;
+    }
+
+    public Map<String, String> GetNamespacesAndPrefixesMap()
+    {
+        XElement xe = new XElement(this.element.getOwnerDocument().getDocumentElement());
+        HashMap<String, String> map = new HashMap();
+        for (XAttribute xatt: xe.Attributes())
+        {
+            if (xatt.Name.startsWith("xmlns:"))
+            {
+                String prefix = ListExtensions.LastOrDefault(Arrays.stream(xatt.Name.split(":")));
+                String namespace = xatt.Value;
+
+                map.put(prefix, namespace);
+                map.put(namespace, prefix);
+            }
+        }
+        return map;
+    }
+
+    public List<String> GetPrefixes()
+    {
+        XElement xe = new XElement(this.element.getOwnerDocument().getDocumentElement());
+        List<String> prefixes = new ArrayList<>();
+        for (XAttribute xatt: xe.Attributes())
+        {
+            if (xatt.Name.startsWith("xmlns:"))
+            {
+                String prefix = ListExtensions.LastOrDefault(Arrays.stream(xatt.Name.split(":")));
+                prefixes.add(prefix);
+            }
+        }
+        return prefixes;
+    }
+
     public static XElement Parse(String xml) throws Exception {
-        var documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        var documentBuilder = factory.newDocumentBuilder();
         ByteArrayInputStream input = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
         var document = documentBuilder.parse(input);
 
@@ -224,11 +331,11 @@ public class XElement
         return e;
     }
 
-    public String Attribute(String name) throws Exception
+    public String Attribute(String name)
     {
         if (IsNull)
         {
-            throw new Exception("Cannot access attribute(name) on null XElement.");
+            return null;
         }
 
         return this.element.getAttribute(name);
@@ -246,28 +353,26 @@ public class XElement
         }
     }
 
-    public String Attribute(String ns, String name) throws Exception {
+    public String Attribute(String ns, String name) {
         if (IsNull)
         {
-            throw new Exception("Cannot access attribute(ns,name) on null XElement.");
+            return null;
         }
 
         return this.element.getAttributeNS(ns, name);
     }
 
-    public ArrayList<XAttribute> Attributes() throws Exception {
-        if (IsNull)
-        {
-            throw new Exception("Cannot access attributes() on null XElement.");
-        }
-
+    public ArrayList<XAttribute> Attributes() {
         ArrayList<XAttribute> xAtts = new ArrayList<>();
-        var attribtues = this.element.getAttributes();
-        for (int i = 0; i < attribtues.getLength(); i++)
+        if (!IsNull)
         {
-            var a = attribtues.item(i);
-            XAttribute xAtt = new XAttribute(a.getNamespaceURI(), a.getNodeName(), a.getLocalName(), a.getNodeValue());
-            xAtts.add(xAtt);
+            var attribtues = this.element.getAttributes();
+            for (int i = 0; i < attribtues.getLength(); i++)
+            {
+                var a = attribtues.item(i);
+                XAttribute xAtt = new XAttribute(a.getNamespaceURI(), a.getNodeName(), a.getLocalName(), a.getNodeValue());
+                xAtts.add(xAtt);
+            }
         }
         return xAtts;
     }
@@ -296,20 +401,20 @@ public class XElement
         return eles;
     }
 
-    public void setValue(String value) throws Exception {
+    public void setValue(String value)  {
         if (this.IsNull)
         {
-            throw new Exception("Cannot call setValue(value) on null XElement.");
+            return;
         }
 
-        this.element.setNodeValue(value);
+        this.element.setTextContent(value);
     }
 
-    public String getNamespaceUri() throws Exception {
+    public String getNamespaceUri() {
 
         if (this.IsNull)
         {
-            throw new Exception("Cannot call getNamespaceURI() on null XElement.");
+            return null;
         }
 
         return this.element.getNamespaceURI();
@@ -344,13 +449,61 @@ public class XElement
         this.Add(xatt);
     }
 
-    public String getTagName() throws Exception {
+    public String getTagName() {
         if (this.IsNull)
         {
-            throw new Exception("Cannot call getTagName() on null XElement.");
+            return null;
         }
 
         return this.element.getTagName();
+    }
+
+    @Override
+    public String toString() {
+        try
+        {
+            // clone elements
+            XElement clone = this.DeepClone();
+
+            DOMSource domSource = new DOMSource(clone.element.getOwnerDocument());
+            StringWriter writer = new StringWriter();
+            StreamResult result = new StreamResult(writer);
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.transform(domSource, result);
+            String str = writer.toString();
+            return str;
+        }
+        catch (TransformerException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void copyNamespacesTo(XElement xele) {
+        if (!this.IsNull)
+        {
+            var root = new XElement(this.element.getOwnerDocument().getDocumentElement());
+            var targetRoot = new XElement(xele.element.getOwnerDocument().getDocumentElement());
+            for (XAttribute att: root.Attributes())
+            {
+                if (att.Name.startsWith("xmlns:"))
+                {
+                    String existing = targetRoot.Attribute(att.Name);
+                    if (StringHelper.isNullOrEmpty(existing))
+                    {
+                        targetRoot.element.setAttributeNS("http://www.w3.org/2000/xmlns/", att.Name, att.Value);
+                    }
+                }
+            }
+        }
+    }
+
+    public void RemoveNamespace(String prefix)
+    {
+        var root = this.element.getOwnerDocument().getDocumentElement();
+        root.removeAttribute("xmlns:" + prefix);
     }
 //
 //

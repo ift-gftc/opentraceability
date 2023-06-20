@@ -125,4 +125,14 @@ public class StringExtensions {
         }
         return str;
     }
+
+    public static String trimString(String input) {
+        // Remove leading newline characters
+        String trimmed = input.replaceAll("^(\\n)+", "");
+
+        // Remove trailing newline characters
+        trimmed = trimmed.replaceAll("(\\n)+$", "");
+
+        return trimmed.trim();
+    }
 }

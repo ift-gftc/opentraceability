@@ -68,24 +68,24 @@ public abstract class IEvent
     public EventLocation location = null;
 
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityArrayAttribute(itemName = "bizTransaction")
+    @OpenTraceabilityArrayAttribute(itemName = "bizTransaction", itemType = EventBusinessTransaction.class)
     @OpenTraceabilityAttribute(ns = "", name = "bizTransactionList")
     public List<EventBusinessTransaction> bizTransactionList = new ArrayList<>();
 
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityArrayAttribute(itemName = "source")
+    @OpenTraceabilityArrayAttribute(itemName = "source", itemType = EventSource.class)
     @OpenTraceabilityAttribute(ns = "", name = "sourceList", version = EPCISVersion.V2)
     @OpenTraceabilityAttribute(ns = "", name = "extension/sourceList", version = EPCISVersion.V1)
     public List<EventSource> sourceList = new ArrayList<>();
 
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityArrayAttribute(itemName = "destination")
+    @OpenTraceabilityArrayAttribute(itemName = "destination", itemType = EventDestination.class)
     @OpenTraceabilityAttribute(ns = "", name = "destinationList", version = EPCISVersion.V2)
     @OpenTraceabilityAttribute(ns = "", name = "extension/destinationList", version = EPCISVersion.V1)
     public List<EventDestination> destinationList = new ArrayList<>();
 
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityArrayAttribute(itemName = "sensorElement")
+    @OpenTraceabilityArrayAttribute(itemName = "sensorElement", itemType = SensorElement.class)
     @OpenTraceabilityAttribute(ns = "",  name = "sensorElementList", version = EPCISVersion.V2)
     @OpenTraceabilityAttribute(ns = "", name = "extension/sensorElementList", version = EPCISVersion.V1)
     public List<SensorElement> sensorElementList = new ArrayList<>();

@@ -5,6 +5,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
+import tangible.StringHelper;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,17 +31,9 @@ public class XmlSchemaChecker {
         boolean isFileOk = false;
 
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
-            javax.xml.parsers.DocumentBuilder builder = factory.newDocumentBuilder();
-            InputSource reader = new InputSource();
-            reader.setCharacterStream(new StringReader(xml.element.getOwnerDocument().toString()));
-
-            Document doc = builder.parse(reader);
 
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            URL schemaURLObject = new URL(schemaURL);
-            Schema schema = schemaFactory.newSchema(schemaURLObject);
+            Schema schema = getSchema(schemaURL);
 
             javax.xml.validation.Validator validator = schema.newValidator();
             ErrorHandler errorHandler = new ErrorHandler() {
@@ -69,17 +62,15 @@ public class XmlSchemaChecker {
                 }
             };
             validator.setErrorHandler(errorHandler);
-            validator.validate(new DOMSource(doc));
+            validator.validate(new DOMSource(xml.element.getOwnerDocument()));
 
-            isFileOk = true;
-
-        } catch (FileNotFoundException e) {
-            OTLogger.error(e);
-        } catch (Exception e) {
-            OTLogger.error(e);
-        } finally {
             error.outArgValue = validationError.toString();
-            isFileOk = error == null || error.outArgValue.isBlank();
+        } catch (FileNotFoundException e) {
+            error.outArgValue = validationError.toString();
+        } catch (Exception e) {
+            error.outArgValue = validationError.toString();
+        } finally {
+            isFileOk = StringHelper.isNullOrEmpty(error.outArgValue);
         }
 
         return isFileOk;
@@ -89,11 +80,14 @@ public class XmlSchemaChecker {
         Date now = new Date();
 
         CachedXmlSchema cacheEntry = cache.get(url);
-        Duration timeDifference = Duration.between(cacheEntry.lastUpdated, Instant.now());
-        long hoursDifference = timeDifference.toHours();
-        boolean isCacheExpired = hoursDifference > 1;
+        boolean isCacheExpired = true;
+        if (cacheEntry != null) {
+            Duration timeDifference = Duration.between(cacheEntry.lastUpdated, Instant.now());
+            long hoursDifference = timeDifference.toHours();
+            isCacheExpired = hoursDifference > 1;
+        }
 
-        if (!cache.containsKey(url) || isCacheExpired) {
+        if (isCacheExpired) {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
             Schema schema;
