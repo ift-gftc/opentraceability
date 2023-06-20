@@ -8,8 +8,10 @@ import opentraceability.utility.ReflectionUtility;
 import opentraceability.utility.attributes.*;
 import opentraceability.*;
 import opentraceability.mappers.*;
+import org.apache.commons.codec.language.bm.Lang;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import tangible.StringHelper;
 
 
 import java.util.*;
@@ -68,6 +70,7 @@ public final class EPCISJsonMasterDataWriter
 				xVocabEleList.put(xMD);
 			}
 
+			jVocab.put("vocabularyElementList", xVocabEleList);
 			xVocabList.put(jVocab);
 		}
 	}
@@ -85,7 +88,7 @@ public final class EPCISJsonMasterDataWriter
 			Object o = mapping.field.get(md);
 			if (o != null)
 			{
-				if (Objects.equals(mapping.name, ""))
+				if (StringHelper.isNullOrEmpty(mapping.name))
 				{
 					var subMappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(o.getClass());
 					for (var subMapping : subMappings.properties)
@@ -97,7 +100,7 @@ public final class EPCISJsonMasterDataWriter
 							if (subObj instanceof ArrayList)
 							{
 								ArrayList list = (ArrayList)subObj;
-								if (list.isEmpty())
+								if (!list.isEmpty())
 								{
 									var i = list.get(0);
 									if (i instanceof LanguageString)
@@ -105,7 +108,7 @@ public final class EPCISJsonMasterDataWriter
 										String str = ((LanguageString)i).value;
 										JSONObject jAtt = new JSONObject();
 										jAtt.put("id", subID);
-										jAtt.put("attributes", str);
+										jAtt.put("attribute", str);
 										jAttributes.put(jAtt);
 									}
 								}
@@ -117,7 +120,7 @@ public final class EPCISJsonMasterDataWriter
 								{
 									JSONObject jAtt = new JSONObject();
 									jAtt.put("id", subID);
-									jAtt.put("attributes", str);
+									jAtt.put("attribute", str);
 									jAttributes.put(jAtt);
 								}
 							}
@@ -130,7 +133,7 @@ public final class EPCISJsonMasterDataWriter
 
 					JSONObject jAtt = new JSONObject();
 					jAtt.put("id", mapping.name);
-					jAtt.put("attributes", val);
+					jAtt.put("attribute", val);
 					jAttributes.put(jAtt);
 				}
 				else if (ReflectionUtility.getFieldAnnotation(mapping.field, OpenTraceabilityArrayAttribute.class) != null)
@@ -139,11 +142,15 @@ public final class EPCISJsonMasterDataWriter
 					for (var i : l)
 					{
 						String str = i.toString();
+						if (i instanceof LanguageString)
+						{
+							str = ((LanguageString)i).value;
+						}
 						if (str != null)
 						{
 							JSONObject jAtt = new JSONObject();
 							jAtt.put("id", mapping.name);
-							jAtt.put("attributes", str);
+							jAtt.put("attribute", str);
 							jAttributes.put(jAtt);
 						}
 					}
@@ -159,7 +166,7 @@ public final class EPCISJsonMasterDataWriter
 							String str = ((LanguageString)i).value;
 							JSONObject jAtt = new JSONObject();
 							jAtt.put("id", mapping.name);
-							jAtt.put("attributes", str);
+							jAtt.put("attribute", str);
 							jAttributes.put(jAtt);
 						}
 					}
@@ -171,7 +178,7 @@ public final class EPCISJsonMasterDataWriter
 					{
 						JSONObject jAtt = new JSONObject();
 						jAtt.put("id", mapping.name);
-						jAtt.put("attributes", str);
+						jAtt.put("attribute", str);
 						jAttributes.put(jAtt);
 					}
 				}
@@ -185,7 +192,7 @@ public final class EPCISJsonMasterDataWriter
 			{
 				JSONObject jAtt = new JSONObject();
 				jAtt.put("id", kde.name);
-				jAtt.put("attributes", jKDE);
+				jAtt.put("attribute", jKDE);
 				jAttributes.put(jAtt);
 			}
 		}

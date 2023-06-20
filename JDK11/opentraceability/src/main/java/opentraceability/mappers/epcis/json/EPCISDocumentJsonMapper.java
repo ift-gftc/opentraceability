@@ -27,14 +27,14 @@ public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper
 		}
 
 		// read the master data
-		JSONObject jMasterData = JSONExtensions.queryForObject(json, "epcisHEader:epcisMasterData");
+		JSONObject jMasterData = JSONExtensions.queryForObject(json, "epcisHeader.epcisMasterData");
 		if (jMasterData != null)
 		{
 			EPCISJsonMasterDataReader.ReadMasterData(doc, jMasterData);
 		}
 
 		// read the events epcisBody:eventList
-		JSONArray jEventList = JSONExtensions.queryForArray(json, "epcisBody:eventList");
+		JSONArray jEventList = JSONExtensions.queryForArray(json, "epcisBody.eventList");
 		if (jEventList != null)
 		{
 			for (var item : jEventList)
@@ -67,7 +67,7 @@ public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper
 		// write the events
 		JSONArray jEventList = new JSONArray();
 		JSONObject jEventBody = new JSONObject();
-		jEventBody.put("epcisList", jEventList);
+		jEventBody.put("eventList", jEventList);
 
 		for (IEvent e : doc.events)
 		{
@@ -80,7 +80,6 @@ public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper
 			}
 		}
 
-//C# TO JAVA CONVERTER TASK: There is no equivalent to 'await' in Java:
 		JSONObject json = EPCISDocumentBaseJsonMapper.WriteJson(doc, epcisNS, "EPCISDocument");
 
 		json.put("sender", doc.header.Sender.Identifier);
@@ -95,7 +94,6 @@ public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper
 		EPCISDocumentBaseJsonMapper.conformEPCISJsonLD(json, doc.namespaces);
 
 		// validate the JSON-LD schema
-//C# TO JAVA CONVERTER TASK: There is no equivalent to 'await' in Java:
 		EPCISDocumentBaseJsonMapper.checkSchema(json);
 
 		return json.toString();

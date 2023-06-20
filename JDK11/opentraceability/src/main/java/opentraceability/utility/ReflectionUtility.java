@@ -2,6 +2,7 @@ package opentraceability.utility;
 
 import opentraceability.models.events.EventAction;
 import opentraceability.models.events.EventProduct;
+import opentraceability.models.events.EventType;
 import opentraceability.models.events.ObjectEvent;
 import opentraceability.models.identifiers.EPC;
 import opentraceability.models.identifiers.GLN;
@@ -179,6 +180,11 @@ public class ReflectionUtility
         {
             EventAction action = Enum.valueOf(EventAction.class, value);
             return action;
+        }
+        else if (t == EventType.class)
+        {
+            EventType type = Enum.valueOf(EventType.class, value);
+            return type;
         }
         else if (t == PGLN.class)
         {

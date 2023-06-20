@@ -10,6 +10,7 @@ import opentraceability.*;
 import org.apache.commons.codec.language.bm.Lang;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import tangible.StringHelper;
 
 
 import java.time.Duration;
@@ -28,9 +29,6 @@ public final class OpenTraceabilityJsonLDMapper
 		return ToJson(value, namespacesReversed, false);
 	}
 
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: public static System.Nullable<Object> ToJson(object? value, Dictionary<string, string> namespacesReversed, bool required = false)
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 	public static Object ToJson(Object value, Map<String, String> namespacesReversed, boolean required) throws Exception {
 		if (value != null)
 		{
@@ -39,7 +37,7 @@ public final class OpenTraceabilityJsonLDMapper
 
 			Class t = value.getClass();
 			OTMappingTypeInformation typeInfo = OTMappingTypeInformation.getJsonTypeInfo(t);
-			for (var property : typeInfo.properties.stream().filter(p -> p.version == null || p.version == EPCISVersion.V2).collect(Collectors.toList()))
+			for (var property : typeInfo.properties.stream().filter(p -> p.version.equals(EPCISVersion.Any) || p.version == EPCISVersion.V2).collect(Collectors.toList()))
 			{
 				Object obj = property.field.get(value);
 				if (obj != null)
@@ -68,7 +66,7 @@ public final class OpenTraceabilityJsonLDMapper
 									jQuantityList.put(jQuantity);
 								}
 							}
-							jvaluepointer.put(jChildName, jQuantityList);
+							JSONExtensions.put(jvaluepointer, jChildName, jQuantityList);
 						}
 					}
 					else if (property.isEPCList)
@@ -82,10 +80,10 @@ public final class OpenTraceabilityJsonLDMapper
 							{
 								if (product.EPC != null)
 								{
-									jEPCList.put(product.EPC.toString());
+									JSONExtensions.put(jEPCList, product.EPC.toString());
 								}
 							}
-							jvaluepointer.put(jChildName, jEPCList);
+							JSONExtensions.put(jvaluepointer, jChildName, jEPCList);
 						}
 					}
 					else if (property.isArray)
@@ -100,7 +98,7 @@ public final class OpenTraceabilityJsonLDMapper
 								Object jt = WriteObjectToJToken(list.get(0));
 								if (jt != null)
 								{
-									jvaluepointer.put(jChildName, jt);
+									JSONExtensions.put(jvaluepointer, jChildName, jt);
 								}
 							}
 							else
@@ -112,7 +110,7 @@ public final class OpenTraceabilityJsonLDMapper
 										Object jListChild = ToJson(o, namespacesReversed, property.required);
 										if (jListChild != null)
 										{
-											jList.put(jListChild);
+											JSONExtensions.put(jList, jListChild);
 										}
 									}
 									else
@@ -120,12 +118,12 @@ public final class OpenTraceabilityJsonLDMapper
 										Object jt = WriteObjectToJToken(o);
 										if (jt != null)
 										{
-											jList.put(jt);
+											JSONExtensions.put(jList, jt);
 										}
 									}
 								}
 
-								jvaluepointer.put(jChildName, jList);
+								JSONExtensions.put(jvaluepointer, jChildName, jList);
 							}
 						}
 					}
@@ -134,7 +132,7 @@ public final class OpenTraceabilityJsonLDMapper
 						Object jChild = ToJson(obj, namespacesReversed, property.required);
 						if (jChild != null)
 						{
-							jvaluepointer.put(jChildName, jChild);
+							JSONExtensions.put(jvaluepointer, jChildName, jChild);
 						}
 					}
 					else
@@ -142,7 +140,7 @@ public final class OpenTraceabilityJsonLDMapper
 						Object jt = WriteObjectToJToken(obj);
 						if (jt != null)
 						{
-							jvaluepointer.put(jChildName, jt);
+							JSONExtensions.put(jvaluepointer, jChildName, jt);
 						}
 					}
 				}
@@ -162,7 +160,7 @@ public final class OpenTraceabilityJsonLDMapper
 							if (jChild != null)
 							{
 								String name = kde.name;
-								if (kde.namespace != null)
+								if (!StringHelper.isNullOrEmpty(kde.namespace))
 								{
 									if (!namespacesReversed.containsKey(kde.namespace))
 									{
@@ -171,7 +169,7 @@ public final class OpenTraceabilityJsonLDMapper
 									name = namespacesReversed.get(kde.namespace) + ":" + name;
 								}
 
-								jpointer.put(name, jChild);
+								JSONExtensions.put(jpointer, name, jChild);
 							}
 						}
 					}
@@ -201,7 +199,7 @@ public final class OpenTraceabilityJsonLDMapper
 										name = namespacesReversed.get(kde.namespace) + ":" + name;
 									}
 
-									jpointer.put(name, jChild);
+									JSONExtensions.put(jpointer, name, jChild);
 								}
 							}
 						}
@@ -217,19 +215,9 @@ public final class OpenTraceabilityJsonLDMapper
 	}
 
 	/** 
-	 Converts a JSON object into the generic type specified.
-	*/
-	public static <T> T FromJson(Object json, Map<String, String> namespaces, Class<T> clazz) throws Exception {
-		T o = (T)FromJson(json, clazz.getClass(), namespaces);
-		return o;
-	}
-
-	/** 
 	 Converts a JSON object into the type specified.
 	*/
 	public static Object FromJson(Object json, Class type, Map<String, String> namespaces) throws Exception {
-//C# TO JAVA CONVERTER TASK: Throw expressions are not converted by C# to Java Converter:
-//ORIGINAL LINE: object value = Activator.CreateInstance(type) ?? throw new Exception("Failed to create instance of type " + type.FullName);
 		Object value = ReflectionUtility.constructType(type);
 
 		OTMappingTypeInformation typeInfo = OTMappingTypeInformation.getJsonTypeInfo(type);
@@ -247,8 +235,6 @@ public final class OpenTraceabilityJsonLDMapper
 			extensionKDEs = new ArrayList<IEventKDE>();
 		}
 
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: OTMappingTypeInformationProperty? mappingProp;
 		OTMappingTypeInformationProperty mappingProp;
 
 		JSONObject jobj = json instanceof JSONObject ? (JSONObject)json : null;
@@ -310,10 +296,10 @@ public final class OpenTraceabilityJsonLDMapper
 					if (o instanceof LanguageString)
 					{
 						JSONObject j = ((LanguageString)o).toJSON();
-						jArr.put(j);
+						JSONExtensions.put(jArr, j);
 					}
 					else {
-						jArr.put(o);
+						JSONExtensions.put(jArr, o);
 					}
 				}
 				return jArr;
@@ -348,16 +334,7 @@ public final class OpenTraceabilityJsonLDMapper
 		}
 		else if (obj instanceof Duration)
 		{
-			Duration timespan = (Duration)obj;
-			String timeStr = timespan.toHoursPart() + ":" + timespan.toMinutesPart();
-			if (timespan.isNegative())
-			{
-				return "-" + timeStr;
-			}
-			else
-			{
-				return "+" + timeStr;
-			}
+			return StringExtensions.fromDuration((Duration)obj);
 		}
 		else
 		{
@@ -377,6 +354,11 @@ public final class OpenTraceabilityJsonLDMapper
 					if (o instanceof JSONObject)
 					{
 						JSONObject jQuantity = (JSONObject) o;
+						if (!jQuantity.has("epcClass"))
+						{
+							throw new Exception("Cannot deserialize quantityElement because epcClass not on JSON object.");
+						}
+
 						EPC epc = new EPC((jQuantity.getString("epcClass")));
 
 						EventProduct product = new EventProduct(epc);
@@ -436,6 +418,8 @@ public final class OpenTraceabilityJsonLDMapper
 					}
 				}
 			}
+
+			mappingProp.field.set(value, list);
 		}
 		else if (mappingProp.isObject)
 		{
@@ -462,8 +446,7 @@ public final class OpenTraceabilityJsonLDMapper
 	}
 
 	private static IEventKDE ReadKDE(String name, Object value, Map<String, String> namespaces) throws Exception {
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: IEventKDE? kde = null;
+
 		IEventKDE kde = null;
 
 		//if not, check if it is a simple value or an object

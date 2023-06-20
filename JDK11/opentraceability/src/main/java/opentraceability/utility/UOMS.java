@@ -34,13 +34,13 @@ public class UOMS {
             if (!uomsAbbrevDict.containsKey(lowerCaseAbbreviation)) {
                 uomsAbbrevDict.put(lowerCaseAbbreviation, uom);
             } else {
-                System.out.println("Duplicate Unit abbreviation detected: " + uom.Abbreviation);
+                //System.out.println("Duplicate Unit abbreviation detected: " + uom.Abbreviation);
             }
 
             if (!uomsUNCodeDict.containsKey(upperCaseUNCode)) {
                 uomsUNCodeDict.put(upperCaseUNCode, uom);
             } else {
-                System.out.println("Duplicate Unit UNCode detected: " + uom.UNCode);
+                //System.out.println("Duplicate Unit UNCode detected: " + uom.UNCode);
             }
         }
     }

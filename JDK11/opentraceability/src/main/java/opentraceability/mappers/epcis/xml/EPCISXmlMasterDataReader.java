@@ -12,6 +12,7 @@ import opentraceability.utility.*;
 import opentraceability.utility.attributes.*;
 import opentraceability.*;
 import opentraceability.mappers.*;
+import org.apache.commons.codec.language.bm.Lang;
 import org.json.JSONObject;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -176,7 +177,7 @@ public final class EPCISXmlMasterDataReader
 					var propMapping = subMappedProperties.get(id, null);
 					if (propMapping != null)
 					{
-						if (!TrySetValueType(xeAtt.getValue(), propMapping.field, subObject))
+						if (!TrySetValueType(xeAtt.getValue(), subObject, propMapping.field, propMapping.itemType))
 						{
 							Object value = ReadKDEObject(xeAtt, propMapping.field.getType(), propMapping.itemType);
 							propMapping.field.set(subObject, value);
@@ -205,7 +206,7 @@ public final class EPCISXmlMasterDataReader
 			var propMapping = mappedProperties.get(id, null);
 			if (propMapping != null)
 			{
-				if (!TrySetValueType(xeAtt.getValue(), propMapping.field, md))
+				if (!TrySetValueType(xeAtt.getValue(), md, propMapping.field, propMapping.itemType))
 				{
 					Object value = ReadKDEObject(xeAtt, propMapping.field.getType(), propMapping.itemType);
 					propMapping.field.set(md, value);
@@ -264,7 +265,7 @@ public final class EPCISXmlMasterDataReader
 						{
 							Object o = ReadKDEObject(x, p.getType(), null);
 						}
-						else if (!TrySetValueType(x.getValue(), p, value))
+						else if (!TrySetValueType(x.getValue(), value, p, itemType))
 						{
 							throw new RuntimeException(String.format("Failed to set value type while reading KDE object. property = %1$s, type = %2$s, xml = %3$s", p.getName(), t.getTypeName(), x));
 						}
@@ -276,13 +277,13 @@ public final class EPCISXmlMasterDataReader
 		return value;
 	}
 
-	private static boolean TrySetValueType(String val, Field p, Object o) throws IllegalAccessException {
+	private static boolean TrySetValueType(String val, Object o, Field p, Class itemType) throws IllegalAccessException {
 		if (p.getType() == String.class)
 		{
 			p.set(o, val);
 			return true;
 		}
-		else if (ReflectionUtility.isListOf(p.getType(), String.class))
+		else if (List.class.isAssignableFrom(p.getType()) && itemType == String.class)
 		{
 			Object tempVar = p.get(o);
 			ArrayList cur = tempVar instanceof ArrayList ? (ArrayList)tempVar : null;
@@ -312,7 +313,7 @@ public final class EPCISXmlMasterDataReader
 			p.set(o, v);
 			return true;
 		}
-		else if (ReflectionUtility.isListOf(p.getType(), LanguageString.class))
+		else if (List.class.isAssignableFrom(p.getType()) && itemType == LanguageString.class)
 		{
 			ArrayList<LanguageString> l = LanguageString.fromJSON(val);
 			p.set(o, l);

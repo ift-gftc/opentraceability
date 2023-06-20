@@ -2,6 +2,8 @@ package opentraceability.models.masterdata;
 
 import java.util.List;
 import java.util.ArrayList;
+
+import org.apache.commons.codec.language.bm.Lang;
 import org.json.JSONObject;
 import opentraceability.interfaces.IMasterDataKDE;
 import opentraceability.interfaces.IVocabularyElement;
@@ -21,9 +23,12 @@ public class TradeItem extends IVocabularyElement {
     }
     @OpenTraceabilityJsonAttribute(name = "gtin")
     public GTIN gtin = null;
+
+    @OpenTraceabilityArrayAttribute(itemType = LanguageString.class)
     @OpenTraceabilityJsonAttribute(name = "productName")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#descriptionShort")
     public List<LanguageString> shortDescription = new ArrayList<LanguageString>();
+
     @OpenTraceabilityJsonAttribute(name = "cbvmda:tradeItemConditionCode")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#tradeItemConditionCode")
     public String tradeItemConditionCode = null;

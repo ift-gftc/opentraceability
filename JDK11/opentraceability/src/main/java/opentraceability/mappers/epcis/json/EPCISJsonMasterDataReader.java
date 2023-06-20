@@ -36,10 +36,10 @@ public final class EPCISJsonMasterDataReader
 				JSONObject jVocabListItem = jVocabList.getJSONObject(i);
 				if (jVocabListItem != null)
 				{
-					String type = jVocabListItem.getString("type").toLowerCase();
+					String type = jVocabListItem.optString("type").toLowerCase();
 					if (type != null)
 					{
-						JSONArray jVocabElementaryList = jVocabListItem.getJSONArray("vocabularyElementList");
+						JSONArray jVocabElementaryList = jVocabListItem.optJSONArray("vocabularyElementList");
 						if (jVocabElementaryList != null)
 						{
 							for (int k = 0; k < jVocabElementaryList.length(); k++)
@@ -189,7 +189,7 @@ public final class EPCISJsonMasterDataReader
 						var propMapping = subMappedProperties.get(id, null);
 						if (propMapping != null)
 						{
-							if (!TrySetValueType(jAtt.get("attribute").toString(), propMapping.field, subObject))
+							if (!TrySetValueType(jAtt.get("attribute").toString(), propMapping.field, subObject, propMapping.itemType))
 							{
 								Object value = ReadKDEObject(jAtt, propMapping.field.getType(), propMapping.itemType);
 								propMapping.field.set(subObject, value);
@@ -219,7 +219,7 @@ public final class EPCISJsonMasterDataReader
 
 				var propMapping = mappedProperties.get(id, null);
 				if (propMapping != null) {
-					if (!TrySetValueType(jAtt.get("attribute").toString(), propMapping.field, md))
+					if (!TrySetValueType(jAtt.get("attribute").toString(), propMapping.field, md, propMapping.itemType))
 					{
 						Object value = ReadKDEObject(jAtt, propMapping.field.getType(), propMapping.itemType);
 						propMapping.field.set(md, value);
@@ -302,7 +302,7 @@ public final class EPCISJsonMasterDataReader
 						{
 							Object o = ReadKDEObject(x, p.getType(), null);
 						}
-						else if (!TrySetValueType(x.toString(), p, value))
+						else if (!TrySetValueType(x.toString(), p, value, null))
 						{
 							throw new RuntimeException(String.format("Failed to set value type while reading KDE object. property = %1$s, type = %2$s, json = %3$s", p.getName(), t.getTypeName(), x));
 						}
@@ -314,13 +314,13 @@ public final class EPCISJsonMasterDataReader
 		return value;
 	}
 
-	private static boolean TrySetValueType(String val, Field p, Object o) throws IllegalAccessException {
+	private static boolean TrySetValueType(String val, Field p, Object o, Class itemType) throws IllegalAccessException {
 		if (p.getType() == String.class)
 		{
 			p.set(o, val);
 			return true;
 		}
-		else if (ReflectionUtility.isListOf(p.getType(), String.class))
+		else if (List.class.isAssignableFrom(p.getType()) && itemType == String.class)
 		{
 			Object tempVar = p.get(o);
 			ArrayList cur = tempVar instanceof ArrayList ? (ArrayList)tempVar : null;
@@ -350,7 +350,7 @@ public final class EPCISJsonMasterDataReader
 			p.set(o, v);
 			return true;
 		}
-		else if (ReflectionUtility.isListOf(p.getType(), LanguageString.class))
+		else if (List.class.isAssignableFrom(p.getType()) && itemType == LanguageString.class)
 		{
 			ArrayList<LanguageString> l = LanguageString.fromJSON(val);
 			p.set(o, l);

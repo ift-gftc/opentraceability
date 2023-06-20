@@ -2,6 +2,8 @@ package opentraceability.models.masterdata;
 
 import java.util.List;
 import java.util.UUID;
+
+import opentraceability.utility.attributes.OpenTraceabilityArrayAttribute;
 import org.json.JSONObject;
 import opentraceability.interfaces.IMasterDataKDE;
 import opentraceability.interfaces.IVocabularyElement;
@@ -31,6 +33,7 @@ public class TradingParty extends IVocabularyElement {
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#informationProvider")
     public PGLN informationProvider;
 
+    @OpenTraceabilityArrayAttribute(itemType = LanguageString.class)
     @OpenTraceabilityJsonAttribute(name = "organizationName")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#name")
     public List<LanguageString> name;

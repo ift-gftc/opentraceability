@@ -1,15 +1,12 @@
 package opentraceability.utility;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import tangible.StringHelper;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -18,9 +15,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.*;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -117,7 +112,7 @@ public class XElement
                 ele = document.createElementNS(ns, name);
             }
             document.appendChild(ele);
-            return ele;
+            return document.getDocumentElement();
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -168,11 +163,23 @@ public class XElement
 
     public String getValue()
     {
-        if (this.IsNull) return null;
+        if (this.IsNull)
+        {
+            return "";
+        }
         else
         {
             return StringExtensions.trimString(this.element.getTextContent());
         }
+    }
+
+    public Boolean IsEmpty()
+    {
+        if (this.element.getChildNodes().getLength() == 0 && this.element.getAttributes().getLength() == 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     public XElement Add(XAttribute xAtt)
@@ -267,16 +274,9 @@ public class XElement
     }
 
     private NodeList queryByXpath(String xpath) throws XPathExpressionException {
-        //var xpathFactory = XPathFactory.newInstance();
-        //var xp = xpathFactory.newXPath();
-
-        // Set up namespace context
         Map prefixAndNamespacesMap = this.GetNamespacesAndPrefixesMap();
         List<String> prefixes = this.GetPrefixes();
         SimpleNamespaceContext nsContext = new SimpleNamespaceContext(prefixAndNamespacesMap, prefixes);
-
-        // Set the namespace context on the XPath object
-        //xp.setNamespaceContext(nsContext);
 
         XPathFactory xpathFactory = XPathFactory.newInstance();
         XPath xpathObj = xpathFactory.newXPath();
@@ -383,10 +383,10 @@ public class XElement
         this.Add(xatt);
     }
 
-    public ArrayList<XElement> Elements() throws Exception {
+    public ArrayList<XElement> Elements() {
         if (this.IsNull)
         {
-            throw new Exception("Cannot call Elements() on null.");
+            return new ArrayList<>();
         }
         ArrayList<XElement> eles = new ArrayList<>();
         var children = this.element.getChildNodes();
@@ -505,6 +505,75 @@ public class XElement
         var root = this.element.getOwnerDocument().getDocumentElement();
         root.removeAttribute("xmlns:" + prefix);
     }
+
+    public void FixPrefixesAndNamespacing()
+    {
+        var namespaces = GetNamespacesAndPrefixesMap();
+        UpdatePrefixes_Internal(this, namespaces);
+    }
+
+    private void UpdatePrefixes_Internal(XElement xe, Map<String, String> namespaces)
+    {
+        String tag = xe.getTagName();
+        String namespaceURI = xe.getNamespaceUri();
+        if (!tag.contains(":") && !StringHelper.isNullOrEmpty(namespaceURI))
+        {
+            String prefix = namespaces.get(namespaceURI);
+            if (!StringHelper.isNullOrEmpty(prefix))
+            {
+                xe.changeTagName(null,prefix + ":" + tag);
+            }
+        }
+
+        else if (tag.contains(":") && StringHelper.isNullOrEmpty(namespaceURI))
+        {
+            String prefix = ListExtensions.FirstOrDefault(Arrays.stream(tag.split(":")));
+            String ns = namespaces.get(prefix);
+            if (!StringHelper.isNullOrEmpty(ns))
+            {
+                xe.changeTagName(ns, tag);
+            }
+        }
+
+        for (XElement xchild: xe.Elements())
+        {
+            xchild.UpdatePrefixes_Internal(xchild, namespaces);
+        }
+    }
+
+    private void changeTagName(String ns, String newTagName) {
+        Element newElement;
+        if (StringHelper.isNullOrEmpty(ns))
+        {
+            newElement = element.getOwnerDocument().createElement(newTagName);
+        }
+        else
+        {
+            newElement = element.getOwnerDocument().createElementNS(ns, newTagName);
+        }
+
+        // Transfer the child nodes to the new element
+        NodeList childNodes = element.getChildNodes();
+        while (childNodes.getLength() > 0) {
+            Node child = childNodes.item(0);
+            element.removeChild(child);
+            newElement.appendChild(child);
+        }
+
+        // Transfer the attributes to the new element
+        element.removeAttribute("xmlns"); // Remove the default namespace attribute if present
+        while (element.hasAttributes()) {
+            Node attribute = element.getAttributes().item(0);
+            element.removeAttributeNode((org.w3c.dom.Attr) attribute);
+            newElement.setAttributeNode((org.w3c.dom.Attr) attribute);
+        }
+
+        // Replace the original element with the new element in its parent node
+        Node parent = element.getParentNode();
+        parent.replaceChild(newElement, element);
+        element = newElement;
+    }
+
 //
 //
 //    // Gets the child element using the matching namespace URI (ns) and node name (xName)

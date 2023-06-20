@@ -28,13 +28,7 @@ public class EventKDEString extends IEventKDE {
     }
 
     public Object getJson() {
-        if (value == null || value.isEmpty()) {
-            return null;
-        } else {
-            JSONObject json = new JSONObject();
-            json.put("keyName", value);
-            return json;
-        }
+        return value;
     }
 
     public XElement getXml() throws Exception {

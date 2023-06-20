@@ -7,14 +7,10 @@ import opentraceability.models.events.kdes.*;
 import opentraceability.models.identifiers.*;
 import opentraceability.utility.*;
 import opentraceability.utility.attributes.*;
-import opentraceability.*;
 import org.json.JSONArray;
-import org.json.JSONObject;
-import org.w3c.dom.Element;
 import tangible.StringHelper;
 
 
-import java.sql.Ref;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,11 +22,12 @@ import java.util.stream.Collectors;
 */
 public final class OpenTraceabilityXmlMapper
 {
-	public static XElement ToXml(String ns, String name, Object value, EPCISVersion version, boolean required) throws Exception {
+	public static XElement ToXml(String ns, String name, Object value, EPCISVersion version, boolean required) throws Exception
+	{
 		if (value != null)
 		{
-			XElement xvalue = new XElement(ns, name);
-
+			XElement x = new XElement(ns, name);
+			XElement xvalue = x;
 
 			// make sure we have created the xml XElement correctly.
 			List<String> xParts = StringExtensions.splitXPath(name);
@@ -38,7 +35,7 @@ public final class OpenTraceabilityXmlMapper
 			{
 				String p = xParts.get(0);
 				xParts.remove(0);
-				if (xvalue.Element(p) == null)
+				if (xvalue.Element(p).IsNull)
 				{
 					xvalue.Add(new XElement(p));
 				}
@@ -64,14 +61,14 @@ public final class OpenTraceabilityXmlMapper
 				}
 				else if (!required)
 				{
-					xvalue = null;
+					x = null;
 				}
 			}
 			else
 			{
 				Class t = value.getClass();
 				OTMappingTypeInformation typeInfo = OTMappingTypeInformation.getXmlTypeInfo(t);
-				for (var property : typeInfo.properties.stream().filter(p -> p.version == EPCISVersion.Any || p.version.equals(version)).collect(Collectors.toList()))
+				for (var property : typeInfo.properties.stream().filter(p -> p.version.equals(EPCISVersion.Any) || p.version.equals(version)).collect(Collectors.toList()))
 				{
 					Object obj = property.field.get(value);
 					if (obj != null)
@@ -82,9 +79,9 @@ public final class OpenTraceabilityXmlMapper
 						{
 							String p = xParts.get(0);
 							xParts.remove(0);
-							if (xvaluepointer.Element(p) == null)
+							if (xvaluepointer.Element(p).IsNull)
 							{
-								xvalue.Add(new XElement(p));
+								xvaluepointer.Add(new XElement(p));
 							}
 							xvaluepointer = xvaluepointer.Element(p);
 						}
@@ -168,7 +165,7 @@ public final class OpenTraceabilityXmlMapper
 							{
 								if (property.isObject)
 								{
-									XElement xchild = ToXml(null, !StringHelper.isNullOrEmpty(property.itemName) ? property.itemName : xchildname, o, version, property.required);
+									XElement xchild = ToXml(property.namespace, !StringHelper.isNullOrEmpty(property.itemName) ? property.itemName : xchildname, o, version, property.required);
 									if (!xchild.IsNull)
 									{
 										xlist.Add(xchild);
@@ -179,7 +176,7 @@ public final class OpenTraceabilityXmlMapper
 									String objStr = WriteObjectToString(o);
 									if (!(objStr == null || objStr.isBlank()))
 									{
-										XElement xchild = new XElement(null, !StringHelper.isNullOrEmpty(property.itemName) ? property.itemName : xchildname, objStr);
+										XElement xchild = new XElement(property.namespace, !StringHelper.isNullOrEmpty(property.itemName) ? property.itemName : xchildname, objStr);
 										xlist.Add(xchild);
 									}
 								}
@@ -187,10 +184,13 @@ public final class OpenTraceabilityXmlMapper
 						}
 						else if (property.isObject)
 						{
-							XElement xchild = ToXml(null, xchildname, obj, version, property.required);
+							XElement xchild = ToXml(property.namespace, xchildname, obj, version, property.required);
 							if (!xchild.IsNull)
 							{
-								xvaluepointer.Add(xchild);
+								if (property.required || !xchild.IsEmpty())
+								{
+									xvaluepointer.Add(xchild);
+								}
 							}
 						}
 						else
@@ -198,13 +198,23 @@ public final class OpenTraceabilityXmlMapper
 							String objStr = WriteObjectToString(obj);
 							if (!(objStr == null || objStr.isBlank()))
 							{
-								XElement xchild = new XElement(xchildname);
+								XElement xchild = new XElement(property.namespace, xchildname);
 								xchild.setValue(objStr);
 								xvaluepointer.Add(xchild);
 							}
 						}
 
-						xvalue = xvaluepointer;
+						// if xvaluepointer is empty and not required and not equal to 'X', then remove it...
+						if (!property.required && xvaluepointer.IsEmpty())
+						{
+							if (xvaluepointer.element != x.element)
+							{
+								if (xvaluepointer.element.getParentNode() == x.element)
+								{
+									x.element.removeChild(xvaluepointer.element);
+								}
+							}
+						}
 					}
 					else if (property.required)
 					{
@@ -214,7 +224,7 @@ public final class OpenTraceabilityXmlMapper
 						{
 							String p = xParts.get(0);
 							xParts.remove(0);
-							if (xvaluepointer.Element(p) == null)
+							if (xvaluepointer.Element(p).IsNull)
 							{
 								xvaluepointer.Add(new XElement(p));
 							}
@@ -265,7 +275,7 @@ public final class OpenTraceabilityXmlMapper
 				}
 			}
 
-			return xvalue;
+			return x;
 		}
 		else if (required)
 		{

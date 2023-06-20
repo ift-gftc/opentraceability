@@ -47,7 +47,7 @@ public abstract class IEvent
     @OpenTraceabilityExtensionElementsAttribute
     public ArrayList<IEventKDE> kdes = new ArrayList<>();
 
-    @JsonProperty("@type")
+    @OpenTraceabilityJsonAttribute(name = "type")
     public EventType eventType;
 
     @OpenTraceabilityAttribute(ns = "", name = "action")

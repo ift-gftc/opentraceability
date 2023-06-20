@@ -19,7 +19,7 @@ public class JSONExtensions {
             return json;
         }
 
-        if (jpath.contains("[.]"))
+        if (jpath.contains("."))
         {
             String[] parts = jpath.split("[.]");
             String newJPath = String.join(".", Arrays.stream(parts).skip(1).collect(Collectors.toList()));
@@ -28,7 +28,7 @@ public class JSONExtensions {
         }
         else
         {
-            return json.get(jpath);
+            return (json.has(jpath) ? json.get(jpath) : null);
         }
     }
 
@@ -42,6 +42,37 @@ public class JSONExtensions {
         else {
             return null;
         }
+    }
+
+    public static void put(JSONObject jobj, String name, Object value)
+    {
+        if (value instanceof JSONObject)
+        {
+            jobj.put(name, (JSONObject)value);
+        }
+        else if (value instanceof JSONArray)
+        {
+            jobj.put(name, (JSONArray)value);
+        }
+        else if (value instanceof Integer)
+        {
+            jobj.put(name, (Integer) value);
+        }
+        else if (value instanceof Double)
+        {
+            jobj.put(name, (Double)value);
+        }
+        else
+        {
+            jobj.put(name, value.toString());
+        }
+
+        String debug = jobj.toString();
+    }
+
+    public static void put(JSONArray jarr, Object value)
+    {
+        jarr.put(value);
     }
 
     public static JSONObject queryForObject(JSONObject json, String jpath)

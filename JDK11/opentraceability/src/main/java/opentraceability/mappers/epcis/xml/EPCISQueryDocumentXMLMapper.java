@@ -3,11 +3,8 @@ package opentraceability.mappers.epcis.xml;
 import opentraceability.*;
 import opentraceability.interfaces.*;
 import opentraceability.mappers.*;
-import opentraceability.mappers.epcis.xml.*;
 import opentraceability.models.events.*;
 import opentraceability.utility.*;
-
-import javax.xml.xpath.XPathExpressionException;
 
 
 public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
@@ -34,20 +31,20 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 		String epcisQueryXName = (document.epcisVersion == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
 
 		// read the query name
-		XElement xQueryName = xDoc.Element("EPCISBody/QueryResults/queryName");
+		XElement xQueryName = xDoc.Element("EPCISBody/epcisq:QueryResults/queryName");
 		if (!xQueryName.IsNull)
 		{
 			document.QueryName = xQueryName.getValue();
 		}
 
 		// read the events
-		XElement xEventList = xDoc.Element("EPCISBody/QueryResults/resultsBody/EventList");
+		XElement xEventList = xDoc.Element("EPCISBody/epcisq:QueryResults/resultsBody/EventList");
 		if (!xEventList.IsNull)
 		{
 			for (XElement xEvent : xEventList.Elements())
 			{
 				XElement x = xEvent;
-				if (document.epcisVersion == EPCISVersion.V1 && x.Element("TransformationEvent") != null)
+				if (document.epcisVersion == EPCISVersion.V1 && !x.Element("TransformationEvent").IsNull)
 				{
 					x = xEvent.Element("TransformationEvent");
 				}
@@ -75,15 +72,25 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 		String epcisQueryXName = (doc.epcisVersion == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
 
 		// write the query name
-		xDoc.Add(new XElement("EPCISBody", new XElement(epcisQueryXName, "QueryResults", new XElement("queryName"), new XElement("resultsBody", new XElement("EventList")))));
+		xDoc.Add(new XElement("EPCISBody")).Add(new XElement("epcisq:QueryResults")).Add(new XElement("resultsBody")).Add(new XElement("EventList"));
+		xDoc.Element("EPCISBody/QueryResults").Add(new XElement("queryName"));
+		xDoc.FixPrefixesAndNamespacing();
 
-		XElement xQueryName = xDoc.Element("EPCISBody/QueryResults/queryName");
+		XElement xQueryName = xDoc.Element("EPCISBody/epcisq:QueryResults/queryName");
 		if (!xQueryName.IsNull)
 		{
 			xQueryName.setValue(doc.QueryName);
 		}
+		else
+		{
+			throw new Exception("Failed to find EPCISBody/epcisq:QueryResults/queryName.");
+		}
 
-		XElement xEventList = xDoc.Element("EPCISBody/QueryResults/resultsBody/EventList");
+		XElement xEventList = xDoc.Element("EPCISBody/epcisq:QueryResults/resultsBody/EventList");
+		if (xEventList.IsNull)
+		{
+			throw new RuntimeException("Failed to find event EPCISBody/epcisq:QueryResults/resultsBody/EventList.");
+		}
 		for (IEvent e : doc.events)
 		{
 			String xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
@@ -100,6 +107,7 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 
 		EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.epcisVersion);
 
+		xDoc.FixPrefixesAndNamespacing();
 		return xDoc.toString();
 	}
 }

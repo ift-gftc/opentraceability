@@ -82,13 +82,13 @@ public class MasterDataKDEString extends IMasterDataKDE {
     }
 
     @Override
-    public void setFromGS1WebVocabJson(JSONObject json) {
+    public void setFromGS1WebVocabJson(Object json) {
         value = json.toString();
     }
 
-    public JSONObject getGS1WebVocabJson() {
+    public Object getGS1WebVocabJson() {
         if (value != null) {
-            return new JSONObject(value);
+            return value;
         } else {
             return null;
         }

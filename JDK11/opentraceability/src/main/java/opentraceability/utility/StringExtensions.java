@@ -36,6 +36,15 @@ public class StringExtensions {
         }
     }
 
+    public static String TrimEnd(String str, String endTrim)
+    {
+        if (str.endsWith(endTrim))
+        {
+            str = str.substring(0, str.length() - endTrim.length());
+        }
+        return str;
+    }
+
     public static String First(String[] strArray) throws Exception
     {
         if (strArray.length == 0)

@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 
 public class MasterDataKDEObject extends IMasterDataKDE  {
     private Element _xml = null;
-    private JSONObject _json = null;
+    private Object _json = null;
     Class valueType = Object.class;
 
     public Object getValue() {
@@ -35,12 +35,12 @@ public class MasterDataKDEObject extends IMasterDataKDE  {
         super.name = name;
     }
 
-    public void setFromGS1WebVocabJson(JSONObject json) {
+    public void setFromGS1WebVocabJson(Object json) {
         _xml = null;
         _json = json;
     }
 
-    public JSONObject getGS1WebVocabJson() {
+    public Object getGS1WebVocabJson() {
         if (_xml != null) {
             JSONObject json = XmlToJsonConverter.toJSON(new XElement(_xml));
             return json;
@@ -59,7 +59,7 @@ public class MasterDataKDEObject extends IMasterDataKDE  {
         if (_xml != null) {
             xml = _xml;
         } else if (_json != null) {
-            xml = XmlToJsonConverter.toXML(_json).element;
+            xml = XmlToJsonConverter.toXML((JSONObject)_json).element;
         } else {
             xml = null;
         }

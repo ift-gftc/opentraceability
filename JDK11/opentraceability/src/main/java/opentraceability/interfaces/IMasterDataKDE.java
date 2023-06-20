@@ -11,8 +11,8 @@ public abstract class IMasterDataKDE {
     public String name;
     public Class valueType;
 
-    public abstract void setFromGS1WebVocabJson(JSONObject json);
-    public abstract JSONObject getGS1WebVocabJson();
+    public abstract void setFromGS1WebVocabJson(Object json);
+    public abstract Object getGS1WebVocabJson();
     public abstract void setFromEPCISXml(XElement xml) throws Exception;
     public abstract XElement getEPCISXml() throws Exception;
 }

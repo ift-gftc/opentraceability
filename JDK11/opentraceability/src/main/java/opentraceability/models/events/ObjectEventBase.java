@@ -15,7 +15,7 @@ public class ObjectEventBase<T extends EventILMD> extends IILMDEvent<T> {
 
     @OpenTraceabilityProductsAttribute(name = "extension/quantityList", version = EPCISVersion.V1, productType = EventProductType.Reference, listType = OpenTraceabilityProductsListType.QuantityList)
     @OpenTraceabilityProductsAttribute(name = "quantityList", version = EPCISVersion.V2, productType = EventProductType.Reference, listType = OpenTraceabilityProductsListType.QuantityList)
-    @OpenTraceabilityProductsAttribute(name = "epcList", version = EPCISVersion.V2, productType = EventProductType.Reference, listType = OpenTraceabilityProductsListType.EPCList, required = true)
+    @OpenTraceabilityProductsAttribute(name = "epcList", version = EPCISVersion.Any, productType = EventProductType.Reference, listType = OpenTraceabilityProductsListType.EPCList, required = true)
     public List<EventProduct> referenceProducts = new ArrayList<>();
 
     public List<EventProduct> getProducts() {

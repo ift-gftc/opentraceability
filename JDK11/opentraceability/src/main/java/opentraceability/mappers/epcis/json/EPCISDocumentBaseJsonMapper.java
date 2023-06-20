@@ -35,19 +35,19 @@ public final class EPCISDocumentBaseJsonMapper
 
 			JSONObject json = new JSONObject(strValue);
 
-			if (expectedType != "EPCISDocument" && expectedType != "EPCISQueryDocument")
+			if (!expectedType.equals("EPCISDocument") && !expectedType.equals("EPCISQueryDocument"))
 			{
 				throw new Exception("expectedType has to be EPCISDocument or EPCISQueryDocument. expectedType=" + expectedType);
 			}
 
-			if (json.get("type") != expectedType)
+			if (!json.has("type") || !json.getString("type").equals(expectedType))
 			{
-				throw new Exception("Failed to parse json from string. Expected type=" + expectedType + ", actual type=" + (json.getString("type")));
+				throw new Exception("Failed to parse json from string. Expected type=" + expectedType + ", actual type=" + (json.has("type") ? json.getString("type") : ""));
 			}
 
 			// read all of the attributes
 			EPCISBaseDocument document = null;
-			if (expectedType == "EPCISDocument")
+			if (expectedType.equals("EPCISDocument"))
 			{
 				document = new EPCISDocument();
 			}
@@ -56,11 +56,11 @@ public final class EPCISDocumentBaseJsonMapper
 				document = new EPCISQueryDocument();
 			}
 
-			document.attributes.put("schemaVersion", json.getString("schemaVersion"));
+			document.attributes.put("schemaVersion", (json.has("schemaVersion") ? json.getString("schemaVersion") : ""));
 			document.epcisVersion = EPCISVersion.V2;
 
 			// read the creation date from json.get("creationDate") and try and parse as ISO DATE TIME
-			String creationDateAttributeStr = json.getString("creationDate");
+			String creationDateAttributeStr = (json.has("creationDate") ? json.getString("creationDate") : "");
 			if (!StringHelper.isNullOrEmpty(creationDateAttributeStr))
 			{
 				document.creationDate = OffsetDateTime.parse(creationDateAttributeStr, DateTimeFormatter.ISO_DATE_TIME);
@@ -70,7 +70,7 @@ public final class EPCISDocumentBaseJsonMapper
 			document.attributes = new HashMap<>();
 
 			// we are going to break down the content into either namespaces, or links to contexts...
-			JSONArray jContextArray = json.getJSONArray("@context");
+			JSONArray jContextArray = json.has("@context") && json.get("@context") instanceof JSONArray ? json.getJSONArray("@context") : null;
 			if (jContextArray != null)
 			{
 				for (int i = 0; i < jContextArray.length(); i++)
@@ -116,29 +116,29 @@ public final class EPCISDocumentBaseJsonMapper
 			else
 				throw new Exception("the @context on the root of the JSON-LD EPCIS file was not an array. we are currently expecting this to be an array.");
 
-			if (json.get("id") != null)
+			if (json.has("id"))
 			{
-				document.attributes.put("id", json.getString("id"));
+				document.attributes.put("id", json.get("id").toString());
 			}
 
 			// read header information
 			document.header = new StandardBusinessDocumentHeader();
 
 			document.header.Sender = new SBDHOrganization();
-			document.header.Sender.Identifier = json.getString("sender");
+			document.header.Sender.Identifier = json.has("sender") ? json.getString("sender") : "";
 
 			document.header.Receiver = new SBDHOrganization();
-			document.header.Receiver.Identifier = json.getString("receiver");
+			document.header.Receiver.Identifier = json.has("receiver") ? json.getString("receiver") : "";
 
 			document.header.DocumentIdentification = new SBDHDocumentIdentification();
-			document.header.DocumentIdentification.InstanceIdentifier = json.getString("instanceIdentifier");
+			document.header.DocumentIdentification.InstanceIdentifier = json.has("instanceIdentifier") ? json.getString("instanceIdentifier") : "";
 
 			return new Pair<>(document, json);
 		}
 
 
 	public static JSONObject WriteJson(EPCISBaseDocument doc, String epcisNS, String docType) throws Exception {
-		if (doc.epcisVersion != EPCISVersion.V2)
+		if (!doc.epcisVersion.equals(EPCISVersion.V2))
 		{
 			throw new RuntimeException("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
 		}
@@ -227,27 +227,31 @@ public final class EPCISDocumentBaseJsonMapper
 	public static void PostWriteEventCleanUp(JSONObject json)
 	{
 		// when converting from XML to JSON, the XML allows an empty readPoint, but the JSON does not.
-		if (json.get("readPoint") instanceof JSONObject && json.getJSONObject("readPoint").get("id") == null)
+		if (json.has("readPoint") && json.get("readPoint") instanceof JSONObject)
 		{
-			json.remove("readPoint");
+			JSONObject jReadPoint = (JSONObject)json.get("readPoint");
+			if (jReadPoint.has("id") && jReadPoint.get("id") instanceof String && StringHelper.isNullOrEmpty(jReadPoint.getString("id")))
+			{
+				json.remove("readPoint");
+			}
 		}
 	}
 
 	public static Class GetEventTypeFromProfile(JSONObject jEvent)
 	{
-		String action = jEvent.getString("action");
-		String bizStep = jEvent.getString("bizStep");
-		String eventType = jEvent.getString("type");
+		String action = (jEvent.has("action") ? jEvent.getString("action") : "");
+		String bizStep = (jEvent.has("bizStep") ? jEvent.getString("bizStep") : "");
+		String eventType = (jEvent.has("type") ? jEvent.getString("type") : "");
 
 		if (bizStep == null)
 		{
 			bizStep = "";
 		}
 
-		String finalBizStep = bizStep;
-		var profiles = Setup.Profiles.stream().filter(p -> Objects.equals(p.EventType.toString(), eventType)
+		String finalBizStep = bizStep.toLowerCase();
+		var profiles = Setup.Profiles.stream().filter(p -> p.EventType.toString().toLowerCase().equals(eventType.toLowerCase())
 				&& (p.Action == null || p.Action.toString() == action)
-				&& (p.BusinessStep == null || Objects.equals(p.BusinessStep.toLowerCase(), finalBizStep)));
+				&& (StringHelper.isNullOrEmpty(p.BusinessStep) || p.BusinessStep.toLowerCase().equals(finalBizStep)));
 
 		List<OpenTraceabilityEventProfile> finalProfiles = profiles.collect(Collectors.toList());
 
@@ -280,11 +284,8 @@ public final class EPCISDocumentBaseJsonMapper
 		}
 	}
 
-//C# TO JAVA CONVERTER TASK: There is no equivalent in Java to the 'async' keyword:
-//ORIGINAL LINE: internal static async Task CheckSchemaAsync(JSONObject json)
 	public static void checkSchema(JSONObject json) throws URISyntaxException, IOException, InterruptedException, OpenTraceabilitySchemaException {
 		String jsonStr = json.toString();
-//C# TO JAVA CONVERTER TASK: There is no equivalent to 'await' in Java:
 		Pair<Boolean, List<String>> results = JsonSchemaChecker.isValid(jsonStr, "https://ref.gs1.org/standards/epcis/epcis-json-schema.json");
 		if (!results.getSecond().isEmpty())
 		{
@@ -330,23 +331,26 @@ public final class EPCISDocumentBaseJsonMapper
 			JSONObject jobj = (JSONObject)json;
 			for (var jprop : jobj.keySet())
 			{
-				Object jvalue = jobj.get(jprop);
-				if (jvalue instanceof JSONObject)
+				if (jobj.has(jprop))
 				{
-					jobj.put(jprop, CompressVocab(jvalue));
-				}
-				else if (jvalue instanceof JSONArray)
-				{
-					JSONArray ja = (JSONArray)jvalue;
-					for (int i = 0; i < ja.length(); i++)
+					Object jvalue = jobj.get(jprop);
+					if (jvalue instanceof JSONObject)
 					{
-						Object jt = ja.get(i);
-						ja.put(i, CompressVocab(jt));
+						jobj.put(jprop, CompressVocab(jvalue));
 					}
-				}
-				else if (jvalue != null)
-				{
-					jobj.put(jprop, CompressVocab(jvalue));
+					else if (jvalue instanceof JSONArray)
+					{
+						JSONArray ja = (JSONArray)jvalue;
+						for (int i = 0; i < ja.length(); i++)
+						{
+							Object jt = ja.get(i);
+							ja.put(i, CompressVocab(jt));
+						}
+					}
+					else if (jvalue != null)
+					{
+						jobj.put(jprop, CompressVocab(jvalue));
+					}
 				}
 			}
 			return jobj;
@@ -388,26 +392,14 @@ public final class EPCISDocumentBaseJsonMapper
 		JSONObject jEPCISContext = JsonContextHelper.getJsonLDContext("https://ref.gs1.org/standards/epcis/epcis-context.jsonld");
 		Map<String, String> namespaces = JsonContextHelper.scrapeNamespaces(jEPCISContext);
 
-		Object eventListObj = null;
-
-		json.getJSONObject("epcisBody").getJSONArray("eventList");
-
-		// epcisBody/eventList
-		// epcisBody/queryResults/resultsBody/eventList
-
-		eventListObj = JSONExtensions.query(json,"epcisBody:eventList");
-		if (eventListObj == null || !(eventListObj instanceof JSONArray))
+		JSONArray jEventList = JSONExtensions.queryForArray(json,"epcisBody.eventList");
+		if (jEventList == null)
 		{
-			eventListObj = JSONExtensions.query(json,"epcisBody:queryResults:resultsBody:eventList");
-			if (eventListObj == null || !(eventListObj instanceof JSONArray))
-			{
-				eventListObj = null;
-			}
+			jEventList = JSONExtensions.queryForArray(json,"epcisBody.queryResults.resultsBody.eventList");
 		}
 
-		if (eventListObj != null)
+		if (jEventList != null)
 		{
-			JSONArray jEventList = (JSONArray) eventListObj;
 			for (Object jEvent : jEventList)
 			{
 				if (jEvent instanceof JSONObject)

@@ -80,7 +80,7 @@ public class JsonContextHelper {
             }
             String value = Objects.toString(obj, "");
             if (value != null && isNamespace(value)) {
-                namespaces.put(key, value.trim().replaceAll(":", ""));
+                namespaces.put(key, StringExtensions.TrimEnd(value.trim(), ":"));
             }
         }
         return namespaces;

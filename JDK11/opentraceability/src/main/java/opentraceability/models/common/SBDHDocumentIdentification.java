@@ -5,7 +5,7 @@ import opentraceability.utility.attributes.OpenTraceabilityAttribute;
 import static opentraceability.Constants.SBDH_NAMESPACE;
 
 public class SBDHDocumentIdentification {
-    @OpenTraceabilityAttribute(ns = SBDH_NAMESPACE, name="standard", sequenceOrder = 1)
+    @OpenTraceabilityAttribute(ns = SBDH_NAMESPACE, name="Standard", sequenceOrder = 1)
     public String Standard = "";
 
     @OpenTraceabilityAttribute(ns = SBDH_NAMESPACE, name="TypeVersion", sequenceOrder = 2)

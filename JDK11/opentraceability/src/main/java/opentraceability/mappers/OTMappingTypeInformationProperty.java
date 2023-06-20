@@ -20,8 +20,13 @@ public class OTMappingTypeInformationProperty {
     public EventProductType productType = EventProductType.Reference;
 
     public String name = "";
+
+    public String namespace = null;
+
     public String itemName;
+
     public Class itemType;
+
     public EPCISVersion version;
     public Integer sequenceOrder;
     public String curieMapping;
@@ -63,6 +68,7 @@ public class OTMappingTypeInformationProperty {
         this.isRepeating = !repeatingAttributes.isEmpty();
 
         this.name = att.name();
+        this.namespace = att.ns();
         this.version = att.version();
         this.sequenceOrder = att.sequenceOrder();
 
@@ -98,6 +104,7 @@ public class OTMappingTypeInformationProperty {
         this.isRepeating = !repeatingAttributes.isEmpty();
 
         this.name = att.name();
+        this.version = EPCISVersion.V2;
 
         OpenTraceabilityArrayAttribute arrayAttribute = ReflectionUtility.getFieldAnnotation(field, OpenTraceabilityArrayAttribute.class);
 

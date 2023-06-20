@@ -42,6 +42,7 @@ public class Location extends IVocabularyElement {
     @OpenTraceabilityMasterDataAttribute(name = "https://gs1.org/cbv/cbvmda:certificationList")
     public CertificationList certificationList = null;
 
+    @OpenTraceabilityArrayAttribute(itemType = LanguageString.class)
     @OpenTraceabilityJsonAttribute(name = "name")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#name")
     public List<LanguageString> name = new ArrayList<LanguageString>();

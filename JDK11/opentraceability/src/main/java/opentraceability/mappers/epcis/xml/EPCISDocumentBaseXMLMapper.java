@@ -160,6 +160,7 @@ public class EPCISDocumentBaseXMLMapper
 		// write the master data
 		EPCISXmlMasterDataWriter.WriteMasterData(xDoc, doc);
 
+		xDoc.FixPrefixesAndNamespacing();
 		return xDoc;
 	}
 
