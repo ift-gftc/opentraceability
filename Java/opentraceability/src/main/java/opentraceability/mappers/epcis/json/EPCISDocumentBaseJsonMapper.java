@@ -250,7 +250,7 @@ public final class EPCISDocumentBaseJsonMapper
 
 		String finalBizStep = bizStep.toLowerCase();
 		var profiles = Setup.Profiles.stream().filter(p -> p.EventType.toString().toLowerCase().equals(eventType.toLowerCase())
-				&& (p.Action == null || p.Action.toString() == action)
+				&& (p.Action == null || p.Action.toString().equals(action))
 				&& (StringHelper.isNullOrEmpty(p.BusinessStep) || p.BusinessStep.toLowerCase().equals(finalBizStep)));
 
 		List<OpenTraceabilityEventProfile> finalProfiles = profiles.collect(Collectors.toList());
@@ -267,7 +267,7 @@ public final class EPCISDocumentBaseJsonMapper
 				{
 					for (var kdeProfile : profile.KDEProfiles)
 					{
-						if (jEvent.query(kdeProfile.JPath) == null)
+						if (JSONExtensions.query(jEvent, kdeProfile.JPath) == null)
 						{
 							finalProfiles.remove(profile);
 						}
@@ -280,6 +280,7 @@ public final class EPCISDocumentBaseJsonMapper
 				throw new RuntimeException("Failed to create event from profile. Type=" + eventType + " and BizStep=" + bizStep + " and Action=" + action);
 			}
 
+			finalProfiles.sort(Comparator.comparingInt(OpenTraceabilityEventProfile::getSpecificityScore).reversed());
 			return ((OpenTraceabilityEventProfile)finalProfiles.toArray()[0]).EventClassType;
 		}
 	}

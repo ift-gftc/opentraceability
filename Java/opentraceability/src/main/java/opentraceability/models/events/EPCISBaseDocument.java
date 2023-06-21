@@ -35,7 +35,7 @@ public class EPCISBaseDocument {
 
     public <T extends IVocabularyElement> T searchMasterData(String id, Class<T> type) {
         for (IVocabularyElement element : this.masterData) {
-            if (type.isAssignableFrom(element.getClass()) && element.id.equals(id)) {
+            if (type.isAssignableFrom(element.getClass()) && element.getId().equals(id)) {
                 return (T) element;
             }
         }
@@ -60,7 +60,7 @@ public class EPCISBaseDocument {
             }
 
             for (IVocabularyElement element : data.masterData) {
-                Stream<IVocabularyElement> singles = this.masterData.stream().filter(x -> x.id == element.id);
+                Stream<IVocabularyElement> singles = this.masterData.stream().filter(x -> x.getId().equals(element.getId()));
                 if (singles.count() == 0) {
                     this.masterData.add(element);
                 }
@@ -107,7 +107,7 @@ public class EPCISBaseDocument {
 
             if (parameters.query.EQ_bizLocation != null && !parameters.query.EQ_bizLocation.isEmpty()) {
                 boolean found = false;
-                for (URI eqBiz : parameters.query.EQ_bizLocation) {
+                for (String eqBiz : parameters.query.EQ_bizLocation) {
                     if (evt.location != null && evt.location.gln != null
                             && eqBiz.toString().equalsIgnoreCase(evt.location.gln.toString())) {
                         found = true;

@@ -164,6 +164,9 @@ public class DataCompare {
                         {
                             JSONObject jobj = (JSONObject)jt1;
                             if (!jobj.has(keyField)) keyField = "id";
+                            if (!jobj.has(keyField)) keyField = "component";
+                            if (!jobj.has(keyField)) keyField = "ex:feature";
+                            if (!jobj.has(keyField)) keyField = "time";
                             if (!jobj.has(keyField)) keyField = "type";
 
                             key = jobj.optString(keyField);
@@ -294,6 +297,12 @@ public class DataCompare {
             if (!StringHelper.isNullOrEmpty(type))
             {
                 xchild2 = ListExtensions.FirstOrDefault(x2.Elements().stream().filter(x -> x.Attribute("type").equals(type)));
+            }
+
+            String component = xchild1.Attribute("component");
+            if (!StringHelper.isNullOrEmpty(component))
+            {
+                xchild2 = ListExtensions.FirstOrDefault(x2.Elements().stream().filter(x -> x.Attribute("component").equals(component)));
             }
 
             String xsiType = xchild1.Attribute("xsi:type");

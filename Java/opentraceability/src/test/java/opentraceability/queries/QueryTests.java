@@ -31,6 +31,8 @@ public class QueryTests {
         Setup.Initialize();
     }
 
+    String testServerURL = "https://traceabilityserver01.azurewebsites.net/";
+
     @Test
     public void queryParameters() throws Exception {
         EPCISQueryParameters parameters = new EPCISQueryParameters();
@@ -49,12 +51,8 @@ public class QueryTests {
         parameters.query.LE_eventTime = OffsetDateTime.now();
         parameters.query.LE_recordTime = OffsetDateTime.now();
         parameters.query.EQ_bizLocation = new ArrayList<>();
-        try {
-            parameters.query.EQ_bizLocation.add(new URI("urn:epc:id:sgln:0614141.00888.0"));
-            parameters.query.EQ_bizLocation.add(new URI("urn:epc:id:sgln:0614141.00888.0"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        parameters.query.EQ_bizLocation.add("urn:epc:id:sgln:0614141.00888.0");
+        parameters.query.EQ_bizLocation.add("urn:epc:id:sgln:0614141.00888.0");
         parameters.query.EQ_bizStep = new ArrayList<>();
         parameters.query.EQ_bizStep.add("https://ref.gs1.org/cbv/BizStep-shipping");
         parameters.query.EQ_bizStep.add("receiving");
@@ -99,7 +97,7 @@ public class QueryTests {
     @Test
     public void masterData() throws Exception {
         String filename = "testserver_advancedfilters.jsonld";
-        EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", EPCISDataFormat.JSON, EPCISVersion.V2);
+        EPCISTestServerClient client = new EPCISTestServerClient(testServerURL, EPCISDataFormat.JSON, EPCISVersion.V2);
 
         String data = ReadTestData(filename);
         EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data);
@@ -131,7 +129,7 @@ public class QueryTests {
     public void getEPCISQueryInterfaceURL() throws Exception {
         String filename = "testserver_advancedfilters.jsonld";
         OkHttpClient httpClient = new OkHttpClient();
-        EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", EPCISDataFormat.JSON, EPCISVersion.V2);
+        EPCISTestServerClient client = new EPCISTestServerClient(testServerURL, EPCISDataFormat.JSON, EPCISVersion.V2);
 
         String data = ReadTestData(filename);
         EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data);
@@ -139,7 +137,7 @@ public class QueryTests {
 
         DigitalLinkQueryOptions queryOptions = new DigitalLinkQueryOptions();
         try {
-            queryOptions.url = new URI("https://localhost:4001/digitallink/" + blob_id + "/");
+            queryOptions.url = new URI(testServerURL + "/digitallink/" + blob_id + "/");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -155,7 +153,7 @@ public class QueryTests {
     @Test
     public void queryEvents() throws Exception {
         String filename = "aggregation_event_all_possible_fields.jsonld";
-        EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", EPCISDataFormat.JSON, EPCISVersion.V2);
+        EPCISTestServerClient client = new EPCISTestServerClient(testServerURL, EPCISDataFormat.JSON, EPCISVersion.V2);
 
         String data = ReadTestData(filename);
         EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data);
@@ -174,7 +172,7 @@ public class QueryTests {
     @Test
     public void advancedFilters() throws Exception {
         String filename = "testserver_advancedfilters.jsonld";
-        EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", EPCISDataFormat.JSON, EPCISVersion.V2);
+        EPCISTestServerClient client = new EPCISTestServerClient(testServerURL, EPCISDataFormat.JSON, EPCISVersion.V2);
 
         String data = ReadTestData(filename);
         EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data);
@@ -188,11 +186,7 @@ public class QueryTests {
         parameters.query.EQ_bizStep = new ArrayList<>();
         parameters.query.EQ_bizStep.add(bizStep);
         parameters.query.EQ_bizLocation = new ArrayList<>();
-        try {
-            parameters.query.EQ_bizLocation.add(new URI(bizLocation));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        parameters.query.EQ_bizLocation.add(bizLocation);
 
         EPCISQueryResults results = client.queryEvents(blob_id, parameters);
         assertEquals(results.Errors.size(), 0, "errors found in the query events");
@@ -202,7 +196,7 @@ public class QueryTests {
     @Test
     public void traceback() throws Exception {
         String filename = "traceback_tests.jsonld";
-        EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", EPCISDataFormat.JSON, EPCISVersion.V2);
+        EPCISTestServerClient client = new EPCISTestServerClient(testServerURL, EPCISDataFormat.JSON, EPCISVersion.V2);
 
         String data = ReadTestData(filename);
         EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data);
@@ -212,7 +206,7 @@ public class QueryTests {
         EPCISQueryResults results = client.traceback(blob_id, new EPC(epc));
         assertEquals(results.Errors.size(), 0, "errors found in the traceback events");
         assertNotNull(results.Document);
-        assertEquals(results.Document.events.size(), 16, "expected 16 events");
+        assertEquals(16, results.Document.events.size(), "expected 16 events");
     }
 
     String ReadTestData(String file)

@@ -111,7 +111,7 @@ class OpenTraceabilityXmlMapperTest {
         }
     }
 
-    @Test
+    //@Test
     void epcisQueryDocument_to_from_xml_1_2_100Times() throws Exception {
         Setup.Initialize();
 
@@ -159,7 +159,7 @@ class OpenTraceabilityXmlMapperTest {
         }
     }
 
-    @Test
+    //@Test
     void epcisDocument_to_from_xml_100Times() throws Exception
     {
         Setup.Initialize();

@@ -91,6 +91,7 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 		{
 			throw new RuntimeException("Failed to find event EPCISBody/epcisq:QueryResults/resultsBody/EventList.");
 		}
+
 		for (IEvent e : doc.events)
 		{
 			String xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);

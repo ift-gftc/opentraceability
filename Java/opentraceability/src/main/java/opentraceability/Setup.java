@@ -10,10 +10,7 @@ import opentraceability.utility.ReflectionUtility;
 import opentraceability.utility.UOMS;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Setup {
     public static List<OpenTraceabilityEventProfile> Profiles = new ArrayList<>();
@@ -82,6 +79,7 @@ public class Setup {
         });
 
         Profiles.add(profile);
+        Profiles.sort(Comparator.comparingInt(OpenTraceabilityEventProfile::getSpecificityScore).reversed());
     }
 
     public static void registerMasterDataType(Class type, Class defaultFor) throws Exception {

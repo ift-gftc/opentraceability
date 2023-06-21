@@ -12,6 +12,10 @@ import org.junit.jupiter.api.Test;
 
 public class MasterDataTests {
 
+    public MasterDataTests() throws Exception {
+        Setup.Initialize();
+    }
+
     @Test
     public void GS1WebVocab_Products() throws Exception {
         String file = "gs1-vocab-products01.json";
@@ -64,7 +68,10 @@ public class MasterDataTests {
     }
 
     @Test
-    public void GS1WebVocab_EPCISDocument(String file) throws Exception {
+    public void GS1WebVocab_EPCISDocument() throws Exception {
+
+        String file = "testserver_advancedfilters.jsonld";
+
         // read object events from test data specified in the file argument
         String json = ReadTestData(file);
 

@@ -625,7 +625,7 @@
             <bizLocation>
               <id>urn:gdst:example.org:location:loc:importer.123u</id>
             </bizLocation>
-            <extension />
+
             <cbvmda:certificationList>
               <certification>
                 <gdst:certificationType>urn:gdst:certType:harvestCoC</gdst:certificationType>
@@ -928,7 +928,7 @@
             <bizLocation>
               <id>urn:gdst:example.org:location:loc:importer.123u</id>
             </bizLocation>
-            <extension />
+
             <cbvmda:certificationList>
               <certification>
                 <gdst:certificationType>urn:gdst:certType:harvestCoC</gdst:certificationType>
@@ -1003,7 +1003,7 @@
             <bizLocation>
               <id>urn:gdst:example.org:location:loc:importer.123u</id>
             </bizLocation>
-            <extension />
+
             <cbvmda:certificationList>
               <certification>
                 <gdst:certificationType>urn:gdst:certType:harvestCoC</gdst:certificationType>

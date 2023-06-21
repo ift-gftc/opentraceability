@@ -3,6 +3,8 @@ package opentraceability.models.masterdata;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import opentraceability.models.identifiers.GTIN;
 import org.json.JSONObject;
 import opentraceability.interfaces.*;
 import opentraceability.utility.attributes.*;
@@ -18,10 +20,8 @@ public class Location extends IVocabularyElement {
     {
         epcisType = "urn:epcglobal:epcis:vtype:Location";
         vocabularyType = VocabularyType.Location;
+        type = "gs1:Place";
     }
-
-    @OpenTraceabilityJsonAttribute(name = "@type")
-    public String jsonLDType = "gs1:Place";
 
     public VocabularyType vocabularyType = VocabularyType.Location;
 
@@ -29,6 +29,16 @@ public class Location extends IVocabularyElement {
 
     @OpenTraceabilityJsonAttribute(name = "globalLocationNumber")
     public GLN gln = null;
+
+    @Override
+    public String getId() {
+        return (gln == null) ? null : gln.toString();
+    }
+
+    @Override
+    public void setId(String val) {
+        gln = (val == null) ? null : new GLN(val);
+    }
 
     @OpenTraceabilityJsonAttribute(name = "cbvmda:owning_party")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:owning_party")
@@ -56,6 +66,6 @@ public class Location extends IVocabularyElement {
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#unloadingPort")
     public String unloadingPort = null;
 
-    public ArrayList<IMasterDataKDE> kdes = new ArrayList<IMasterDataKDE>();
-
+    @OpenTraceabilityExtensionElementsAttribute
+    public List<IMasterDataKDE> kdes = new ArrayList<>();
 }

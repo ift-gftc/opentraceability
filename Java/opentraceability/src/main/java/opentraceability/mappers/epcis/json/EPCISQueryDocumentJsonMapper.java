@@ -25,13 +25,13 @@ public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper
 		}
 
 		// read the query name epcisBody:queryResults:queryName
-		doc.QueryName = JSONExtensions.query(json, "epcisBody:queryResults:queryName").toString();
+		doc.QueryName = JSONExtensions.queryString(json, "epcisBody.queryResults.queryName");
 
 		// read subscription ID, epcisBody:queryResults:subscriptionID
-		doc.SubscriptionID = JSONExtensions.query(json, "epcisBody:queryResults:subscriptionID").toString();
+		doc.SubscriptionID = JSONExtensions.queryString(json, "epcisBody.queryResults.subscriptionID");
 
 		// read the events epcisBody:queryResults:resultsBody:eventList
-		JSONArray jEventsList = JSONExtensions.queryForArray(json, "epcisBody:queryResults:resultsBody:eventList");
+		JSONArray jEventsList = JSONExtensions.queryForArray(json, "epcisBody.queryResults.resultsBody.eventList");
 		if (jEventsList != null)
 		{
 			for (Object o : jEventsList)
@@ -63,7 +63,7 @@ public class EPCISQueryDocumentJsonMapper implements IEPCISQueryDocumentMapper
 		JSONArray jEventsList = new JSONArray();
 		for (IEvent e : doc.events)
 		{
-			Object o = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed);
+			Object o = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed, false, false);
 			JSONObject jEvent = o instanceof JSONObject ? (JSONObject)o : null;
 			if (jEvent != null)
 			{

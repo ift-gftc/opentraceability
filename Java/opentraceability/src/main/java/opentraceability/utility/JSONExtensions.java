@@ -23,7 +23,7 @@ public class JSONExtensions {
         {
             String[] parts = jpath.split("[.]");
             String newJPath = String.join(".", Arrays.stream(parts).skip(1).collect(Collectors.toList()));
-            JSONObject newJSON = json.getJSONObject(parts[0]);
+            JSONObject newJSON = json.optJSONObject(parts[0]);
             return query(newJSON, newJPath);
         }
         else
@@ -61,6 +61,10 @@ public class JSONExtensions {
         else if (value instanceof Double)
         {
             jobj.put(name, (Double)value);
+        }
+        else if (value instanceof Boolean)
+        {
+            jobj.put(name, (Boolean)value);
         }
         else
         {
@@ -101,5 +105,16 @@ public class JSONExtensions {
         }
         Measurement m = new Measurement(quantity, uom);
         return m;
+    }
+
+    public static String queryString(JSONObject json, String jpath) {
+        Object o = query(json, jpath);
+        if (o != null)
+        {
+            return o.toString();
+        }
+        else {
+            return null;
+        }
     }
 }

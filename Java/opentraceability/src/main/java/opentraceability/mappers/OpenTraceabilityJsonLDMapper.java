@@ -21,15 +21,7 @@ import java.util.stream.Collectors;
 
 public final class OpenTraceabilityJsonLDMapper
 {
-	/** 
-	 Converts an object into JSON.
-	*/
-
-	public static Object ToJson(Object value, java.util.Map<String, String> namespacesReversed) throws Exception {
-		return ToJson(value, namespacesReversed, false);
-	}
-
-	public static Object ToJson(Object value, Map<String, String> namespacesReversed, boolean required) throws Exception {
+	public static Object ToJson(Object value, Map<String, String> namespacesReversed, Boolean isGs1WebVocab, boolean required) throws Exception {
 		if (value != null)
 		{
 			JSONObject json = new JSONObject();
@@ -95,7 +87,7 @@ public final class OpenTraceabilityJsonLDMapper
 						{
 							if (property.isRepeating && list.size() == 1)
 							{
-								Object jt = WriteObjectToJToken(list.get(0));
+								Object jt = WriteObjectToJToken(list.get(0), isGs1WebVocab);
 								if (jt != null)
 								{
 									JSONExtensions.put(jvaluepointer, jChildName, jt);
@@ -107,15 +99,21 @@ public final class OpenTraceabilityJsonLDMapper
 								{
 									if (property.isObject)
 									{
-										Object jListChild = ToJson(o, namespacesReversed, property.required);
+										Object jListChild = ToJson(o, namespacesReversed, isGs1WebVocab, property.required);
 										if (jListChild != null)
 										{
 											JSONExtensions.put(jList, jListChild);
 										}
 									}
+									else if (property.itemType == LanguageString.class && isGs1WebVocab)
+									{
+										LanguageString ls = (LanguageString)o;
+										JSONObject j = ls.toJSON();
+										JSONExtensions.put(jList, j);
+									}
 									else
 									{
-										Object jt = WriteObjectToJToken(o);
+										Object jt = WriteObjectToJToken(o, isGs1WebVocab);
 										if (jt != null)
 										{
 											JSONExtensions.put(jList, jt);
@@ -129,7 +127,7 @@ public final class OpenTraceabilityJsonLDMapper
 					}
 					else if (property.isObject)
 					{
-						Object jChild = ToJson(obj, namespacesReversed, property.required);
+						Object jChild = ToJson(obj, namespacesReversed, isGs1WebVocab, property.required);
 						if (jChild != null)
 						{
 							JSONExtensions.put(jvaluepointer, jChildName, jChild);
@@ -137,7 +135,7 @@ public final class OpenTraceabilityJsonLDMapper
 					}
 					else
 					{
-						Object jt = WriteObjectToJToken(obj);
+						Object jt = WriteObjectToJToken(obj, isGs1WebVocab);
 						if (jt != null)
 						{
 							JSONExtensions.put(jvaluepointer, jChildName, jt);
@@ -278,7 +276,7 @@ public final class OpenTraceabilityJsonLDMapper
 		return value;
 	}
 
-	private static Object WriteObjectToJToken(Object obj)
+	private static Object WriteObjectToJToken(Object obj, Boolean isGs1WebVocab)
 	{
 		if (obj == null)
 		{
@@ -403,17 +401,24 @@ public final class OpenTraceabilityJsonLDMapper
 				JSONArray jArr = json instanceof JSONArray ? (JSONArray)json : null;
 				if (jArr != null)
 				{
-					for (Object j : jArr)
+					if (mappingProp.itemType == LanguageString.class)
 					{
-						if (mappingProp.isObject)
+						list = LanguageString.fromJSON(jArr);
+					}
+					else
+					{
+						for (Object j : jArr)
 						{
-							Object o = FromJson(j, mappingProp.itemType, namespaces);
-							list.add(o);
-						}
-						else
-						{
-							Object o = ReadObjectFromString(j.toString(), mappingProp.itemType);
-							list.add(o);
+							if (mappingProp.isObject)
+							{
+								Object o = FromJson(j, mappingProp.itemType, namespaces);
+								list.add(o);
+							}
+							else
+							{
+								Object o = ReadObjectFromString(j.toString(), mappingProp.itemType);
+								list.add(o);
+							}
 						}
 					}
 				}

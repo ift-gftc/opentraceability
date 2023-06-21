@@ -76,8 +76,7 @@ public final class EPCISXmlMasterDataReader
 		if (o instanceof  TradeItem)
 		{
 			TradeItem md = (TradeItem)o;
-			md.id = xTradeitem.Attribute("id");
-			md.gtin = new opentraceability.models.identifiers.GTIN(md.id);
+			md.gtin = new opentraceability.models.identifiers.GTIN(xTradeitem.Attribute("id"));
 			md.epcisType = type;
 
 			// read the object
@@ -101,8 +100,7 @@ public final class EPCISXmlMasterDataReader
 		if (o instanceof  Location)
 		{
 			Location md = (Location)o;
-			md.id = xLocation.Attribute("id");
-			md.gln = new opentraceability.models.identifiers.GLN(md.id);
+			md.gln = new opentraceability.models.identifiers.GLN(xLocation.Attribute("id"));
 			md.epcisType = type;
 
 			// read the object
@@ -126,8 +124,7 @@ public final class EPCISXmlMasterDataReader
 		if (o instanceof  TradingParty)
 		{
 			TradingParty md = (TradingParty)o;
-			md.id = xTradingParty.Attribute("id");
-			md.pgln = new opentraceability.models.identifiers.PGLN(md.id);
+			md.pgln = new opentraceability.models.identifiers.PGLN(xTradingParty.Attribute("id"));
 			md.epcisType = type;
 
 			// read the object
@@ -144,7 +141,7 @@ public final class EPCISXmlMasterDataReader
 		// read the pgln from the id
 		String id = xUnknown.Element("id").getValue();
 		VocabularyElement ele = new VocabularyElement();
-		ele.id = id;
+		ele.setId(id);
 		ele.epcisType = type;
 
 		// read the object

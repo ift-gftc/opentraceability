@@ -71,7 +71,7 @@ public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper
 
 		for (IEvent e : doc.events)
 		{
-			Object tempVar = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed);
+			Object tempVar = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed, false, false);
 			JSONObject jEvent = tempVar instanceof JSONObject ? (JSONObject)tempVar : null;
 			if (jEvent != null)
 			{

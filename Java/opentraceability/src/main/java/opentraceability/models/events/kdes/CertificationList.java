@@ -7,7 +7,7 @@ import opentraceability.utility.attributes.OpenTraceabilityAttribute;
 import opentraceability.utility.attributes.OpenTraceabilityObjectAttribute;
 
 public class CertificationList {
-    @OpenTraceabilityArrayAttribute(itemName = "certification", itemType = Certificate.class)
+    @OpenTraceabilityArrayAttribute(itemName = "", itemType = Certificate.class)
     @OpenTraceabilityObjectAttribute
     @OpenTraceabilityAttribute(ns="", name="certification")
     public List<Certificate> certificates = new ArrayList<Certificate>();

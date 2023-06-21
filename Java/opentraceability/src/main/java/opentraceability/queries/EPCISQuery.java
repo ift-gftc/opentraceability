@@ -20,7 +20,7 @@ public class EPCISQuery {
     public List<String> MATCH_anyEPC = new ArrayList<>();
     public List<String> MATCH_anyEPCClass = new ArrayList<>();
     public List<String> EQ_bizStep = new ArrayList<>();
-    public List<URI> EQ_bizLocation = new ArrayList<>();
+    public List<String> EQ_bizLocation = new ArrayList<>();
     public List<String> EQ_action = new ArrayList<>();
 
     public JSONObject toJSON()
@@ -40,7 +40,7 @@ public class EPCISQuery {
         AddListString(json, "EQ_bizStep", EQ_bizStep);
         AddListString(json, "EQ_action", EQ_action);
 
-        AddUriList(json, "EQ_bizLocation", EQ_bizLocation);
+        AddListString(json, "EQ_bizLocation", EQ_bizLocation);
 
         return json;
     }
@@ -53,28 +53,11 @@ public class EPCISQuery {
         }
     }
 
-    private void AddListString(JSONObject json, String name, List<String> list)
-    {
-        if (list != null && !list.isEmpty())
-        {
+    private void AddListString(JSONObject json, String name, List<String> list) {
+        if (list != null && !list.isEmpty()) {
             JSONArray jarray = new JSONArray();
-            for (var s: list)
-            {
+            for (var s : list) {
                 jarray.put(s);
-            }
-            json.put(name, jarray);
-        }
-    }
-
-
-    private void AddUriList(JSONObject json, String name, List<URI> list)
-    {
-        if (list != null && !list.isEmpty())
-        {
-            JSONArray jarray = new JSONArray();
-            for (var s: list)
-            {
-                jarray.put(s.toString());
             }
             json.put(name, jarray);
         }

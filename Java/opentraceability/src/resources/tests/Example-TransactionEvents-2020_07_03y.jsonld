@@ -6,6 +6,7 @@
     "eventList": [
       {
         "type": "TransactionEvent",
+        "eventID" : "urn:uuid:1234-456-001",
         "eventTime": "2019-10-04T13:12:00.000Z",
         "eventTimeZoneOffset": "+01:00",
         "bizTransactionList": [{"bizTransaction": "urn:epc:id:gdti:95252084.0001.0003555480001000"}],
@@ -16,6 +17,7 @@
       },
       {
         "type": "TransactionEvent",
+        "eventID" : "urn:uuid:1234-456-002",
         "eventTime": "2014-12-12T10:00:00.000Z",
         "eventTimeZoneOffset": "+02:00",
         "bizTransactionList": [{

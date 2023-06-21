@@ -79,8 +79,7 @@ public final class EPCISJsonMasterDataReader
 		if (o instanceof  TradeItem)
 		{
 			TradeItem md = (TradeItem)o;
-			md.id = jTradeItem.getString("id");
-			md.gtin = new opentraceability.models.identifiers.GTIN(md.id);
+			md.gtin = new opentraceability.models.identifiers.GTIN(jTradeItem.getString("id"));
 			md.epcisType = type;
 
 			// read the object
@@ -104,8 +103,7 @@ public final class EPCISJsonMasterDataReader
 		if (o instanceof  Location)
 		{
 			Location md = (Location)o;
-			md.id = jLoc.getString("id");
-			md.gln = new opentraceability.models.identifiers.GLN(md.id);
+			md.gln = new opentraceability.models.identifiers.GLN(jLoc.getString("id"));
 			md.epcisType = type;
 
 			// read the object
@@ -129,8 +127,7 @@ public final class EPCISJsonMasterDataReader
 		if (o instanceof  TradingParty)
 		{
 			TradingParty md = (TradingParty)o;
-			md.id = jTradingParty.getString("id");
-			md.pgln = new opentraceability.models.identifiers.PGLN(md.id);
+			md.pgln = new opentraceability.models.identifiers.PGLN(jTradingParty.getString("id"));
 			md.epcisType = type;
 
 			// read the object
@@ -147,7 +144,7 @@ public final class EPCISJsonMasterDataReader
 		// read the pgln from the id
 		String id = jVocabEle.getString("id");
 		VocabularyElement ele = new VocabularyElement();
-		ele.id = id;
+		ele.setId(id);
 		ele.epcisType = type;
 
 		// read the object

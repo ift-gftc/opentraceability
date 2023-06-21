@@ -3,6 +3,8 @@ package opentraceability.models.masterdata;
 import java.util.List;
 import java.util.ArrayList;
 
+import opentraceability.models.identifiers.GLN;
+import opentraceability.utility.attributes.OpenTraceabilityExtensionElementsAttribute;
 import org.apache.commons.codec.language.bm.Lang;
 import org.json.JSONObject;
 import opentraceability.interfaces.IMasterDataKDE;
@@ -20,9 +22,21 @@ public class TradeItem extends IVocabularyElement {
     {
         epcisType = "urn:epcglobal:epcis:vtype:EPCClass";
         vocabularyType = VocabularyType.TradeItem;
+        type = "gs1Product";
     }
+
     @OpenTraceabilityJsonAttribute(name = "gtin")
     public GTIN gtin = null;
+
+    @Override
+    public String getId() {
+        return (gtin == null) ? null : gtin.toString();
+    }
+
+    @Override
+    public void setId(String val) {
+        gtin = (val == null) ? null : new GTIN(val);
+    }
 
     @OpenTraceabilityArrayAttribute(itemType = LanguageString.class)
     @OpenTraceabilityJsonAttribute(name = "productName")
@@ -32,18 +46,25 @@ public class TradeItem extends IVocabularyElement {
     @OpenTraceabilityJsonAttribute(name = "cbvmda:tradeItemConditionCode")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#tradeItemConditionCode")
     public String tradeItemConditionCode = null;
+
     @OpenTraceabilityJsonAttribute(name = "cbvmda:owning_party")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:owning_Party")
     public PGLN owningParty = null;
+
     @OpenTraceabilityJsonAttribute(name = "cbvmda:informationProvider")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#informationProvider")
     public PGLN informationProvider = null;
+
     @OpenTraceabilityArrayAttribute(itemType = String.class)
     @OpenTraceabilityJsonAttribute(name = "cbvmda:speciesForFisheryStatisticsPurposesName")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName")
     public List<String> fisherySpeciesScientificName = new ArrayList<String>();
+
     @OpenTraceabilityArrayAttribute(itemType = String.class)
     @OpenTraceabilityJsonAttribute(name = "cbvmda:speciesForFisheryStatisticsPurposesCode")
     @OpenTraceabilityMasterDataAttribute(name = "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode")
     public List<String> fisherySpeciesCode = new ArrayList<String>();
+
+    @OpenTraceabilityExtensionElementsAttribute
+    public List<IMasterDataKDE> kdes = new ArrayList<>();
 }

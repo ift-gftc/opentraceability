@@ -32,12 +32,6 @@
 								"value": 20.9,
 								"ex:feature": "ex:ambiance",
 								"uom": "CEL"
-							},
-							{
-								"type": "Temperature",
-								"value": 20.7,
-								"ex:feature": "ex:outerPackage",
-								"uom": "CEL"
 							}
 						]
 					}

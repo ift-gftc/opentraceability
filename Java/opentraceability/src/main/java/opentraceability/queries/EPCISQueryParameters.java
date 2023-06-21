@@ -65,23 +65,9 @@ public class EPCISQueryParameters {
                 }
                 else if (List.class.isAssignableFrom(prop.getType())) {
                     Class itemType = ReflectionUtility.getItemType(prop.getType());
-                    List<Object> listValues = new ArrayList<>();
-                    if (itemType == String.class)
-                    {
-                        // Split value by '|' and assign to prop
-                        listValues = Arrays.asList(value.split("\\|"));
-                    }
-                    else if (itemType == URI.class) {
-                        // Split value by '|', construct URIs, and assign to prop
-                        String[] uriStrings = value.split("\\|");
-                        for (String uriString : uriStrings) {
-                            listValues.add(new URI(uriString));
-                        }
-                    }
-                    else {
-                        // Unsupported list type
-                        throw new Exception("Unsupported List type in property: " + key);
-                    }
+                    List<String> listValues = new ArrayList<String>();
+                    listValues = Arrays.asList(value.split("\\|"));
+                    prop.set(query, listValues);
                 }
             }
         }

@@ -173,10 +173,10 @@ public class EPCISDocumentBaseXMLMapper
 			bizStep = "";
 		}
 
-		String finalBizStep = bizStep;
+		String finalBizStep = bizStep.toLowerCase();
 		var profiles = Setup.Profiles.stream().filter(p -> p.EventType.toString().toLowerCase().equals(eventType.toLowerCase())
 				&& (p.Action == null || p.Action.toString().equals(action))
-				&& (StringHelper.isNullOrEmpty(p.BusinessStep)|| p.BusinessStep.toLowerCase().equals(finalBizStep.toLowerCase())));
+				&& (StringHelper.isNullOrEmpty(p.BusinessStep) || p.BusinessStep.toLowerCase().equals(finalBizStep)));
 
 		List<OpenTraceabilityEventProfile> finalProfiles = profiles.collect(Collectors.toList());
 
@@ -188,11 +188,14 @@ public class EPCISDocumentBaseXMLMapper
 		{
 			for (var profile : finalProfiles.stream().filter(p -> p.KDEProfiles != null).collect(Collectors.toList()))
 			{
-				for (var kdeProfile : profile.KDEProfiles)
+				if (profile.KDEProfiles != null)
 				{
-					if (xEvent.Element(kdeProfile.XPath_V1).IsNull)
+					for (var kdeProfile : profile.KDEProfiles)
 					{
-						finalProfiles.remove(profile);
+						if (xEvent.Element(kdeProfile.XPath_V1).IsNull && xEvent.Element(kdeProfile.XPath_V2).IsNull)
+						{
+							finalProfiles.remove(profile);
+						}
 					}
 				}
 			}
@@ -202,6 +205,7 @@ public class EPCISDocumentBaseXMLMapper
 				throw new RuntimeException("Failed to create event from profile. Type=" + eventType + " and BizStep=" + bizStep + " and Action=" + action);
 			}
 
+			finalProfiles.sort(Comparator.comparingInt(OpenTraceabilityEventProfile::getSpecificityScore).reversed());
 			return ((OpenTraceabilityEventProfile)finalProfiles.toArray()[0]).EventClassType;
 		}
 	}

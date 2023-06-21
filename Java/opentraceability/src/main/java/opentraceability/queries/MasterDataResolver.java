@@ -14,6 +14,7 @@ import opentraceability.models.masterdata.TradeItem;
 import opentraceability.models.masterdata.TradingParty;
 import opentraceability.models.identifiers.*;
 import opentraceability.utility.URLHelper;
+import tangible.StringHelper;
 
 
 import java.net.URI;
@@ -123,7 +124,7 @@ public class MasterDataResolver {
                     if (itemResponse.code() == 200) {
                         IVocabularyElement item = OpenTraceabilityMappers.MasterData.GS1WebVocab.map(type, itemResponseStr);
                         if (item != null) {
-                            if (item.id == null) {
+                            if (StringHelper.isNullOrEmpty(item.getId())) {
                                 throw new Exception("While resolve a " + type + " through the GS1 Digital Link Resolver, the " + type + " returned " +
                                         "had an empty or invalid Identifier. The link that was resolved was " + link + " and the results was " + itemResponseStr);
                             } else {

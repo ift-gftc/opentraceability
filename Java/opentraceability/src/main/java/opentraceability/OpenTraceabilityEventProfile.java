@@ -10,8 +10,6 @@ import java.util.ArrayList;
 
 public class OpenTraceabilityEventProfile {
 
-    private final int SpecificityScore = 0;
-
     public int getSpecificityScore() {
         int score = 1;
 
@@ -27,7 +25,7 @@ public class OpenTraceabilityEventProfile {
             score += KDEProfiles.size();
         }
 
-        return SpecificityScore;
+        return score;
     }
 
     public EventType EventType;

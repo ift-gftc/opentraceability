@@ -8,7 +8,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TransactionEvent extends IEvent {
+public class TransactionEvent extends IEvent {
     public TransactionEvent() {
         this.eventType = opentraceability.models.events.EventType.TransactionEvent;
     }
@@ -30,5 +30,10 @@ public abstract class TransactionEvent extends IEvent {
         } else {
             throw new Exception("Object event only supports references.");
         }
+    }
+
+    @Override
+    public EventILMD grabILMD() {
+        return null;
     }
 }

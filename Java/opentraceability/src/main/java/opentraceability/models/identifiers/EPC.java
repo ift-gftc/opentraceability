@@ -352,7 +352,7 @@ public class EPC
 		{
 			return true;
 		}
-		else return Objects.equals(this.getSerialLotNumber(), "*") && opentraceability.models.identifiers.GTIN.opEquals(this.getGTIN(), targetEPC.getGTIN());
+		else return this.getSerialLotNumber().equals("*") && opentraceability.models.identifiers.GTIN.opEquals(this.getGTIN(), targetEPC.getGTIN());
 	}
 
 	public final Object Clone() throws Exception {
@@ -468,8 +468,6 @@ public class EPC
 		return this.IsEquals(epc);
 	}
 
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: private bool IsEquals(EPC? epc)
 	private boolean IsEquals(EPC epc)
 	{
 		if (null == epc)

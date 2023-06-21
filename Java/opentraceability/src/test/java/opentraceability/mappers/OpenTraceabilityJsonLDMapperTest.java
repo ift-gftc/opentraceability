@@ -68,17 +68,21 @@ class OpenTraceabilityJsonLDMapperTest {
 
         for (String file: files)
         {
+            // load an XML file
+            EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+            String str = loader.readString(Setup.class, "/tests/" + file);
+
             try
             {
-                // load an XML file
-                EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                String str = loader.readString(Setup.class, "/tests/" + file);
-
                 EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(str);
                 String strAfter = OpenTraceabilityMappers.EPCISDocument.JSON.map(doc);
 
                 // compare the XMLs
                 DataCompare.CompareJSON(str, strAfter);
+            }
+            catch (AssertionError err)
+            {
+                throw new Exception("File Failed: " + file, err);
             }
             catch (Exception ex)
             {

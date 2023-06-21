@@ -2,6 +2,7 @@ package opentraceability.utility;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.zip.CRC32;
 
 public class HashCodeUtility {
     public static int getInt32HashCode(String str) {
@@ -10,13 +11,9 @@ public class HashCodeUtility {
             hashCode = 0;
         } else {
             byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
-            MessageDigest digest;
-            try {
-                digest = MessageDigest.getInstance("CRC32");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            hashCode = toInt(digest.digest(bytes));
+            CRC32 fileCRC32 = new CRC32();
+            fileCRC32.update(bytes);
+            hashCode = (int) fileCRC32.getValue();
         }
         return hashCode;
     }

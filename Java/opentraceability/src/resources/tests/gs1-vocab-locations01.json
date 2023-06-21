@@ -34,7 +34,7 @@
                 "@language": "en"
             }
         ],
-        "countyCode": "US"
+        "countryCode": "US"
     },
     "cbvmda:informationProvider": "urn:gdst:traceability-solution.com:party:0048000.000001",
     "cbvmda:owning_party": "urn:gdst:traceability-solution.com:party:0048000.000001",

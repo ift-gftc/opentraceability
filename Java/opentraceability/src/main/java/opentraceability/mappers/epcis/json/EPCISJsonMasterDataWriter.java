@@ -78,7 +78,7 @@ public final class EPCISJsonMasterDataWriter
 	private static JSONObject WriteMasterDataObject(IVocabularyElement md) throws Exception {
 		JSONArray jAttributes = new JSONArray();
 		JSONObject jVocabElement = new JSONObject();
-		jVocabElement.put("id", md.id);
+		jVocabElement.put("id", md.getId());
 		jVocabElement.put("attributes", jAttributes);
 
 		var mappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md.getClass());

@@ -67,7 +67,7 @@ public class EPCISXmlMasterDataWriter
 
 	private static XElement WriteMasterDataObject(IVocabularyElement md) throws Exception {
 		XElement xVocabEle = new XElement("VocabularyElement");
-		xVocabEle.SetAttributeValue("id", md.id);
+		xVocabEle.SetAttributeValue("id", md.getId());
 
 		var mappings = OTMappingTypeInformation.getMasterDataXmlTypeInfo(md.getClass());
 

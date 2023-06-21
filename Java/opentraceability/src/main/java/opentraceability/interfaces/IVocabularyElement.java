@@ -1,18 +1,22 @@
 package opentraceability.interfaces;
 
+import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class IVocabularyElement {
-    public String id = null;
+    public abstract String getId();
+    public abstract void setId(String val);
 
     public JSONObject context = null;
 
     public String epcisType = null;
 
     public VocabularyType vocabularyType = null;
+
+    @OpenTraceabilityJsonAttribute(name = "@type")
+    public String type;
 
     public ArrayList<IMasterDataKDE> kdes = new ArrayList<IMasterDataKDE>();
 

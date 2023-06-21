@@ -24,7 +24,7 @@ public class GS1VocabJsonMapper implements IMasterDataMapper
 		}
 
 		Map<String, String> namespaces = GetNamespaces(vocab.context);
-		Object obj = OpenTraceabilityJsonLDMapper.ToJson(vocab, DictionaryExtensions.reverse(namespaces));
+		Object obj = OpenTraceabilityJsonLDMapper.ToJson(vocab, DictionaryExtensions.reverse(namespaces), true, false);
 
 		JSONObject json = obj instanceof JSONObject ? (JSONObject)obj : null;
 		json.put("@context", vocab.context);

@@ -6,11 +6,10 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import opentraceability.interfaces.IEPCISQueryDocumentMapper;
+import opentraceability.interfaces.IEvent;
 import opentraceability.mappers.EPCISDataFormat;
 import opentraceability.mappers.OpenTraceabilityMappers;
-import opentraceability.models.events.EPCISQueryDocument;
-import opentraceability.models.events.EPCISVersion;
-import opentraceability.models.events.EventProductType;
+import opentraceability.models.events.*;
 import opentraceability.models.identifiers.*;
 import opentraceability.models.masterdata.DigitalLink;
 import opentraceability.utility.OpenTraceabilitySchemaException;
@@ -18,6 +17,7 @@ import opentraceability.utility.URLHelper;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -157,7 +157,52 @@ public class EPCISTraceabilityResolver {
             }
         }
 
-        // Continue with the rest of the conversion here
+        // Fill in missing events that occurred to aggregated containers
+        // Find each time an EPC was aggregated into an SSCC
+        // Find the next event the EPC was recorded in an event after being aggregated
+        // Search for events that occurred to the SSCC and add them to the results
+        // Repeat until we find nothing...
+        for (int stack = 0; stack < 100; stack++) {
+            // Find aggregate events where we have not queried for the parent ID
+            List<IEvent> aggEvents = results.Document.events.stream()
+                    .filter(e -> e.eventType == EventType.AggregationEvent && e.action == EventAction.ADD && !queriedEpcs.contains(((AggregationEventBase)e).parentID))
+                    .collect(Collectors.toList());
+
+            if (!aggEvents.isEmpty()) {
+                for (IEvent aggEvt : aggEvents) {
+                    // Find the next event recorded where one of the children is recorded in the event
+                    EPC parentId = ((AggregationEventBase)aggEvt).parentID;
+                    List<EPC> childEpcs = aggEvt.getProducts().stream()
+                            .filter(p -> p.Type == EventProductType.Child)
+                            .map(p -> p.EPC)
+                            .collect(Collectors.toList());
+                    Optional<IEvent> nextEvt = results.Document.events.stream()
+                            .filter(e -> e.eventTime.isAfter(aggEvt.eventTime))
+                            .filter(e -> e.getProducts().stream().anyMatch(p -> childEpcs.contains(p.EPC)))
+                            .min(Comparator.comparing(e -> e.eventTime));
+                    Optional<OffsetDateTime> nextEvtTime = nextEvt.map(e -> e.eventTime);
+
+                    // If we couldn't find a next event time, take the max event time of all events
+                    if (nextEvtTime.isEmpty()) {
+                        nextEvtTime = results.Document.events.stream()
+                                .map(e -> e.eventTime)
+                                .max(OffsetDateTime::compareTo);
+                    }
+
+                    // Query for events that occurred to the parent ID
+                    EPCISQueryParameters p = new EPCISQueryParameters(parentId);
+                    p.query.LE_eventTime = nextEvtTime.orElse(null);
+                    if (additionalParameters != null) {
+                        p.merge(additionalParameters);
+                    }
+                    EPCISQueryResults r = queryEvents(options, p, client);
+                    results.merge(r);
+                    queriedEpcs.add(parentId);
+                }
+            } else {
+                break;
+            }
+        }
 
         return results;
     }
@@ -196,10 +241,9 @@ public class EPCISTraceabilityResolver {
         EPCISQueryResults results = new EPCISQueryResults();
 
         Response response = null;
+        String responseBody = null;
         try {
             response = client.newCall(requestBuilder.build()).execute();
-
-            String responseBody = null;
             if (response.isSuccessful()) {
                 responseBody = response.body().string();
                 try {
@@ -243,7 +287,7 @@ public class EPCISTraceabilityResolver {
             item.RelativeURL = requestBuilder.build().url().toURI();
             item.RequestHeaders = requestHeaders;
             item.ResponseStatusCode = (response.code());
-            item.ResponseBody = response.body().string();
+            item.ResponseBody = responseBody;
             item.ResponseHeaders = responseHeaders;
 
             results.StackTrace.add(item);
