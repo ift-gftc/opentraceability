@@ -1,0 +1,3373 @@
+[
+  {
+    "UNCode": "EA",
+    "name": "each",
+    "symbol": "EA",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "count"
+  },
+  {
+    "UNCode": "KEL",
+    "name": "kelvin",
+    "symbol": "K",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "temperature"
+  },
+  {
+    "UNCode": "FAH",
+    "name": "degrees Fahrenheit",
+    "symbol": "ºF",
+    "multiplier": "5/9",
+    "offset": 273.15,
+    "type": "temperature"
+  },
+  {
+    "UNCode": "CEL",
+    "name": "degrees Celsius",
+    "symbol": "ºC",
+    "multiplier": 1,
+    "offset": 273.15,
+    "type": "temperature"
+  },
+  {
+    "UNCode": "A48",
+    "name": "degrees Rankine",
+    "symbol": "ºR",
+    "multiplier": "5/9",
+    "offset": 0,
+    "type": "temperature"
+  },
+
+  {
+    "UNCode": "PAL",
+    "name": "pascal",
+    "symbol": "Pa",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "H75",
+    "name": "decapascal",
+    "symbol": "daPa",
+    "multiplier": 10,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "74",
+    "name": "millipascal",
+    "symbol": "mPa",
+    "multiplier": 1.00E-03,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "A89",
+    "name": "gigapascal",
+    "symbol": "GPa",
+    "multiplier": 1.00E+09,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "A97",
+    "name": "hectopascal",
+    "symbol": "hPa",
+    "multiplier": 100,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "B96",
+    "name": "micropascal",
+    "symbol": "µPa",
+    "multiplier": 1.00E-06,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "KPA",
+    "name": "kilopascal",
+    "symbol": "kPa",
+    "multiplier": 1.00E+03,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "MPA",
+    "name": "megapascal",
+    "symbol": "MPa",
+    "multiplier": 1.00E+06,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "BAR",
+    "name": "bar",
+    "symbol": "bar",
+    "multiplier": 100000,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "MBR",
+    "name": "millibar",
+    "symbol": "mbar",
+    "multiplier": 100,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "C55",
+    "name": "newton per square metre",
+    "symbol": "N/m²",
+    "multiplier": 1.00,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "C56",
+    "name": "newton per square millimetre",
+    "symbol": "N/mm²",
+    "multiplier": 1000000.00,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "B40",
+    "name": "kilogram-force per square metre",
+    "symbol": "kgf/m²",
+    "multiplier": 9.80665,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "UA",
+    "name": "torr",
+    "symbol": "Torr",
+    "multiplier": 133.3224,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "80",
+    "name": "pound per square inch absolute",
+    "symbol": "lb/in²",
+    "multiplier": 6897.112776,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "H78",
+    "name": "conventional centimetre of water",
+    "symbol": "cm H₂O",
+    "multiplier": 98.0665,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "HP",
+    "name": "conventional millimetre of water",
+    "symbol": "mm H₂O",
+    "multiplier": 9.80665,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "F79",
+    "name": "inch of mercury",
+    "symbol": "inHg",
+    "multiplier": 33220.4859,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "F78",
+    "name": "inch of water",
+    "symbol": "inH₂O",
+    "multiplier": 2443.56309,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "ATT",
+    "name": "technical atmosphere",
+    "symbol": "at",
+    "multiplier": 98066.5,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "ATM",
+    "name": "standard atmosphere",
+    "symbol": "atm",
+    "multiplier": 101325,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "J89",
+    "name": "centimetres of mercury",
+    "symbol": "cm Hg",
+    "multiplier": 1333.224,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "K24",
+    "name": "foot of water",
+    "symbol": "ft H₂O",
+    "multiplier": 2989.067,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "K25",
+    "name": "foot of mercury",
+    "symbol": "ft Hg",
+    "multiplier": 40636.66,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "K31",
+    "name": "gram-force per square centimetre",
+    "symbol": "gf/cm²",
+    "multiplier": 98.0665,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "E42",
+    "name": "kilogram-force per square centimetre",
+    "symbol": "kgf/cm²",
+    "multiplier": 98066.50,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "E41",
+    "name": "kilogram-force per square millimetre",
+    "symbol": "kgf·/mm²",
+    "multiplier": 9806650.00,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "K85",
+    "name": "pound-force per square foot",
+    "symbol": "lbf/ft²",
+    "multiplier": 47.88026,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "84",
+    "name": "kilopounds force per square inch",
+    "symbol": "klbf/in²",
+    "multiplier": 6894757.00,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N13",
+    "name": "centimetre of mercury (0 ºC)",
+    "symbol": "cmHg (0 ºC)",
+    "multiplier": 1333.22,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N14",
+    "name": "centimetre of water (4 ºC)",
+    "symbol": "cmH₂O (4 ºC)",
+    "multiplier": 98.0638,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N15",
+    "name": "foot of water (39.2 ºF)",
+    "symbol": "ftH₂O (392 ºF)",
+    "multiplier": 2988.98,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N16",
+    "name": "inch of mercury (32 ºF)",
+    "symbol": "inHG (32 ºF)",
+    "multiplier": 3386.38,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N17",
+    "name": "inch of mercury (60 ºF)",
+    "symbol": "inHg (60 ºF)",
+    "multiplier": 3376.85,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N18",
+    "name": "inch of water (39.2 ºF)",
+    "symbol": "inH₂O (392 ºF)",
+    "multiplier": 249.082,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N19",
+    "name": "inch of water (60 ºF)",
+    "symbol": "inH₂O (60 ºF)",
+    "multiplier": 248.84,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N20",
+    "name": "kip per square inch",
+    "symbol": "ksi",
+    "multiplier": 6894757.00,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N21",
+    "name": "poundal per square foot",
+    "symbol": "pdl/ft²",
+    "multiplier": 1.488164,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N22",
+    "name": "ounce (avoirdupois) per square inch",
+    "symbol": "oz/in²",
+    "multiplier": 431.0695485,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "N23",
+    "name": "conventional metre of water",
+    "symbol": "mH₂O",
+    "multiplier": 9806.65,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "HN",
+    "name": "millimetres of mercury",
+    "symbol": "mm Hg",
+    "multiplier": 13332.24,
+    "offset": 0,
+    "type": "pressure"
+  },
+  {
+    "UNCode": "PS",
+    "name": "pound force per square inch",
+    "symbol": "psi",
+    "multiplier": 6894.757,
+    "offset": 0,
+    "type": "pressure"
+  },
+
+  {
+    "UNCode": "KMQ",
+    "name": "kilogram per cubic metre",
+    "symbol": "kg/m³",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "23",
+    "name": "gram per cubic centimetre",
+    "symbol": "g/cm³",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "D41",
+    "name": "tonne per cubic metre",
+    "symbol": "t/m³",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "GJ",
+    "name": "gram per millilitre",
+    "symbol": "g/ml",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "B35",
+    "name": "kilogram per litre",
+    "symbol": "kg/l or kg/L",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "GL",
+    "name": "gram per litre",
+    "symbol": "g/l",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "A93",
+    "name": "gram per cubic metre",
+    "symbol": "g/m³",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "GP",
+    "name": "milligram per cubic metre",
+    "symbol": "mg/m³",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "B72",
+    "name": "megagram per cubic metre",
+    "symbol": "Mg/m³",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "B34",
+    "name": "kilogram per cubic decimetre",
+    "symbol": "kg/dm³",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "H29",
+    "name": "microgram per litre",
+    "symbol": "µg/l",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "M1",
+    "name": "milligram per litre",
+    "symbol": "mg/l",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "GQ",
+    "name": "microgram per cubic metre",
+    "symbol": "µg/m³",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "F23",
+    "name": "gram per cubic decimetre",
+    "symbol": "g/dm³",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "G31",
+    "name": "kilogram per cubic centimetre",
+    "symbol": "kg/cm³",
+    "multiplier": 1e6,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "87",
+    "name": "pound per cubic foot",
+    "symbol": "lb/ft³",
+    "multiplier": 16.01846,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "GE",
+    "name": "pound per gallon (US)",
+    "symbol": "lb/gal (US)",
+    "multiplier": 119.8264,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "LA",
+    "name": "pound per cubic inch",
+    "symbol": "lb/in³",
+    "multiplier": 27679.90,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "G32",
+    "name": "ounce (avoirdupois) per cubic yard",
+    "symbol": "oz/yd³",
+    "multiplier": 0.0370798,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "K41",
+    "name": "grain per gallon (US)",
+    "symbol": "gr/gal (US)",
+    "multiplier": 0.01711806,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "K71",
+    "name": "pound (avoirdupois) per gallon (UK)",
+    "symbol": "lb/gal (UK)",
+    "multiplier": 99.77637,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "K84",
+    "name": "pound per cubic yard",
+    "symbol": "lb/yd³",
+    "multiplier": 0.5932764,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "L37",
+    "name": "ounce (avoirdupois) per gallon (UK)",
+    "symbol": "oz/gal (UK)",
+    "multiplier": 6.236023,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "L38",
+    "name": "ounce (avoirdupois) per gallon (US)",
+    "symbol": "oz/gal (US)",
+    "multiplier": 7.489152,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "L39",
+    "name": "ounce (avoirdupois) per cubic inch",
+    "symbol": "oz/in³",
+    "multiplier": 1729.994,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "L65",
+    "name": "slug per cubic foot",
+    "symbol": "slug/ft³",
+    "multiplier": 515.3788,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "L92",
+    "name": "ton (UK long) per cubic yard",
+    "symbol": "ton.l/yd³ (UK)",
+    "multiplier": 1328.939,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+  {
+    "UNCode": "L93",
+    "name": "ton (US short) per cubic yard",
+    "symbol": "ton.s/yd³ (US)",
+    "multiplier": 1186.553,
+    "offset": 0,
+    "type": "density, humidity"
+  },
+
+  {
+    "UNCode": "A39",
+    "name": "cubic metre per kilogram",
+    "symbol": "m³/kg",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "specific volume"
+  },
+  {
+    "UNCode": "22",
+    "name": "decilitre per gram",
+    "symbol": "dl/g",
+    "multiplier": 0.1,
+    "offset": 0,
+    "type": "specific volume"
+  },
+  {
+    "UNCode": "H83",
+    "name": "litre per kilogram",
+    "symbol": "l/kg",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "specific volume"
+  },
+  {
+    "UNCode": "KX",
+    "name": "millilitre per kilogram",
+    "symbol": "ml/kg",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "specific volume"
+  },
+  {
+    "UNCode": "N28",
+    "name": "cubic decimetre per kilogram",
+    "symbol": "dm³/kg",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "specific volume"
+  },
+  {
+    "UNCode": "N29",
+    "name": "cubic foot per pound",
+    "symbol": "ft³/lb",
+    "multiplier": 0.06242796,
+    "offset": 0,
+    "type": "specific volume"
+  },
+  {
+    "UNCode": "N30",
+    "name": "cubic inch per pound",
+    "symbol": "in³/lb",
+    "multiplier": 3.612728e-5,
+    "offset": 0,
+    "type": "specific volume"
+  },
+
+
+  {
+    "UNCode": "NEW",
+    "name": "newton",
+    "symbol": "N",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "B47",
+    "name": "kilonewton",
+    "symbol": "kN",
+    "multiplier": 1.00E+03,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "B73",
+    "name": "meganewton",
+    "symbol": "MN",
+    "multiplier": 1.00E+06,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "B92",
+    "name": "micronewton",
+    "symbol": "µN",
+    "multiplier": 1.00E-06,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "C20",
+    "name": "millinewton",
+    "symbol": "mN",
+    "multiplier": 1.00E-03,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "DU",
+    "name": "dyne",
+    "symbol": "dyn",
+    "multiplier": 1e-5,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "C78",
+    "name": "pound-force",
+    "symbol": "lbf",
+    "multiplier": 4.448222,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "B37",
+    "name": "kilogram-force",
+    "symbol": "kgf",
+    "multiplier": 9.80665,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "B51",
+    "name": "kilopond",
+    "symbol": "kp",
+    "multiplier": 9.80665,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "L40",
+    "name": "ounce (avoirdupois)-force",
+    "symbol": "ozf",
+    "multiplier": 0.2780139,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "L94",
+    "name": "ton-force (US short)",
+    "symbol": "ton.sh-force",
+    "multiplier": 8.896443e3,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "M75",
+    "name": "kilopound-force",
+    "symbol": "kip",
+    "multiplier": 4.448222e3,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "M76",
+    "name": "poundal",
+    "symbol": "pdl",
+    "multiplier": 1.382550e-1,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "M77",
+    "name": "kilogram metre per second squared",
+    "symbol": "kg·m/s²",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "force"
+  },
+  {
+    "UNCode": "M78",
+    "name": "pond",
+    "symbol": "p",
+    "multiplier": 9.80665e-3,
+    "offset": 0,
+    "type": "force"
+  },
+
+  {
+    "UNCode": "JOU",
+    "name": "joule",
+    "symbol": "J",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "KJO",
+    "name": "kilojoule",
+    "symbol": "kJ",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "A68",
+    "name": "exajoule",
+    "symbol": "EJ",
+    "multiplier": 1e18,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "C68",
+    "name": "petajoule",
+    "symbol": "PJ",
+    "multiplier": 1e15,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "D30",
+    "name": "terajoule",
+    "symbol": "TJ",
+    "multiplier": 1e12,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "GV",
+    "name": "gigajoule",
+    "symbol": "GJ",
+    "multiplier": 1e9,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "3B",
+    "name": "megajoule",
+    "symbol": "MJ",
+    "multiplier": 1e6,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "C15",
+    "name": "millijoule",
+    "symbol": "mJ",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "A70",
+    "name": "femtojoule",
+    "symbol": "fJ",
+    "multiplier": 1e-15,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "A13",
+    "name": "attojoule",
+    "symbol": "aJ",
+    "multiplier": 1e-18,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "WHR",
+    "name": "watt hour",
+    "symbol": "W·h",
+    "multiplier": 3600,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "MWH",
+    "name": "megawatt hour",
+    "symbol": "MW·h",
+    "multiplier": 3.6e9,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "KWH",
+    "name": "kilowatt hour",
+    "symbol": "kW·h",
+    "multiplier": 3.6e6,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "GWH",
+    "name": "gigawatt hour",
+    "symbol": "GW·h",
+    "multiplier": 3.6e12,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "D32",
+    "name": "terawatt hour",
+    "symbol": "TW·h",
+    "multiplier": 3.6e15,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "A53",
+    "name": "electronvolt",
+    "symbol": "eV",
+    "multiplier": 1.602176487e-19,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "B71",
+    "name": "megaelectronvolt",
+    "symbol": "MeV",
+    "multiplier": 1.602176487e-13,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "A85",
+    "name": "gigaelectronvolt",
+    "symbol": "GeV",
+    "multiplier": 1.602176487e-10,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "B29",
+    "name": "kiloelectronvolt",
+    "symbol": "keV",
+    "multiplier": 1.602176487e-16,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "A57",
+    "name": "erg",
+    "symbol": "erg",
+    "multiplier": 1e-7,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "85",
+    "name": "foot pound-force",
+    "symbol": "ft·lbf",
+    "multiplier": 1.355818,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "B38",
+    "name": "kilogram-force metre",
+    "symbol": "kgf·m",
+    "multiplier": 9.80665,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "N46",
+    "name": "foot poundal",
+    "symbol": "ft·pdl",
+    "multiplier": 4.214011e-2,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "N47",
+    "name": "inch poundal",
+    "symbol": "in·pdl",
+    "multiplier": 3.511677e-3,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "D60",
+    "name": "calorie (international table)",
+    "symbol": "cal(IT)",
+    "multiplier": 4.1868,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "J75",
+    "name": "calorie (mean)",
+    "symbol": "cal",
+    "multiplier": 4.19002,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "E14",
+    "name": "kilocalorie (international table)",
+    "symbol": "kcal(IT)",
+    "multiplier": 4186.8,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "K51",
+    "name": "kilocalorie (mean)",
+    "symbol": "kcal",
+    "multiplier": 4190.02,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "K53",
+    "name": "kilocalorie (thermochemical)",
+    "symbol": "kcal(TH)",
+    "multiplier": 4184,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "BTU",
+    "name": "British thermal unit (international table)",
+    "symbol": "Btu(IT)",
+    "multiplier": 1055.056,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "J37",
+    "name": "British thermal unit (mean)",
+    "symbol": "Btu",
+    "multiplier": 1055.87,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "N71",
+    "name": "therm (EC)",
+    "symbol": "thm(EC)",
+    "multiplier": 1.05506E8,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "N72",
+    "name": "therm (US)",
+    "symbol": "thm(US)",
+    "multiplier": 1.054804E8,
+    "offset": 0,
+    "type": "energy"
+  },
+  {
+    "UNCode": "J55",
+    "name": "watt second",
+    "symbol": "Ws",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "energy"
+  },
+
+  {
+    "UNCode": "NU",
+    "name": "newton metre",
+    "symbol": "N·m",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "B74",
+    "name": "meganewton metre",
+    "symbol": "MN·m",
+    "multiplier": 1e6,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "B48",
+    "name": "kilonewton metre",
+    "symbol": "kN·m",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "D83",
+    "name": "millinewton metre",
+    "symbol": "mN·m",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "B93",
+    "name": "micronewton metre",
+    "symbol": "µN·m",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "DN",
+    "name": "decinewton metre",
+    "symbol": "dN·m",
+    "multiplier": 1e-1,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "J72",
+    "name": "centinewton metre",
+    "symbol": "cN·m",
+    "multiplier": 1e-2,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "B38",
+    "name": "kilogram-force metre",
+    "symbol": "kgf·m",
+    "multiplier": 9.80665,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "F21",
+    "name": "pound-force inch",
+    "symbol": "lbf·in",
+    "multiplier": 0.112985,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "J94",
+    "name": "dyne centimetre",
+    "symbol": "dyn·cm",
+    "multiplier": 1e-7,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "L41",
+    "name": "ounce (avoirdupois)-force inch",
+    "symbol": "ozf·in",
+    "multiplier": 7.061552e-3,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "M92",
+    "name": "pound-force foot",
+    "symbol": "lbf·ft",
+    "multiplier": 1.355818,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "M95",
+    "name": "poundal foot",
+    "symbol": "pdl·ft",
+    "multiplier": 4.214011e-2,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "M96",
+    "name": "poundal inch",
+    "symbol": "pdl·in",
+    "multiplier": 3.511677e-3,
+    "offset": 0,
+    "type": "torque"
+  },
+  {
+    "UNCode": "M97",
+    "name": "dyne metre",
+    "symbol": "dyn·m",
+    "multiplier": 1e-5,
+    "offset": 0,
+    "type": "torque"
+  },
+
+  {
+    "UNCode": "WTT",
+    "name": "watt",
+    "symbol": "W",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "KWT",
+    "name": "kilowatt",
+    "symbol": "kW",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "MAW",
+    "name": "megawatt",
+    "symbol": "MW",
+    "multiplier": 1e6,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "A90",
+    "name": "gigawatt",
+    "symbol": "GW",
+    "multiplier": 1e9,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "C31",
+    "name": "milliwatt",
+    "symbol": "mW",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "D80",
+    "name": "microwatt",
+    "symbol": "µW",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "F80",
+    "name": "water horse power",
+    "symbol": "water hp\t",
+    "multiplier": 7.46043e2,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "A63",
+    "name": "erg per second",
+    "symbol": "erg/s",
+    "multiplier": 1e-7,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "A74",
+    "name": "foot pound-force per second",
+    "symbol": "ft·lbf/s",
+    "multiplier": 1.355818,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "B39",
+    "name": "kilogram-force metre per second",
+    "symbol": "kgf·m/s",
+    "multiplier": 9.80665,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "HJ",
+    "name": "metric horse power",
+    "symbol": "metric hp",
+    "multiplier": 735.49875,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "A25",
+    "name": "cheval vapeur",
+    "symbol": "CV",
+    "multiplier": 735.4988,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "BHP",
+    "name": "brake horse power",
+    "symbol": "BHP",
+    "multiplier": 745.7,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "K15",
+    "name": "foot pound-force per hour",
+    "symbol": "ft·lbf/h",
+    "multiplier": 3.766161e-4,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "K16",
+    "name": "foot pound-force per minute",
+    "symbol": "ft·lbf/min",
+    "multiplier": 2.259697e-2,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "K42",
+    "name": "horsepower (boiler)",
+    "symbol": "boiler hp",
+    "multiplier": 9809.50,
+    "offset": 0,
+    "type": "power"
+  },
+  {
+    "UNCode": "N12",
+    "name": "Pferdestaerke",
+    "symbol": "PS",
+    "multiplier": 735.4988,
+    "offset": 0,
+    "type": "power"
+  },
+
+  {
+    "UNCode": "COU",
+    "name": "coulomb",
+    "symbol": "C",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "A8",
+    "name": "ampere second",
+    "symbol": "A·s",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "AMH",
+    "name": "ampere hour",
+    "symbol": "A·h",
+    "multiplier": 3600,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "TAH",
+    "name": "kiloampere hour (thousand ampere hour)",
+    "symbol": "kA·h",
+    "multiplier": 3600000,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "D77",
+    "name": "megacoulomb",
+    "symbol": "MC",
+    "multiplier": 1e6,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "D86",
+    "name": "millicoulomb",
+    "symbol": "mC",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "B26",
+    "name": "kilocoulomb",
+    "symbol": "kC",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "B86",
+    "name": "microcoulomb",
+    "symbol": "µC",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "C40",
+    "name": "nanocoulomb",
+    "symbol": "nC",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "C71",
+    "name": "picocoulomb",
+    "symbol": "pC",
+    "multiplier": 1e-12,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "E09",
+    "name": "milliampere hour",
+    "symbol": "mA·h",
+    "multiplier": 3.6,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "N95",
+    "name": "ampere minute",
+    "symbol": "A·min",
+    "multiplier": 60,
+    "offset": 0,
+    "type": "charge"
+  },
+  {
+    "UNCode": "N94",
+    "name": "franklin",
+    "symbol": "Fr",
+    "multiplier": 3.335641e-10,
+    "offset": 0,
+    "type": "charge"
+  },
+
+  {
+    "UNCode": "AMP",
+    "name": "ampere",
+    "symbol": "A",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "current"
+  },
+  {
+    "UNCode": "B22",
+    "name": "kiloampere",
+    "symbol": "kA",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "current"
+  },
+  {
+    "UNCode": "H38",
+    "name": "megaampere",
+    "symbol": "MA",
+    "multiplier": 1e6,
+    "offset": 0,
+    "type": "current"
+  },
+  {
+    "UNCode": "4K",
+    "name": "milliampere",
+    "symbol": "mA",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "current"
+  },
+  {
+    "UNCode": "B84",
+    "name": "microampere",
+    "symbol": "µA",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "current"
+  },
+  {
+    "UNCode": "C39",
+    "name": "nanoampere",
+    "symbol": "nA",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "current"
+  },
+  {
+    "UNCode": "C70",
+    "name": "picoampere",
+    "symbol": "pA",
+    "multiplier": 1e-12,
+    "offset": 0,
+    "type": "current"
+  },
+  {
+    "UNCode": "N96",
+    "name": "biot",
+    "symbol": "Bi",
+    "multiplier": 10,
+    "offset": 0,
+    "type": "current"
+  },
+  {
+    "UNCode": "N97",
+    "name": "gilbert",
+    "symbol": "Gi",
+    "multiplier": 0.7957747,
+    "offset": 0,
+    "type": "current"
+  },
+
+  {
+    "UNCode": "OHM",
+    "name": "ohm",
+    "symbol": "Ω",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "resistance"
+  },
+  {
+    "UNCode": "A87",
+    "name": "gigaohm",
+    "symbol": "GΩ",
+    "multiplier": 1e9,
+    "offset": 0,
+    "type": "resistance"
+  },
+  {
+    "UNCode": "B75",
+    "name": "megaohm",
+    "symbol": "MΩ",
+    "multiplier": 1e6,
+    "offset": 0,
+    "type": "resistance"
+  },
+  {
+    "UNCode": "H44",
+    "name": "teraohm",
+    "symbol": "TΩ",
+    "multiplier": 1e12,
+    "offset": 0,
+    "type": "resistance"
+  },
+  {
+    "UNCode": "B49",
+    "name": "kiloohm",
+    "symbol": "kΩ",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "resistance"
+  },
+  {
+    "UNCode": "E45",
+    "name": "milliohm",
+    "symbol": "mΩ",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "resistance"
+  },
+  {
+    "UNCode": "B94",
+    "name": "microohm",
+    "symbol": "µΩ",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "resistance"
+  },
+  {
+    "UNCode": "P22",
+    "name": "nanoohm",
+    "symbol": "nΩ",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "resistance"
+  },
+
+  {
+    "UNCode": "SIE",
+    "name": "siemens",
+    "symbol": "S",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "conductance"
+  },
+  {
+    "UNCode": "B53",
+    "name": "kilosiemens",
+    "symbol": "kS",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "conductance"
+  },
+  {
+    "UNCode": "C27",
+    "name": "millisiemens",
+    "symbol": "mS",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "conductance"
+  },
+  {
+    "UNCode": "B99",
+    "name": "microsiemens",
+    "symbol": "µS",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "conductance"
+  },
+  {
+    "UNCode": "N92",
+    "name": "picosiemens",
+    "symbol": "pS",
+    "multiplier": 1e-12,
+    "offset": 0,
+    "type": "conductance"
+  },
+  {
+    "UNCode": "NQ",
+    "name": "mho",
+    "symbol": "mho",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "conductance"
+  },
+  {
+    "UNCode": "NR",
+    "name": "micromho",
+    "symbol": "µmho",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "conductance"
+  },
+
+  {
+    "UNCode": "C81",
+    "name": "radian",
+    "symbol": "rad",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "angle"
+  },
+  {
+    "UNCode": "C25",
+    "name": "milliradian",
+    "symbol": "mrad",
+    "multiplier": 1.00E-03,
+    "offset": 0,
+    "type": "angle"
+  },
+  {
+    "UNCode": "B97",
+    "name": "microradian",
+    "symbol": "µrad",
+    "multiplier": 1.00E-06,
+    "offset": 0,
+    "type": "angle"
+  },
+  {
+    "UNCode": "A91",
+    "name": "gon",
+    "symbol": "gon",
+    "multiplier": 0.01570796327,
+    "offset": 0,
+    "type": "angle"
+  },
+  {
+    "UNCode": "DD",
+    "name": "degree",
+    "symbol": "º",
+    "multiplier": 0.01745329252,
+    "offset": 0,
+    "type": "angle"
+  },
+  {
+    "UNCode": "D61",
+    "name": "minute",
+    "symbol": "'",
+    "multiplier": 0.0002908882087,
+    "offset": 0,
+    "type": "angle"
+  },
+  {
+    "UNCode": "D62",
+    "name": "second",
+    "symbol": "\"",
+    "multiplier": 0.000004848136811,
+    "offset": 0,
+    "type": "angle"
+  },
+  {
+    "UNCode": "M43",
+    "name": "mil",
+    "symbol": "mil",
+    "multiplier": 0.0009817477042,
+    "offset": 0,
+    "type": "angle"
+  },
+  {
+    "UNCode": "M44",
+    "name": "revolution",
+    "symbol": "rev",
+    "multiplier": 6.283185307,
+    "offset": 0,
+    "type": "angle"
+  },
+
+
+  {
+    "UNCode": "KGM",
+    "name": "kilogram",
+    "symbol": "kg",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "mass"
+  },
+  {
+    "UNCode": "GRM",
+    "name": "gram",
+    "symbol": "g",
+    "multiplier": 0.001,
+    "offset": 0,
+    "type": "mass"
+  },
+  {
+    "UNCode": "ONZ",
+    "name": "ounce",
+    "symbol": "oz",
+    "multiplier": 0.02834952,
+    "offset": 0,
+    "type": "mass"
+  },
+  {
+    "UNCode": "LBR",
+    "name": "pound",
+    "symbol": "lb",
+    "multiplier": 0.45359237,
+    "offset": 0,
+    "type": "mass"
+  },
+  {
+    "UNCode": "MGM",
+    "name": "milligram",
+    "symbol": "mg",
+    "multiplier": 0.000001,
+    "offset": 0,
+    "type": "mass"
+  },
+  {
+    "UNCode": "MC",
+    "name": "microgram",
+    "symbol": "µg",
+    "multiplier": 0.000000001,
+    "offset": 0,
+    "type": "mass"
+  },
+  {
+    "UNCode": "STI",
+    "name": "stone (UK)",
+    "symbol": "st",
+    "multiplier": 6.350293,
+    "offset": 0,
+    "type": "mass"
+  },
+  {
+    "UNCode": "TNE",
+    "name": "tonne (metric ton)",
+    "symbol": "t",
+    "multiplier": 1000,
+    "offset": 0,
+    "type": "mass"
+  },
+
+  {
+    "UNCode": "MTR",
+    "name": "metre",
+    "symbol": "m",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "A11",
+    "name": "angstrom",
+    "symbol": "Å",
+    "multiplier": 1E-10,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "A71",
+    "name": "femtometre",
+    "symbol": "fm",
+    "multiplier": 1E-15,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "C45",
+    "name": "nanometre",
+    "symbol": "nm",
+    "multiplier": 1E-9,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "4H",
+    "name": "micrometre",
+    "symbol": "µm",
+    "multiplier": 1E-6,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "A12",
+    "name": "astronomical unit",
+    "symbol": "ua",
+    "multiplier": 1.49597870E11,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "DMT",
+    "name": "decimetre",
+    "symbol": "dm",
+    "multiplier": 0.1,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "CMT",
+    "name": "centimetre",
+    "symbol": "cm",
+    "multiplier": 0.01,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "MMT",
+    "name": "millimetre",
+    "symbol": "mm",
+    "multiplier": 0.001,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "INH",
+    "name": "inch",
+    "symbol": "in",
+    "multiplier": 0.0254,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "FOT",
+    "name": "foot",
+    "symbol": "ft",
+    "multiplier": 0.3048,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "YRD",
+    "name": "yard",
+    "symbol": "yd",
+    "multiplier": 0.9144,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "NMI",
+    "name": "nautical mile",
+    "symbol": "n mile",
+    "multiplier": 1852,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "A45",
+    "name": "decametre",
+    "symbol": "dam",
+    "multiplier": 10,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "HMT",
+    "name": "hectometre",
+    "symbol": "hm",
+    "multiplier": 100,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "KMT",
+    "name": "kilometre",
+    "symbol": "km",
+    "multiplier": 1000,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "B57",
+    "name": "light year",
+    "symbol": "ly",
+    "multiplier": 9.46073E15,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "AK",
+    "name": "fathom",
+    "symbol": "fth",
+    "multiplier": 1.8288,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "M50",
+    "name": "furlong",
+    "symbol": "fur",
+    "multiplier": 201.168,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "M49",
+    "name": "chain (based on US survey foot)",
+    "symbol": "ch (US survey)",
+    "multiplier": 20.11684,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "X1",
+    "name": "Gunter's chain",
+    "symbol": "ch (UK)",
+    "multiplier": 20.1168,
+    "offset": 0,
+    "type": "length"
+  },
+  {
+    "UNCode": "M51",
+    "name": "foot (US survey)",
+    "symbol": "ft (US survey)",
+    "multiplier": 0.3048006,
+    "offset": 0,
+    "type": "length"
+  },
+
+  {
+    "UNCode": "MTK",
+    "name": "square metre",
+    "symbol": "m²",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "KMK",
+    "name": "square kilometre",
+    "symbol": "km²",
+    "multiplier": 1e6,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "H30",
+    "name": "square micrometre (square micron)",
+    "symbol": "µm²",
+    "multiplier": 1e-12,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "DAA",
+    "name": "decare",
+    "symbol": "daa",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "CMK",
+    "name": "square centimetre",
+    "symbol": "cm²",
+    "multiplier": 1e-4,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "DMK",
+    "name": "square decimetre",
+    "symbol": "dm²",
+    "multiplier": 1e-2,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "H16",
+    "name": "square decametre",
+    "symbol": "dam²",
+    "multiplier": 1e2,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "H18",
+    "name": "square hectometre",
+    "symbol": "hm²",
+    "multiplier": 1e4,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "MMK",
+    "name": "square millimetre",
+    "symbol": "mm²",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "ARE",
+    "name": "are",
+    "symbol": "a",
+    "multiplier": 1e2,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "HAR",
+    "name": "hectare",
+    "symbol": "ha",
+    "multiplier": 1e4,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "INK",
+    "name": "square inch",
+    "symbol": "in²",
+    "multiplier": 6.4516e-4,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "FTK",
+    "name": "square foot",
+    "symbol": "ft²",
+    "multiplier": 9.290304e-2,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "YDK",
+    "name": "square yard",
+    "symbol": "yd²",
+    "multiplier": 8.361274e-1,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "MIK",
+    "name": "square mile (statute mile)",
+    "symbol": "mi²",
+    "multiplier": 2.589988e6,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "M48",
+    "name": "square mile (based on U.S. survey foot) ",
+    "symbol": "mi² (US survey)",
+    "multiplier": 2.589998e6,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "ACR",
+    "name": "acre",
+    "symbol": "acre",
+    "multiplier": 4046.873,
+    "offset": 0,
+    "type": "area"
+  },
+  {
+    "UNCode": "M47",
+    "name": "circular mil ",
+    "symbol": "cmil",
+    "multiplier": 5.067075e-10,
+    "offset": 0,
+    "type": "area"
+  },
+
+  {
+    "UNCode": "MTQ",
+    "name": "cubic metre",
+    "symbol": "m³",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "MAL",
+    "name": "megalitre",
+    "symbol": "Ml",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "LTR",
+    "name": "litre",
+    "symbol": "l",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "MMQ",
+    "name": "cubic millimetre",
+    "symbol": "mm³",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "CMQ",
+    "name": "cubic centimetre",
+    "symbol": "cm³",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "DMQ",
+    "name": "cubic decimetre",
+    "symbol": "dm³",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "MLT",
+    "name": "millilitre",
+    "symbol": "ml",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "HLT",
+    "name": "hectolitre",
+    "symbol": "hl",
+    "multiplier": 1e-1,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "CLT",
+    "name": "centilitre",
+    "symbol": "cl",
+    "multiplier": 1e-5,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "DMA",
+    "name": "cubic decametre",
+    "symbol": "dam³",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "H19",
+    "name": "cubic hectometre",
+    "symbol": "hm³",
+    "multiplier": 1e6,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "H20",
+    "name": "cubic kilometre",
+    "symbol": "km³",
+    "multiplier": 1e9,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "DLT",
+    "name": "decilitre",
+    "symbol": "dl",
+    "multiplier": 1e-4,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "4G",
+    "name": "microlitre",
+    "symbol": "µl",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "K6",
+    "name": "kilolitre",
+    "symbol": "kl",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "A44",
+    "name": "decalitre",
+    "symbol": "dal",
+    "multiplier": 1e-2,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "INQ",
+    "name": "cubic inch",
+    "symbol": "in³",
+    "multiplier": 16.387064e-6,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "FTQ",
+    "name": "cubic foot",
+    "symbol": "ft³",
+    "multiplier": 2.831685e-2,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "YDQ",
+    "name": "cubic yard",
+    "symbol": "yd³",
+    "multiplier": 0.764555,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "GLI",
+    "name": "gallon (UK)",
+    "symbol": "gal (UK)",
+    "multiplier": 4.546092e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "GLL",
+    "name": "gallon (US)",
+    "symbol": "gal (US)",
+    "multiplier": 3.785412e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "PT",
+    "name": "pint (US)",
+    "symbol": "pt (US)",
+    "multiplier": 4.73176e-4,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "PTI",
+    "name": "pint (UK)",
+    "symbol": "pt (UK)",
+    "multiplier": 5.68261e-4,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "QTI",
+    "name": "quart (UK)",
+    "symbol": "qt (UK)",
+    "multiplier": 1.1365225e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "PTL",
+    "name": "liquid pint (US)",
+    "symbol": "liq pt (US)",
+    "multiplier": 4.731765e-4,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "QTL",
+    "name": "liquid quart (US)",
+    "symbol": "liq qt (US)",
+    "multiplier": 9.463529e-4,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "PTD",
+    "name": "dry pint (US)",
+    "symbol": "dry pt (US)",
+    "multiplier": 5.506105e-4,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "OZI",
+    "name": "fluid ounce (UK)",
+    "symbol": "fl oz (UK)",
+    "multiplier": 2.841306e-5,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "QT",
+    "name": "quart (US)",
+    "symbol": "qt (US)",
+    "multiplier": 0.9463529e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "J57",
+    "name": "barrel (UK petroleum)",
+    "symbol": "bbl (UK liq.)",
+    "multiplier": 0.15911315,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "L43",
+    "name": "peck (UK)",
+    "symbol": "pk (UK)",
+    "multiplier": 9.092181e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "L61",
+    "name": "pint (US dry)",
+    "symbol": "pt (US dry)",
+    "multiplier": 5.506105e-4,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "L62",
+    "name": "quart (US dry)",
+    "symbol": "qt (US dry)",
+    "multiplier": 1.101221e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "L84",
+    "name": "ton (UK shipping)",
+    "symbol": "British shipping ton",
+    "multiplier": 1.1893,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "L86",
+    "name": "ton (US shipping)",
+    "symbol": "(US) shipping ton",
+    "multiplier": 1.1326,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "OZA",
+    "name": "fluid ounce (US)",
+    "symbol": "fl oz (US)",
+    "multiplier": 2.957353e-5,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "BUI",
+    "name": "bushel (UK)",
+    "symbol": "bushel (UK)",
+    "multiplier": 3.636872e-2,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "BUA",
+    "name": "bushel (US)",
+    "symbol": "bu (US)",
+    "multiplier": 3.523907e-2,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "BLL",
+    "name": "barrel (US)",
+    "symbol": "barrel (US)",
+    "multiplier": 158.9873e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "BLD",
+    "name": "dry barrel (US)",
+    "symbol": "bbl (US)",
+    "multiplier": 1.15627e-1,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "GLD",
+    "name": "dry gallon (US)",
+    "symbol": "dry gal (US)",
+    "multiplier": 4.404884e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "QTD",
+    "name": "dry quart (US)",
+    "symbol": "dry qt (US)",
+    "multiplier": 1.101221e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "G26",
+    "name": "stere",
+    "symbol": "st",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "G21",
+    "name": "cup [unit of volume]",
+    "symbol": "cup (US)",
+    "multiplier": 2.365882e-4,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "G24",
+    "name": "tablespoon (US)",
+    "symbol": "tablespoon (US)",
+    "multiplier": 1.478676e-5,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "G25",
+    "name": "teaspoon (US)",
+    "symbol": "teaspoon (US)",
+    "multiplier": 4.928922e-6,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "G23",
+    "name": "peck",
+    "symbol": "pk (US)",
+    "multiplier": 8.809768e-3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "M67",
+    "name": "acre-foot (based on U.S. survey foot)",
+    "symbol": "acre-ft (US survey)",
+    "multiplier": 1.233489e3,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "M68",
+    "name": "cord (128 ft³)",
+    "symbol": "cord",
+    "multiplier": 3.624556,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "M69",
+    "name": "cubic mile (UK statute)",
+    "symbol": "mi³",
+    "multiplier": 4.168182e9,
+    "offset": 0,
+    "type": "volume"
+  },
+  {
+    "UNCode": "M70",
+    "name": "ton. register ",
+    "symbol": "RT",
+    "multiplier": 2.831685,
+    "offset": 0,
+    "type": "volume"
+  },
+
+
+  {
+    "UNCode": "KMH",
+    "name": "kilometres per hour",
+    "symbol": "km/h",
+    "multiplier": 0.277777778,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "MTS",
+    "name": "metres per second",
+    "symbol": "m/s",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "HM",
+    "name": "miles per hour",
+    "symbol": "mile/h",
+    "multiplier": 0.44704,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "M57",
+    "name": "miles per minute",
+    "symbol": "mi/min",
+    "multiplier": 26.8224,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "M58",
+    "name": "miles per second",
+    "symbol": "mi/s",
+    "multiplier": 1609.344,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "KNT",
+    "name": "knot",
+    "symbol": "kn",
+    "multiplier": 0.514444,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "M62",
+    "name": "kilometres per second",
+    "symbol": "km/s",
+    "multiplier": 1000,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "H49",
+    "name": "centimetres per hour",
+    "symbol": "cm/h",
+    "multiplier": 0.277777778E-6,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "2M",
+    "name": "centimetres per second",
+    "symbol": "cm/s",
+    "multiplier": 0.01,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "K14",
+    "name": "foot per hour",
+    "symbol": "ft/h",
+    "multiplier": 8.466667E-5,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "FR",
+    "name": "foot per minute",
+    "symbol": "ft/min",
+    "multiplier": 5.08E-3,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "FS",
+    "name": "foot per second",
+    "symbol": "ft/s",
+    "multiplier": 0.3048,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "M63",
+    "name": "inch per minute",
+    "symbol": "in/min",
+    "multiplier": 4.233333E-4,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "IU",
+    "name": "inch per second",
+    "symbol": "in/s",
+    "multiplier": 0.0254,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "M61",
+    "name": "inch per year",
+    "symbol": "in/y",
+    "multiplier": 8.048774E-10,
+    "offset": 0,
+    "type": "speed"
+  },
+  {
+    "UNCode": "2X",
+    "name": "metre per minute",
+    "symbol": "m/min",
+    "multiplier": "1/60",
+    "offset": 0,
+    "type": "speed"
+  },
+
+  {
+    "UNCode": "MSK",
+    "name": "metre per second squared",
+    "symbol": "m/s²",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "acceleration"
+  },
+  {
+    "UNCode": "A76",
+    "name": "gal",
+    "symbol": "Gal",
+    "multiplier": 1e-2,
+    "offset": 0,
+    "type": "acceleration"
+  },
+  {
+    "UNCode": "C11",
+    "name": "milligal",
+    "symbol": "mGal",
+    "multiplier": 1e-5,
+    "offset": 0,
+    "type": "acceleration"
+  },
+  {
+    "UNCode": "M38",
+    "name": "kilometre per second squared",
+    "symbol": "km/s²",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "acceleration"
+  },
+  {
+    "UNCode": "M39",
+    "name": "centimetre per second squared",
+    "symbol": "cm/s²",
+    "multiplier": 1e-2,
+    "offset": 0,
+    "type": "acceleration"
+  },
+  {
+    "UNCode": "M41",
+    "name": "millimetre per second squared",
+    "symbol": "mm/s²",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "acceleration"
+  },
+  {
+    "UNCode": "A73",
+    "name": "foot per second squared",
+    "symbol": "ft/s²",
+    "multiplier": 0.3048,
+    "offset": 0,
+    "type": "acceleration"
+  },
+  {
+    "UNCode": "IV",
+    "name": "inch per second squared",
+    "symbol": "in/s²",
+    "multiplier": 0.0254,
+    "offset": 0,
+    "type": "acceleration"
+  },
+  {
+    "UNCode": "K40",
+    "name": "standard acceleration of free fall",
+    "symbol": "gn",
+    "multiplier": 9.80665,
+    "offset": 0,
+    "type": "acceleration"
+  },
+  {
+    "UNCode": "M40",
+    "name": "yard per second squared",
+    "symbol": "yd/s²",
+    "multiplier": 0.9144,
+    "offset": 0,
+    "type": "acceleration"
+  },
+  {
+    "UNCode": "M42",
+    "name": "mile (statute mile) per second squared",
+    "symbol": "mi/s²",
+    "multiplier": 1609.344,
+    "offset": 0,
+    "type": "acceleration"
+  },
+
+  {
+    "UNCode": "HTZ",
+    "name": "hertz",
+    "symbol": "Hz",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "frequency"
+  },
+  {
+    "UNCode": "KHZ",
+    "name": "kilohertz",
+    "symbol": "kHz",
+    "multiplier": 1.00E+03,
+    "offset": 0,
+    "type": "frequency"
+  },
+  {
+    "UNCode": "MHZ",
+    "name": "megahertz",
+    "symbol": "MHz",
+    "multiplier": 1.00E+06,
+    "offset": 0,
+    "type": "frequency"
+  },
+  {
+    "UNCode": "A86",
+    "name": "gigahertz",
+    "symbol": "GHz",
+    "multiplier": 1.00E+09,
+    "offset": 0,
+    "type": "frequency"
+  },
+  {
+    "UNCode": "D29",
+    "name": "terahertz",
+    "symbol": "THz",
+    "multiplier": 1.00E+12,
+    "offset": 0,
+    "type": "frequency"
+  },
+
+  {
+    "UNCode": "SEC",
+    "name": "second",
+    "symbol": "s",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "MIN",
+    "name": "minute",
+    "symbol": "min",
+    "multiplier": 60,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "HUR",
+    "name": "hour",
+    "symbol": "h",
+    "multiplier": 3600,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "DAY",
+    "name": "day",
+    "symbol": "d",
+    "multiplier": 86400,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "B52",
+    "name": "kilosecond",
+    "symbol": "ks",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "C26",
+    "name": "millisecond",
+    "symbol": "ms",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "H70",
+    "name": "picosecond",
+    "symbol": "ps",
+    "multiplier": 1e-12,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "B98",
+    "name": "microsecond",
+    "symbol": "µs",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "C47",
+    "name": "nanosecond",
+    "symbol": "ns",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "WEE",
+    "name": "week",
+    "symbol": "wk",
+    "multiplier": 6.048e5,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "MON",
+    "name": "month",
+    "symbol": "mo",
+    "multiplier": 2.629800e6,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "ANN",
+    "name": "year",
+    "symbol": "y",
+    "multiplier": 3.15576e7,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "D42",
+    "name": "tropical year",
+    "symbol": "y (tropical)",
+    "multiplier": 3.1556925e7,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "L95",
+    "name": "common year",
+    "symbol": "y (365 days)",
+    "multiplier": 3.1536e7,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "L96",
+    "name": "sidereal year",
+    "symbol": "y (sidereal)",
+    "multiplier": 3.155815e7,
+    "offset": 0,
+    "type": "time"
+  },
+  {
+    "UNCode": "M56",
+    "name": "shake",
+    "symbol": "shake",
+    "multiplier": 1e-8,
+    "offset": 0,
+    "type": "time"
+  },
+
+  {
+    "UNCode": "VLT",
+    "name": "volt",
+    "symbol": "V",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "voltage"
+  },
+  {
+    "UNCode": "N99",
+    "name": "picovolt",
+    "symbol": "pV",
+    "multiplier": 1.00E-12,
+    "offset": 0,
+    "type": "voltage"
+  },
+  {
+    "UNCode": "2Z",
+    "name": "millivolt",
+    "symbol": "mV",
+    "multiplier": 1.00E-03,
+    "offset": 0,
+    "type": "voltage"
+  },
+  {
+    "UNCode": "B78",
+    "name": "megavolt",
+    "symbol": "MV",
+    "multiplier": 1.00E+06,
+    "offset": 0,
+    "type": "voltage"
+  },
+  {
+    "UNCode": "D82",
+    "name": "microvolt",
+    "symbol": "µV",
+    "multiplier": 1.00E-06,
+    "offset": 0,
+    "type": "voltage"
+  },
+  {
+    "UNCode": "KVT",
+    "name": "kilovolt",
+    "symbol": "kV",
+    "multiplier": 1000,
+    "offset": 0,
+    "type": "voltage"
+  },
+
+  {
+    "UNCode": "FAR",
+    "name": "farad",
+    "symbol": "F",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "capacitance"
+  },
+  {
+    "UNCode": "H48",
+    "name": "attofarad",
+    "symbol": "aF",
+    "multiplier": 1e-18,
+    "offset": 0,
+    "type": "capacitance"
+  },
+  {
+    "UNCode": "C10",
+    "name": "millifarad",
+    "symbol": "mF",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "capacitance"
+  },
+  {
+    "UNCode": "4O",
+    "name": "microfarad",
+    "symbol": "µF",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "capacitance"
+  },
+  {
+    "UNCode": "C41",
+    "name": "nanofarad",
+    "symbol": "nF",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "capacitance"
+  },
+  {
+    "UNCode": "4T",
+    "name": "picofarad",
+    "symbol": "pF",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "capacitance"
+  },
+  {
+    "UNCode": "N90",
+    "name": "kilofarad",
+    "symbol": "kF",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "capacitance"
+  },
+
+  {
+    "UNCode": "D33",
+    "name": "tesla",
+    "symbol": "T",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "magnetic flux density"
+  },
+  {
+    "UNCode": "C29",
+    "name": "millitesla",
+    "symbol": "mT",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "magnetic flux density"
+  },
+  {
+    "UNCode": "D81",
+    "name": "microtesla",
+    "symbol": "µT",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "magnetic flux density"
+  },
+  {
+    "UNCode": "C48",
+    "name": "nanotesla",
+    "symbol": "nT",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "magnetic flux density"
+  },
+  {
+    "UNCode": "P13",
+    "name": "kilotesla",
+    "symbol": "kT",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "magnetic flux density"
+  },
+  {
+    "UNCode": "P12",
+    "name": "gamma",
+    "symbol": "γ",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "magnetic flux density"
+  },
+
+  {
+    "UNCode": "81",
+    "name": "henry",
+    "symbol": "H",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "inductance"
+  },
+  {
+    "UNCode": "C14",
+    "name": "millihenry",
+    "symbol": "mH",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "inductance"
+  },
+  {
+    "UNCode": "B90",
+    "name": "microhenry",
+    "symbol": "µH",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "inductance"
+  },
+  {
+    "UNCode": "C43",
+    "name": "nanohenry",
+    "symbol": "nH",
+    "multiplier": 1e-9,
+    "offset": 0,
+    "type": "inductance"
+  },
+  {
+    "UNCode": "C73",
+    "name": "picohenry",
+    "symbol": "pH",
+    "multiplier": 1e-12,
+    "offset": 0,
+    "type": "inductance"
+  },
+  {
+    "UNCode": "P24",
+    "name": "kilohenry",
+    "symbol": "kH",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "inductance"
+  },
+
+  {
+    "UNCode": "WEB",
+    "name": "weber",
+    "symbol": "Wb",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "magnetic flux"
+  },
+  {
+    "UNCode": "C33",
+    "name": "milliweber",
+    "symbol": "mWb",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "magnetic flux"
+  },
+  {
+    "UNCode": "P11",
+    "name": "kiloweber",
+    "symbol": "kWb",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "magnetic flux"
+  },
+
+  {
+    "UNCode": "D59",
+    "name": "weber per metre",
+    "symbol": "Wb/m",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "magnetic vector potential"
+  },
+  {
+    "UNCode": "B56",
+    "name": "kiloweber per metre",
+    "symbol": "kWb/m",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "magnetic vector potential"
+  },
+  {
+    "UNCode": "D60",
+    "name": "weber per millimetre",
+    "symbol": "Wb/mm",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "magnetic vector potential"
+  },
+
+  {
+    "UNCode": "CDL",
+    "name": "candela",
+    "symbol": "cd",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "luminous intensity"
+  },
+  {
+    "UNCode": "P33",
+    "name": "kilocandela",
+    "symbol": "kcd",
+    "multiplier": 1.00E+03,
+    "offset": 0,
+    "type": "luminous intensity"
+  },
+  {
+    "UNCode": "P34",
+    "name": "millicandela",
+    "symbol": "mcd",
+    "multiplier": 1.00E-03,
+    "offset": 0,
+    "type": "luminous intensity"
+  },
+
+  {
+    "UNCode": "B60",
+    "name": "lumen per square metre",
+    "symbol": "lm/m²",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "illuminance"
+  },
+  {
+    "UNCode": "LUX",
+    "name": "lux",
+    "symbol": "lx",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "illuminance"
+  },
+  {
+    "UNCode": "KLX",
+    "name": "kilolux",
+    "symbol": "klx",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "illuminance"
+  },
+  {
+    "UNCode": "P25",
+    "name": "lumen per square foot ",
+    "symbol": "lm/ft²",
+    "multiplier": 1.076391e1,
+    "offset": 0,
+    "type": "illuminance"
+  },
+  {
+    "UNCode": "P26",
+    "name": "phot",
+    "symbol": "ph",
+    "multiplier": 1e4,
+    "offset": 0,
+    "type": "illuminance"
+  },
+  {
+    "UNCode": "P27",
+    "name": "footcandle",
+    "symbol": "ftc",
+    "multiplier": 1.076391e1,
+    "offset": 0,
+    "type": "illuminance"
+  },
+
+  {
+    "UNCode": "C34",
+    "name": "mole",
+    "symbol": "mol",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "amount of substance"
+  },
+  {
+    "UNCode": "B45",
+    "name": "kilomole",
+    "symbol": "kmol",
+    "multiplier": 1.00E+03,
+    "offset": 0,
+    "type": "amount of substance"
+  },
+  {
+    "UNCode": "C18",
+    "name": "millimole",
+    "symbol": "mmol",
+    "multiplier": 1.00E-03,
+    "offset": 0,
+    "type": "amount of substance"
+  },
+  {
+    "UNCode": "FH",
+    "name": "micromole",
+    "symbol": "µmol",
+    "multiplier": 1.00E-06,
+    "offset": 0,
+    "type": "amount of substance"
+  },
+
+  {
+    "UNCode": "CUR",
+    "name": "curie",
+    "symbol": "Ci",
+    "multiplier": 3.7e10,
+    "offset": 0,
+    "type": "radioactivity"
+  },
+  {
+    "UNCode": "MCU",
+    "name": "millicurie",
+    "symbol": "mCi",
+    "multiplier": 3.7e7,
+    "offset": 0,
+    "type": "radioactivity"
+  },
+  {
+    "UNCode": "M5",
+    "name": "microcurie",
+    "symbol": "µCi",
+    "multiplier": 3.7e4,
+    "offset": 0,
+    "type": "radioactivity"
+  },
+  {
+    "UNCode": "2R",
+    "name": "kilocurie",
+    "symbol": "kCi",
+    "multiplier": 3.7e13,
+    "offset": 0,
+    "type": "radioactivity"
+  },
+  {
+    "UNCode": "BQL",
+    "name": "becquerel",
+    "symbol": "Bq",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "radioactivity"
+  },
+  {
+    "UNCode": "GBQ",
+    "name": "gigabecquerel",
+    "symbol": "GBq",
+    "multiplier": 1e9,
+    "offset": 0,
+    "type": "radioactivity"
+  },
+  {
+    "UNCode": "2Q",
+    "name": "kilobecquerel",
+    "symbol": "kBq",
+    "multiplier": 1e3,
+    "offset": 0,
+    "type": "radioactivity"
+  },
+  {
+    "UNCode": "4N",
+    "name": "megabecquerel",
+    "symbol": "MBq",
+    "multiplier": 1e6,
+    "offset": 0,
+    "type": "radioactivity"
+  },
+  {
+    "UNCode": "H08",
+    "name": "microbecquerel",
+    "symbol": "µBq",
+    "multiplier": 1e-6,
+    "offset": 0,
+    "type": "radioactivity"
+  },
+
+  {
+    "UNCode": "A95",
+    "name": "gray",
+    "symbol": "Gy",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "absorbed dose"
+  },
+  {
+    "UNCode": "C13",
+    "name": "milligray",
+    "symbol": "mGy",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "absorbed dose"
+  },
+  {
+    "UNCode": "C80",
+    "name": "rad",
+    "symbol": "rad",
+    "multiplier": 1e-2,
+    "offset": 0,
+    "type": "absorbed dose"
+  },
+  {
+    "UNCode": "A61",
+    "name": "erg per gram",
+    "symbol": "J/kg",
+    "multiplier": 1e-4,
+    "offset": 0,
+    "type": "absorbed dose"
+  },
+
+  {
+    "UNCode": "D13",
+    "name": "sievert",
+    "symbol": "Sv",
+    "multiplier": 1,
+    "offset": 0,
+    "type": "effective dose"
+  },
+  {
+    "UNCode": "C28",
+    "name": "millisievert",
+    "symbol": "mSv",
+    "multiplier": 1e-3,
+    "offset": 0,
+    "type": "effective dose"
+  },
+  {
+    "UNCode": "D91",
+    "name": "rem",
+    "symbol": "rem",
+    "multiplier": 1e-2,
+    "offset": 0,
+    "type": "effective dose"
+  },
+  {
+    "UNCode": "L31",
+    "name": "milliroentgen aequivalent men",
+    "symbol": "mrem",
+    "multiplier": 1e-5,
+    "offset": 0,
+    "type": "effective dose"
+  }
+]

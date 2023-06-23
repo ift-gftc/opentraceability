@@ -48,8 +48,7 @@ namespace OpenTraceability.Models.Events.KDEs
             Value = Countries.Parse(xml.Value);
         }
 
-        public override string ToString()
-        {
+        public override string ToString()        {
             return Value?.Name ?? String.Empty;
         }
     }
