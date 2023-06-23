@@ -16,9 +16,19 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
     {
         public EPCISDocument Map(string strValue)
         {
+            return MapAsync(strValue).GetAwaiter().GetResult();
+        }
+
+        public string Map(EPCISDocument doc)
+        {
+            return MapAsync(doc).GetAwaiter().GetResult();
+        }
+
+        public async Task<EPCISDocument> MapAsync(string strValue)
+        {
             try
             {
-                EPCISDocument doc = EPCISDocumentBaseJsonMapper.ReadJSON<EPCISDocument>(strValue, out JObject json);
+                (EPCISDocument doc, JObject json) = await EPCISDocumentBaseJsonMapper.ReadJSONAsync<EPCISDocument>(strValue, "EPCISDocument");
 
                 if (doc.EPCISVersion != EPCISVersion.V2)
                 {
@@ -54,7 +64,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
         }
 
-        public string Map(EPCISDocument doc)
+        public async Task<string> MapAsync(EPCISDocument doc)
         {
             if (doc.EPCISVersion != EPCISVersion.V2)
             {
@@ -71,14 +81,15 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             jEventBody["eventList"] = jEventList;
             foreach (IEvent e in doc.Events)
             {
-                JToken? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed);
+                JObject? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed) as JObject;
                 if (jEvent != null)
                 {
+                    EPCISDocumentBaseJsonMapper.PostWriteEventCleanUp(jEvent);
                     jEventList.Add(jEvent);
                 }
             }
 
-            JObject json = EPCISDocumentBaseJsonMapper.WriteJson(doc, epcisNS, "EPCISDocument");
+            JObject json = await EPCISDocumentBaseJsonMapper.WriteJsonAsync(doc, epcisNS, "EPCISDocument");
 
             // write the header
             if (!string.IsNullOrWhiteSpace(doc.Header?.Sender?.Identifier))
@@ -104,7 +115,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             EPCISDocumentBaseJsonMapper.ConformEPCISJsonLD(json, doc.Namespaces);
 
             // validate the JSON-LD schema
-            EPCISDocumentBaseJsonMapper.CheckSchema(json);
+            await EPCISDocumentBaseJsonMapper.CheckSchemaAsync(json);
 
             return json.ToString(Newtonsoft.Json.Formatting.Indented);
         }

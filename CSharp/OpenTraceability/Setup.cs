@@ -21,9 +21,9 @@ namespace OpenTraceability
     /// </summary>
     public static class Setup
     {
-        internal static List<OpenTraceabilityEventProfile> Profiles = new List<OpenTraceabilityEventProfile>();
-        internal static ConcurrentDictionary<string, Type> MasterDataTypes = new ConcurrentDictionary<string, Type>();
-        internal static ConcurrentDictionary<Type, Type> MasterDataTypeDefault = new ConcurrentDictionary<Type, Type>();
+        public static List<OpenTraceabilityEventProfile> Profiles = new List<OpenTraceabilityEventProfile>();
+        public static ConcurrentDictionary<string, Type> MasterDataTypes = new ConcurrentDictionary<string, Type>();
+        public static ConcurrentDictionary<Type, Type> MasterDataTypeDefault = new ConcurrentDictionary<Type, Type>();
 
         private static object _locker = new object();
         private static bool _isInitialized = false;

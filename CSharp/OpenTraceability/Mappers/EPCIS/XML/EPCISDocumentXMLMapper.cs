@@ -83,5 +83,15 @@ namespace GS1.Mappers.EPCIS
 
             return xDoc.ToString();
         }
+
+        public Task<EPCISDocument> MapAsync(string strValue)
+        {
+            return Task.FromResult(Map(strValue));
+        }
+
+        public Task<string> MapAsync(EPCISDocument doc)
+        {
+            return Task.FromResult(Map(doc));
+        }
     }
 }
