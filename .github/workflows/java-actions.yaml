@@ -30,6 +30,7 @@ jobs:
         working-directory: ./Java/opentraceability/
 
       - name: Publish to the Maven Central Repository
+        working-directory: ./Java/opentraceability/
         run: |
           mvn \
             --no-transfer-progress \
