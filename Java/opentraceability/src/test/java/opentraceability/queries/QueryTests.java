@@ -6,6 +6,7 @@ import opentraceability.interfaces.IEvent;
 import opentraceability.mappers.EPCISDataFormat;
 import opentraceability.mappers.OpenTraceabilityMappers;
 import opentraceability.models.events.EPCISDocument;
+import opentraceability.models.events.EPCISQueryDocument;
 import opentraceability.models.events.EPCISVersion;
 import opentraceability.models.events.EventProduct;
 import opentraceability.models.identifiers.EPC;
@@ -167,6 +168,8 @@ public class QueryTests {
                 assertEquals(results.Document.events.size(), 1, "no events returned");
             }
         }
+
+
     }
 
     @Test

@@ -22,4 +22,4 @@ jobs:
 
       - name: Build and test
         run: mvn clean test
-        working-directory: ./Java/OpenTraceability/
+        working-directory: ./Java/opentraceability/
