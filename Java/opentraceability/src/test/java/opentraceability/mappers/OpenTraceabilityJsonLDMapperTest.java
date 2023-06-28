@@ -93,7 +93,8 @@ class OpenTraceabilityJsonLDMapperTest {
 
     @Test
     void epcisQueryDocument() throws Exception {
-        Setup.Initialize();
+        //Setup.Initialize();
+        opentraceability.gdst.Setup.Initialize();
 
         String[] files = new String[] {
                 "EPCISQueryDocument.jsonld"

@@ -192,9 +192,19 @@ public class EPCISDocumentBaseXMLMapper
 				{
 					for (var kdeProfile : profile.KDEProfiles)
 					{
-						if (xEvent.Element(kdeProfile.XPath_V1).IsNull && xEvent.Element(kdeProfile.XPath_V2).IsNull)
+						try
 						{
-							finalProfiles.remove(profile);
+							if (xEvent.Element(kdeProfile.XPath_V1).IsNull && xEvent.Element(kdeProfile.XPath_V2).IsNull)
+							{
+								finalProfiles.remove(profile);
+							}
+						}
+						catch (Exception ex)
+						{
+							if (!ex.getMessage().contains("Prefix must resolve to a namespace"))
+							{
+								throw ex;
+							}
 						}
 					}
 				}

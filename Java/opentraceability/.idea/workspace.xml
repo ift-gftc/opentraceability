@@ -8,8 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a90cffd5-42a7-4393-b4db-8951db78ce91" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../.github/workflows/java-actions.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.github/workflows/java-actions.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/Setup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/Setup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentBaseXMLMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentBaseXMLMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/tests/transformation_event_all_possible_fields.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/tests/transformation_event_all_possible_fields.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/OpenTraceabilityJsonLDMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/OpenTraceabilityJsonLDMapperTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,31 +103,7 @@
       <recent name="opentraceability.interfaces" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.OpenTraceabilityXmlMapperTest">
-    <configuration name="All in opentraceability" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="opentraceability" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="OpenTraceabilityJsonLDMapperTest.epcisDocument" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="opentraceability" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="opentraceability.mappers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="opentraceability.mappers" />
-      <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OpenTraceabilityJsonLDMapperTest" />
-      <option name="METHOD_NAME" value="epcisDocument" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.java in opentraceability">
     <configuration name="OpenTraceabilityXmlMapperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="opentraceability" />
       <extension name="coverage">
@@ -138,7 +119,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="OpenTraceabilityXmlMapperTest.epcisQueryDocument_to_from_xml_1_2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="OpenTraceabilityXmlMapperTest.epcisDocument_to_from_xml" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="opentraceability" />
       <extension name="coverage">
         <pattern>
@@ -148,8 +129,25 @@
       </extension>
       <option name="PACKAGE_NAME" value="opentraceability.mappers" />
       <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OpenTraceabilityXmlMapperTest" />
-      <option name="METHOD_NAME" value="epcisQueryDocument_to_from_xml_1_2" />
+      <option name="METHOD_NAME" value="epcisDocument_to_from_xml" />
       <option name="TEST_OBJECT" value="method" />
+      <dir value="$PROJECT_DIR$/src/test/java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="java in opentraceability" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="opentraceability" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="mappers in opentraceability" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="opentraceability" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java/opentraceability/mappers" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -170,11 +168,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.java in opentraceability" />
         <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest" />
+        <item itemvalue="JUnit.mappers in opentraceability" />
+        <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest.epcisDocument_to_from_xml" />
         <item itemvalue="JUnit.opentraceability.mappers in opentraceability" />
-        <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest.epcisQueryDocument_to_from_xml_1_2" />
-        <item itemvalue="JUnit.All in opentraceability" />
-        <item itemvalue="JUnit.OpenTraceabilityJsonLDMapperTest.epcisDocument" />
       </list>
     </recent_temporary>
   </component>
@@ -195,7 +193,7 @@
       <workItem from="1687334011796" duration="9511000" />
       <workItem from="1687353765238" duration="10387000" />
       <workItem from="1687951401934" duration="368000" />
-      <workItem from="1687952193728" duration="3547000" />
+      <workItem from="1687952193728" duration="6115000" />
     </task>
     <servers />
   </component>
@@ -223,6 +221,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISDocumentBaseJsonMapper.java</url>
           <line>292</line>
           <option name="timeStamp" value="383" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/utility/XElement.java</url>
+          <line>292</line>
+          <option name="timeStamp" value="387" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

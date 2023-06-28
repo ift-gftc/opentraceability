@@ -274,17 +274,24 @@ public class XElement
     }
 
     private NodeList queryByXpath(String xpath) throws XPathExpressionException {
-        Map prefixAndNamespacesMap = this.GetNamespacesAndPrefixesMap();
-        List<String> prefixes = this.GetPrefixes();
-        SimpleNamespaceContext nsContext = new SimpleNamespaceContext(prefixAndNamespacesMap, prefixes);
+        try
+        {
+            Map prefixAndNamespacesMap = this.GetNamespacesAndPrefixesMap();
+            List<String> prefixes = this.GetPrefixes();
+            SimpleNamespaceContext nsContext = new SimpleNamespaceContext(prefixAndNamespacesMap, prefixes);
 
-        XPathFactory xpathFactory = XPathFactory.newInstance();
-        XPath xpathObj = xpathFactory.newXPath();
-        xpathObj.setNamespaceContext(nsContext);
+            XPathFactory xpathFactory = XPathFactory.newInstance();
+            XPath xpathObj = xpathFactory.newXPath();
+            xpathObj.setNamespaceContext(nsContext);
 
-        XPathExpression expr = xpathObj.compile(xpath);
-        NodeList result = (NodeList) expr.evaluate(this.element, XPathConstants.NODESET);
-        return result;
+            XPathExpression expr = xpathObj.compile(xpath);
+            NodeList result = (NodeList) expr.evaluate(this.element, XPathConstants.NODESET);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
     public Map<String, String> GetNamespacesAndPrefixesMap()
