@@ -13,6 +13,15 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub ift-gftc/opentraceability Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/ift-gftc/opentraceability</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.json</groupId>
