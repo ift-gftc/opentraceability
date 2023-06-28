@@ -29,13 +29,9 @@ jobs:
         run: mvn clean test
         working-directory: ./Java/opentraceability/
 
-      - name: Build artifact
-        run: mvn clean package
-        working-directory: ./Java/opentraceability/
-
       - name: Publish to the Maven Central Repository
         working-directory: ./Java/opentraceability/
-        run: mvn deploy -e
+        run: mvn clean deploy -e
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
