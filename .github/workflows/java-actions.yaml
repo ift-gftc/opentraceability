@@ -25,6 +25,10 @@ jobs:
          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
+      - name: Maven Install
+        run: mvn install
+        working-directory: ./Java/opentraceability/
+
       - name: Build and test
         run: mvn clean test
         working-directory: ./Java/opentraceability/
