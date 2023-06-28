@@ -103,5 +103,30 @@ namespace OpenTraceability.Tests.Events
 
             OpenTraceabilityTests.CompareJSON(json, jsonAfter);
         }
+
+        [Test]
+        [TestCase("Example_9.6.2-ObjectEvent.jsonld", "Failed to parse json from string. Expected type=EPCISQueryDocument, actual type=EPCISDocument")]
+        public void FailSchema(string file, string expectedExceptionMsg)
+        {
+            try
+            {
+                // read object events from test data specified in the file argument
+                string json = OpenTraceabilityTests.ReadTestData(file);
+
+                // deserialize object events into C# models
+                EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(json);
+
+                // serialize C# models into xml
+                string jsonAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc);
+
+                OpenTraceabilityTests.CompareJSON(json, jsonAfter);
+
+                Assert.Fail("Should fail the schema check.");
+            }
+            catch (Exception ex)
+            {
+                Assert.That(ex.Message, Is.EqualTo(expectedExceptionMsg));
+            }
+        }
     }
 }

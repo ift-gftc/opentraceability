@@ -125,6 +125,9 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 xDoc.Root.Add(new XAttribute("creationDate", doc.CreationDate.Value.ToString("o")));
             }
 
+            xDoc.Root.SetAttributeValue(Constants.XMLNS_XNAMESPACE + "epcis", null);
+            xDoc.Root.SetAttributeValue(Constants.XMLNS_XNAMESPACE + "cbvmda", null);
+
             if (doc.EPCISVersion == EPCISVersion.V2)
             {
                 xDoc.Root.Add(new XAttribute("schemaVersion", "2.0"));

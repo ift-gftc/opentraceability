@@ -9,20 +9,25 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 {
     public static class EPCISDocumentBaseJsonMapper
     {
-        public static T ReadJSON<T>(string strValue, out JObject json, bool checkSchema = true) where T : EPCISBaseDocument, new()
+        public static async Task<(T, JObject)> ReadJSONAsync<T>(string strValue, string expectedType, bool checkSchema = true) where T : EPCISBaseDocument, new()
         {
             // validate the JSON...
             if (checkSchema)
             {
-                CheckSchema(JObject.Parse(strValue));
+                await CheckSchemaAsync(JObject.Parse(strValue));
             }
 
             // normalize the json-ld
-            strValue = NormalizeEPCISJsonLD(strValue);
+            strValue = await NormalizeEPCISJsonLDAsync(strValue);
 
             // convert into XDocument
             var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
-            json = JsonConvert.DeserializeObject<JObject>(strValue, settings) ?? throw new Exception("Failed to parse json from string. " + strValue);
+            JObject json = JsonConvert.DeserializeObject<JObject>(strValue, settings) ?? throw new Exception("Failed to parse json from string. " + strValue);
+
+            if (json["type"]?.ToString() != expectedType)
+            {
+                throw new Exception("Failed to parse json from string. Expected type=" + expectedType + ", actual type=" + json["type"]?.ToString() ?? string.Empty);
+            }
 
             // read all of the attributes
             T document = Activator.CreateInstance<T>();
@@ -70,7 +75,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                         if (!string.IsNullOrWhiteSpace(val))
                         {
                             // if this is a URL, then resolve it and grab the namespaces...
-                            JObject jcontext = JsonContextHelper.GetJsonLDContext(val);
+                            JObject jcontext = await JsonContextHelper.GetJsonLDContextAsync(val);
                             var ns = JsonContextHelper.ScrapeNamespaces(jcontext);
                             foreach (var n in ns)
                             {
@@ -104,10 +109,10 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             document.Header.DocumentIdentification = new Models.Common.SBDHDocumentIdentification();
             document.Header.DocumentIdentification.InstanceIdentifier = json["instanceIdentifier"]?.ToString() ?? string.Empty;
 
-            return document;
+            return (document, json);
         }
 
-        public static JObject WriteJson(EPCISBaseDocument doc, XNamespace epcisNS, string docType)
+        public static async Task<JObject> WriteJsonAsync(EPCISBaseDocument doc, XNamespace epcisNS, string docType)
         {
             if (doc.EPCISVersion != EPCISVersion.V2)
             {
@@ -130,7 +135,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             {
                 if (Uri.TryCreate(context, UriKind.Absolute, out var uri))
                 {
-                    JObject jc = JsonContextHelper.GetJsonLDContext(context);
+                    JObject jc = await JsonContextHelper.GetJsonLDContextAsync(context);
                     var ns = JsonContextHelper.ScrapeNamespaces(jc);
                     foreach (var n in ns)
                     {
@@ -188,6 +193,19 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             return json;
         }
 
+        /// <summary>
+        /// This performs a final cleanup on the JSON-LD document.
+        /// </summary>
+        /// <param name="json"></param>
+        public static void PostWriteEventCleanUp(JObject json)
+        {
+            // when converting from XML to JSON, the XML allows an empty readPoint, but the JSON does not.
+            if (json["readPoint"] is JObject && json["readPoint"]?["id"] == null)
+            {
+                json.Remove("readPoint");
+            }
+        }
+
         internal static Type GetEventTypeFromProfile(JObject jEvent)
         {
             Enum.TryParse<EventAction>(jEvent["action"]?.ToString(), out var action);
@@ -224,9 +242,11 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
         }
 
-        internal static void CheckSchema(JObject json)
+        internal static async Task CheckSchemaAsync(JObject json)
         {
-            if (!JsonSchemaChecker.IsValid(json.ToString(), "https://ref.gs1.org/standards/epcis/epcis-json-schema.json", out List<string> errors))
+            string jsonStr = json.ToString();
+            List<string> errors = await JsonSchemaChecker.IsValidAsync(jsonStr, "https://ref.gs1.org/standards/epcis/epcis-json-schema.json");
+            if (errors.Count > 0)
             {
                 throw new OpenTraceabilitySchemaException("Failed to validate JSON schema with errors:\n" + string.Join('\n', errors) + "\n\n and json " + json.ToString(Formatting.Indented));
             }
@@ -347,13 +367,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         /// URIs and that the JSON-LD is compacted.
         /// https://ref.gs1.org/standards/epcis/epcis-context.jsonld
         /// </summary>
-        internal static string NormalizeEPCISJsonLD(string jEPCISStr)
+        internal static async Task<string> NormalizeEPCISJsonLDAsync(string jEPCISStr)
         {
             // convert into XDocument
             var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
             JObject json = JsonConvert.DeserializeObject<JObject>(jEPCISStr, settings) ?? throw new Exception("Failed to parse json from string. " + jEPCISStr);
 
-            JObject jEPCISContext = JsonContextHelper.GetJsonLDContext("https://ref.gs1.org/standards/epcis/epcis-context.jsonld");
+            JObject jEPCISContext = await JsonContextHelper.GetJsonLDContextAsync("https://ref.gs1.org/standards/epcis/epcis-context.jsonld");
             Dictionary<string, string> namespaces = JsonContextHelper.ScrapeNamespaces(jEPCISContext);
 
             JArray? jEventList = json["epcisBody"]?["eventList"] as JArray;

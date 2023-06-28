@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraceability.MSC", "Ope
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraceability.TestServerPackage", "OpenTraceability.TestServerPackage\OpenTraceability.TestServerPackage.csproj", "{6A33F39C-2395-4A23-8779-6BDB64C18927}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTraceability.Kotlin", "OpenTraceability.Kotlin\OpenTraceability.Kotlin.csproj", "{EF7A38D5-CEF9-4FAA-9CDD-18D7E01641A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTraceability.Tools", "OpenTraceability.Tools\OpenTraceability.Tools.csproj", "{4813687D-51AE-4348-A6A8-5D5D77868036}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{6A33F39C-2395-4A23-8779-6BDB64C18927}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A33F39C-2395-4A23-8779-6BDB64C18927}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A33F39C-2395-4A23-8779-6BDB64C18927}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF7A38D5-CEF9-4FAA-9CDD-18D7E01641A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF7A38D5-CEF9-4FAA-9CDD-18D7E01641A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF7A38D5-CEF9-4FAA-9CDD-18D7E01641A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF7A38D5-CEF9-4FAA-9CDD-18D7E01641A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4813687D-51AE-4348-A6A8-5D5D77868036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4813687D-51AE-4348-A6A8-5D5D77868036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4813687D-51AE-4348-A6A8-5D5D77868036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4813687D-51AE-4348-A6A8-5D5D77868036}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
