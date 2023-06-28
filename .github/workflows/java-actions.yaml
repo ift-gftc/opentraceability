@@ -29,6 +29,10 @@ jobs:
         run: mvn clean test
         working-directory: ./Java/opentraceability/
 
+      - name: Build artifact
+        run: mvn clean package
+        working-directory: ./Java/opentraceability/
+
       - name: Publish to the Maven Central Repository
         working-directory: ./Java/opentraceability/
         run: mvn deploy -X
