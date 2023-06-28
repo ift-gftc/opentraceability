@@ -1,0 +1,42 @@
+{
+    "@context": {
+        "cbvmda": "urn:epcglobal:cbv:mda",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "gs1": "http://gs1.org/voc/",
+        "@vocab": "http://gs1.org/voc/",
+        "gdst": "https://traceability-dialogue.org/vocab"
+    },
+    "@type": "gs1:Organization",
+    "globalLocationNumber": "urn:gdst:traceability-solution.com:party:0048000.000001",
+    "organizationName": [
+        {
+            "@value": "test",
+            "@language": "en"
+        }
+    ],
+    "address": {
+        "@type": "gs1:PostalAddress",
+        "streetAddress": [
+            {
+                "@value": "15814 blanco trails ln",
+                "@language": "en"
+            }
+        ],
+        "addressLocality": [
+            {
+                "@value": "Cypress",
+                "@language": "en"
+            }
+        ],
+        "addressRegion": [
+            {
+                "@value": "Texas",
+                "@language": "en"
+            }
+        ],
+        "countryCode": "US"
+    },
+    "gdst:iftp": "1234567890",
+    "cbvmda:informationProvider": "urn:gdst:traceability-solution.com:party:0048000.000001",
+    "cbvmda:owning_party": "urn:gdst:traceability-solution.com:party:0048000.000001"
+}
