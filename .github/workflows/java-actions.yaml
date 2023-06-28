@@ -25,7 +25,8 @@ jobs:
         working-directory: ./Java/opentraceability/
 
       - name: Deploy
-        run: mvn deploy
-        working-directory: ./Java/opentraceability/
+        run: mvn --batch-mode deploy
+        working-directory: ./Java/opentraceability/ 
         env:
-          GITHUB_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
