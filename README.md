@@ -17,6 +17,18 @@ We currently support the following:
 
 *If you want us to support your language, please reach out to us so we can put on our to-do list.*
 
+## Accessing the Packages
+You can access the packges for the various languages like so:
+- **C#** - Nuget Feed
+  - https://www.nuget.org/packages/OpenTraceability
+  - https://www.nuget.org/packages/OpenTraceability.GDST
+ 
+- **Java**
+  - We are waiting for approval to post the java libraries to the Maven network, but for now you can download the source code, build and use the JAR libraries this way.
+ 
+## Not happy?
+If you find any issues, please contact me directly at pheggelund@ift.org and we will fix the problem the best we can.
+
 # Open Traceability (C#)
 This is an open-source library for handling traceability data in .NET using C#.
 
