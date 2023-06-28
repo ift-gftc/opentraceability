@@ -31,11 +31,7 @@ jobs:
 
       - name: Publish to the Maven Central Repository
         working-directory: ./Java/opentraceability/
-        run: |
-          mvn \
-            --no-transfer-progress \
-            --batch-mode \
-            deploy
+        run: mvn deploy -X
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
