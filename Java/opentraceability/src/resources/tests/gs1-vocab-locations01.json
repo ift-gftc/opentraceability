@@ -1,0 +1,48 @@
+{
+    "@context": {
+        "cbvmda": "urn:epcglobal:cbvmda:mda",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "gs1": "http://gs1.org/voc/",
+        "@vocab": "http://gs1.org/voc/",
+        "gdst": "https://traceability-dialogue.org/vocab"
+    },
+    "@type": "gs1:Place",
+    "globalLocationNumber": "urn:gdst:traceability-solution.com:location:loc:0b4e59bb-29ba-4edd-8e51-7e8d1a96dce7.47797660-9355-4f8c-8867-c98ee1e8b684",
+    "name": [
+        {
+            "@value": "Fishing Vessel #1",
+            "@language": "en"
+        }
+    ],
+    "address": {
+        "@type": "gs1:PostalAddress",
+        "streetAddress": [
+            {
+                "@value": "15814 Blanco Trails Ln",
+                "@language": "en"
+            }
+        ],
+        "addressLocality": [
+            {
+                "@value": "Cypress",
+                "@language": "en"
+            }
+        ],
+        "addressRegion": [
+            {
+                "@value": "Texas",
+                "@language": "en"
+            }
+        ],
+        "countryCode": "US"
+    },
+    "cbvmda:informationProvider": "urn:gdst:traceability-solution.com:party:0048000.000001",
+    "cbvmda:owning_party": "urn:gdst:traceability-solution.com:party:0048000.000001",
+    "cbvmda:vesselFlagState": "US",
+    "cbvmda:vesselID": "some_vessel_id",
+    "cbvmda:vesselName": "some vessel",
+    "gdst:imoNumber": "some_imo_number",
+    "gdst:vesselPublicRegistry": "https://some.registry.com/some_vessel_id",
+    "gdst:satelliteTracking": "Some Name of a Sattelite tracking authority",
+    "cbvmda:unloadingPort": "SDPORT"
+}

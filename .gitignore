@@ -2,9 +2,5 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/Java/OpenTraceability/.gradle
-/Java/OpenTraceability/.idea
-/Java/OpenTraceability/build/kotlin/compileKotlin
-/Java/OpenTraceability/build/classes/kotlin/main
-/Java/OpenTraceability/build
-/JDK11/opentraceability/.idea
+/Java/opentraceability/.gradle
+/Java/opentraceability/.idea

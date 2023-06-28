@@ -9,22 +9,22 @@ namespace OpenTraceability.Utility
 {
     public static class DoubleExtensions
     {
-        public static double Round(this double val)
+        public static double Round(this double number)
         {
-            double roundedValue = val;
-            string strVal = val.ToString("e12", CultureInfo.InvariantCulture);
+            double roundedValue = number;
+            string strVal = number.ToString("e12", CultureInfo.InvariantCulture);
             roundedValue = System.Convert.ToDouble(strVal);
             return (roundedValue);
         }
 
-        public static double? Round(this double? val)
+        public static double? Round(this double? number)
         {
-            if (val == null)
+            if (number == null)
             {
-                return (val);
+                return (number);
             }
-            double? roundedValue = val;
-            string strVal = val.Value.ToString("e12", CultureInfo.InvariantCulture);
+            double? roundedValue = number;
+            string strVal = number.Value.ToString("e12", CultureInfo.InvariantCulture);
             roundedValue = System.Convert.ToDouble(strVal);
             return (roundedValue);
         }

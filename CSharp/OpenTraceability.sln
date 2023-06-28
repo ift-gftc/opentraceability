@@ -17,6 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraceability.TestServer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTraceability.Tools", "OpenTraceability.Tools\OpenTraceability.Tools.csproj", "{4813687D-51AE-4348-A6A8-5D5D77868036}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2E6D9124-B7FA-4B0B-B39B-CF353E0D0F0F}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\java-actions.yaml = ..\.github\workflows\java-actions.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

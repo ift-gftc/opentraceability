@@ -1,0 +1,31 @@
+name: Java Maven Build and Test
+
+on:
+  push:
+    branches: [ prerelease ]
+  pull_request_target:
+    branches: [ prerelease ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+         java-version: 11
+         distribution: 'zulu'
+
+      - name: Build and test
+        run: mvn clean test
+        working-directory: ./Java/opentraceability/
+
+      - name: Deploy
+        run: mvn deploy
+        working-directory: ./Java/opentraceability/
+        env:
+          GITHUB_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
