@@ -7,6 +7,43 @@
     <groupId>io.github.ift-gftc</groupId>
     <artifactId>opentraceability</artifactId>
     <version>1.2.4</version>
+    <packaging>jar</packaging>
+
+    <name>OpenTraceability</name>
+    <description>
+        SDK for working with EPCIS and GDST data.
+    </description>
+    <url>https://github.com/ift-gftc/opentraceability</url>
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://github.com/ift-gftc/opentraceability/blob/main/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>pheggelund</id>
+            <name>Philip Heggelund</name>
+            <email>pheggelund@ift.org</email>
+            <organization>Institute of Food Technologists (IFT)</organization>
+            <organizationUrl>https://ift.org</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/ift-gftc/opentraceability.git</connection>
+        <developerConnection>scm:git:git://github.com/ift-gftc/opentraceability.git</developerConnection>
+        <url>https://github.com/ift-gftc/opentraceability</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <plugins>
@@ -43,6 +80,20 @@
                         <id>attach-javadoc</id>
                         <goals>
                             <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>
