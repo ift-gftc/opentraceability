@@ -40,58 +40,78 @@ trying to map into EPCIS XML 2.0 and not EPCIS XML 1.2, then you need to make su
 
 #### EPCIS Document Header
 The XML format for EPCIS 1.2 and 2.0 require a Standard Business Document Header (SBDH). This is represented by the `StandardBusinessDocumentHeader` class.
-When converting from EPCIS JSON-LD into XML, you need to make sure to set this if check schema is enabled. Otherwise you will fail the schema validation.
+When converting from EPCIS JSON-LD into XML, you need to make sure to set this if the check schema is enabled. Otherwise, you will fail the schema validation.
 
-> You can use `StandardBusinessDocumentHeader.DummyHeader` to get a dummy header that you can use to pass schema validation.
+> You can use `StandardBusinessDocumentHeader.DummyHeader` to get a dummy header that you can use to pass schema validation for the XML formats.
 
 ## Mapping
 We support mapping between EPCIS 1.2 XML, EPCIS 2.0 XML, and EPCIS 2.0 JSON-LD. Our mappers are thread-safe and are accessible from the `OpenTraceability.Mappers.OpenTraceabilityMappers` static object.
 
 ### Reading EPCIS 1.2 XML
-
+In order to read an EPCIS Query Document from an XML string in the EPCIS 1.2 xml format you can do the following:
 ```csharp
 // You can read an XML string representing an EPCIS 1.2 Query Document in XML format.
 EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(queryDocXmlStr);
 ```
 
+In order to read an EPCIS Document from an XML string in the EPCIS 1.2 xml format you can do the following:
 ```csharp
 // You can read an XML string representing an EPCIS 1.2 Document in XML format.
 EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.XML.Map(docXmlStr);
 ```
 
 ### Reading EPCIS 2.0 XML
-This is done the same way as the 1.2 XML. It auto-detects the version and maps it to the correct object.
+This is done the same way as the 1.2 XML above. It auto-detects the version and maps it to the correct object.
 
+In order to read an EPCIS Query Document from an XML string in the EPCIS 2.0 xml format you can do the following:
 ```csharp
 // You can read an XML string representing an EPCIS 2.0 Query Document in XML format.
 EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(queryDocXmlStr);
 ```
 
+In order to read an EPCIS Document from an XML string in the EPCIS 2.0 xml format you can do the following:
 ```csharp
 // You can read an XML string representing an EPCIS 2.0 Document in XML format.
 EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.XML.Map(docXmlStr);
 ```
 
 ### Reading EPCIS 2.0 JSON-LD
-
+In order to read an EPCIS Query Document from a JSON string in the EPCIS 2.0 JSON-LD format you can do the following:
 ```csharp
 // You can read an XML string representing an EPCIS 2.0 Query Document in JSON-LD format.
 EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(queryDocXmlStr);
 ```
 
+In order to read an EPCIS Document from a JSON string in the EPCIS 2.0 JSON-LD format you can do the following:
 ```csharp
 // You can read an XML string representing an EPCIS 2.0 Document in JSON-LD format.
 EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(docXmlStr);
 ```
 
 ### Convert EPCIS 1.2 XML to EPCIS 2.0 XML
+This example is for reading an EPCIS Query Document, but it would work the same with EPCIS Document as well.
 ```csharp
+// read the EPCIS 1.2 XML string 
 EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(queryDocXmlStr_1_2);
 
-// make sure you set the version to 2.0
+// set the EPCIS version
 doc.EPCISVersion = EPCISVersion.V2;
 
+// write it back out now
 string queryDocXmlStr_2_0 = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(doc);
+```
+
+### Convert EPCIS 1.2 XML to EPCIS 2.0 JSON-LD
+This example is for reading an EPCIS Query Document, but it would work the same with EPCIS Document as well.
+```csharp
+// read the EPCIS 1.2 XML string 
+EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(queryDocXmlStr_1_2);
+
+// set the EPCIS version
+doc.EPCISVersion = EPCISVersion.V2;
+
+// write it back out now
+string queryDocJsonStr_2_0 = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc);
 ```
 
 ## Querying for Data
