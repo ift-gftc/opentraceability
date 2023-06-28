@@ -12,7 +12,7 @@ public class AssociationEventBase<T extends EventILMD> extends IILMDEvent<T> {
 
     @OpenTraceabilityProductsAttribute(name = "extension/childQuantityList", version = EPCISVersion.V1, productType = EventProductType.Child, listType = OpenTraceabilityProductsListType.QuantityList)
     @OpenTraceabilityProductsAttribute(name = "childQuantityList", version = EPCISVersion.V2, productType = EventProductType.Child, listType = OpenTraceabilityProductsListType.QuantityList)
-    @OpenTraceabilityProductsAttribute(name = "childEPCs", version = EPCISVersion.V2, productType = EventProductType.Child, listType = OpenTraceabilityProductsListType.EPCList, required = true)
+    @OpenTraceabilityProductsAttribute(name = "childEPCs", version = EPCISVersion.Any, productType = EventProductType.Child, listType = OpenTraceabilityProductsListType.EPCList, required = true)
     public List<EventProduct> children = new ArrayList<>();
 
 

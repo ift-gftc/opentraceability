@@ -8,7 +8,314 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a90cffd5-42a7-4393-b4db-8951db78ce91" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/GDSTMasterDataResolver.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/Setup.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTAggregationEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTDisaggregationEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTFarmHarvestEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTFeedmillObjectEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTFeedmillTransformationEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTFishingEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTHatchingEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTILMD.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTLandingEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTProcessingEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTReceiveEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTShippingEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/GDSTTransshipmentEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/IGDSTEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/kdes/VesselCatchInformation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/events/kdes/VesselCatchInformationList.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/gdst/masterdata/GDSTLocation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/opentraceability/gdst/GDSTTests.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/AssociationEventBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/models/events/AssociationEventBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/tests/EPCISDocument_objectevents_complete.jsonld" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/tests/EPCISDocument_objectevents_complete.jsonld" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/.idea/opentraceability.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/opentraceability.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/Countries.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/Constants.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/EPCISConstants.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/EPCISURNConstants.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/LogLevel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/OTLog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/OTLogger.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/OnLogDelegate.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/OpenTraceabilityEventKDEProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/OpenTraceabilityEventProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/Setup.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/GDSTMasterDataResolver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/Setup.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTAggregationEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTDisaggregationEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTFarmHarvestEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTFeedmillObjectEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTFeedmillTransformationEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTFishingEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTHatchingEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTILMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTLandingEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTProcessingEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTReceiveEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTShippingEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/GDSTTransshipmentEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/IGDSTEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/kdes/VesselCatchInformation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/events/kdes/VesselCatchInformationList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/gdst/masterdata/GDSTLocation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/interfaces/IEPCISDocumentMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/interfaces/IEPCISQueryDocumentMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/interfaces/IEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/interfaces/IEventKDE.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/interfaces/IILMDEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/interfaces/IMasterDataKDE.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/interfaces/IMasterDataMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/interfaces/ITransformationEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/interfaces/IVocabularyElement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/interfaces/VocabularyType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/EPCISDataFormat.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/EPCISDocumentMappers.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/EPCISQueryDocumentMappers.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/MasterDataMappers.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/OTMappingTypeInformation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/OTMappingTypeInformationProperty.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/OpenTraceabilityJsonLDMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/OpenTraceabilityMappers.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/OpenTraceabilityXmlMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/epcis/json/EPCISDocumentBaseJsonMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/epcis/json/EPCISDocumentJsonMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/epcis/json/EPCISJsonMasterDataReader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/epcis/json/EPCISJsonMasterDataWriter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/epcis/json/EPCISQueryDocumentJsonMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/epcis/xml/EPCISDocumentBaseXMLMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/epcis/xml/EPCISDocumentXMLMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/epcis/xml/EPCISQueryDocumentXMLMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/epcis/xml/EPCISXmlMasterDataReader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/epcis/xml/EPCISXmlMasterDataWriter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/mappers/masterdata/GS1VocabJsonMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/common/Address.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/common/AnonymizedAddress.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/common/Certificate.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/common/LanguageString.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/common/SBDHContact.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/common/SBDHDocumentIdentification.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/common/SBDHOrganization.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/common/StandardBusinessDocumentHeader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/AggregationEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/AggregationEventBase$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/AggregationEventBase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/AssociationEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/AssociationEventBase$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/AssociationEventBase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EPCISBaseDocument.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EPCISDocument.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EPCISQueryDocument.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EPCISVersion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/ErrorDeclaration.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventAction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventBusinessStep.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventBusinessTransaction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventDestination.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventDestinationType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventErrorType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventILMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventLocation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventProduct.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventProductType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventReadPoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventSource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventSourceType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/EventType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/ObjectEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/ObjectEventBase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/PersistentDisposition.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/SensorElement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/SensorMetaData.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/SensorReport.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/TransactionEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/TransformationEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/TransformationEventBase$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/TransformationEventBase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/kdes/CertificationList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/kdes/EventKDEObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/events/kdes/EventKDEString.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/identifiers/EPC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/identifiers/EPCType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/identifiers/GLN.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/identifiers/GS1Util.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/identifiers/GTIN.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/identifiers/PGLN.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/masterdata/Address.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/masterdata/DigitalLink.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/masterdata/Location.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/masterdata/TradeItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/masterdata/TradingParty.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/masterdata/VocabularyElement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/masterdata/kdes/MasterDataKDEObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/models/masterdata/kdes/MasterDataKDEString.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/DigitalLinkQueryOptions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISQuery.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISQueryError.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISQueryErrorType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISQueryInterfaceOptions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISQueryParameters.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISQueryResults.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISQueryStackTraceItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISQueryType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISTestServerClient.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISTraceabilityResolver$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/EPCISTraceabilityResolver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/queries/MasterDataResolver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/CBVAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/CBVAttributes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/CachedXmlSchema.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/Countries.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/Country.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/DataCompare.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/DictionaryExtensions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/DoubleExtensions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/EmbeddedResourceLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/EnumUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/HashCodeUtility.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/JSONExtensions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/JsonContextHelper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/JsonLDVocabTransformationType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/JsonSchemaChecker.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/ListExtensions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/Measurement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/OTXmlUtil$ForEachIndexFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/OTXmlUtil$XMLParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/OTXmlUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/OpenTraceabilitySchemaException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/Pair.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/ReflectionUtility.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/SimpleNamespaceContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/StaticData.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/StringExtensions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/UOM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/UOMS.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/URLHelper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/XAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/XElement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/XmlSchemaChecker$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/XmlSchemaChecker.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/XmlToJsonConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/Description.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/Display.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityArrayAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityAttributes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityEventKDEOrder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityExtensionAttributesAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityExtensionElementsAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityJsonAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityMasterDataAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityObjectAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityProductsAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityProductsAttributes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityProductsListType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityRepeatingAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/opentraceability/utility/attributes/OpenTraceabilityXmlIgnoreAttribute.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tangible/Action1Param.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tangible/Func0Param.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tangible/IntegerLists.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tangible/ListHelper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tangible/OutObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tangible/StringHelper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tangible/TryParseHelper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/AssociationEvent-a.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/AssociationEvent-b.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/AssociationEvent-c.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/AssociationEvent-d.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/AssociationEvent-e.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/AssociationEvent-f.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/AssociationEvent-g.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/AssociationEvent-h.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/EPCISDocument_objectevents_complete.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/EPCISQueryDocument.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/ErrorDeclarationAndCorrectiveEvent.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example-TransactionEvents-2020_07_03y.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example-Type-sourceOrDestination,measurement,bizTransaction.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.1-ObjectEvent-with-error-declaration.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.1-ObjectEvent-with-pseudo-SBDH-headers.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.1-ObjectEvent.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.1-ObjectEventWithDigitalLink.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.1-with-comment.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.2-ObjectEvent.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.2-ObjectEventWithDigitalLink.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.3-AggregationEvent.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.3-AggregationEventWithDigitalLink.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.4-TransformationEvent.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/Example_9.6.4-TransformationEventWithDigitalLink.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/PersistentDisposition-example.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample1.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample10.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample11.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample12.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample13.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample14.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample15.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample16.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample17.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample1b.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample2.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample3.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample4.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample5.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample6.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample7.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample8.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/SensorDataExample9.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/aggregation_event_all_possible_fields.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/aggregation_event_all_possible_fields.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/all_events_query_doc_1_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/association_event_all_possible_fields.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/association_event_all_possible_fields.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/epc_tests.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/gdst_data_withmasterdata.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/gdst_extensions_01.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/gdst_extensions_02.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/gdst_with_masterdata.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/gs1-vocab-locations01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/gs1-vocab-products01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/gs1-vocab-tradingparties01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/object_event_all_possible_fields.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/object_event_all_possible_fields.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/querydoc_example01.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/querydoc_example02.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/querydoc_fail_schemacheck.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/testserver_advancedfilters.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/traceback_tests.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/transaction_event_all_possible_fields.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/transformation_event_all_possible_fields.jsonld" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/tests/transformation_event_all_possible_fields.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/classes/uoms.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/OpenTraceabilityTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/IdentifierTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/SetupTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/gdst/GDSTTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/mappers/MasterDataTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/mappers/OTMappingTypeInformationTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/mappers/OpenTraceabilityJsonLDMapperTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/mappers/OpenTraceabilityXmlMapperTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/queries/QueryTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/utility/CountriesTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/utility/EnumUtilTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/utility/ReflectionUtilityTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/utility/StringExtensionsTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/utility/TestEnum.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/utility/UOMTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/utility/XElementTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../temp/target/test-classes/opentraceability/utility/XmlSchemaCheckerTest.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,30 +359,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;11&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/philip/Projects/opentraceability/Java/OpenTraceability&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "jdk.selected.JAVA_MODULE": "11",
+    "last_opened_file_path": "/Volumes/Git/opentraceability/Java/opentraceability",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/resources" />
@@ -97,7 +404,7 @@
       <recent name="opentraceability.interfaces" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.All in opentraceability">
+  <component name="RunManager" selected="JUnit.OpenTraceabilityXmlMapperTest">
     <configuration name="All in opentraceability" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="opentraceability" />
       <option name="PACKAGE_NAME" value="" />
@@ -106,68 +413,74 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GDSTTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="OpenTraceabilityJsonLDMapperTest.epcisDocument" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="opentraceability" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="opentraceability.gdst.*" />
+          <option name="PATTERN" value="opentraceability.mappers.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="opentraceability.gdst" />
-      <option name="MAIN_CLASS_NAME" value="opentraceability.gdst.GDSTTests" />
+      <option name="PACKAGE_NAME" value="opentraceability.mappers" />
+      <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OpenTraceabilityJsonLDMapperTest" />
+      <option name="METHOD_NAME" value="epcisDocument" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OpenTraceabilityXmlMapperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="opentraceability" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="opentraceability.mappers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="opentraceability.mappers" />
+      <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OpenTraceabilityXmlMapperTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="QueryTests.getEPCISQueryInterfaceURL" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="OpenTraceabilityXmlMapperTest.epcisQueryDocument_to_from_xml_1_2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="opentraceability" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="opentraceability.queries.*" />
+          <option name="PATTERN" value="opentraceability.mappers.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="opentraceability.queries" />
-      <option name="MAIN_CLASS_NAME" value="opentraceability.queries.QueryTests" />
-      <option name="METHOD_NAME" value="getEPCISQueryInterfaceURL" />
+      <option name="PACKAGE_NAME" value="opentraceability.mappers" />
+      <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OpenTraceabilityXmlMapperTest" />
+      <option name="METHOD_NAME" value="epcisQueryDocument_to_from_xml_1_2" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="QueryTests.traceback" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="opentraceability.mappers in opentraceability" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="opentraceability" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="opentraceability.queries.*" />
+          <option name="PATTERN" value="opentraceability.mappers.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="opentraceability.queries" />
-      <option name="MAIN_CLASS_NAME" value="opentraceability.queries.QueryTests" />
-      <option name="METHOD_NAME" value="traceback" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="java in opentraceability" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="opentraceability" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/src/test/java" />
+      <option name="PACKAGE_NAME" value="opentraceability.mappers" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest" />
+        <item itemvalue="JUnit.opentraceability.mappers in opentraceability" />
+        <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest.epcisQueryDocument_to_from_xml_1_2" />
         <item itemvalue="JUnit.All in opentraceability" />
-        <item itemvalue="JUnit.GDSTTests" />
-        <item itemvalue="JUnit.java in opentraceability" />
-        <item itemvalue="JUnit.QueryTests.traceback" />
-        <item itemvalue="JUnit.QueryTests.getEPCISQueryInterfaceURL" />
+        <item itemvalue="JUnit.OpenTraceabilityJsonLDMapperTest.epcisDocument" />
       </list>
     </recent_temporary>
   </component>
@@ -187,7 +500,8 @@
       <workItem from="1687115641262" duration="54518000" />
       <workItem from="1687334011796" duration="9511000" />
       <workItem from="1687353765238" duration="10387000" />
-      <workItem from="1687951401934" duration="62000" />
+      <workItem from="1687951401934" duration="368000" />
+      <workItem from="1687952193728" duration="1076000" />
     </task>
     <servers />
   </component>
@@ -215,11 +529,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISDocumentBaseJsonMapper.java</url>
           <line>292</line>
           <option name="timeStamp" value="383" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentBaseXMLMapper.java</url>
-          <line>166</line>
-          <option name="timeStamp" value="384" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

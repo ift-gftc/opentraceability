@@ -540,7 +540,6 @@
         "bizLocation": {
           "id": "urn:gdst:example.org:location:loc:fishfarm.1u"
         },
-        "childEPCs": []
       },
       {
         "eventTimeZoneOffset": "+00:00",
