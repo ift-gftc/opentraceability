@@ -27,3 +27,5 @@ jobs:
       - name: Deploy
         run: mvn deploy
         working-directory: ./Java/opentraceability/
+        env:
+          GITHUB_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
