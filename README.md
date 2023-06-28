@@ -29,6 +29,9 @@ You can access the packges for the various languages like so:
 ## Not happy?
 If you find any issues, please contact me directly at pheggelund@ift.org and we will fix the problem the best we can.
 
+## Help?
+This ReadMe file should contain documentation on how to use the libraries in C# and Java, please just keep scrolling. If you find it lacking, please let us know.
+
 # Open Traceability (C#)
 This is an open-source library for handling traceability data in .NET using C#.
 
