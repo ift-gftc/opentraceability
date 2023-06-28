@@ -29,13 +29,6 @@ jobs:
         run: mvn clean test
         working-directory: ./Java/opentraceability/
 
-      - name: Create release
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: "${{ github.workspace }}/target/*.jar"
-          token: ${{ secrets.PACKAGE_TOKEN }}
-
       - name: Publish to the Maven Central Repository
         run: |
           mvn \
