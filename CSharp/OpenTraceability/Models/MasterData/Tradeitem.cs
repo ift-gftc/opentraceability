@@ -37,7 +37,7 @@ namespace OpenTraceability.Models.MasterData
         public string? TradeItemConditionCode { get; set; }
 
         [OpenTraceabilityJson("cbvmda:owning_party")]
-        [OpenTraceabilityMasterData("urn:epcglobal:cbv:owning_Party")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:owning_party")]
         public PGLN? OwningParty { get; set; }
 
         [OpenTraceabilityJson("cbvmda:informationProvider")]

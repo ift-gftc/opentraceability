@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xmlWrapper xmlns:epcis="urn:epcglobal:epcis:xsd:1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:sbdh="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+    xmlns:cbvmda="urn:epcglobal:cbv:mda"
+    xmlns:gdst="https://traceability-dialogue.org/epcis">
+	{XML}
+</xmlWrapper>
