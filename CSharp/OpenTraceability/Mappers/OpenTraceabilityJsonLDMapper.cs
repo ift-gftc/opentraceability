@@ -157,7 +157,7 @@ namespace OpenTraceability.Mappers
                                     if (xchild != null)
                                     {
                                         string name = kde.Name;
-                                        if (kde.Namespace != null)
+                                        if (!string.IsNullOrWhiteSpace(kde.Namespace))
                                         {
                                             if (!namespacesReversed.ContainsKey(kde.Namespace))
                                             {

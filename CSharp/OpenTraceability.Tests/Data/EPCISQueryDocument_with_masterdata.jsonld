@@ -1,0 +1,386 @@
+{
+    "@context": [
+
+        "https://ref.gs1.org/standards/epcis/epcis-context.jsonld",
+
+        {
+            "gdst": "https://traceability-dialogue.org/epcis"
+        },
+
+        {
+            "sbdh": "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+        },
+
+        {
+            "epcisq": "urn:epcglobal:epcis-query:xsd:1"
+        }
+
+    ],
+
+    "type": "EPCISQueryDocument",
+
+    "creationDate": "2023-06-29T12:04:11.321+03:00",
+
+    "schemaVersion": "2.0",
+
+    "epcisHeader": {
+
+        "epcisMasterData": {
+
+            "vocabularyList": [
+
+                {
+                    "type": "urn:epcglobal:epcis:vtype:epcclass",
+
+                    "vocabularyElementList": [
+
+                        {
+                            "id": "urn:gdst:agritrack.io:product:class:feedmill.feedml001",
+
+                            "attributes": [
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+
+                                    "attribute": "AQUA BLUE BB 44/20-5.0 mm-L-BB 1000-P"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+
+                                    "attribute": "SCK"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:Agritrack.0"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:FishProducer.0"
+                                }
+
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:agritrack.io:product:class:fishfarm.bream001",
+
+                            "attributes": [
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+
+                                    "attribute": "Sea Bream Raw"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+
+                                    "attribute": "WHL"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+
+                                    "attribute": "Thunnus albacares"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+
+                                    "attribute": "YFT"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:Agritrack.0"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:FishProducer.0"
+                                }
+
+                            ]
+                        }
+
+                    ]
+                },
+
+                {
+                    "type": "urn:epcglobal:epcis:vtype:location",
+
+                    "vocabularyElementList": [
+
+                        {
+                            "id": "urn:gdst:agritrack.io:location:loc:5208106.feedml001",
+
+                            "attributes": [
+
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:feedmill.feedml001.0"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:feedmill.feedml001.0"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+
+                                    "attribute": "feedml001"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#streetAddressOne",
+
+                                    "attribute": "15km Nat.Rd Patras-Athens"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#city",
+
+                                    "attribute": "Patra"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#state",
+
+                                    "attribute": "Achaia"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#countryCode",
+
+                                    "attribute": "GR"
+                                }
+
+                            ]
+                        }
+
+                    ]
+                },
+
+                {
+                    "type": "urn:epcglobal:epcis:vtype:party",
+
+                    "vocabularyElementList": [
+
+                        {
+                            "id": "urn:gdst:agritrack.io:party:Agritrack.0",
+
+                            "attributes": [
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:Agritrack.0"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+
+                                    "attribute": "agritrack"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:FishProducer.0"
+                                }
+
+                            ]
+                        },
+
+                        {
+                            "id": "urn:gdst:agritrack.io:party:FishProducer.0",
+
+                            "attributes": [
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:Agritrack.0"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+
+                                    "attribute": "FishProducer"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:FishProducer.0"
+                                }
+
+                            ]
+                        },
+
+                        {
+                            "id": "urn:gdst:agritrack.io:party:feedmill.feedml001.0",
+
+                            "attributes": [
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:feedmill.feedml001.0"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+
+                                    "attribute": "feedml001"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+
+                                    "attribute": "urn:gdst:agritrack.io:party:feedmill.feedml001.0"
+                                }
+
+                            ]
+                        },
+
+                        {
+                            "id": "urn:epc:id:pgln:0048000.00001",
+
+                            "attributes": [
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+
+                                    "attribute": "urn:epc:id:pgln:0048000.00001"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+
+                                    "attribute": "Some Organization"
+                                },
+
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+
+                                    "attribute": "urn:epc:id:pgln:0048000.00001"
+                                }
+
+                            ]
+                        }
+
+                    ]
+                }
+
+            ]
+        }
+    },
+
+    "epcisBody": {
+        "queryResults": {
+            "queryName": "SimpleQuery",
+
+            "resultsBody": {
+                "eventList": [
+
+                    {
+                        "type": "ObjectEvent",
+
+                        "eventID": "urn:uuid:ef349742-ddcf-429b-a507-2f5fb0d6abc9",
+
+                        "eventTime": "2023-06-29T12:04:13.013",
+
+                        "eventTimeZoneOffset": "+03:00",
+
+                        "bizStep": "commissioning",
+
+                        "disposition": "active",
+
+                        "epcList": [],
+
+                        "action": "ADD",
+
+                        "bizLocation": {
+                            "id": "urn:gdst:agritrack.io:location:loc:feedmill.feedml001.0"
+                        },
+
+                        "quantityList": [
+
+                            {
+                                "epcClass": "urn:gdst:agritrack.io:product:lot:class:feedmill.1u.ff11252021",
+
+                                "quantity": 1000.0,
+
+                                "uom": "KGM"
+                            }
+
+                        ],
+
+                        "ilmd": {
+                            "cbvmda:certificationList": {
+                                "certification": [
+
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCert",
+
+                                        "certificationAgency": "Farm Certificate Authority",
+
+                                        "certificationStandard": "Farm Certificate Standard",
+
+                                        "certificationValue": "SIMP.LPCO.2",
+
+                                        "certificationIdentification": "10161781"
+                                    },
+
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+
+                                        "certificationAgency": "MSC",
+
+                                        "certificationStandard": "MSC Chain of Custody",
+
+                                        "certificationValue": "MSC_COC_1234567890",
+
+                                        "certificationIdentification": "1254.2"
+                                    },
+
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+
+                                        "certificationAgency": "WHO",
+
+                                        "certificationStandard": "WHO Human Decency Policy",
+
+                                        "certificationValue": "1234567890",
+
+                                        "certificationIdentification": "0987654321"
+                                    }
+
+                                ]
+                            },
+
+                            "gdst:feedType": "processed",
+
+                            "gdst:proteinSource": "mixed wild/aquaculture"
+                        },
+
+                        "gdst:humanWelfarePolicy": "Internal",
+
+                        "gdst:productOwner": "urn:gdst:agritrack.io:party:FishProducer.0",
+
+                        "cbvmda:informationProvider": "urn:gdst:agritrack.io:party:Agritrack.0"
+                    }
+
+                ]
+            }
+        }
+    }
+}

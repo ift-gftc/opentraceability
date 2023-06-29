@@ -48,15 +48,16 @@ namespace GS1.Mappers.EPCIS
                     ?? throw new Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root");
                 if (xEventList != null)
                 {
-                    foreach (XElement xEvent in xEventList.Elements())
+                    foreach (XElement xe in xEventList.Elements())
                     {
-                        XElement x = xEvent;
-                        if (document.EPCISVersion.Value == EPCISVersion.V1 && x.Element("TransformationEvent") != null)
+                        XElement xEvent = xe;
+                        if (xEvent.Name == "extension")
                         {
-                            x = xEvent.Element("TransformationEvent");
+                            xEvent = xEvent.Elements().First();
                         }
-                        Type eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(x);
-                        IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(x, eventType, document.EPCISVersion.Value);
+
+                        Type eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(xEvent);
+                        IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(xEvent, eventType, document.EPCISVersion.Value);
                         document.Events.Add(e);
                     }
                 }
