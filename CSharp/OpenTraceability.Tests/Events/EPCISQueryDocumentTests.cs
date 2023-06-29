@@ -65,7 +65,7 @@ namespace OpenTraceability.Tests.Events
 
             // convert back into EPCIS Query Document
             EPCISQueryDocument docAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(jsonLD);
-            docAfter.Header = null;
+            docAfter.Header = Models.Common.StandardBusinessDocumentHeader.DummyHeader;
 
             // convert back into XML 1.2
             docAfter.EPCISVersion = EPCISVersion.V1;
@@ -73,6 +73,7 @@ namespace OpenTraceability.Tests.Events
 
             // map the XML back into a document
             var finalDoc = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(xmlAfter);
+            finalDoc.Header = Models.Common.StandardBusinessDocumentHeader.DummyHeader;
 
             xmlAfter = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(finalDoc);
 
@@ -127,6 +128,25 @@ namespace OpenTraceability.Tests.Events
             {
                 Assert.That(ex.Message, Is.EqualTo(expectedExceptionMsg));
             }
+        }
+
+        [Test]
+        [TestCase("EPCISQueryDocument_with_masterdata.jsonld")]
+        public void EPCISQueryDoc_Json_WithMasterData(string file)
+        {
+            // read object events from test data specified in the file argument
+            string json = OpenTraceabilityTests.ReadTestData(file);
+
+            // deserialize object events into C# models
+            EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(json);
+
+            // assert that we have master data
+            Assert.IsTrue(doc.MasterData.Count > 0);
+
+            // serialize C# models into xml
+            string jsonAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc);
+
+            OpenTraceabilityTests.CompareJSON(json, jsonAfter);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace OpenTraceability.Mappers.MasterData
 
             Dictionary<string, string> namespaces = GetNamespaces(vocab.Context ?? throw new Exception("vocab.Context is null."));
             JObject json = OpenTraceabilityJsonLDMapper.ToJson(vocab, namespaces.Reverse()) as JObject ?? throw new Exception("Failed to map master data into GS1 web vocab.");
-            json["@context"] = vocab.Context;
+            json.AddFirst(new JProperty("@context", vocab.Context));
             return json.ToString();
         }
 

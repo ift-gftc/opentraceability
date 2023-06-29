@@ -9,9 +9,11 @@
   <ItemGroup>
     <None Remove="Resources\EPCISEventTemplate.xml" />
     <None Remove="Resources\EPCISMasterDataTemplate.xml" />
+    <None Remove="Resources\XMLTemplate.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLTemplate.xml" />
     <EmbeddedResource Include="Resources\EPCISEventTemplate.xml" />
     <EmbeddedResource Include="Resources\EPCISMasterDataTemplate.xml" />
   </ItemGroup>

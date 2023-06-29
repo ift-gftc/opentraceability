@@ -45,6 +45,18 @@ namespace OpenTraceability.Models.MasterData
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#name")]
         public List<LanguageString>? Name { get; set; }
 
+        [OpenTraceabilityJson("contact")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#contact")]
+        public string? Contact { get; set; }
+
+        [OpenTraceabilityJson("email")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#email")]
+        public string? Email { get; set; }
+
+        [OpenTraceabilityJson("telephone")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#phone")]
+        public string? Phone { get; set; }
+
         [OpenTraceabilityObject]
         [OpenTraceabilityJson("address")]
         [OpenTraceabilityMasterData]

@@ -40,7 +40,7 @@ public class Setup {
                 // The feedmill event is special in the sense that it requires a KDE profile to detect.
                 // We know it is a feedmill event when it has the proteinSource KDE in the ILMD.
                 List<OpenTraceabilityEventKDEProfile> feedmillKDEProfile = new ArrayList<>();
-                feedmillKDEProfile.add(new OpenTraceabilityEventKDEProfile("extension/ilmd/" + (Constants.GDST_XNAMESPACE + "proteinSource"), "ilmd/" + (Constants.GDST_XNAMESPACE + "proteinSource"), "ilmd.gdst:proteinSource"));
+                feedmillKDEProfile.add(new OpenTraceabilityEventKDEProfile("extension/ilmd/gdst:proteinSource", "ilmd/gdst:proteinSource", "ilmd.gdst:proteinSource"));
 
                 opentraceability.Setup.registerEventProfile(new OpenTraceabilityEventProfile(GDSTFeedmillTransformationEvent.class, EventType.TransformationEvent, "urn:epcglobal:cbv:bizstep:commissioning", feedmillKDEProfile));
                 opentraceability.Setup.registerEventProfile(new OpenTraceabilityEventProfile(GDSTFeedmillTransformationEvent.class, EventType.TransformationEvent, "https://ref.gs1.org/cbv/BizStep-commissioning", feedmillKDEProfile));

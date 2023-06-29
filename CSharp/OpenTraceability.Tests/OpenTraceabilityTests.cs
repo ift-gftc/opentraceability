@@ -239,6 +239,20 @@ namespace OpenTraceability.Tests
                         {
                             JToken jt1 = jarr1[i];
                             JToken jt2 = jarr2[i];
+
+                            // try and find matching array item...
+                            if (jt1 is JObject)
+                            {
+                                if (jt1["id"] != null)
+                                {
+                                    JToken? jt2match = jarr2.FirstOrDefault(x => x["id"]?.ToString() == jt1["id"]?.ToString());
+                                    if (jt2match != null)
+                                    {
+                                        jt2 = jt2match;
+                                    }
+                                }
+                            }
+
                             if (jt1.GetType() != jt2.GetType())
                             {
                                 Assert.Fail($"j1 property array {prop.Name} has item[{i}] with type {jt1.GetType()}, but on j2 it is {jt2.GetType()}.\nh1={j1.ToString(Newtonsoft.Json.Formatting.Indented)}\nj2={j2.ToString(Newtonsoft.Json.Formatting.Indented)}");

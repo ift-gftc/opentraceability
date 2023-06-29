@@ -24,6 +24,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     throw new Exception("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
                 }
 
+                // read the master data
+                JObject? jMasterData = json["epcisHeader"]?["epcisMasterData"] as JObject;
+                if (jMasterData != null)
+                {
+                    EPCISJsonMasterDataReader.ReadMasterData(doc, jMasterData);
+                }
+
                 // read the query name
                 doc.QueryName = json["epcisBody"]?["queryResults"]?["queryName"]?.ToString() ?? string.Empty;
                 doc.SubscriptionID = json["epcisBody"]?["queryResults"]?["subscriptionID"]?.ToString() ?? string.Empty;
@@ -79,6 +86,8 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
 
             JObject json = await EPCISDocumentBaseJsonMapper.WriteJsonAsync(doc, epcisNS, "EPCISQueryDocument");
+
+            EPCISJsonMasterDataWriter.WriteMasterData(json, doc);
 
             JObject jEPCISBody = new JObject();
             JObject jQueryResults = new JObject();

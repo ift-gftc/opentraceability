@@ -29,8 +29,14 @@ namespace GS1.Mappers.EPCIS
                 XElement? xEventList = xDoc.Root?.Element("EPCISBody")?.Element("EventList");
                 if (xEventList != null)
                 {
-                    foreach (XElement xEvent in xEventList.Elements())
+                    foreach (XElement xe in xEventList.Elements())
                     {
+                        XElement xEvent = xe;
+                        if (xEvent.Name == "extension")
+                        {
+                            xEvent = xEvent.Elements().First();
+                        }
+
                         Type eventType = EPCISDocumentBaseXMLMapper.GetEventTypeFromProfile(xEvent);
                         IEvent e = (IEvent)OpenTraceabilityXmlMapper.FromXml(xEvent, eventType, doc.EPCISVersion.Value);
                         doc.Events.Add(e);
