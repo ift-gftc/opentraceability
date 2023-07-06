@@ -1,4 +1,4 @@
-name: Java Maven Build and Test
+name: Java Maven Release
 
 on:
   push:
