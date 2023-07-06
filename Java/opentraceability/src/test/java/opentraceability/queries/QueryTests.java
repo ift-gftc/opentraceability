@@ -101,7 +101,7 @@ public class QueryTests {
         EPCISTestServerClient client = new EPCISTestServerClient(testServerURL, EPCISDataFormat.JSON, EPCISVersion.V2);
 
         String data = ReadTestData(filename);
-        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data);
+        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data, true);
         String blob_id = client.postEPCISDocument(doc);
 
         boolean foundOneGDSTLocation = false;
@@ -133,7 +133,7 @@ public class QueryTests {
         EPCISTestServerClient client = new EPCISTestServerClient(testServerURL, EPCISDataFormat.JSON, EPCISVersion.V2);
 
         String data = ReadTestData(filename);
-        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data);
+        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data, true);
         String blob_id = client.postEPCISDocument(doc);
 
         DigitalLinkQueryOptions queryOptions = new DigitalLinkQueryOptions();
@@ -157,7 +157,7 @@ public class QueryTests {
         EPCISTestServerClient client = new EPCISTestServerClient(testServerURL, EPCISDataFormat.JSON, EPCISVersion.V2);
 
         String data = ReadTestData(filename);
-        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data);
+        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data, true);
         String blob_id = client.postEPCISDocument(doc);
 
         for (IEvent e : doc.events) {
@@ -178,7 +178,7 @@ public class QueryTests {
         EPCISTestServerClient client = new EPCISTestServerClient(testServerURL, EPCISDataFormat.JSON, EPCISVersion.V2);
 
         String data = ReadTestData(filename);
-        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data);
+        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data, true);
         String blob_id = client.postEPCISDocument(doc);
 
         String epc = "urn:epc:id:sscc:08600031303.0004";
@@ -202,7 +202,7 @@ public class QueryTests {
         EPCISTestServerClient client = new EPCISTestServerClient(testServerURL, EPCISDataFormat.JSON, EPCISVersion.V2);
 
         String data = ReadTestData(filename);
-        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data);
+        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(data, true);
         String blob_id = client.postEPCISDocument(doc);
 
         String epc = "urn:gdst:example.org:product:lot:class:processor.2u.v1-0122-2022";

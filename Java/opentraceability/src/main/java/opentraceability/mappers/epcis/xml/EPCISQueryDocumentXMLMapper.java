@@ -72,8 +72,9 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 		String epcisQueryXName = (doc.epcisVersion == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
 
 		// write the query name
-		xDoc.Add(new XElement("EPCISBody")).Add(new XElement("epcisq:QueryResults")).Add(new XElement("resultsBody")).Add(new XElement("EventList"));
+		xDoc.Add(new XElement("EPCISBody")).Add(new XElement("epcisq:QueryResults"));
 		xDoc.Element("EPCISBody/QueryResults").Add(new XElement("queryName"));
+		xDoc.Element("EPCISBody/QueryResults").Add(new XElement("resultsBody")).Add(new XElement("EventList"));
 		xDoc.FixPrefixesAndNamespacing();
 
 		XElement xQueryName = xDoc.Element("EPCISBody/epcisq:QueryResults/queryName");
@@ -106,9 +107,10 @@ public class EPCISQueryDocumentXMLMapper implements IEPCISQueryDocumentMapper
 			}
 		}
 
+		xDoc.FixPrefixesAndNamespacing();
+
 		EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.epcisVersion);
 
-		xDoc.FixPrefixesAndNamespacing();
 		return xDoc.toString();
 	}
 }

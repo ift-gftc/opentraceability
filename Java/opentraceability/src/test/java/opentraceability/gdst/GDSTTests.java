@@ -88,7 +88,7 @@ public class GDSTTests {
 
             try
             {
-                EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(str);
+                EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(str, true);
 
                 for (var e: doc.events)
                 {
@@ -103,7 +103,7 @@ public class GDSTTests {
                     if (e instanceof GDSTProcessingEvent) foundProcessing = true;
                 }
 
-                String strAfter = OpenTraceabilityMappers.EPCISDocument.JSON.map(doc);
+                String strAfter = OpenTraceabilityMappers.EPCISDocument.JSON.map(doc, true);
 
                 // compare the XMLs
                 DataCompare.CompareJSON(str, strAfter);

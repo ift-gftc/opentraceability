@@ -12,6 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class OTMappingTypeInformation {
     public Class Class;
+
     public ArrayList<OTMappingTypeInformationProperty> properties = new ArrayList<>();
     public Map<String, OTMappingTypeInformationProperty> dic = new HashMap<>();
     public Field extensionKDEs = null;
@@ -76,13 +77,19 @@ public class OTMappingTypeInformation {
                     {
                         extensionAttributes = prop;
                     }
-
-//                    properties.sort((a, b) -> Boolean.compare(a.sequenceOrder == null, b.sequenceOrder == null) != 0
-//                            ? a.sequenceOrder == null ? 1 : -1
-//                            : a.sequenceOrder - b.sequenceOrder);
                 }
             }
         }
+
+        for (var prop: properties)
+        {
+            if (prop.sequenceOrder < 0)
+            {
+                prop.sequenceOrder = 10000;
+            }
+        }
+
+        properties.sort((a, b) -> a.sequenceOrder - b.sequenceOrder);
     }
 
     private static final ReentrantLock locker = new ReentrantLock();

@@ -146,8 +146,8 @@ class OpenTraceabilityXmlMapperTest {
                 EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
                 String xmlStr = loader.readString(Setup.class, "/tests/" + file);
 
-                EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.XML.map(xmlStr);
-                String xmlStrAfter = OpenTraceabilityMappers.EPCISDocument.XML.map(doc);
+                EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.XML.map(xmlStr, true);
+                String xmlStrAfter = OpenTraceabilityMappers.EPCISDocument.XML.map(doc, true);
 
                 // compare the XMLs
                 DataCompare.CompareXML(xmlStr, xmlStrAfter);
@@ -170,8 +170,8 @@ class OpenTraceabilityXmlMapperTest {
 
         for (int i = 0; i < 1000; i++)
         {
-            EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.XML.map(xmlStr);
-            String xmlStrAfter = OpenTraceabilityMappers.EPCISDocument.XML.map(doc);
+            EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.XML.map(xmlStr, true);
+            String xmlStrAfter = OpenTraceabilityMappers.EPCISDocument.XML.map(doc, true);
         }
     }
 }

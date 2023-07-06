@@ -528,7 +528,7 @@ public class XElement
             String prefix = namespaces.get(namespaceURI);
             if (!StringHelper.isNullOrEmpty(prefix))
             {
-                xe.changeTagName(null,prefix + ":" + tag);
+                xe.changeTagName(namespaceURI,prefix + ":" + tag);
             }
         }
 

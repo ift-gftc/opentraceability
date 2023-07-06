@@ -248,40 +248,38 @@ public class EPCISDocumentBaseXMLMapper
 		}
 	}
 
-	public static void ValidateEPCISDocumentSchema(XElement xdoc, EPCISVersion version) throws OpenTraceabilitySchemaException {
+	public static void ValidateEPCISDocumentSchema(XElement xdoc, EPCISVersion version) throws OpenTraceabilitySchemaException
+	{
 		if (version == EPCISVersion.V1)
 		{
 			// validate the schema depending on the version in the document
 			String error;
 			tangible.OutObject<String> tempOut_error = new tangible.OutObject<String>();
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: if (!EPCISDocumentBaseXMLMapper._schemaChecker.Validate(xdoc, "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-1_2.xsd", out string? error))
-			if (!XmlSchemaChecker.validate(xdoc, "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-1_2.xsd", tempOut_error))
+
+			if (!XmlSchemaChecker.validate(xdoc, "/schema/epcis_1_2/EPCglobal-epcis-1_2.xsd", tempOut_error))
 			{
-			error = tempOut_error.outArgValue;
+				error = tempOut_error.outArgValue;
 				throw new OpenTraceabilitySchemaException("Failed to validate the XML schema for the EPCIS XML.\n" + error);
 			}
-		else
-		{
-			error = tempOut_error.outArgValue;
-		}
+			else
+			{
+				error = tempOut_error.outArgValue;
+			}
 		}
 		else
 		{
 			// https://ref.gs1.org/standards/epcis/epcglobal-epcis-2_0.xsd
 			String error;
 			tangible.OutObject<String> tempOut_error2 = new tangible.OutObject<String>();
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: if (!EPCISDocumentBaseXMLMapper._schemaChecker.Validate(xdoc, "https://ref.gs1.org/standards/epcis/epcglobal-epcis-2_0.xsd", out string? error))
-			if (!XmlSchemaChecker.validate(xdoc, "https://ref.gs1.org/standards/epcis/epcglobal-epcis-2_0.xsd", tempOut_error2))
+			if (!XmlSchemaChecker.validate(xdoc, "/schema/epcis_2_0/epcglobal-epcis-2_0.xsd", tempOut_error2))
 			{
-			error = tempOut_error2.outArgValue;
+				error = tempOut_error2.outArgValue;
 				throw new OpenTraceabilitySchemaException("Failed to validate the XML schema for the EPCIS XML.\n" + error);
 			}
-		else
-		{
-			error = tempOut_error2.outArgValue;
-		}
+			else
+			{
+				error = tempOut_error2.outArgValue;
+			}
 		}
 	}
 
@@ -289,12 +287,9 @@ public class EPCISDocumentBaseXMLMapper
 	{
 		if (version == EPCISVersion.V1)
 		{
-			// validate the schema depending on the version in the document
 			String error;
 			tangible.OutObject<String> tempOut_error = new tangible.OutObject<String>();
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: if (!EPCISDocumentBaseXMLMapper._schemaChecker.Validate(xdoc, "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-query-1_2.xsd", out string? error))
-			if (!XmlSchemaChecker.validate(xdoc, "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-query-1_2.xsd", tempOut_error))
+			if (!XmlSchemaChecker.validate(xdoc, "/schema/epcis_1_2/EPCglobal-epcis-query-1_2.xsd", tempOut_error))
 			{
 			error = tempOut_error.outArgValue;
 				throw new RuntimeException("Failed to validate the XML schema for the EPCIS XML.\n" + error);
@@ -306,12 +301,9 @@ public class EPCISDocumentBaseXMLMapper
 		}
 		else
 		{
-			// https://ref.gs1.org/standards/epcis/epcglobal-epcis-query-2_0.xsd
 			String error;
 			tangible.OutObject<String> tempOut_error2 = new tangible.OutObject<String>();
-//C# TO JAVA CONVERTER WARNING: Nullable reference types have no equivalent in Java:
-//ORIGINAL LINE: if (!EPCISDocumentBaseXMLMapper._schemaChecker.Validate(xdoc, "https://ref.gs1.org/standards/epcis/epcglobal-epcis-query-2_0.xsd", out string? error))
-			if (!XmlSchemaChecker.validate(xdoc, "https://ref.gs1.org/standards/epcis/epcglobal-epcis-query-2_0.xsd", tempOut_error2))
+			if (!XmlSchemaChecker.validate(xdoc, "/schema/epcis_2_0/epcglobal-epcis-query-2_0.xsd", tempOut_error2))
 			{
 			error = tempOut_error2.outArgValue;
 				throw new RuntimeException("Failed to validate the XML schema for the EPCIS XML.\n" + error);

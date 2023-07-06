@@ -14,8 +14,8 @@ public class TransactionEvent extends IEvent {
     }
 
     @OpenTraceabilityProductsAttribute(name = "extension/quantityList", version = EPCISVersion.V1, productType = EventProductType.Reference, listType = OpenTraceabilityProductsListType.QuantityList)
-    @OpenTraceabilityProductsAttribute(name = "quantityList", version = EPCISVersion.V2, productType = EventProductType.Reference, listType = OpenTraceabilityProductsListType.QuantityList)
-    @OpenTraceabilityProductsAttribute(name = "epcList", version = EPCISVersion.V2, productType = EventProductType.Reference, listType = OpenTraceabilityProductsListType.EPCList, required = true)
+    @OpenTraceabilityProductsAttribute(name = "quantityList", version = EPCISVersion.V2, sequenceOrder = 30, productType = EventProductType.Reference, listType = OpenTraceabilityProductsListType.QuantityList)
+    @OpenTraceabilityProductsAttribute(name = "epcList", version = EPCISVersion.V2, sequenceOrder = 10, productType = EventProductType.Reference, listType = OpenTraceabilityProductsListType.EPCList, required = true)
     public List<EventProduct> referenceProducts = new ArrayList<>();
 
     public List<EventProduct> getProducts() {

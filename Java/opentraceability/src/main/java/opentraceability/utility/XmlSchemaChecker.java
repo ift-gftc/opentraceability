@@ -2,6 +2,10 @@ package opentraceability.utility;
 
 import opentraceability.OTLogger;
 import org.w3c.dom.Document;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
@@ -9,18 +13,24 @@ import tangible.StringHelper;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class XmlSchemaChecker {
     private static final Map<String, CachedXmlSchema> cache = new HashMap<>();
@@ -66,9 +76,9 @@ public class XmlSchemaChecker {
 
             error.outArgValue = validationError.toString();
         } catch (FileNotFoundException e) {
-            error.outArgValue = validationError.toString();
+            error.outArgValue = e.getMessage();
         } catch (Exception e) {
-            error.outArgValue = validationError.toString();
+            error.outArgValue = e.getMessage();
         } finally {
             isFileOk = StringHelper.isNullOrEmpty(error.outArgValue);
         }
@@ -82,7 +92,7 @@ public class XmlSchemaChecker {
         CachedXmlSchema cacheEntry = cache.get(url);
         boolean isCacheExpired = true;
         if (cacheEntry != null) {
-            Duration timeDifference = Duration.between(cacheEntry.lastUpdated, Instant.now());
+            Duration timeDifference = Duration.between(cacheEntry.lastUpdated, OffsetDateTime.now(ZoneOffset.UTC));
             long hoursDifference = timeDifference.toHours();
             isCacheExpired = hoursDifference > 1;
         }
@@ -91,10 +101,13 @@ public class XmlSchemaChecker {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
             Schema schema;
-            try {
-                StreamSource reader2 = new StreamSource(new URL(url).openStream());
-                schema = factory.newSchema(reader2);
-            } catch (Exception e) {
+            try
+            {
+                URL resourceURL = XmlSchemaChecker.class.getResource(url);
+                schema = factory.newSchema(resourceURL);
+            }
+            catch (Exception e)
+            {
                 throw new RuntimeException("Failed to load the schema from the URL " + url, e);
             }
 

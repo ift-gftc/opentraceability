@@ -12,7 +12,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 {
-	public EPCISDocument map(String strValue) throws Exception {
+	public EPCISDocument map(String strValue, Boolean checkSchema) throws Exception {
 			XElement xDoc;
 			tangible.OutObject<XElement> tempOut_xDoc = new tangible.OutObject<XElement>();
 			EPCISDocument doc = EPCISDocumentBaseXMLMapper.ReadXml(strValue, tempOut_xDoc, EPCISDocument.class);
@@ -22,6 +22,12 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 			{
 				throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
 			}
+
+			if (checkSchema)
+			{
+				EPCISDocumentBaseXMLMapper.ValidateEPCISQueryDocumentSchema(xDoc, doc.epcisVersion);
+			}
+
 
 			EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.epcisVersion);
 
@@ -40,7 +46,7 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 			return doc;
 	}
 
-	public String map(EPCISDocument doc) throws Exception {
+	public String map(EPCISDocument doc, Boolean checkSchema) throws Exception {
 		if (doc.epcisVersion == null)
 		{
 			throw new RuntimeException("doc.EPCISVersion is NULL. This must be set to a version.");
@@ -69,9 +75,13 @@ public class EPCISDocumentXMLMapper implements IEPCISDocumentMapper
 			}
 		}
 
-		EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.epcisVersion);
-
 		xDoc.FixPrefixesAndNamespacing();
+
+		if (checkSchema)
+		{
+			EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.epcisVersion);
+		}
+
 		return xDoc.toString();
 	}
 }
