@@ -22,7 +22,7 @@ jobs:
       run: dotnet build -c Debug
     - name: Test
       run: dotnet test -c Debug --no-build
-    - name: Build
+    #- name: Build
     #  run: dotnet build -c Release
     #- name: Pack nugets
     #  run: dotnet pack -c Release --no-build --version-suffix beta${{ github.run_number }} --output .
