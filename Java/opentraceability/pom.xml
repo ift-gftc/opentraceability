@@ -149,10 +149,13 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-base -->
         <dependency>
             <groupId>com.fasterxml.jackson</groupId>
             <artifactId>jackson-base</artifactId>
-            <version>2.14.2</version>
+            <version>2.15.2</version>
+            <type>pom</type>
         </dependency>
+
     </dependencies>
 </project>

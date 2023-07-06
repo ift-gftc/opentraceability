@@ -8,42 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a90cffd5-42a7-4393-b4db-8951db78ce91" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/BasicTypes.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/BusinessScope.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/DocumentIdentification.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/EPCglobal-epcis-1_2.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/EPCglobal-epcis-masterdata-1_2.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/EPCglobal-epcis-masterdata-2_0.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/EPCglobal-epcis-query-1_2.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/EPCglobal.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/Manifest.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/Partner.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_1_2/StandardBusinessDocumentHeader.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_2_0/BasicTypes.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_2_0/BusinessScope.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_2_0/DocumentIdentification.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_2_0/Manifest.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_2_0/Partner.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_2_0/StandardBusinessDocumentHeader.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_2_0/epcglobal-epcis-2_0.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_2_0/epcglobal-epcis-masterdata-2_0.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_2_0/epcglobal-epcis-query-2_0.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/schema/epcis_2_0/epcglobal.xsd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../JDK11/opentraceability/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../JDK11/opentraceability/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/opentraceability/utility/XmlSchemaCheckerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/opentraceability/utility/XmlSchemaCheckerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEPCISDocumentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/interfaces/IEPCISDocumentMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISDocumentJsonMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/json/EPCISDocumentJsonMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentBaseXMLMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentBaseXMLMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentXMLMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/mappers/epcis/xml/EPCISDocumentXMLMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISTestServerClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/queries/EPCISTestServerClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XmlSchemaChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/opentraceability/utility/XmlSchemaChecker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/opentraceability/gdst/GDSTTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/opentraceability/gdst/GDSTTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/MasterDataTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/MasterDataTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/OpenTraceabilityJsonLDMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/OpenTraceabilityJsonLDMapperTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/OpenTraceabilityXmlMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/opentraceability/mappers/OpenTraceabilityXmlMapperTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/opentraceability/queries/QueryTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/opentraceability/queries/QueryTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.github/workflows/java-actions.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.github/workflows/java-actions.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.github/workflows/prerelease-nuget.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.github/workflows/prerelease-nuget.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.github/workflows/release-nuget.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.github/workflows/release-nuget.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +101,7 @@
       <recent name="opentraceability.interfaces" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.XmlSchemaCheckerTest.validate">
+  <component name="RunManager" selected="JUnit.opentraceability in opentraceability (1)">
     <configuration name="OpenTraceabilityXmlMapperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="opentraceability" />
       <extension name="coverage">
@@ -166,22 +133,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="OpenTraceabilityXmlMapperTest.epcisQueryDocument_to_from_xml_1_2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="opentraceability" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="opentraceability.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="opentraceability.mappers" />
-      <option name="MAIN_CLASS_NAME" value="opentraceability.mappers.OpenTraceabilityXmlMapperTest" />
-      <option name="METHOD_NAME" value="epcisQueryDocument_to_from_xml_1_2" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="XmlSchemaCheckerTest.validate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="opentraceability" />
       <extension name="coverage">
@@ -194,6 +145,14 @@
       <option name="MAIN_CLASS_NAME" value="opentraceability.utility.XmlSchemaCheckerTest" />
       <option name="METHOD_NAME" value="validate" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="opentraceability in opentraceability (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="opentraceability" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java/opentraceability" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -214,11 +173,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.opentraceability in opentraceability (1)" />
         <item itemvalue="JUnit.XmlSchemaCheckerTest.validate" />
         <item itemvalue="JUnit.opentraceability in opentraceability" />
         <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest" />
         <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest.epcisDocument_to_from_xml" />
-        <item itemvalue="JUnit.OpenTraceabilityXmlMapperTest.epcisQueryDocument_to_from_xml_1_2" />
       </list>
     </recent_temporary>
   </component>
@@ -240,7 +199,7 @@
       <workItem from="1687353765238" duration="10387000" />
       <workItem from="1687951401934" duration="368000" />
       <workItem from="1687952193728" duration="6115000" />
-      <workItem from="1688576519005" duration="12093000" />
+      <workItem from="1688576519005" duration="12971000" />
     </task>
     <servers />
   </component>
