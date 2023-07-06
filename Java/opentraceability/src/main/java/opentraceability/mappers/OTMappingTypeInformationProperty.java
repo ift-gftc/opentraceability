@@ -28,7 +28,7 @@ public class OTMappingTypeInformationProperty {
     public Class itemType;
 
     public EPCISVersion version;
-    public Integer sequenceOrder;
+    public Integer sequenceOrder = -1;
     public String curieMapping;
 
     public OTMappingTypeInformationProperty(){}
@@ -136,6 +136,7 @@ public class OTMappingTypeInformationProperty {
         this.isQuantityList = att.listType() == OpenTraceabilityProductsListType.QuantityList;
         this.productType = att.productType();
         this.required = att.required();
+        this.sequenceOrder = att.sequenceOrder();
 
         if (format == EPCISDataFormat.JSON) {
 

@@ -74,8 +74,8 @@ class OpenTraceabilityJsonLDMapperTest {
 
             try
             {
-                EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(str);
-                String strAfter = OpenTraceabilityMappers.EPCISDocument.JSON.map(doc);
+                EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(str, true);
+                String strAfter = OpenTraceabilityMappers.EPCISDocument.JSON.map(doc, true);
 
                 // compare the XMLs
                 DataCompare.CompareJSON(str, strAfter);

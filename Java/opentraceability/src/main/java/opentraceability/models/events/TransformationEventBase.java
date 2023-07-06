@@ -13,14 +13,14 @@ public class TransformationEventBase<T extends EventILMD> extends ITransformatio
         this.eventType = EventType.TransformationEvent;
     }
 
-    @OpenTraceabilityProductsAttribute(name = "inputQuantityList", version = EPCISVersion.Any, productType = EventProductType.Input, listType = OpenTraceabilityProductsListType.QuantityList)
-    @OpenTraceabilityProductsAttribute(name = "inputEPCList", version = EPCISVersion.Any, productType = EventProductType.Input, listType = OpenTraceabilityProductsListType.EPCList)
+    @OpenTraceabilityProductsAttribute(name = "inputQuantityList", version = EPCISVersion.Any, sequenceOrder = 11, productType = EventProductType.Input, listType = OpenTraceabilityProductsListType.QuantityList)
+    @OpenTraceabilityProductsAttribute(name = "inputEPCList", version = EPCISVersion.Any, sequenceOrder = 10, productType = EventProductType.Input, listType = OpenTraceabilityProductsListType.EPCList)
     public List<EventProduct> inputs = new ArrayList<>();
-    @OpenTraceabilityProductsAttribute(name = "outputQuantityList", version = EPCISVersion.Any, productType = EventProductType.Output, listType = OpenTraceabilityProductsListType.QuantityList)
-    @OpenTraceabilityProductsAttribute(name = "outputEPCList", version = EPCISVersion.Any, productType = EventProductType.Output, listType = OpenTraceabilityProductsListType.EPCList)
+    @OpenTraceabilityProductsAttribute(name = "outputQuantityList", version = EPCISVersion.Any, sequenceOrder = 13, productType = EventProductType.Output, listType = OpenTraceabilityProductsListType.QuantityList)
+    @OpenTraceabilityProductsAttribute(name = "outputEPCList", version = EPCISVersion.Any, sequenceOrder = 12, productType = EventProductType.Output, listType = OpenTraceabilityProductsListType.EPCList)
     public List<EventProduct> outputs = new ArrayList<>();
 
-    @OpenTraceabilityAttribute(ns = "", name = "transformationID")
+    @OpenTraceabilityAttribute(ns = "", name = "transformationID", sequenceOrder = 14)
     public String transformationID = null;
 
 

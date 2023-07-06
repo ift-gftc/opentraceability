@@ -13,9 +13,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OpenTraceabilityProductsAttribute {
     String name();
+
     EPCISVersion version() default EPCISVersion.Any;
     EventProductType productType();
     OpenTraceabilityProductsListType listType();
+
+    int sequenceOrder() default -1;
+
     boolean required() default false;
 }
 

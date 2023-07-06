@@ -50,7 +50,7 @@ public class EPCISTestServerClient {
             .header("GS1-EPCIS-Max", _version == EPCISVersion.V1 ? "1.2" : "2.0")
             .header("GS1-CBV-Version", _version == EPCISVersion.V1 ? "1.2" : "2.0")
             .header("GS1-CBV-XML-Format", "ALWAYS_URN")
-            .post(RequestBody.create(MediaType.parse(contentType), mapper.map(document)))
+            .post(RequestBody.create(MediaType.parse(contentType), mapper.map(document, true)))
             .build();
 
         Response response = client.newCall(request).execute();

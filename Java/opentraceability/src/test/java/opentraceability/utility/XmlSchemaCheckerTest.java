@@ -17,7 +17,7 @@ class XmlSchemaCheckerTest {
         String xmlStr = loader.readString(Setup.class, "/tests/object_event_all_possible_fields.xml");
         XElement xml = XElement.Parse(xmlStr);
         OutObject<String> outArgs = new OutObject<>();
-        Boolean isValid = XmlSchemaChecker.validate(xml, "https://ref.gs1.org/standards/epcis/epcglobal-epcis-2_0.xsd", outArgs);
+        Boolean isValid = XmlSchemaChecker.validate(xml, "/schema/epcis_2_0/epcglobal-epcis-2_0.xsd", outArgs);
         assertTrue(isValid);
     }
 }

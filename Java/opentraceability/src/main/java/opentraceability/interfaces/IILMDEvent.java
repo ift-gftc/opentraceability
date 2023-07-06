@@ -7,7 +7,7 @@ import opentraceability.utility.attributes.OpenTraceabilityObjectAttribute;
 
 public abstract class IILMDEvent<T extends EventILMD> extends IEvent {
     @OpenTraceabilityObjectAttribute
-    @OpenTraceabilityAttribute(ns = "", name = "ilmd", version = EPCISVersion.V2)
-    @OpenTraceabilityAttribute(ns = "", name = "extension/ilmd", version = EPCISVersion.V1)
+    @OpenTraceabilityAttribute(ns = "", name = "ilmd", sequenceOrder = 50, version = EPCISVersion.V2)
+    @OpenTraceabilityAttribute(ns = "", name = "extension/ilmd", sequenceOrder = 50, version = EPCISVersion.V1)
     public T ilmd = null;
 }

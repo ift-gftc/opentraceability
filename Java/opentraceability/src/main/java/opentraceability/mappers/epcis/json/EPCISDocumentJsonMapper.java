@@ -15,9 +15,9 @@ import java.net.URISyntaxException;
 
 public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper
 {
-	public final EPCISDocument map(String strValue) throws Exception
+	public final EPCISDocument map(String strValue, Boolean checkSchema) throws Exception
 	{
-		Pair<EPCISBaseDocument, JSONObject> pair = EPCISDocumentBaseJsonMapper.ReadJSONAsync(strValue, "EPCISDocument", true);
+		Pair<EPCISBaseDocument, JSONObject> pair = EPCISDocumentBaseJsonMapper.ReadJSONAsync(strValue, "EPCISDocument", checkSchema);
 		EPCISDocument doc = (EPCISDocument)pair.getFirst();
 		JSONObject json = pair.getSecond();
 
@@ -54,7 +54,8 @@ public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper
 
 //C# TO JAVA CONVERTER TASK: There is no equivalent in Java to the 'async' keyword:
 //ORIGINAL LINE: public async Task<string> MapAsync(EPCISDocument doc)
-	public String map(EPCISDocument doc) throws Exception {
+	public String map(EPCISDocument doc, Boolean checkSchema) throws Exception
+	{
 		if (doc.epcisVersion != EPCISVersion.V2)
 		{
 			throw new RuntimeException("doc.EPCISVersion is not set to V2. Only EPCIS 2.0 supports JSON-LD.");
@@ -94,7 +95,9 @@ public class EPCISDocumentJsonMapper implements IEPCISDocumentMapper
 		EPCISDocumentBaseJsonMapper.conformEPCISJsonLD(json, doc.namespaces);
 
 		// validate the JSON-LD schema
-		EPCISDocumentBaseJsonMapper.checkSchema(json);
+		if (checkSchema) {
+			EPCISDocumentBaseJsonMapper.checkSchema(json);
+		}
 
 		return json.toString();
 	}

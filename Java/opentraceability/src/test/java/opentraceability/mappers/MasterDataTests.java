@@ -76,7 +76,7 @@ public class MasterDataTests {
         String json = ReadTestData(file);
 
         // map into a trade item
-        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(json);
+        EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.map(json, true);
 
         // foreach master data item
         for (var md: doc.masterData)
