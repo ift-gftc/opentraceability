@@ -34,7 +34,7 @@
                 "@language": "en"
             }
         ],
-        "countyCode": "US"
+        "countryCode": "US"
     },
     "gdst:iftp": "1234567890",
     "cbvmda:informationProvider": "urn:gdst:traceability-solution.com:party:0048000.000001",

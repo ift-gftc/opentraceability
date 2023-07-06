@@ -30,7 +30,7 @@ namespace OpenTraceability.Models.MasterData
         public List<LanguageString>? State { get; set; }
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#countryCode")]
-        [OpenTraceabilityJson("countyCode")]
+        [OpenTraceabilityJson("countryCode")]
         public Country? Country { get; set; }
     }
 }
