@@ -22,7 +22,6 @@ namespace OpenTraceability.GDST.Events
         public GDSTFeedmillTransformationEvent()
         {
             this.BusinessStep = new Uri("urn:epcglobal:cbv:bizstep:commissioning");
-            this.Action = EventAction.ADD;
         }
     }
 }

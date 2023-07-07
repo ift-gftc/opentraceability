@@ -1,10 +1,13 @@
 package opentraceability.gdst.events;
 
 import opentraceability.Constants;
+import opentraceability.models.events.EventAction;
 import opentraceability.models.events.ObjectEventBase;
 import opentraceability.models.identifiers.PGLN;
 import opentraceability.utility.attributes.OpenTraceabilityAttribute;
 import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute;
+
+import java.net.URI;
 
 public class GDSTShippingEvent extends ObjectEventBase<GDSTILMD> implements IGDSTEvent {
     @OpenTraceabilityAttribute(ns = Constants.GDST_NAMESPACE, name = "productOwner")
@@ -21,4 +24,9 @@ public class GDSTShippingEvent extends ObjectEventBase<GDSTILMD> implements IGDS
     private String humanWelfarePolicy;
 
     // Add constructor, getters, and setters here
+    public GDSTShippingEvent()
+    {
+        this.businessStep = URI.create("urn:epcglobal:cbv:bizstep:shipping");
+        this.action = EventAction.OBSERVE;
+    }
 }

@@ -22,7 +22,6 @@ namespace OpenTraceability.GDST.Events
         public GDSTFarmHarvestEvent()
         {
             this.BusinessStep = new Uri("urn:gdst:bizStep:farmHarvest");
-            this.Action = EventAction.ADD;
         }
     }
 }

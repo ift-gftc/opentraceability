@@ -19,7 +19,7 @@ namespace OpenTraceability.GDST.Events
         [OpenTraceabilityJson("gdst:humanWelfarePolicy")]
         public string? HumanWelfarePolicy { get; set; }
 
-        public GDSTShippingEvent()
+        public GDSTReceiveEvent()
         {
             this.BusinessStep = new Uri("urn:epcglobal:cbv:bizstep:receiving");
             this.Action = EventAction.OBSERVE;
