@@ -1,10 +1,13 @@
 package opentraceability.gdst.events;
 
 import opentraceability.Constants;
+import opentraceability.models.events.EventAction;
 import opentraceability.models.events.ObjectEventBase;
 import opentraceability.models.identifiers.PGLN;
 import opentraceability.utility.attributes.OpenTraceabilityAttribute;
 import opentraceability.utility.attributes.OpenTraceabilityJsonAttribute;
+
+import java.net.URI;
 
 public class GDSTLandingEvent extends ObjectEventBase<GDSTILMD> implements IGDSTEvent {
     @OpenTraceabilityAttribute(ns = Constants.GDST_NAMESPACE, name = "productOwner")
@@ -26,4 +29,9 @@ public class GDSTLandingEvent extends ObjectEventBase<GDSTILMD> implements IGDST
     private String unloadingPort;
 
     // Add constructor, getters, and setters here
+    public GDSTLandingEvent()
+    {
+        this.businessStep = URI.create("urn:gdst:bizStep:landing");
+        this.action = EventAction.OBSERVE;
+    }
 }
