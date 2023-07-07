@@ -22,5 +22,11 @@ namespace OpenTraceability.GDST.Events
         [OpenTraceabilityJson("cbvmda:unloadingPort")]
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "unloadingPort")]
         public string? UnloadingPort { get; set; }
+
+        public GDSTTransshipmentEvent()
+        {
+            this.BusinessStep = new Uri("urn:gdst:bizStep:transshipment");
+            this.Action = EventAction.OBSERVE;
+        }
     }
 }

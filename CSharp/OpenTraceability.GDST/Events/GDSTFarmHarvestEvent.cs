@@ -18,5 +18,11 @@ namespace OpenTraceability.GDST.Events
         [OpenTraceability(Constants.GDST_NAMESPACE, "humanWelfarePolicy")]
         [OpenTraceabilityJson("gdst:humanWelfarePolicy")]
         public string? HumanWelfarePolicy { get; set; }
+
+        public GDSTFarmHarvestEvent()
+        {
+            this.BusinessStep = new Uri("urn:gdst:bizStep:farmHarvest");
+            this.Action = EventAction.ADD;
+        }
     }
 }
