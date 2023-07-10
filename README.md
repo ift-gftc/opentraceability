@@ -25,7 +25,7 @@ You can access the packges for the various languages like so:
   - https://www.nuget.org/packages/OpenTraceability.GDST
  
 - **Java**
-  - We are waiting for approval to post the java libraries to the Maven network, but for now you can download the source code, build and use the JAR libraries this way.
+  - https://mvnrepository.com/artifact/io.github.ift-gftc/opentraceability 
  
 ## Not happy?
 If you find any issues, please contact me directly at pheggelund@ift.org and we will fix the problem the best we can.
