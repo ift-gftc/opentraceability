@@ -244,7 +244,6 @@ These libraries were designed with EXTENSIBILITY at heart. It was designed so th
 
 Current Extensions
 - GDST
-- MSC (.NET only, coming soon to Java)
 
 ## Models
 This library provides model support for working with EPCIS data. The models can be found in the `opentraceability.models` and `opentraceability.interfaces` packages.
