@@ -10,12 +10,10 @@ If you are just using the core library, you should call:
 
 However, if you are using an extension library such as:
 - OpenTraceability.GDST
-- OpenTraceability.MSC
 
 Then you just need to call the setup method for that library such as:
 
 - `OpenTraceability.GDST.Setup.Initialize();`
-- `OpenTraceability.MSC.Setup.Initialize();`
 
 And that will initialize everything you need.
 

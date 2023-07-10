@@ -11,7 +11,7 @@
 	  <PackageReadmeFile>README_TESTSERVER.md</PackageReadmeFile>
 	  <RepositoryUrl>https://github.com/ift-gftc/opentraceability</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
-	  <PackageTags>epcis;open;traceability;ift;msc</PackageTags>
+	  <PackageTags>epcis;open;traceability;ift</PackageTags>
 	  <VersionPrefix>1.2.9</VersionPrefix>
   </PropertyGroup>
 
