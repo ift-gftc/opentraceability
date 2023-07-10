@@ -1,10 +1,11 @@
 # Open Traceability
-A repository for storing code for the open-source traceability libraries developed by IFT.
+A repository for storing code for the open-source traceability libraries.
 
 ## Funded By
 These open-source libraries would not be possible without great organizations who took the initiative to fund this project. We want to give a special thanks to:
 
-- Global Dialogue on Seafood Traceability (GDST)
+- Gordon and Betty Moore Foundation
+- Walton Family Foundation
 
 ## Current Supported Programming Languages / Frameworks
 We currently support the following:
@@ -29,12 +30,10 @@ If you are just using the core library, you should call:
 
 However, if you are using an extension library such as:
 - OpenTraceability.GDST
-- OpenTraceability.MSC
 
 Then you just need to call the setup method for that library such as:
 
 - `OpenTraceability.GDST.Setup.Initialize();`
-- `OpenTraceability.MSC.Setup.Initialize();`
 
 And that will initialize everything you need.
 
