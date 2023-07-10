@@ -11,11 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraceability.GDST", "Op
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraceability.TestServer", "OpenTraceability.TestServer\OpenTraceability.TestServer.csproj", "{CD63CDD1-7BD2-4280-85BF-F43C2BD69B0D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraceability.MSC", "OpenTraceability.MSC\OpenTraceability.MSC.csproj", "{ED386D4B-2B27-41D1-9503-0FA3954A8F3B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraceability.TestServerPackage", "OpenTraceability.TestServerPackage\OpenTraceability.TestServerPackage.csproj", "{6A33F39C-2395-4A23-8779-6BDB64C18927}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTraceability.Tools", "OpenTraceability.Tools\OpenTraceability.Tools.csproj", "{4813687D-51AE-4348-A6A8-5D5D77868036}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraceability.Tools", "OpenTraceability.Tools\OpenTraceability.Tools.csproj", "{4813687D-51AE-4348-A6A8-5D5D77868036}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2E6D9124-B7FA-4B0B-B39B-CF353E0D0F0F}"
 	ProjectSection(SolutionItems) = preProject
@@ -44,10 +42,6 @@ Global
 		{CD63CDD1-7BD2-4280-85BF-F43C2BD69B0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD63CDD1-7BD2-4280-85BF-F43C2BD69B0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD63CDD1-7BD2-4280-85BF-F43C2BD69B0D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ED386D4B-2B27-41D1-9503-0FA3954A8F3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED386D4B-2B27-41D1-9503-0FA3954A8F3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED386D4B-2B27-41D1-9503-0FA3954A8F3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED386D4B-2B27-41D1-9503-0FA3954A8F3B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A33F39C-2395-4A23-8779-6BDB64C18927}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A33F39C-2395-4A23-8779-6BDB64C18927}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A33F39C-2395-4A23-8779-6BDB64C18927}.Release|Any CPU.ActiveCfg = Release|Any CPU
