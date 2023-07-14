@@ -36,6 +36,7 @@ public class Setup {
                 opentraceability.Setup.registerEventProfile(new OpenTraceabilityEventProfile(GDSTAggregationEvent.class, EventType.AggregationEvent, "https://ref.gs1.org/cbv/BizStep-packing", EventAction.ADD));
                 opentraceability.Setup.registerEventProfile(new OpenTraceabilityEventProfile(GDSTDisaggregationEvent.class, EventType.AggregationEvent, "urn:epcglobal:cbv:bizstep:unpacking", EventAction.DELETE));
                 opentraceability.Setup.registerEventProfile(new OpenTraceabilityEventProfile(GDSTDisaggregationEvent.class, EventType.AggregationEvent, "https://ref.gs1.org/cbv/BizStep-unpacking", EventAction.DELETE));
+                opentraceability.Setup.registerEventProfile(new OpenTraceabilityEventProfile(GDSTComminglingEvent.class, EventType.TransformationEvent, "urn:gdst:bizStep:commingling"));
 
                 // The feedmill event is special in the sense that it requires a KDE profile to detect.
                 // We know it is a feedmill event when it has the proteinSource KDE in the ILMD.
