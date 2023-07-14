@@ -9,5 +9,10 @@ namespace OpenTraceability.GDST.Events
         [OpenTraceability(Constants.GDST_NAMESPACE, "productOwner")]
         [OpenTraceabilityJson("gdst:productOwner")]
         public PGLN? ProductOwner { get; set; }
+
+        public GDSTComminglingEvent()
+        {
+            this.BusinessStep = new Uri("urn:gdst:bizStep:commingling");
+        }
     }
 }
