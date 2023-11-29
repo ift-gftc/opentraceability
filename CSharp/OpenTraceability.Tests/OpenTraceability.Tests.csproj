@@ -4,14 +4,18 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<VersionPrefix>1.0.7</VersionPrefix>
+		<VersionPrefix>1.2.12</VersionPrefix>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Remove="Data\aggregation_event_all_possible_fields.xml" />
+		<None Remove="Data\all_wholechain_events.jsonld" />
 		<None Remove="Data\association_event_all_possible_fields.xml" />
+		<None Remove="Data\cap_tool_events.jsonld" />
+		<None Remove="Data\epcisdocument-example01.jsonld" />
 		<None Remove="Data\EPCISDocument_objectevents_complete.jsonld" />
+		<None Remove="Data\epcisquerydoc-example01.jsonld" />
 		<None Remove="Data\EPCISQueryDocument_with_masterdata.jsonld" />
 		<None Remove="Data\epc_tests.json" />
 		<None Remove="Data\gdst_data_withmasterdata.jsonld" />

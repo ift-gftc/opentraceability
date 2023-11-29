@@ -32,10 +32,20 @@ namespace OpenTraceability.Utility
             {
                 using (await _lock.LockAsync())
                 {
-                    using (HttpClient client = new HttpClient())
+                    if (contextURL == "https://ref.gs1.org/standards/epcis/epcis-context.jsonld" || contextURL == "https://gs1.github.io/EPCIS/epcis-context.jsonld")
                     {
-                        jContext = JObject.Parse(await client.GetStringAsync(contextURL));
+                        EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+                        string json = loader.ReadString("OpenTraceability", "OpenTraceability.Utility.Data.EPCISJsonContext.jsonld");
+                        jContext = JObject.Parse(json);
                         _contextCache.TryAdd(contextURL, jContext);
+                    }
+                    else
+                    {
+                        using (HttpClient client = new HttpClient())
+                        {
+                            jContext = JObject.Parse(await client.GetStringAsync(contextURL));
+                            _contextCache.TryAdd(contextURL, jContext);
+                        }
                     }
                 }
             }
