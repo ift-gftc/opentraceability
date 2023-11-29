@@ -17,10 +17,19 @@ namespace OpenTraceability.Utility
             {
                 using (await _lock.LockAsync())
                 {
-                    using (HttpClient client = new HttpClient())
+                    if (schemaURL == "https://ref.gs1.org/standards/epcis/epcis-json-schema.json")
                     {
-                        schemaStr = await client.GetStringAsync(schemaURL);
+                        EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
+                        schemaStr = loader.ReadString("OpenTraceability", "OpenTraceability.Utility.Data.EPCISJsonSchema.jsonld");
                         _schemaCache.TryAdd(schemaURL, schemaStr);
+                    }
+                    else
+                    {
+                        using (HttpClient client = new HttpClient())
+                        {
+                            schemaStr = await client.GetStringAsync(schemaURL);
+                            _schemaCache.TryAdd(schemaURL, schemaStr);
+                        }
                     }
                 }
             }

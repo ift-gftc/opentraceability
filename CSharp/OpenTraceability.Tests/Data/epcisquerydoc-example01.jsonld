@@ -1,0 +1,1801 @@
+﻿{
+    "@context": [
+        "https://ref.gs1.org/standards/epcis/epcis-context.jsonld",
+        {
+            "gdst": "https://traceability-dialogue.org/epcis"
+        },
+        {
+            "xsi": "http://www.w3.org/2001/XMLSchema-instance"
+        },
+        {
+            "sbdh": "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+        },
+        {
+            "epcisq": "urn:epcglobal:epcis-query:xsd:1"
+        }
+    ],
+    "type": "EPCISQueryDocument",
+    "creationDate": "2023-07-14T15:55:41.5668469+00:00",
+    "schemaVersion": "2.0",
+    "epcisHeader": {
+        "epcisMasterData": {
+            "vocabularyList": [
+                {
+                    "type": "urn:epcglobal:epcis:vtype:EPCClass",
+                    "vocabularyElementList": [
+                        {
+                            "id": "urn:gdst:example.org:product:class:feedmill.1",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Fish Feed"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": ""
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:product:class:hatchery.1",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Tuna Fryling"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "OTH"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Thunnus albacares"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "YFT"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:wholechain.com:product:class:fishcompany.sal-fry",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Salmon Fry"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "WHL"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Oncorhynchus nerka"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "SK"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:product:class:fisherman01.tuna",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Whole Yellowfin Tuna"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "WHL"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:product:class:fishfarm.1",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Farmed Tuna"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "WHL"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Thunnus albacares"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "YFT"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:product:class:processor.10",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Tuna"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "WHL"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Thunnus albacares"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "YFT"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:product:class:processor.2",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Can of Tuna"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "OTH"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Thunnus albacares"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "YFT"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:wholechain.com:product:class:fishcompany.tuna",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Whole Yellowfin Tuna"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "WHL"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Thunnus albacares"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "YFT"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:wholechain.com:product:class:fishcompany.sal-whole",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Whole Salmon"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "WHL"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Oncorhynchus nerka"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "SK"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:wholechain.com:product:class:fishcompany.hgtuna",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "HG Yellowfin Tuna"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "GUH"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Thunnus albacares"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "YFT"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:wholechain.com:product:class:processingcompany.tunafilet",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Processed Filets"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "FIL"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Thunnus albacares"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "YFT"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "epcisBody": {
+        "queryResults": {
+            "queryName": "SimpleEventQuery",
+            "subscriptionID": "",
+            "resultsBody": {
+                "eventList": [
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2021-02-24T11:10:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:35:10.4390000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:c63238c2-9de1-4123-ba79-6e03d7fea878",
+                        "epcList": [],
+                        "action": "ADD",
+                        "bizStep": "commissioning",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:feedmill.1"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:feedmill.1.ff11252021",
+                                "quantity": 10000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "ilmd": {
+                            "gdst:proteinSource": "wild caught",
+                            "cbvmda:itemExpirationDate": "2022-02-03T03:00:00.0000000+00:00",
+                            "cbvmda:countryOfOrigin": "US",
+                            "cbvmda:lotNumber": "FF11252021",
+                            "cbvmda:certificationList": {
+                                "certification": [
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    }
+                                ]
+                            }
+                        },
+                        "gdst:productOwner": "urn:gdst:example.org:party:feedmill.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:fishfarm.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2021-12-22T11:09:40.7930000+00:00",
+                        "recordTime": "2023-07-14T14:35:05.9780000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:0ed30680-7f6e-428b-a916-71595059606f",
+                        "epcList": [],
+                        "action": "ADD",
+                        "bizStep": "urn:gdst:bizStep:hatching",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:hatchery.1"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:hatchery.1.tf12012021",
+                                "quantity": 1000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "ilmd": {
+                            "gdst:broodstockSource": "domestic",
+                            "cbvmda:lotNumber": "TF12012021",
+                            "cbvmda:certificationList": {
+                                "certification": [
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    }
+                                ]
+                            }
+                        },
+                        "gdst:productOwner": "urn:gdst:example.org:party:hatchery.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:fishfarm.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-02-01T09:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:13.0900000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:bedb0a63-5463-4349-9093-a727c2cb94ec",
+                        "epcList": [],
+                        "action": "ADD",
+                        "bizStep": "urn:gdst:bizStep:hatching",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:fishcompany.portsd"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.sal-fry.weio348",
+                                "quantity": 250,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "ilmd": {
+                            "gdst:broodstockSource": "Domestic"
+                        },
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:fishcompany.0"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-02-09T10:57:24.1560000+00:00",
+                        "recordTime": "2023-07-14T14:35:07.3350000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:299e0545-76ed-4eba-8470-0db0dac191a9",
+                        "epcList": [],
+                        "action": "ADD",
+                        "bizStep": "urn:gdst:bizStep:fishingEvent",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:epc:id:sgln:08600031303.1.0"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:fisherman01.tuna.v1-0122-2022",
+                                "quantity": 9876,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "ilmd": {
+                            "cbvmda:vesselCatchInformationList": {
+                                "cbvmda:vesselCatchInformation": [
+                                    {
+                                        "cbvmda:economicZone": "urn:gdst:eez:usa",
+                                        "cbvmda:fishingGearTypeCode": "urn:gdst:gear:1.1",
+                                        "cbvmda:vesselFlagState": "US",
+                                        "cbvmda:vesselID": "VESSEL1",
+                                        "cbvmda:vesselName": "Vessel #1",
+                                        "gdst:fisheryImprovementProject": "test",
+                                        "gdst:gpsAvailability": true,
+                                        "gdst:imoNumber": "IMO12345678",
+                                        "gdst:rfmoArea": "urn:gdst:rfmo:cecaf",
+                                        "gdst:satelliteTrackingAuthority": "test",
+                                        "gdst:subnationalPermitArea": "test",
+                                        "gdst:vesselPublicRegistry": "test",
+                                        "gdst:vesselTripDate": "2022-01-20T10:57:24.1560000+00:00",
+                                        "cbvmda:catchArea": "urn:gdst:fao:27.1"
+                                    }
+                                ]
+                            },
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "MARINE_FISHERY",
+                            "cbvmda:lotNumber": "V1-0122-2022",
+                            "cbvmda:certificationList": {
+                                "certification": [
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:fishingAuth",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    }
+                                ]
+                            }
+                        },
+                        "gdst:productOwner": "urn:gdst:example.org:party:fisherman01.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:fisherman01.1"
+                    },
+                    {
+                        "type": "TransformationEvent",
+                        "eventTime": "2022-02-09T11:09:54.5490000+00:00",
+                        "recordTime": "2023-07-14T14:35:10.7960000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:e3d9c513-3dd6-42f1-a467-a7dff9ef0188",
+                        "inputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:feedmill.1.ff11252021",
+                                "quantity": 10000,
+                                "uom": "KGM"
+                            },
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:hatchery.1.tf12012021",
+                                "quantity": 1000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "outputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:fishfarm.1.farmed-tuna-01192022",
+                                "quantity": 12000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "bizStep": "urn:gdst:bizStep:farmHarvest",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:fishfarm.1"
+                        },
+                        "ilmd": {
+                            "gdst:aquacultureMethod": "intensive ponds",
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "AQUACULTURE",
+                            "cbvmda:lotNumber": "FARMED-TUNA-01192022",
+                            "cbvmda:certificationList": {
+                                "certification": [
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    }
+                                ]
+                            }
+                        },
+                        "gdst:productOwner": "urn:gdst:example.org:party:fishfarm.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:fishfarm.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-02-10T11:10:14.0250000+00:00",
+                        "recordTime": "2023-07-14T14:35:06.3370000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:ac782d72-d630-41fb-b26c-28b11099e0f3",
+                        "epcList": [],
+                        "action": "OBSERVE",
+                        "bizStep": "shipping",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:fishfarm.1"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:fishfarm.1.farmed-tuna-01192022",
+                                "quantity": 12000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "sourceList": [
+                            {
+                                "type": "owning_party",
+                                "source": "urn:gdst:example.org:party:fishfarm.1"
+                            }
+                        ],
+                        "destinationList": [
+                            {
+                                "type": "owning_party",
+                                "destination": "urn:gdst:example.org:party:processor.1"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:example.org:party:processor.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:fishfarm.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-02-11T10:58:15.1540000+00:00",
+                        "recordTime": "2023-07-14T14:35:07.6950000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:970f1561-9860-41a8-8333-0326c84d5d32",
+                        "epcList": [],
+                        "action": "OBSERVE",
+                        "bizStep": "urn:gdst:bizStep:transshipment",
+                        "disposition": "active",
+                        "readPoint": {
+                            "id": "geo:-34.3232,1.232"
+                        },
+                        "bizLocation": {
+                            "id": "urn:epc:id:sgln:08600031303.3.0"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:fisherman01.tuna.v1-0122-2022",
+                                "quantity": 9876,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:example.org:party:fisherman01.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:unloadingPort": "PORTSD",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:transshipmentAuth",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:fisherman01.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-02-11T11:10:18.0370000+00:00",
+                        "recordTime": "2023-07-14T14:35:06.8470000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:2a2cdc0d-6fa8-4635-bdb4-887dc2e8f717",
+                        "epcList": [],
+                        "action": "OBSERVE",
+                        "bizStep": "receiving",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:processor.plant1"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:fishfarm.1.farmed-tuna-01192022",
+                                "quantity": 12000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:example.org:party:processor.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:processor.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-02-12T11:00:25.1910000+00:00",
+                        "recordTime": "2023-07-14T14:35:08.0800000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:a785c7b0-2576-4ade-9879-3911096a177d",
+                        "epcList": [],
+                        "action": "OBSERVE",
+                        "bizStep": "urn:gdst:bizStep:landing",
+                        "disposition": "active",
+                        "readPoint": {
+                            "id": "geo:0,0"
+                        },
+                        "bizLocation": {
+                            "id": "urn:epc:id:sgln:08600031303.2.0"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:fisherman01.tuna.v1-0122-2022",
+                                "quantity": 9876,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:example.org:party:fisherman01.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:unloadingPort": "PORTSD",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:landingAuth",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:fisherman01.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-02-13T07:30:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:35:08.4490000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:8f764e57-1f1d-4ed1-a2db-25c5024e43fd",
+                        "epcList": [],
+                        "action": "OBSERVE",
+                        "bizStep": "shipping",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:epc:id:sgln:08600031303.2.0"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:fisherman01.tuna.v1-0122-2022",
+                                "quantity": 9876,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:example.org:party:processor.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:processor.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-02-13T08:30:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:35:08.9140000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:ed5e4f53-b58c-42da-9e0b-b8574f35a270",
+                        "epcList": [],
+                        "action": "OBSERVE",
+                        "bizStep": "receiving",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:processor.plant1"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:fisherman01.tuna.v1-0122-2022",
+                                "quantity": 9876,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "sourceList": [
+                            {
+                                "type": "owning_party",
+                                "source": "urn:gdst:example.org:party:fisherman01.1"
+                            }
+                        ],
+                        "destinationList": [
+                            {
+                                "type": "owning_party",
+                                "destination": "urn:gdst:example.org:party:processor.1"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:example.org:party:processor.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:processor.1"
+                    },
+                    {
+                        "type": "TransformationEvent",
+                        "eventTime": "2022-02-13T11:10:47.2850000+00:00",
+                        "recordTime": "2023-07-14T14:35:11.5830000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:6dbcbdd2-7b96-49b9-94f7-d82b9526f803",
+                        "inputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:fishfarm.1.farmed-tuna-01192022",
+                                "quantity": 12000,
+                                "uom": "KGM"
+                            },
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:fisherman01.tuna.v1-0122-2022",
+                                "quantity": 10000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "outputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:processor.10.commingle-01232022",
+                                "quantity": 22000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "bizStep": "urn:gdst:bizstep:commingling",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:processor.plant1"
+                        },
+                        "ilmd": {
+                            "cbvmda:lotNumber": "COMMINGLE-01232022"
+                        },
+                        "gdst:productOwner": "urn:gdst:example.org:party:processor.1",
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:processor.1"
+                    },
+                    {
+                        "type": "TransformationEvent",
+                        "eventTime": "2022-02-18T08:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:35:12.4690000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:8778bb7a-1723-4cea-b58f-e0de93b3861b",
+                        "inputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:processor.10.commingle-01232022",
+                                "quantity": 9876,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "outputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:processor.2.v1-0122-2022",
+                                "quantity": 5000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "bizStep": "commissioning",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:processor.plant1"
+                        },
+                        "ilmd": {
+                            "cbvmda:itemExpirationDate": "2023-01-22T03:00:00.0000000+00:00",
+                            "cbvmda:countryOfOrigin": "US",
+                            "cbvmda:lotNumber": "V1-0122-2022",
+                            "cbvmda:certificationList": {
+                                "certification": [
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    },
+                                    {
+                                        "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "certificationIdentification": "test"
+                                    }
+                                ]
+                            }
+                        },
+                        "gdst:productOwner": "urn:gdst:example.org:party:processor.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:processor.1"
+                    },
+                    {
+                        "type": "AggregationEvent",
+                        "eventTime": "2022-02-18T11:11:25.7520000+00:00",
+                        "recordTime": "2023-07-14T14:35:04.1610000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:b27daa73-7c36-40ab-a71a-03172fcf431b",
+                        "parentID": "urn:epc:id:sscc:08600031303.0003",
+                        "childEPCs": [],
+                        "action": "ADD",
+                        "bizStep": "packing",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:processor.plant1"
+                        },
+                        "childQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:processor.2.v1-0122-2022",
+                                "quantity": 5000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:example.org:party:processor.1",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:aggregatorLicense",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:processor.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-02-19T11:12:04.4880000+00:00",
+                        "recordTime": "2023-07-14T14:35:09.4340000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:4482ed83-b713-4979-a0bb-744540c1c142",
+                        "epcList": [
+                            "urn:epc:id:sscc:08600031303.0003"
+                        ],
+                        "action": "OBSERVE",
+                        "bizStep": "shipping",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:processor.plant1"
+                        },
+                        "sourceList": [
+                            {
+                                "type": "owning_party",
+                                "source": "urn:gdst:example.org:party:processor.1"
+                            }
+                        ],
+                        "destinationList": [
+                            {
+                                "type": "owning_party",
+                                "destination": "urn:gdst:example.org:party:importer.1"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:example.org:party:importer.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:processor.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-02-24T11:12:14.9210000+00:00",
+                        "recordTime": "2023-07-14T14:35:09.9220000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:4c2c34b0-cab6-4a68-b0e0-66545b5d3e2c",
+                        "epcList": [
+                            "urn:epc:id:sscc:08600031303.0003"
+                        ],
+                        "action": "OBSERVE",
+                        "bizStep": "receiving",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:importer.123"
+                        },
+                        "gdst:productOwner": "urn:gdst:example.org:party:importer.1",
+                        "gdst:humanWelfarePolicy": "3P Audit",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:importer.1"
+                    },
+                    {
+                        "type": "AggregationEvent",
+                        "eventTime": "2022-02-25T11:12:25.7910000+00:00",
+                        "recordTime": "2023-07-14T14:35:05.0010000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:efa8c74f-b012-433a-b9a2-1d4afd5a3535",
+                        "parentID": "urn:epc:id:sscc:08600031303.0003",
+                        "childEPCs": [],
+                        "action": "DELETE",
+                        "bizStep": "unpacking",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:importer.123"
+                        },
+                        "gdst:productOwner": "urn:gdst:example.org:party:importer.1",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:aggregatorLicense",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:importer.1"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-03-01T09:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:10.2770000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:574d3866-134d-4f43-92d1-384b4e8bb46c",
+                        "epcList": [],
+                        "action": "ADD",
+                        "bizStep": "urn:gdst:bizStep:fishingEvent",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:fishcompany.boat1"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.tuna.23423445",
+                                "quantity": 5000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "ilmd": {
+                            "cbvmda:vesselCatchInformationList": {
+                                "cbvmda:vesselCatchInformation": [
+                                    {
+                                        "cbvmda:economicZone": "urn:gdst:eez:usa",
+                                        "cbvmda:fishingGearTypeCode": "urn:gdst:gear:1.1",
+                                        "cbvmda:vesselFlagState": "US",
+                                        "cbvmda:vesselID": "BOAT1",
+                                        "cbvmda:vesselName": "boat 1",
+                                        "gdst:fisheryImprovementProject": "test",
+                                        "gdst:gpsAvailability": true,
+                                        "gdst:imoNumber": "IMO12345678",
+                                        "gdst:rfmoArea": "urn:gdst:rfmo:cecaf",
+                                        "gdst:satelliteTrackingAuthority": "test",
+                                        "gdst:subnationalPermitArea": "test",
+                                        "gdst:vesselPublicRegistry": "test",
+                                        "gdst:vesselTripDate": "2022-01-20T10:57:24.1560000+00:00",
+                                        "cbvmda:catchArea": "urn:gdst:fao:27.1"
+                                    }
+                                ]
+                            },
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "MARINE_FISHERY",
+                            "cbvmda:lotNumber": "23423445"
+                        },
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:fishingAuth",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:fishcompany.0"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-03-01T09:04:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:10.6140000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:24e5d229-d4b3-413f-94eb-e59392c9a4a2",
+                        "epcList": [],
+                        "action": "ADD",
+                        "bizStep": "urn:gdst:bizStep:fishingEvent",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:fishcompany.boat1"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.tuna.23423",
+                                "quantity": 5000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "ilmd": {
+                            "cbvmda:vesselCatchInformationList": {
+                                "cbvmda:vesselCatchInformation": [
+                                    {
+                                        "cbvmda:economicZone": "urn:gdst:eez:usa",
+                                        "cbvmda:fishingGearTypeCode": "urn:gdst:gear:1.1",
+                                        "cbvmda:vesselFlagState": "US",
+                                        "cbvmda:vesselID": "BOAT1",
+                                        "cbvmda:vesselName": "boat 1",
+                                        "gdst:fisheryImprovementProject": "test",
+                                        "gdst:gpsAvailability": true,
+                                        "gdst:imoNumber": "IMO12345678",
+                                        "gdst:rfmoArea": "urn:gdst:rfmo:cecaf",
+                                        "gdst:satelliteTrackingAuthority": "test",
+                                        "gdst:subnationalPermitArea": "test",
+                                        "gdst:vesselPublicRegistry": "test",
+                                        "gdst:vesselTripDate": "2022-01-20T10:57:24.1560000+00:00",
+                                        "cbvmda:catchArea": "urn:gdst:fao:27.1"
+                                    }
+                                ]
+                            },
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "MARINE_FISHERY",
+                            "cbvmda:lotNumber": "23423"
+                        },
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:fishingAuth",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:fishcompany.0"
+                    },
+                    {
+                        "type": "TransformationEvent",
+                        "eventTime": "2022-03-01T09:30:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:10.9570000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:515d6e60-ca43-45a9-b0a8-f2939eac0126",
+                        "inputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.tuna.23423",
+                                "quantity": 5000,
+                                "uom": "KGM"
+                            },
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.tuna.23423445",
+                                "quantity": 5000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "outputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.tuna.1024f44f",
+                                "quantity": 10000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "bizStep": "urn:gdst:bizstep:commingling",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:fishcompany.boat1"
+                        },
+                        "ilmd": {
+                            "cbvmda:itemExpirationDate": "2023-03-01T17:00:00.0000000+00:00",
+                            "cbvmda:countryOfOrigin": "US"
+                        },
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:fishcompany.0"
+                    },
+                    {
+                        "type": "TransformationEvent",
+                        "eventTime": "2022-03-01T10:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:13.4370000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:4ca9fca4-6913-436b-b3b9-569257105e0b",
+                        "inputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.sal-fry.weio348",
+                                "quantity": 250,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "outputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.sal-whole.eiwo493",
+                                "quantity": 1000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "transformationID": "",
+                        "bizStep": "urn:gdst:bizStep:farmHarvest",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:fishcompany.portsd"
+                        },
+                        "ilmd": {
+                            "gdst:aquacultureMethod": "Intensive",
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "AQUACULTURE"
+                        },
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:fishcompany.0"
+                    },
+                    {
+                        "type": "TransformationEvent",
+                        "eventTime": "2022-03-01T10:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:11.7480000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:dad55096-fc2b-4fe9-9f0c-51208dfbc733",
+                        "inputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.tuna.1024f44f",
+                                "quantity": 10000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "outputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.hgtuna.8a25a035",
+                                "quantity": 7000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "transformationID": "",
+                        "bizStep": "commissioning",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:fishcompany.boat1"
+                        },
+                        "ilmd": {
+                            "cbvmda:itemExpirationDate": "2023-03-01T17:00:00.0000000+00:00",
+                            "cbvmda:countryOfOrigin": "US"
+                        },
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:fishcompany.0"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-03-01T11:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:12.3060000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:74129d97-3c7c-462f-a04d-6468d85ce62e",
+                        "epcList": [],
+                        "action": "OBSERVE",
+                        "bizStep": "urn:gdst:bizStep:transshipment",
+                        "disposition": "active",
+                        "readPoint": {
+                            "id": "geo:-34.3232,1.232"
+                        },
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:fishcompany.boat2"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.hgtuna.8a25a035",
+                                "quantity": 7000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:transshipmentAuth",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:fishcompany.0"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-03-01T12:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:12.7150000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:c057ba84-6ed1-405f-af09-460a57ac7186",
+                        "epcList": [],
+                        "action": "OBSERVE",
+                        "bizStep": "urn:gdst:bizStep:landing",
+                        "disposition": "active",
+                        "readPoint": {
+                            "id": "geo:-34.3232,1.232"
+                        },
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:fishcompany.portsd"
+                        },
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.hgtuna.8a25a035",
+                                "quantity": 7000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:landingAuth",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:fishcompany.0"
+                    },
+                    {
+                        "type": "AggregationEvent",
+                        "eventTime": "2022-03-01T13:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:09.0460000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:61937b66-84fd-443c-8416-1e95921e7954",
+                        "parentID": "urn:epc:id:sscc:0614141.1234567890",
+                        "childEPCs": [],
+                        "action": "ADD",
+                        "bizStep": "packing",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:fishcompany.portsd"
+                        },
+                        "childQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.hgtuna.8a25a035",
+                                "quantity": 7000,
+                                "uom": "KGM"
+                            },
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.sal-whole.eiwo493",
+                                "quantity": 1000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:fishcompany.0"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-03-01T14:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:14.0050000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:6517dc3a-4db3-4c6a-bbcb-5f956e8d4b50",
+                        "epcList": [
+                            "urn:epc:id:sscc:0614141.1234567890"
+                        ],
+                        "action": "OBSERVE",
+                        "bizStep": "shipping",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:fishcompany.portsd"
+                        },
+                        "sourceList": [
+                            {
+                                "type": "owning_party",
+                                "source": "urn:gdst:wholechain.com:party:fishcompany.0"
+                            }
+                        ],
+                        "destinationList": [
+                            {
+                                "type": "owning_party",
+                                "destination": "urn:gdst:wholechain.com:party:processingcompany.0"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:processingcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:fishcompany.0"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "eventTime": "2022-03-01T15:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:14.5680000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:c82e4e9f-3f86-4b9e-8579-dc2d05667491",
+                        "epcList": [
+                            "urn:epc:id:sscc:0614141.1234567890"
+                        ],
+                        "action": "OBSERVE",
+                        "bizStep": "receiving",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:processingcompany.plant1"
+                        },
+                        "sourceList": [
+                            {
+                                "type": "owning_party",
+                                "source": "urn:gdst:wholechain.com:party:fishcompany.0"
+                            }
+                        ],
+                        "destinationList": [
+                            {
+                                "type": "owning_party",
+                                "destination": "urn:gdst:wholechain.com:party:processingcompany.0"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:processingcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:processingcompany.0"
+                    },
+                    {
+                        "type": "AggregationEvent",
+                        "eventTime": "2022-03-01T16:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:09.6570000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:09e7e037-6666-4014-b91a-59c10ace0f77",
+                        "parentID": "urn:epc:id:sscc:0614141.1234567890",
+                        "childEPCs": [],
+                        "action": "DELETE",
+                        "bizStep": "unpacking",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:processingcompany.plant1"
+                        },
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:importer.1",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:aggregatorLicense",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:importer.1"
+                    },
+                    {
+                        "type": "TransformationEvent",
+                        "eventTime": "2022-03-01T17:00:00.0000000+00:00",
+                        "recordTime": "2023-07-14T14:34:15.1480000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:09e7e037-fef8-4014-b91a-59c10ace0f77",
+                        "inputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:fishcompany.hgtuna.8a25a035",
+                                "quantity": 7000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "outputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:wholechain.com:product:lot:class:processingcompany.tunafilet.34e5e863",
+                                "quantity": 6000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "transformationID": "",
+                        "bizStep": "commissioning",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:wholechain.com:location:loc:processingcompany.plant1"
+                        },
+                        "ilmd": {
+                            "gdst:proteinSource": "wild caught",
+                            "cbvmda:itemExpirationDate": "2023-03-01T17:00:00.0000000+00:00",
+                            "cbvmda:countryOfOrigin": "US"
+                        },
+                        "gdst:productOwner": "urn:gdst:wholechain.com:party:processingcompany.0",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:wholechain.com:party:processingcompany.0"
+                    },
+                    {
+                        "type": "AggregationEvent",
+                        "eventTime": "2022-03-22T11:11:25.7520000+00:00",
+                        "recordTime": "2023-07-14T14:35:04.5760000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:22b0dbf8-f877-4a2c-a0d9-2cd58c5735fd",
+                        "parentID": "urn:epc:id:sscc:08600031303.0003",
+                        "childEPCs": [],
+                        "action": "ADD",
+                        "bizStep": "packing",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:processor.plant1"
+                        },
+                        "childQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:example.org:product:lot:class:processor.2.v1-0122-2022",
+                                "quantity": 5000,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "gdst:productOwner": "urn:gdst:example.org:party:processor.1",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:aggregatorLicense",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:processor.1"
+                    },
+                    {
+                        "type": "AggregationEvent",
+                        "eventTime": "2022-03-25T11:12:25.7910000+00:00",
+                        "recordTime": "2023-07-14T14:35:05.4630000+00:00",
+                        "eventTimeZoneOffset": "+00:00",
+                        "eventID": "urn:uuid:ed607557-e9e2-4c1e-9e1b-f34516d2b3e8",
+                        "parentID": "urn:epc:id:sscc:08600031303.0003",
+                        "childEPCs": [],
+                        "action": "DELETE",
+                        "bizStep": "unpacking",
+                        "bizLocation": {
+                            "id": "urn:gdst:example.org:location:loc:importer.123"
+                        },
+                        "gdst:productOwner": "urn:gdst:example.org:party:importer.1",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                },
+                                {
+                                    "gdst:certificationType": "urn:gdst:certType:aggregatorLicense",
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "certificationIdentification": "test"
+                                }
+                            ]
+                        },
+                        "cbvmda:informationProvider": "urn:gdst:example.org:party:importer.1"
+                    }
+                ]
+            }
+        }
+    }
+}

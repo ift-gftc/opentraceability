@@ -39,6 +39,8 @@
 	<ItemGroup>
 		<None Remove="Mappers\EPCIS\mappings.json" />
 		<None Remove="Utility\Data\Countries.xml" />
+		<None Remove="Utility\Data\EPCISJsonContext.jsonld" />
+		<None Remove="Utility\Data\EPCISJsonSchema.jsonld" />
 		<None Remove="Utility\Data\UnitDescriptors.xml" />
 		<None Remove="Utility\Data\UnitSystems.xml" />
 		<None Remove="Utility\Data\uoms.json" />
@@ -47,7 +49,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="Utility\Data\EPCISJsonSchema.jsonld" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<EmbeddedResource Include="Utility\Data\Countries.xml" />
+		<EmbeddedResource Include="Utility\Data\EPCISJsonContext.jsonld" />
 		<EmbeddedResource Include="Utility\Data\uoms.json" />
 	</ItemGroup>
 

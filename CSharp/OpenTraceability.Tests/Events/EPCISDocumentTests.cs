@@ -144,5 +144,26 @@ namespace OpenTraceability.Tests.Events
 
             OpenTraceabilityTests.CompareJSON(strEvents, strEventsAfter);
         }
+
+        [Test]
+        public void TestHarness()
+        {
+            // read object events from test data specified in the file argument
+            string strEvents = OpenTraceabilityTests.ReadTestData("cap_tool_events.jsonld");
+
+            // read object events from test data specified in the file argument
+            string strAfterEvents = OpenTraceabilityTests.ReadTestData("all_wholechain_events.jsonld");
+
+            // deserialize object events into C# models
+            EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(strEvents);
+
+            // deserialize object events into C# models
+            EPCISQueryDocument afterDoc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(strEvents);
+
+            List<string> beforeEventIDs = doc.Events.Select(e => e.EventID.ToString()).ToList();
+            List<string> afterEventIDs = afterDoc.Events.Select(e => e.EventID.ToString()).ToList();
+
+            List<string> missing = beforeEventIDs.Except(afterEventIDs).ToList();
+        }
     }
 }

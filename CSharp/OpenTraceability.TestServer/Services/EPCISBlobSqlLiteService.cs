@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using Microsoft.Data.Sqlite;
 using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
@@ -15,6 +16,9 @@ namespace OpenTraceability.TestServer.Services
 	{
 		IConfiguration _config;
 
+        static object cacheLock = new object();
+        static ConcurrentDictionary<string, (EPCISBlob blob, DateTime lastAccess)> _blobCache = new ConcurrentDictionary<string, (EPCISBlob blob, DateTime lastAccess)>();
+
 		public EPCISBlobSqlLiteService(IConfiguration config)
 		{
 			_config = config;
@@ -24,6 +28,12 @@ namespace OpenTraceability.TestServer.Services
         {
             try
             {
+                if (_blobCache.TryGetValue(id, out var b))
+                {
+                    b.lastAccess = DateTime.UtcNow;
+                    return Task.FromResult<EPCISBlob?>(b.blob);
+                }
+
                 string cs = _config.GetConnectionString("sqlite") ?? throw new Exception("No connection string 'sqlite' found in appsettings.");
 
                 // TODO: connect to the database
@@ -38,7 +48,6 @@ namespace OpenTraceability.TestServer.Services
 
                 using SqliteDataReader rdr = cmd.ExecuteReader();
 
-
                 EPCISBlob? blob = null;
                 while (rdr.Read())
                 {
@@ -51,6 +60,32 @@ namespace OpenTraceability.TestServer.Services
                     blob.Created = rdr.GetDateTime(4);
                     break;
                 }
+
+                if (blob != null)
+                {
+                    lock (cacheLock)
+                    {
+                        if (!_blobCache.ContainsKey(id) && _blobCache.Values.Count > 5)
+                        {
+                            var oldest = _blobCache.OrderBy(v => v.Value.lastAccess).First();
+                            _blobCache.TryRemove(oldest.Key, out _);
+                            _blobCache.TryAdd(id, (blob, DateTime.UtcNow));
+                        }
+                        else
+                        {
+                            _blobCache[id] = (blob, DateTime.UtcNow);
+                        }
+                    }
+                }
+
+                // asynchronously delete all blobs that are more than 1 month old...
+                Task.Run(() =>
+                {
+                    string deleteCmd = "DELETE FROM data WHERE created < @date";
+                    using var delete = new SqliteCommand(deleteCmd, con);
+                    delete.Parameters.AddWithValue("@date", DateTime.UtcNow.AddMonths(-1));
+                    delete.ExecuteNonQuery();
+                });
 
                 // return the blob
                 return Task.FromResult(blob);

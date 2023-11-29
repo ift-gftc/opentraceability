@@ -1,0 +1,580 @@
+﻿{
+    "@context": [
+        "https://ref.gs1.org/standards/epcis/epcis-context.jsonld",
+        {
+            "gdst": "https://traceability-dialogue.org/epcis"
+        }
+    ],
+    "type": "EPCISDocument",
+    "creationDate": "2023-02-18T00:00:00.0000000+00:00",
+    "schemaVersion": "2.0",
+    "epcisHeader": {
+        "epcisMasterData": {
+            "vocabularyList": [
+                {
+                    "type": "urn:epcglobal:epcis:vtype:EPCClass",
+                    "vocabularyElementList": [
+                        {
+                            "id": "urn:gdst:example.org:product:class:vessel01.portoflaplaya-ecudaor",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Port of La Playa - Ecudaor"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": ""
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": ""
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:product:class:vessel02.portoflaplaya-ecudaor",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Port of La Playa - Ecudaor"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": ""
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": ""
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:product:class:processor02.",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": ""
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": ""
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": ""
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:product:class:processor01.cannedyellowfintuna",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Canned Yellowfin Tuna"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": ""
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "YFT"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "urn:epcglobal:epcis:vtype:Location",
+                    "vocabularyElementList": [
+                        {
+                            "id": "urn:gdst:example.org:location:loc:port2023071812042636.2023071812042636",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "port 2023071812042636"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:location:loc:vessel2023071812042637.2023071812042637",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "vessel 2023071812042637"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:location:loc:port2023071812042637.2023071812042637",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "port 2023071812042637"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "urn:epcglobal:epcis:vtype:Party",
+                    "vocabularyElementList": [
+                        {
+                            "id": "urn:gdst:example.org:party:port2023071812042636.0",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Port Owner 2023071812042636"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:party:vessel2023071812042637.0",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Vessel Owner 2023071812042637"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:gdst:example.org:party:port2023071812042637.0",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Port Owner 2023071812042637"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "epcisBody": {
+        "eventList": [
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2023-02-18T00:00:00.0000000+00:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:d1e9ff8e-30c8-4ea0-b08e-26b1859ccc30",
+                "epcList": [],
+                "action": "OBSERVE",
+                "bizStep": "shipping",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:processor01.0"
+                },
+                "quantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor01.cannedyellowfintuna.2023071812042631",
+                        "quantity": 45860.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "sourceList": [
+                    {
+                        "type": "owning_party",
+                        "source": "urn:gdst:example.org:party:processor01.0"
+                    }
+                ],
+                "destinationList": [
+                    {
+                        "type": "owning_party",
+                        "destination": "urn:gdst:example.org:party:processor01.0"
+                    }
+                ],
+                "gdst:productOwner": "urn:gdst:example.org:party:processor01.0",
+                "gdst:transportType": "AIR",
+                "gdst:transportVehicleID": "15501b65-ce2c-4374-986d-94ba4414d876",
+                "gdst:transportNumber": "6300e7ae-8221-42eb-8bc1-f88debd257c1",
+                "gdst:transportProviderID": "cf85b4d5-5bac-4700-b880-45d1ccc4074a",
+                "cbvmda:certificationList": {
+                    "certification": [
+                        {
+                            "gdst:certificationType": "urn:gdst:certtype:harvestcoc"
+                        }
+                    ]
+                },
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:processor01.0"
+            },
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2023-01-27T18:00:00.0000000+00:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:4a3109c2-64b2-44d1-acf5-bb19002113c1",
+                "epcList": [],
+                "action": "OBSERVE",
+                "bizStep": "receiving",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:processor01.0"
+                },
+                "quantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor01.cannedyellowfintuna.2023071812042631",
+                        "quantity": 45860.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "sourceList": [
+                    {
+                        "type": "owning_party",
+                        "source": "urn:gdst:example.org:party:processor01.0"
+                    }
+                ],
+                "destinationList": [
+                    {
+                        "type": "owning_party",
+                        "destination": "urn:gdst:example.org:party:processor01.0"
+                    }
+                ],
+                "gdst:productOwner": "urn:gdst:example.org:party:processor01.0",
+                "gdst:transportType": "AIR",
+                "gdst:transportVehicleID": "15501b65-ce2c-4374-986d-94ba4414d876",
+                "gdst:transportNumber": "6300e7ae-8221-42eb-8bc1-f88debd257c1",
+                "gdst:transportProviderID": "cf85b4d5-5bac-4700-b880-45d1ccc4074a",
+                "cbvmda:certificationList": {
+                    "certification": [
+                        {
+                            "gdst:certificationType": "urn:gdst:certtype:humanPolicy"
+                        },
+                        {
+                            "gdst:certificationType": "urn:gdst:certtype:harvestcoc"
+                        }
+                    ]
+                },
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:processor01.0"
+            },
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2023-01-27T18:00:00.0000000+00:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:df056193-b8f9-4cf4-9bfd-e54cae4a1cc3",
+                "epcList": [],
+                "action": "OBSERVE",
+                "bizStep": "storing",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:processor01.0"
+                },
+                "quantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor01.cannedyellowfintuna.2023071812042631",
+                        "quantity": 45860.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "gdst:productOwner": "urn:gdst:example.org:party:processor01.0",
+                "gdst:humanWelfarePolicy": "3P Audit",
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:processor01.0"
+            },
+            {
+                "type": "TransformationEvent",
+                "eventTime": "2023-01-27T16:00:00.0000000+00:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:2ce9975d-8981-4b44-9989-22fd32c934ee",
+                "inputQuantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor01..2023071812042636",
+                        "quantity": 31563.68030294531,
+                        "uom": "KGM"
+                    },
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor01..2023071812042636",
+                        "quantity": 17261.642579001447,
+                        "uom": "KGM"
+                    },
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor01..2023071812042636",
+                        "quantity": 6327.551616558729,
+                        "uom": "KGM"
+                    }
+                ],
+                "outputQuantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor01.cannedyellowfintuna.2023071812042631",
+                        "quantity": 45860.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "bizStep": "commissioning",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:processor01.0"
+                },
+                "ilmd": {
+                    "gdst:processingType": "complete",
+                    "cbvmda:countryOfOrigin": "EC",
+                    "cbvmda:certificationList": {
+                        "certification": [
+                            {
+                                "gdst:certificationType": "urn:gdst:certtype:harvestcoc"
+                            },
+                            {
+                                "gdst:certificationType": "urn:gdst:certtype:humanPolicy"
+                            }
+                        ]
+                    }
+                },
+                "gdst:productOwner": "urn:gdst:example.org:party:processor01.0",
+                "gdst:humanWelfarePolicy": "3P Audit",
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:processor01.0"
+            },
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2023-02-18T00:00:00.0000000+00:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:5bab670e-1aea-4dff-8718-5cd97071ae84",
+                "epcList": [],
+                "action": "OBSERVE",
+                "bizStep": "shipping",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:processor02.0"
+                },
+                "quantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor02..2023071812042636",
+                        "quantity": 37455.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "sourceList": [
+                    {
+                        "type": "owning_party",
+                        "source": "urn:gdst:example.org:party:processor02.0"
+                    }
+                ],
+                "destinationList": [
+                    {
+                        "type": "owning_party",
+                        "destination": "urn:gdst:example.org:party:processor02.0"
+                    }
+                ],
+                "gdst:productOwner": "urn:gdst:example.org:party:processor02.0",
+                "gdst:transportType": "AIR",
+                "gdst:transportVehicleID": "280ba206-ba6a-4138-8fa8-818d5174ce41",
+                "gdst:transportNumber": "2cfaed79-dda1-43fe-978e-f82e0ff0d85f",
+                "gdst:transportProviderID": "9a1a03c3-4138-4bba-9cf5-f8f14b935109",
+                "cbvmda:certificationList": {
+                    "certification": [
+                        {
+                            "gdst:certificationType": "urn:gdst:certtype:harvestcoc"
+                        }
+                    ]
+                },
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:processor02.0"
+            },
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2023-01-27T18:00:00.0000000+00:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:7a5ee82b-e9db-462f-bcf0-b3c9748d6d79",
+                "epcList": [],
+                "action": "OBSERVE",
+                "bizStep": "receiving",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:processor02.0"
+                },
+                "quantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor02..2023071812042636",
+                        "quantity": 37455.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "sourceList": [
+                    {
+                        "type": "owning_party",
+                        "source": "urn:gdst:example.org:party:processor02.0"
+                    }
+                ],
+                "destinationList": [
+                    {
+                        "type": "owning_party",
+                        "destination": "urn:gdst:example.org:party:processor02.0"
+                    }
+                ],
+                "gdst:productOwner": "urn:gdst:example.org:party:processor02.0",
+                "gdst:transportType": "AIR",
+                "gdst:transportVehicleID": "280ba206-ba6a-4138-8fa8-818d5174ce41",
+                "gdst:transportNumber": "2cfaed79-dda1-43fe-978e-f82e0ff0d85f",
+                "gdst:transportProviderID": "9a1a03c3-4138-4bba-9cf5-f8f14b935109",
+                "cbvmda:certificationList": {
+                    "certification": [
+                        {
+                            "gdst:certificationType": "urn:gdst:certtype:humanPolicy"
+                        },
+                        {
+                            "gdst:certificationType": "urn:gdst:certtype:harvestcoc"
+                        }
+                    ]
+                },
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:processor02.0"
+            },
+            {
+                "type": "TransformationEvent",
+                "eventTime": "2023-01-27T16:00:00.0000000+00:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:37ffc013-e4b1-4555-b9e7-7dd6b0f98a0e",
+                "inputQuantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor02..2023071812042636",
+                        "quantity": 51650.81131932347,
+                        "uom": "KGM"
+                    }
+                ],
+                "outputQuantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:processor02..2023071812042636",
+                        "quantity": 37455.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "bizStep": "commissioning",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:processor02.0"
+                },
+                "ilmd": {
+                    "gdst:processingType": "complete",
+                    "cbvmda:countryOfOrigin": "EC",
+                    "cbvmda:certificationList": {
+                        "certification": [
+                            {
+                                "gdst:certificationType": "urn:gdst:certtype:harvestcoc"
+                            },
+                            {
+                                "gdst:certificationType": "urn:gdst:certtype:humanPolicy"
+                            }
+                        ]
+                    }
+                },
+                "gdst:productOwner": "urn:gdst:example.org:party:processor02.0",
+                "gdst:humanWelfarePolicy": "3P Audit",
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:processor02.0"
+            },
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2023-07-18T12:04:26.3703500+01:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:eeeade0e-0da4-4481-a8a7-499b6c4a8008",
+                "epcList": [],
+                "action": "OBSERVE",
+                "bizStep": "urn:gdst:bizStep:landing",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:opentraceability.2023071812042637"
+                },
+                "quantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:vessel01.portoflaplaya-ecudaor.2023071812042636",
+                        "quantity": 13255.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "gdst:productOwner": "urn:gdst:example.org:party:vessel01.0",
+                "gdst:humanWelfarePolicy": "3P Audit",
+                "cbvmda:certificationList": {
+                    "certification": [
+                        {
+                            "gdst:certificationType": "urn:gdst:certtype:harvestcoc"
+                        },
+                        {
+                            "gdst:certificationType": "urn:gdst:certtype:humanPolicy"
+                        }
+                    ]
+                },
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:vessel01.0"
+            },
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2023-07-18T12:04:26.3713034+01:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:41c04986-04c8-4cae-84f3-e27da06f334c",
+                "epcList": [],
+                "action": "ADD",
+                "bizStep": "urn:gdst:bizStep:fishingEvent",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:opentraceability.2023071812042637"
+                },
+                "quantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:vessel01.portoflaplaya-ecudaor.2023071812042636",
+                        "quantity": 13255.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "ilmd": {
+                    "cbvmda:certificationList": {
+                        "certification": [
+                            {
+                                "gdst:certificationType": "urn:gdst:certtype:humanPolicy"
+                            }
+                        ]
+                    }
+                },
+                "gdst:productOwner": "urn:gdst:example.org:party:vessel01.0",
+                "gdst:humanWelfarePolicy": "3P Audit",
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:vessel01.0"
+            },
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2023-07-18T12:04:26.3729908+01:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:414bb6be-430c-4069-843e-e3e40a094525",
+                "epcList": [],
+                "action": "OBSERVE",
+                "bizStep": "urn:gdst:bizStep:landing",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:opentraceability.2023071812042637"
+                },
+                "quantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:vessel02.portoflaplaya-ecudaor.2023071812042637",
+                        "quantity": 17114.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "gdst:productOwner": "urn:gdst:example.org:party:vessel02.0",
+                "gdst:humanWelfarePolicy": "3P Audit",
+                "cbvmda:certificationList": {
+                    "certification": [
+                        {
+                            "gdst:certificationType": "urn:gdst:certtype:harvestcoc"
+                        },
+                        {
+                            "gdst:certificationType": "urn:gdst:certtype:humanPolicy"
+                        }
+                    ]
+                },
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:vessel02.0"
+            },
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2023-07-18T12:04:26.3731258+01:00",
+                "eventTimeZoneOffset": "+00:00",
+                "eventID": "urn:uuid:9c049437-26da-4e35-ac7b-82224e439f9e",
+                "epcList": [],
+                "action": "ADD",
+                "bizStep": "urn:gdst:bizStep:fishingEvent",
+                "bizLocation": {
+                    "id": "urn:gdst:example.org:location:loc:opentraceability.2023071812042637"
+                },
+                "quantityList": [
+                    {
+                        "epcClass": "urn:gdst:example.org:product:lot:class:vessel02.portoflaplaya-ecudaor.2023071812042637",
+                        "quantity": 17114.0,
+                        "uom": "KGM"
+                    }
+                ],
+                "ilmd": {
+                    "cbvmda:certificationList": {
+                        "certification": [
+                            {
+                                "gdst:certificationType": "urn:gdst:certtype:humanPolicy"
+                            }
+                        ]
+                    }
+                },
+                "gdst:productOwner": "urn:gdst:example.org:party:vessel02.0",
+                "gdst:humanWelfarePolicy": "3P Audit",
+                "cbvmda:informationProvider": "urn:gdst:example.org:party:vessel02.0"
+            }
+        ]
+    }
+}
