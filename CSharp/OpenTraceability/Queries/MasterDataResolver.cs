@@ -9,6 +9,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -279,7 +280,11 @@ namespace OpenTraceability.Queries
 
                             if (response.IsSuccessStatusCode)
                             {
-                                string json = await response.Content.ReadAsStringAsync();
+                                var json = (await response.Content.ReadFromJsonAsync<object>())?.ToString();
+                            
+                                if (json is null) 
+                                    throw new NullReferenceException("Error parsing the digital link response: JSON value is null");
+                                
                                 var item = OpenTraceabilityMappers.MasterData.GS1WebVocab.Map(type, json);
                                 if (item != null)
                                 {
