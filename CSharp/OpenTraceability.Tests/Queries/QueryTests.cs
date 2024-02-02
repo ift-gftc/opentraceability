@@ -253,31 +253,29 @@ namespace OpenTraceability.Tests.Queries
             Assert.That(results2.Document.Events.Count, Is.EqualTo(13));
         }
 
-        [Test]
-        public async Task TracebackHarness()
-        {
-            string digitalLinkURL = "https://pacifical-gdst-api-dev.azurewebsites.net";
-            string epc = "urn:epc:id:sscc:0614141.1234567890.";
-            string apiKey = "32688cde-6cbf-41df-9062-4c6169de3eff";
+        //[Test]
+        //public async Task TracebackHarness()
+        //{
+            
 
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
-            client.DefaultRequestHeaders.Add("Accept", "*/*");
-            client.DefaultRequestHeaders.Host = "pacifical-gdst-api-dev.azurewebsites.net";
+        //    HttpClient client = new HttpClient();
+        //    client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+        //    client.DefaultRequestHeaders.Add("Accept", "*/*");
+        //    
 
-            var result = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(new DigitalLinkQueryOptions()
-            {
-                Format = EPCISDataFormat.JSON,
-                EnableStackTrace = true,
-                URL = new Uri(digitalLinkURL),
-            }, new Models.Identifiers.EPC(epc), client);
+        //    var result = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(new DigitalLinkQueryOptions()
+        //    {
+        //        Format = EPCISDataFormat.JSON,
+        //        EnableStackTrace = true,
+        //        URL = new Uri(digitalLinkURL),
+        //    }, new Models.Identifiers.EPC(epc), client);
 
-            var epcisResults = await EPCISTraceabilityResolver.Traceback(new EPCISQueryInterfaceOptions()
-            {
-                URL = result,
-                Version = Models.Events.EPCISVersion.V2,
-                Format = EPCISDataFormat.JSON
-            }, new Models.Identifiers.EPC(epc), client);
-        }
+        //    var epcisResults = await EPCISTraceabilityResolver.Traceback(new EPCISQueryInterfaceOptions()
+        //    {
+        //        URL = result,
+        //        Version = Models.Events.EPCISVersion.V2,
+        //        Format = EPCISDataFormat.JSON
+        //    }, new Models.Identifiers.EPC(epc), client);
+        //}
     }
 }
