@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http.Headers;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
