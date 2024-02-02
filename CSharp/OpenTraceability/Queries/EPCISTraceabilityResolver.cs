@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
@@ -48,6 +49,9 @@ namespace OpenTraceability.Queries
             string host = options.URL.Host;
             request.Headers.Host = host;
 
+            // set accept to "application/json"
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
             var response = await client.SendAsync(request);
             if (response.IsSuccessStatusCode)
             {
@@ -86,6 +90,9 @@ namespace OpenTraceability.Queries
             // calculate the host field for the request
             string host = options.URL.Host;
             request.Headers.Host = host;
+
+            // set accept to "application/json"
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var response = await client.SendAsync(request);
             if (response.IsSuccessStatusCode)
