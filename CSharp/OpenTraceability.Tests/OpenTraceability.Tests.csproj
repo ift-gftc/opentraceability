@@ -16,6 +16,7 @@
 		<None Remove="Data\epcisdocument-example01.jsonld" />
 		<None Remove="Data\EPCISDocument_objectevents_complete.jsonld" />
 		<None Remove="Data\epcisquerydoc-example01.jsonld" />
+		<None Remove="data\EPCISQueryDocument.GDST.jsonld" />
 		<None Remove="Data\EPCISQueryDocument_with_masterdata.jsonld" />
 		<None Remove="Data\epc_tests.json" />
 		<None Remove="Data\gdst_data_withmasterdata.jsonld" />

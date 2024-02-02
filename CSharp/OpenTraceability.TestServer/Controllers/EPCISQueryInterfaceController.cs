@@ -148,7 +148,8 @@ public class EPCISQueryInterfaceController : ControllerBase
                 ID = blob_id,
                 RawData = rawRequestBody,
                 Version = version,
-                Format = format
+                Format = format,
+                Created = DateTime.UtcNow
             };
 
             // save the blob
