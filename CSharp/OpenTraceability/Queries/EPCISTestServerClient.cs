@@ -90,6 +90,10 @@ namespace OpenTraceability.Queries
                 request.Content = content;
                 request.Method = HttpMethod.Post;
 
+                // calculate the host field for the request
+                string host = new Uri(url).Host;
+                request.Headers.Host = host;
+
                 var response = await client.SendAsync(request);
                 if (!response.IsSuccessStatusCode)
                 {

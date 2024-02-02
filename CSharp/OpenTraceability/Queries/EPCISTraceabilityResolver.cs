@@ -38,10 +38,15 @@ namespace OpenTraceability.Queries
             }
 
             relativeUrl += "?linkType=gs1:epcis";
+            string fullURL = options.URL + relativeUrl;
 
             HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri(options.URL + relativeUrl);
+            request.RequestUri = new Uri(fullURL);
             request.Method = HttpMethod.Get;
+
+            // calculate the host field for the request
+            string host = options.URL.Host;
+            request.Headers.Host = host;
 
             var response = await client.SendAsync(request);
             if (response.IsSuccessStatusCode)
@@ -77,6 +82,10 @@ namespace OpenTraceability.Queries
             HttpRequestMessage request = new HttpRequestMessage();
             request.RequestUri = new Uri(options.URL + relativeUrl);
             request.Method = HttpMethod.Get;
+
+            // calculate the host field for the request
+            string host = options.URL.Host;
+            request.Headers.Host = host;
 
             var response = await client.SendAsync(request);
             if (response.IsSuccessStatusCode)
@@ -283,6 +292,10 @@ namespace OpenTraceability.Queries
             string? responseBody = null;
             try
             {
+                // calculate the host field for the request
+                string host = request.RequestUri.Host;
+                request.Headers.Host = host;
+
                 response = await client.SendAsync(request);
                 responseBody = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode)

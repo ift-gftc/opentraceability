@@ -253,15 +253,17 @@ namespace OpenTraceability.Tests.Queries
             Assert.That(results2.Document.Events.Count, Is.EqualTo(13));
         }
 
-        //[Test]
+        [Test]
         public async Task TracebackHarness()
         {
-            string digitalLinkURL = "https://epcis-dev.wholechain.com/DigitalLink";
-            string epc = "urn:epc:id:sscc:08600031303.0003";
-            string apiKey = "58235139-d5f8-4f40-9dbf-e4630db1136e";
+            string digitalLinkURL = "https://pacifical-gdst-api-dev.azurewebsites.net";
+            string epc = "urn:epc:id:sscc:0614141.1234567890.";
+            string apiKey = "32688cde-6cbf-41df-9062-4c6169de3eff";
 
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+            client.DefaultRequestHeaders.Add("Accept", "*/*");
+            client.DefaultRequestHeaders.Host = "pacifical-gdst-api-dev.azurewebsites.net";
 
             var result = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(new DigitalLinkQueryOptions()
             {
@@ -276,8 +278,6 @@ namespace OpenTraceability.Tests.Queries
                 Version = Models.Events.EPCISVersion.V2,
                 Format = EPCISDataFormat.JSON
             }, new Models.Identifiers.EPC(epc), client);
-
-
         }
     }
 }

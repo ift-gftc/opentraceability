@@ -91,6 +91,7 @@ namespace OpenTraceability.Tests.Events
 
         [Test]
         [TestCase("EPCISQueryDocument.jsonld")]
+        [TestCase("EPCISQueryDocument.GDST.jsonld")]
         public void JSONLD(string file)
         {
             // read object events from test data specified in the file argument

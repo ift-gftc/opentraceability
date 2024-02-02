@@ -79,13 +79,13 @@ namespace OpenTraceability.TestServer.Services
                 }
 
                 // asynchronously delete all blobs that are more than 1 month old...
-                Task.Run(() =>
-                {
-                    string deleteCmd = "DELETE FROM data WHERE created < @date";
-                    using var delete = new SqliteCommand(deleteCmd, con);
-                    delete.Parameters.AddWithValue("@date", DateTime.UtcNow.AddMonths(-1));
-                    delete.ExecuteNonQuery();
-                });
+                //Task.Run(() =>
+                //{
+                //    string deleteCmd = "DELETE FROM data WHERE created < @date";
+                //    using var delete = new SqliteCommand(deleteCmd, con);
+                //    delete.Parameters.AddWithValue("@date", DateTime.UtcNow.AddMonths(-1));
+                //    delete.ExecuteNonQuery();
+                //});
 
                 // return the blob
                 return Task.FromResult(blob);
