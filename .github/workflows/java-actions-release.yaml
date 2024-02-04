@@ -32,8 +32,12 @@ jobs:
          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
+      - name: Set project version
+        run: mvn versions:set -DnewVersion=1.3.${{ github.run_number }}
+        working-directory: ./Java/opentraceability/
+
       - name: Build and test
-        run: mvn clean test -DversionNumber=1.3.${{ github.run_number }}
+        run: mvn clean test
         working-directory: ./Java/opentraceability/
 
       - name: Publish to the Maven Central Repository

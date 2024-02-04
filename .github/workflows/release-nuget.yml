@@ -23,6 +23,6 @@ jobs:
     - name: Build
       run: dotnet build -c Release /p:Version=1.3.${{github.run_number}}
     - name: Pack nugets
-      run: dotnet pack -c Release --no-build --output .
-    # - name: Push to NuGet
-    #   run: dotnet nuget push "*.nupkg" --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json
+      run: dotnet pack -c Release /p:Version=1.3.${{github.run_number}} --no-build --output .
+    - name: Push to NuGet
+      run: dotnet nuget push "*.nupkg" --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json
