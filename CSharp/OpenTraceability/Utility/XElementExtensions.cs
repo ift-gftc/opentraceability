@@ -26,6 +26,20 @@ namespace OpenTraceability.Utility
             return result;
         }
 
+        public static void TryAddAttribute(this XElement x, XNamespace xNamespace, string namespaceModifier, string value)
+        {
+            try
+            {
+                XName xName = xNamespace + namespaceModifier;
+                x.Add(new XAttribute(xName, value));
+            }
+            catch(Exception ex)
+            {
+                Exception exception = new Exception("Failed to add attribute to xml doc. Value: " + value, ex);
+                OTLogger.Error(exception);
+            }
+        }
+
         public static XElement? QueryXPath(this XElement x, string xpath)
         {
             List<string> xpath_parts = xpath.SplitXPath();

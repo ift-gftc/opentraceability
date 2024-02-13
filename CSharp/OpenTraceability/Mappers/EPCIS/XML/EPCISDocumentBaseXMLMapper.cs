@@ -115,7 +115,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 }
                 else
                 {
-                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + ns.Key, ns.Value));
+                    xDoc.Root.TryAddAttribute(Constants.XMLNS_XNAMESPACE, ns.Key, ns.Value);
                 }
             }
 

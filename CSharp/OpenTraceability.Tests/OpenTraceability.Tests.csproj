@@ -18,6 +18,7 @@
 		<None Remove="data\EPCISQueryDocument.GDST.jsonld" />
 		<None Remove="Data\EPCISQueryDocument_with_masterdata.jsonld" />
 		<None Remove="Data\epc_tests.json" />
+		<None Remove="Data\Example_9.6.1-ObjectEventWithVocab.jsonld" />
 		<None Remove="Data\gdst_data_withmasterdata.jsonld" />
 		<None Remove="Data\gdst_extensions_01.xml" />
 		<None Remove="Data\gdst_extensions_02.xml" />

@@ -146,6 +146,22 @@ namespace OpenTraceability.Tests.Events
         }
 
         [Test]
+        [TestCase("Example_9.6.1-ObjectEventWithVocab.jsonld")]
+        public void JSONLDtoXML(string file)
+        {
+            // read object events from test data specified in the file argument
+            string strEvents = OpenTraceabilityTests.ReadTestData(file);
+
+            // deserialize object events into C# models
+            EPCISDocument doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(strEvents);
+            doc.Header = StandardBusinessDocumentHeader.DummyHeader;
+
+            // serialize C# models into xml
+            string strEventsAfter = OpenTraceabilityMappers.EPCISDocument.XML.Map(doc);
+            Assert.True(!string.IsNullOrEmpty(strEventsAfter));
+        }
+
+        [Test]
         public void TestHarness()
         {
             // read object events from test data specified in the file argument
