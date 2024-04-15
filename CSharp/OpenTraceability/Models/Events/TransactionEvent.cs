@@ -105,5 +105,25 @@ namespace OpenTraceability.Models.Events
                 throw new Exception("Transaction event only supports references and parents.");
             }
         }
+
+        public void RemoveProduct(EventProduct product)
+        {
+            if (product.Type == EventProductType.Parent)
+            {
+                if (product.Quantity != null)
+                {
+                    throw new Exception("Parents do not support quantity.");
+                }
+                this.ParentID = null;
+            }
+            else if (product.Type == EventProductType.Reference)
+            {
+                this.ReferenceProducts.Remove(product);
+            }
+            else
+            {
+                throw new Exception($"Transaction event only supports references and parents and does not contain this product as either one: {product.EPC}");
+            }
+        }
     }
 }

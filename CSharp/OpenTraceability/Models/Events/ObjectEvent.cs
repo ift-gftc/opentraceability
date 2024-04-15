@@ -91,5 +91,17 @@ namespace OpenTraceability.Models.Events
                 throw new Exception("Object event only supports references.");
             }
         }
+
+        public void RemoveProduct(EventProduct product)
+        {
+            if (product.Type == EventProductType.Reference)
+            {
+                this.ReferenceProducts.Remove(product);
+            }
+            else
+            {
+                throw new Exception($"Object event only supports references and does not contain this product as a reference: {product.EPC}");
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Utility;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -89,7 +90,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             return document;
         }
 
-        public static XDocument WriteXml(EPCISBaseDocument doc, XNamespace epcisNS, string rootEleName)
+        public static XDocument WriteXml(EPCISBaseDocument doc, XNamespace epcisNS, string rootEleName) 
         {
             if (doc.EPCISVersion == null)
             {
@@ -115,7 +116,15 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 }
                 else
                 {
-                    xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + ns.Key, ns.Value));
+                    try
+                    {
+                        xDoc.Root.Add(new XAttribute(Constants.XMLNS_XNAMESPACE + ns.Key, ns.Value));
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex);
+                        Console.WriteLine(ex);
+                    }
                 }
             }
 

@@ -106,5 +106,21 @@ namespace OpenTraceability.Models.Events
                 throw new Exception("Aggregation event only supports children and parents.");
             }
         }
+
+        public void RemoveProduct(EventProduct product)
+        {
+            if (product.Type == EventProductType.Parent)
+            {
+                this.ParentID = null;
+            }
+            else if (product.Type == EventProductType.Child)
+            {
+                this.Children.Remove(product);
+            }
+            else
+            {
+                throw new Exception($"Aggregation event only supports children and parents and does not contain this product as either one: {product.EPC}");
+            }
+        }
     }
 }

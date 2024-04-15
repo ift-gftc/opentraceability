@@ -73,7 +73,7 @@ namespace OpenTraceability.Tests.Queries
         [TestCase("epcisdocument-example01.jsonld")]
         public async Task LiveServerTests(string filename)
         {
-            EPCISTestServerClient client = new EPCISTestServerClient("https://traceabilityserver01.azurewebsites.net", EPCISDataFormat.JSON, OpenTraceability.Models.Events.EPCISVersion.V2);
+            EPCISTestServerClient client = new EPCISTestServerClient("https://traceabilitytestserver01.azurewebsites.net", EPCISDataFormat.JSON, OpenTraceability.Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
             string data = OpenTraceabilityTests.ReadTestData(filename);
@@ -256,12 +256,11 @@ namespace OpenTraceability.Tests.Queries
         //[Test]
         //public async Task TracebackHarness()
         //{
-            
+
 
         //    HttpClient client = new HttpClient();
         //    client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
         //    client.DefaultRequestHeaders.Add("Accept", "*/*");
-        //    
 
         //    var result = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(new DigitalLinkQueryOptions()
         //    {

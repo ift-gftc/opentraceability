@@ -102,5 +102,25 @@ namespace OpenTraceability.Models.Events
                 throw new Exception("Association event only supports children and parents.");
             }
         }
+
+        public void RemoveProduct(EventProduct product)
+        {
+            if (product.Type == EventProductType.Parent)
+            {
+                if (product.Quantity != null)
+                {
+                    throw new Exception("Parents do not support quantity.");
+                }
+                this.ParentID = null;
+            }
+            else if (product.Type == EventProductType.Child)
+            {
+                this.Children.Remove(product);
+            }
+            else
+            {
+                throw new Exception($"Association event only supports children and parents and does not contain this product as either one: {product.EPC}");
+            }
+        }
     }
 }
