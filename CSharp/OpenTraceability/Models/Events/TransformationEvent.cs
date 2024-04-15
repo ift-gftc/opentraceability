@@ -95,5 +95,21 @@ namespace OpenTraceability.Models.Events
                 throw new Exception("Transformation event only supports inputs and outputs.");
             }
         }
+
+        public void RemoveProduct(EventProduct product)
+        {
+            if (product.Type == EventProductType.Output)
+            {
+                this.Outputs.Remove(product);
+            }
+            else if (product.Type == EventProductType.Input)
+            {
+                this.Inputs.Remove(product);
+            }
+            else
+            {
+                throw new Exception($"Transformation event only supports inputs and outputs and does not contain this product as either one: {product.EPC}");
+            }
+        }
     }
 }

@@ -39,6 +39,7 @@ namespace OpenTraceability.Interfaces
         T? GetKDE<T>(string ns, string name) where T : IEventKDE;
         T? GetKDE<T>() where T : IEventKDE;
         void AddProduct(EventProduct product);
+        void RemoveProduct(EventProduct product);
         CertificationList? CertificationList { get; set; }
         EventILMD? GetILMD();
     }
