@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Schema;
 using System.Xml;
 using System.Xml.Linq;
+using System.IO;
 
 namespace OpenTraceability.Utility
 {

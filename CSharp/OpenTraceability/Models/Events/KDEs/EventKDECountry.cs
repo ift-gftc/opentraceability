@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Utility;
+using System;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Models.Events.KDEs

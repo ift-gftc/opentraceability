@@ -3,8 +3,11 @@ using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
 using OpenTraceability.Mappers.EPCIS.XML;
 using OpenTraceability.Models.Events;
-using OpenTraceability.Utility;
-using System.Globalization;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+
 //using System.Reflection.Metadata;
 using System.Xml.Linq;
 

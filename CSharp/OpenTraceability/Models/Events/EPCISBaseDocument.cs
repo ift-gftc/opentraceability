@@ -4,6 +4,9 @@ using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Models.MasterData;
 using OpenTraceability.Queries;
 using OpenTraceability.Utility.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Models.Events

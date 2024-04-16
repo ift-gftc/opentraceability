@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenTraceability;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
@@ -11,7 +14,7 @@ namespace OpenTraceability.Utility
     [DataContract]
     public class Measurement : IComparable<Measurement>, IComparable
     {
-        public double? Value { get; set; }
+        public double Value { get; set; }
 
         public UOM UoM { get; set; }
 

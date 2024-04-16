@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OpenTraceability.Utility;
+using System;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace OpenTraceability.Models.Identifiers

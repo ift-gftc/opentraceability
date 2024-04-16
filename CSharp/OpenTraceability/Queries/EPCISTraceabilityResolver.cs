@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
@@ -128,7 +132,7 @@ namespace OpenTraceability.Queries
             var results = await QueryEvents(options, paramters, client);
 
             // if an error occured, lets stop here and return the results that we have
-            if (results.Errors.Count > 0)
+            if (results.Errors.Count() > 0)
             {
                 return results;
             }

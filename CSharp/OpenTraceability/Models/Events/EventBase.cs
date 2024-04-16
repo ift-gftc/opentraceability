@@ -4,6 +4,8 @@ using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events

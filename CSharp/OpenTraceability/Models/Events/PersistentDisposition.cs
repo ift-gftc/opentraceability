@@ -1,4 +1,6 @@
 ﻿using OpenTraceability.Utility.Attributes;
+using System;
+using System.Collections.Generic;
 
 namespace OpenTraceability.Models.Events
 {

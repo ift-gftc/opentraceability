@@ -1,6 +1,8 @@
 ﻿using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
+using System;
 using System.ComponentModel;
+using System.Linq;
 
 namespace OpenTraceability.Models.Events
 {
@@ -40,7 +42,7 @@ namespace OpenTraceability.Models.Events
                 {
                     if (EnumUtil.GetEnumAttributes<CBVAttribute>(e).Exists(attribute => attribute.Value.ToLower() == Type?.ToString().ToLower()))
                     {
-                        return e;
+                        return (EventDestinationType)e;
                     }
                 }
 

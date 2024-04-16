@@ -1,6 +1,8 @@
 ﻿using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
+using System;
 using System.ComponentModel;
+using System.Linq;
 
 namespace OpenTraceability.Models.Events
 {

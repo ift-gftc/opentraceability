@@ -1,4 +1,7 @@
-﻿namespace OpenTraceability.Models.Common
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace OpenTraceability.Models.Common
 {
     public class Address : AnonymizedAddress
     {

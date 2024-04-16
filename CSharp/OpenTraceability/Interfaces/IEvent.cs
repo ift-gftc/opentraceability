@@ -1,14 +1,8 @@
-﻿using OpenTraceability.Models.Common;
-using OpenTraceability.Models.Events;
+﻿using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Events.KDEs;
-using OpenTraceability.Models.Identifiers;
-using OpenTraceability.Utility.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenTraceability.Interfaces
 {
