@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using OpenTraceability.Models.Events;
 
 namespace OpenTraceability.Queries
 {
-	public class EPCISQueryResults
+    public class EPCISQueryResults
 	{
 		/// <summary>
 		/// A summary of all of the EPCIS events.
