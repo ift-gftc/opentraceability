@@ -82,9 +82,9 @@ namespace OpenTraceability.Utility
             throw new Exception("Failed to get base for dimension = " + dimension);
         }
 
-        static public UOM? GetUOMFromName(string Name)
+        static public UOM GetUOMFromName(string Name)
         {
-            UOM? uom = null;
+            UOM uom = null;
             Name = Name.ToLower();
             if (Name == "count")
             {
@@ -131,9 +131,9 @@ namespace OpenTraceability.Utility
             return (uom);
         }
 
-        static public UOM? GetUOMFromUNCode(string Name)
+        static public UOM GetUOMFromUNCode(string Name)
         {
-            UOM? uom = null;
+            UOM uom = null;
             Name = Name.ToUpper();
             if (uomsUNCodeDict.ContainsKey(Name))
             {
@@ -183,7 +183,7 @@ namespace OpenTraceability.Utility
             {
                 lock (_locker)
                 {
-                    UOM? uom = UOMS.List.Find(u => u.UNCode == unCode);
+                    UOM uom = UOMS.List.Find(u => u.UNCode == unCode);
                     if (uom == null)
                     {
                         uom = new UOM();
@@ -198,7 +198,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static bool IsNullOrEmpty(UOM? uom)
+        public static bool IsNullOrEmpty(UOM uom)
         {
             if (uom == null)
             {
@@ -216,7 +216,7 @@ namespace OpenTraceability.Utility
 
         public static UOM ParseFromName(string name)
         {
-            UOM? u = null;
+            UOM u = null;
             try
             {
                 if (string.IsNullOrEmpty(name))
@@ -224,7 +224,7 @@ namespace OpenTraceability.Utility
                     throw new ArgumentNullException(nameof(name));
                 }
 
-                UOM? uom = UOMS.GetUOMFromName(name);
+                UOM uom = UOMS.GetUOMFromName(name);
                 if (uom != null)
                 {
                     u = new UOM();
@@ -309,7 +309,7 @@ namespace OpenTraceability.Utility
                 return (false);
             }
         }
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (obj != null)
             {

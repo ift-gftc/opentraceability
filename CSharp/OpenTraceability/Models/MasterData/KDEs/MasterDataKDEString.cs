@@ -8,8 +8,8 @@ namespace OpenTraceability.Models.Events.KDEs
     public class MasterDataKDEString : MasterDataKDEBase, IMasterDataKDE
     {
         public Type ValueType => typeof(string);
-        public string? Value { get; set; }
-        public string? Type { get; set; }
+        public string Value { get; set; }
+        public string Type { get; set; }
         Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
 
         internal MasterDataKDEString()
@@ -23,7 +23,7 @@ namespace OpenTraceability.Models.Events.KDEs
             this.Name = name;
         }
 
-        public JToken? GetJson()
+        public JToken GetJson()
         {
             if (string.IsNullOrWhiteSpace(Value))
             {
@@ -35,7 +35,7 @@ namespace OpenTraceability.Models.Events.KDEs
             }
         }
 
-        public XElement? GetXml()
+        public XElement GetXml()
         {
             if (string.IsNullOrWhiteSpace(Value))
             {
@@ -81,7 +81,7 @@ namespace OpenTraceability.Models.Events.KDEs
             this.Value = json.ToString();
         }
 
-        public JToken? GetGS1WebVocabJson()
+        public JToken GetGS1WebVocabJson()
         {
             if (this.Value != null)
             {
@@ -99,7 +99,7 @@ namespace OpenTraceability.Models.Events.KDEs
             Value = xml.Value;
         }
 
-        public XElement? GetEPCISXml()
+        public XElement GetEPCISXml()
         {
             if (Value != null)
             {

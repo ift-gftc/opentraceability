@@ -13,7 +13,7 @@ namespace OpenTraceability.Utility
     {
         private Dictionary<string, CachedXmlSchema> _cache = new Dictionary<string, CachedXmlSchema>();
 
-        public bool Validate(XDocument xml, string schemaURL, out string? error)
+        public bool Validate(XDocument xml, string schemaURL, out string error)
         {
             XmlReader reader = null;
 
@@ -117,7 +117,7 @@ namespace OpenTraceability.Utility
             return (bFileOk);
         }
 
-        private XmlSchemaSet? GetSchema(string url)
+        private XmlSchemaSet GetSchema(string url)
         {
             if (!_cache.ContainsKey(url) || (DateTime.UtcNow - _cache[url].LastUpdated).TotalHours > 1)
             {
@@ -150,7 +150,7 @@ namespace OpenTraceability.Utility
     class CachedXmlSchema
     {
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
-        public string? URL { get; set; }
-        public XmlSchemaSet? SchemaSet { get; set; }
+        public string URL { get; set; }
+        public XmlSchemaSet SchemaSet { get; set; }
     }
 }

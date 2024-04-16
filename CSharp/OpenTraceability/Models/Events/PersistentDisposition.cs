@@ -6,10 +6,10 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceability("unset", 1)]
         [OpenTraceabilityArray]
-        public List<Uri>? Unset { get; set; }
+        public List<Uri> Unset { get; set; }
 
         [OpenTraceability("set", 2)]
         [OpenTraceabilityArray]
-        public List<Uri>? Set { get; set; }
+        public List<Uri> Set { get; set; }
     }
 }

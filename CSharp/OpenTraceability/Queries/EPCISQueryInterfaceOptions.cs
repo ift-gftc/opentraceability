@@ -15,7 +15,7 @@ namespace OpenTraceability.Queries
         /// <summary>
         /// The URL of the EPCIS Query Interface.
         /// </summary>
-        public Uri? URL { get; set; }
+        public Uri URL { get; set; }
 
         /// <summary>
         /// The version of EPCIS that we are querying for. This defaults to EPCIS 2.0

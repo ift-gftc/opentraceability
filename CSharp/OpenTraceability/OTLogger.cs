@@ -25,7 +25,7 @@ namespace OpenTraceability
         /// <summary>
         /// Attach to this to see all logs in the open traceability libraries.
         /// </summary>
-        public static event OnLogDelegate? OnLog;
+        public static event OnLogDelegate OnLog;
 
         /// <summary>
         /// Called when an exception occurs that is an error in the library logic.

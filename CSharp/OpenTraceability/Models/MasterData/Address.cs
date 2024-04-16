@@ -12,25 +12,25 @@ namespace OpenTraceability.Models.MasterData
     public class Address
     {
         [OpenTraceabilityJson("@type")]
-        public string? Type { get; set; } = "gs1:PostalAddress";
+        public string Type { get; set; } = "gs1:PostalAddress";
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#streetAddressOne")]
         [OpenTraceabilityJson("streetAddress")]
-        public List<LanguageString>? Address1 { get; set; }
+        public List<LanguageString> Address1 { get; set; }
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#streetAddressTwo")]
-        public List<LanguageString>? Address2 { get; set; }
+        public List<LanguageString> Address2 { get; set; }
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#city")]
         [OpenTraceabilityJson("addressLocality")]
-        public List<LanguageString>? City { get; set; }
+        public List<LanguageString> City { get; set; }
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#state")]
         [OpenTraceabilityJson("addressRegion")]
-        public List<LanguageString>? State { get; set; }
+        public List<LanguageString> State { get; set; }
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#countryCode")]
         [OpenTraceabilityJson("countryCode")]
-        public Country? Country { get; set; }
+        public Country Country { get; set; }
     }
 }

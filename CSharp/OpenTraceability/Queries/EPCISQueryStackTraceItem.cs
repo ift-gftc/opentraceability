@@ -27,27 +27,27 @@ namespace OpenTraceability.Queries
 		/// <summary>
 		/// The relative URL that was executed against the base URL of the EPCIS Query Interface.
 		/// </summary>
-		public Uri? RelativeURL { get; set; }
+		public Uri RelativeURL { get; set; }
 
 		/// <summary>
 		/// The HTTP headers of the request.
 		/// </summary>
-		public List<KeyValuePair<string, IEnumerable<string>>>? RequestHeaders { get; set; }
+		public List<KeyValuePair<string, IEnumerable<string>>> RequestHeaders { get; set; }
 
 		/// <summary>
 		/// The HTTP headers of the response.
 		/// </summary>
-		public List<KeyValuePair<string, IEnumerable<string>>>? ResponseHeaders { get; set; }
+		public List<KeyValuePair<string, IEnumerable<string>>> ResponseHeaders { get; set; }
 
 		/// <summary>
 		/// The raw contents of the body of the HTTP request.
 		/// </summary>
-		public string? RequestBody { get; set; }
+		public string RequestBody { get; set; }
 
 		/// <summary>
 		/// The raw contents of the body of the HTTP response.
 		/// </summary>
-		public string? ResponseBody { get; set; }
+		public string ResponseBody { get; set; }
 
         public override string ToString()
         {

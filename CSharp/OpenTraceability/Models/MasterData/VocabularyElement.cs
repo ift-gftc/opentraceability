@@ -12,13 +12,13 @@ namespace OpenTraceability.Models.MasterData
 {
     public class VocabularyElement : IVocabularyElement
     {
-        public string? ID { get; set; }
+        public string ID { get; set; }
 
-        public string? EPCISType { get; set; }
+        public string EPCISType { get; set; }
 
-        public string? JsonLDType { get; set; }
+        public string JsonLDType { get; set; }
 
-        public JToken? Context { get; set; }
+        public JToken Context { get; set; }
 
         public VocabularyType VocabularyType
         {

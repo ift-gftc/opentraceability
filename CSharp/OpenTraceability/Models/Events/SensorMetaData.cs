@@ -11,15 +11,15 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityJson("deviceID")]
         [OpenTraceability("@deviceID")]
-        public Uri? DeviceID { get; set; }
+        public Uri DeviceID { get; set; }
 
         [OpenTraceabilityJson("deviceMetadata")]
         [OpenTraceability("@deviceMetadata")]
-        public Uri? DeviceMetaData { get; set; }
+        public Uri DeviceMetaData { get; set; }
 
         [OpenTraceabilityJson("rawData")]
         [OpenTraceability("@rawData")]
-        public Uri? RawData { get; set; }
+        public Uri RawData { get; set; }
 
         [OpenTraceabilityJson("startTime")]
         [OpenTraceability("@startTime")]
@@ -27,11 +27,11 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityJson("bizRules")]
         [OpenTraceability("@bizRules")]
-        public Uri? BizRules { get; internal set; }
+        public Uri BizRules { get; internal set; }
 
         [OpenTraceabilityJson("dataProcessingMethod")]
         [OpenTraceability("@dataProcessingMethod")]
-        public Uri? DataProcessingMethod { get; internal set; }
+        public Uri DataProcessingMethod { get; internal set; }
 
         [OpenTraceabilityJson("endTime")]
         [OpenTraceability("@endTime")]

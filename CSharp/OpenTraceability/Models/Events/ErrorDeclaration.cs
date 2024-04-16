@@ -20,14 +20,14 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceabilityJson("reason")]
         [OpenTraceability("@type")]
-        public Uri? Reason { get; set; }
+        public Uri Reason { get; set; }
 
         [OpenTraceability("declarationTime")]
         public DateTimeOffset? DeclarationTime { get; set; }
 
         [OpenTraceabilityArray("correctiveEventID")]
         [OpenTraceability("correctiveEventIDs")]
-        public List<string>? CorrectingEventIDs { get; set; }
+        public List<string> CorrectingEventIDs { get; set; }
 
         [OpenTraceabilityExtensionElements]
         public List<IEventKDE> ExtensionKDEs { get; internal set; } = new List<IEventKDE>();

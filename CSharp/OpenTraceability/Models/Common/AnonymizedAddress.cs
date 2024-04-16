@@ -1,15 +1,14 @@
 ﻿using OpenTraceability.Utility;
-using System.ComponentModel.DataAnnotations;
 
 namespace OpenTraceability.Models.Common
 {
     public class AnonymizedAddress
     {
-        public string? ZipCode { get; set; }
+        public string ZipCode { get; set; }
 
-        public Country? Country { get; set; }
+        public Country Country { get; set; }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (obj == null)
             {
@@ -24,7 +23,7 @@ namespace OpenTraceability.Models.Common
             return this.Equals(obj as AnonymizedAddress);
         }
 
-        public bool Equals(AnonymizedAddress? other)
+        public bool Equals(AnonymizedAddress other)
         {
             if (other == null)
             {

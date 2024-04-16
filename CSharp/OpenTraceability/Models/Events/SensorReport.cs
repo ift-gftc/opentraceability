@@ -12,7 +12,7 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityJson("type")]
         [OpenTraceability("@type")]
-        public Uri? Type { get; set; }
+        public Uri Type { get; set; }
 
         [OpenTraceabilityJson("value")]
         [OpenTraceability("@value")]
@@ -20,7 +20,7 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityJson("stringValue")]
         [OpenTraceability("@stringValue")]
-        public string? StringValue { get; internal set; }
+        public string StringValue { get; internal set; }
 
         [OpenTraceabilityJson("booleanValue")]
         [OpenTraceability("@booleanValue")]
@@ -28,19 +28,19 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityJson("hexBinaryValue")]
         [OpenTraceability("@hexBinaryValue")]
-        public string? HexBinaryValue { get; internal set; }
+        public string HexBinaryValue { get; internal set; }
 
         [OpenTraceabilityJson("uriValue")]
         [OpenTraceability("@uriValue")]
-        public Uri? URIValue { get; internal set; }
+        public Uri URIValue { get; internal set; }
 
         [OpenTraceabilityJson("uom")]
         [OpenTraceability("@uom")]
-        public UOM? UOM { get; internal set; }
+        public UOM UOM { get; internal set; }
 
         [OpenTraceabilityJson("component")]
         [OpenTraceability("@component")]
-        public Uri? Component { get; internal set; }
+        public Uri Component { get; internal set; }
 
         [OpenTraceabilityJson("minValue")]
         [OpenTraceability("@minValue")]
@@ -56,19 +56,19 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityJson("chemicalSubstance")]
         [OpenTraceability("@chemicalSubstance")]
-        public Uri? ChemicalSubstance { get; internal set; }
+        public Uri ChemicalSubstance { get; internal set; }
 
         [OpenTraceabilityJson("microorganism")]
         [OpenTraceability("@microorganism")]
-        public Uri? MicroOrganism { get; internal set; }
+        public Uri MicroOrganism { get; internal set; }
 
         [OpenTraceabilityJson("deviceID")]
         [OpenTraceability("@deviceID")]
-        public Uri? DeviceID { get; internal set; }
+        public Uri DeviceID { get; internal set; }
 
         [OpenTraceabilityJson("rawData")]
         [OpenTraceability("@rawData")]
-        public Uri? RawData { get; internal set; }
+        public Uri RawData { get; internal set; }
 
         [OpenTraceabilityJson("meanValue")]
         [OpenTraceability("@meanValue")]
@@ -80,15 +80,15 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityJson("dataProcessingMethod")]
         [OpenTraceability("@dataProcessingMethod")]
-        public Uri? DataProcessingMethod { get; internal set; }
+        public Uri DataProcessingMethod { get; internal set; }
 
         [OpenTraceabilityJson("coordinateReferenceSystem")]
         [OpenTraceability("@coordinateReferenceSystem")]
-        public Uri? CoordinateReferenceSystem { get; internal set; }
+        public Uri CoordinateReferenceSystem { get; internal set; }
 
         [OpenTraceabilityJson("exception")]
         [OpenTraceability("@exception")]
-        public Uri? Exception { get; internal set; }
+        public Uri Exception { get; internal set; }
 
         [OpenTraceabilityJson("percValue")]
         [OpenTraceability("@percValue")]
@@ -96,7 +96,7 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityJson("deviceMetadata")]
         [OpenTraceability("@deviceMetadata")]
-        public Uri? DeviceMetadata { get; internal set; }
+        public Uri DeviceMetadata { get; internal set; }
 
         [OpenTraceabilityExtensionAttributes]
         public List<IEventKDE> ExtensionAttributes { get; internal set; } = new List<IEventKDE>();

@@ -8,7 +8,7 @@ namespace OpenTraceability.Queries
 		/// <summary>
 		/// A summary of all of the EPCIS events.
 		/// </summary>
-		public EPCISQueryDocument? Document { get; set; }
+		public EPCISQueryDocument Document { get; set; }
 
 		/// <summary>
 		/// A summary of all HTTP requests that were performed while resolving

@@ -105,7 +105,7 @@ namespace OpenTraceability.Queries
 
         public EPCISQuery query { get; set; } = new EPCISQuery();
 
-        public bool IsValid(out string? error)
+        public bool IsValid(out string error)
         {
             error = null;
             return true;
@@ -145,19 +145,19 @@ namespace OpenTraceability.Queries
                 }
                 else if (prop.PropertyType == typeof(List<string>))
                 {
-                    List<string>? list = prop.GetValue(query) as List<string>;
+                    List<string> list = prop.GetValue(query) as List<string>;
                     if (list != null && list.Count > 0)
                     {
-                        string queryParam = $"{prop.Name}={string.Join('|', list.Select(l => HttpUtility.UrlEncode(l)))}";
+                        string queryParam = $"{prop.Name}={string.Join("|", list.Select(l => HttpUtility.UrlEncode(l)))}";
                         queryParameters.Add(queryParam);
                     }
                 }
                 else if (prop.PropertyType == typeof(List<Uri>))
                 {
-                    List<Uri>? list = prop.GetValue(query) as List<Uri>;
+                    List<Uri> list = prop.GetValue(query) as List<Uri>;
                     if (list != null && list.Count > 0)
                     {
-                        string queryParam = $"{prop.Name}={string.Join('|', list.Select(l => HttpUtility.UrlEncode(l.ToString())))}";
+                        string queryParam = $"{prop.Name}={string.Join("|", list.Select(l => HttpUtility.UrlEncode(l.ToString())))}";
                         queryParameters.Add(queryParam);
                     }
                 }
@@ -182,8 +182,8 @@ namespace OpenTraceability.Queries
                 }
                 else if (prop.PropertyType == typeof(List<string>))
                 {
-                    List<string>? list = prop.GetValue(this.query) as List<string>;
-                    List<string>? otherList = prop.GetValue(queryParameters.query) as List<string>;
+                    List<string> list = prop.GetValue(this.query) as List<string>;
+                    List<string> otherList = prop.GetValue(queryParameters.query) as List<string>;
                     if (otherList != null)
                     {
                         if (list == null)
@@ -204,8 +204,8 @@ namespace OpenTraceability.Queries
                 }
                 else if (prop.PropertyType == typeof(List<Uri>))
                 {
-                    List<Uri>? list = prop.GetValue(this.query) as List<Uri>;
-                    List<Uri>? otherList = prop.GetValue(queryParameters.query) as List<Uri>;
+                    List<Uri> list = prop.GetValue(this.query) as List<Uri>;
+                    List<Uri> otherList = prop.GetValue(queryParameters.query) as List<Uri>;
                     if (otherList != null)
                     {
                         if (list == null)

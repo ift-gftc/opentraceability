@@ -12,15 +12,15 @@ namespace OpenTraceability.Models.Identifiers
     [JsonConverter(typeof(PGLNConverter))]
     public class PGLN : IEquatable<PGLN>, IComparable<PGLN>
     {
-        private string? _pglnStr = string.Empty;
+        private string _pglnStr = string.Empty;
 
         public PGLN()
         {
         }
 
-        public PGLN(string? pglnStr)
+        public PGLN(string pglnStr)
         {
-            string? error = DetectPGLNIssue(pglnStr);
+            string error = DetectPGLNIssue(pglnStr);
             if (!string.IsNullOrWhiteSpace(error))
             {
                 throw new Exception($"The PGLN {pglnStr} is not valid. {error}");
@@ -76,7 +76,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static string? DetectPGLNIssue(string? pglnStr)
+        public static string DetectPGLNIssue(string pglnStr)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace OpenTraceability.Models.Identifiers
                 }
                 else if (pglnStr.StartsWith("urn:") && (pglnStr.Contains(":id:pgln:") || pglnStr.Contains(":id:sgln:")))
                 {
-                    string[] pieces = pglnStr.Split(':').Last().Split(".");
+                    string[] pieces = pglnStr.Split(':').Last().Split('.');
                     if (pieces.Count() < 2)
                     {
                         return ("This is supposed to contain the company prefix and the location code. Did not find these two pieces.");
@@ -146,7 +146,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string? pglnStr, out PGLN? pgln, out string? error)
+        public static bool TryParse(string pglnStr, out PGLN pgln, out string error)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region Overrides
 
-        public static bool operator ==(PGLN? obj1, PGLN? obj2)
+        public static bool operator ==(PGLN obj1, PGLN obj2)
         {
             try
             {
@@ -210,7 +210,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool operator !=(PGLN? obj1, PGLN? obj2)
+        public static bool operator !=(PGLN obj1, PGLN obj2)
         {
             try
             {
@@ -243,7 +243,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             try
             {
@@ -302,7 +302,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IEquatable
 
-        public bool Equals(PGLN? pgln)
+        public bool Equals(PGLN pgln)
         {
             try
             {
@@ -325,7 +325,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        private bool IsEquals(PGLN? pgln)
+        private bool IsEquals(PGLN pgln)
         {
             try
             {
@@ -351,7 +351,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IComparable
 
-        public int CompareTo(PGLN? pgln)
+        public int CompareTo(PGLN pgln)
         {
             try
             {

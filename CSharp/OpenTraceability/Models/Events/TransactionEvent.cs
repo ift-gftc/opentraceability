@@ -8,7 +8,7 @@ namespace OpenTraceability.Models.Events
     public class TransactionEvent : EventBase, IEvent
     {
         [OpenTraceability("parentID", 8)]
-        public EPC? ParentID { get; set; }
+        public EPC ParentID { get; set; }
 
         [OpenTraceabilityProducts("extension/quantityList", EPCISVersion.V1, EventProductType.Reference, 20, OpenTraceabilityProductsListType.QuantityList)]
         [OpenTraceabilityProducts("quantityList", EPCISVersion.V2, EventProductType.Reference, 15, OpenTraceabilityProductsListType.QuantityList)]
@@ -19,18 +19,18 @@ namespace OpenTraceability.Models.Events
         public EventAction? Action { get; set; }
 
         [OpenTraceability("bizStep", 11)]
-        public Uri? BusinessStep { get; set; }
+        public Uri BusinessStep { get; set; }
 
         [OpenTraceability("disposition", 12)]
-        public Uri? Disposition { get; set; }
+        public Uri Disposition { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("readPoint", 13)]
-        public EventReadPoint? ReadPoint { get; set; }
+        public EventReadPoint ReadPoint { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("bizLocation", 14)]
-        public EventLocation? Location { get; set; }
+        public EventLocation Location { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("bizTransaction")]
@@ -58,16 +58,16 @@ namespace OpenTraceability.Models.Events
         [OpenTraceabilityObject]
         [OpenTraceability("persistentDisposition", 19, EPCISVersion.V2)]
         [OpenTraceability("extension/persistentDisposition", EPCISVersion.V1)]
-        public PersistentDisposition? PersistentDisposition { get; set; }
+        public PersistentDisposition PersistentDisposition { get; set; }
 
-        public EventILMD? ILMD { get => null; }
+        public EventILMD ILMD { get => null; }
 
 
         [OpenTraceabilityXmlIgnore]
         [OpenTraceability("type", 0)]
         public EventType EventType => EventType.TransactionEvent;
 
-        public EventILMD? GetILMD() => ILMD;
+        public EventILMD GetILMD() => ILMD;
 
         public ReadOnlyCollection<EventProduct> Products
         {

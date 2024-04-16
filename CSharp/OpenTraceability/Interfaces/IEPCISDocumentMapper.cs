@@ -17,27 +17,27 @@ namespace OpenTraceability.Interfaces
         /// </summary>
         /// <param name="strValue">The string value representing the EPCIS document.</param>
         /// <returns>An EPCIS document.</returns>
-        public EPCISDocument Map(string strValue);
+        EPCISDocument Map(string strValue);
 
         /// <summary>
         /// Maps a string value into an EPCIS document.
         /// </summary>
         /// <param name="strValue">The string value representing the EPCIS document.</param>
         /// <returns>An EPCIS document.</returns>
-        public Task<EPCISDocument> MapAsync(string strValue);
+        Task<EPCISDocument> MapAsync(string strValue);
 
         /// <summary>
         /// Maps an EPCIS document into a string value.
         /// </summary>
         /// <param name="doc">The EPCIS Document to map into the string value.</param>
         /// <returns>A string value representing the EPCIS document.</returns>
-        public string Map(EPCISDocument doc);
+        string Map(EPCISDocument doc);
 
         /// <summary>
         /// Maps an EPCIS document into a string value.
         /// </summary>
         /// <param name="doc">The EPCIS Document to map into the string value.</param>
         /// <returns>A string value representing the EPCIS document.</returns>
-        public Task<string> MapAsync(EPCISDocument doc);
+        Task<string> MapAsync(EPCISDocument doc);
     }
 }

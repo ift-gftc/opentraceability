@@ -22,14 +22,14 @@ namespace OpenTraceability.Models.Identifiers
         private string _epcStr = string.Empty;
 
         public EPCType Type { get; private set; }
-        public GTIN? GTIN { get; private set; }
-        public string? SerialLotNumber { get; private set; }
+        public GTIN GTIN { get; private set; }
+        public string SerialLotNumber { get; private set; }
 
-        public EPC(string? epcStr)
+        public EPC(string epcStr)
         {
             try
             {
-                string? error = EPC.DetectEPCIssue(epcStr);
+                string error = EPC.DetectEPCIssue(epcStr);
 
                 if (!string.IsNullOrWhiteSpace(error))
                 {
@@ -46,13 +46,13 @@ namespace OpenTraceability.Models.Identifiers
                 if (epcStr.StartsWith("urn:epc:id:sscc:"))
                 {
                     this.Type = EPCType.SSCC;
-                    this.SerialLotNumber = epcStr.Split(":").LastOrDefault();
+                    this.SerialLotNumber = epcStr.Split(':').LastOrDefault();
                 }
                 else if (epcStr.StartsWith("urn:epc:class:lgtin:"))
                 {
                     this.Type = EPCType.Class;
 
-                    List<string> parts = epcStr.Split(":").ToList();
+                    List<string> parts = epcStr.Split(':').ToList();
                     List<string> parts2 = parts.Last().Split('.').ToList();
                     parts.RemoveAt(parts.Count - 1);
 
@@ -66,7 +66,7 @@ namespace OpenTraceability.Models.Identifiers
                 {
                     this.Type = EPCType.Instance;
 
-                    List<string> parts = epcStr.Split(":").ToList();
+                    List<string> parts = epcStr.Split(':').ToList();
                     List<string> parts2 = parts.Last().Split('.').ToList();
                     parts.RemoveAt(parts.Count - 1);
 
@@ -80,7 +80,7 @@ namespace OpenTraceability.Models.Identifiers
                 {
                     this.Type = EPCType.Class;
 
-                    List<string> parts = epcStr.Split(":").ToList();
+                    List<string> parts = epcStr.Split(':').ToList();
                     List<string> parts2 = parts.Last().Split('.').ToList();
                     parts.RemoveAt(parts.Count - 1);
 
@@ -94,7 +94,7 @@ namespace OpenTraceability.Models.Identifiers
                 {
                     this.Type = EPCType.Instance;
 
-                    List<string> parts = epcStr.Split(":").ToList();
+                    List<string> parts = epcStr.Split(':').ToList();
                     List<string> parts2 = parts.Last().Split('.').ToList();
                     parts.RemoveAt(parts.Count - 1);
 
@@ -186,7 +186,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static string? DetectEPCIssue(string? epcStr)
+        public static string DetectEPCIssue(string epcStr)
         {
             try
             {
@@ -203,7 +203,7 @@ namespace OpenTraceability.Models.Identifiers
                         return ("The EPC contains non-compatiable characters for a URN format.");
                     }
 
-                    string[] parts = epcStr.Split(":");
+                    string[] parts = epcStr.Split(':');
                     string[] parts2 = parts.Last().Split('.');
 
                     if (parts2.Count() < 3)
@@ -223,7 +223,7 @@ namespace OpenTraceability.Models.Identifiers
                         return ("The EPC contains non-compatiable characters for a URN format.");
                     }
 
-                    string[] parts = epcStr.Split(":");
+                    string[] parts = epcStr.Split(':');
                     string[] parts2 = parts.Last().Split('.');
 
                     if (parts2.Count() < 3)
@@ -243,7 +243,7 @@ namespace OpenTraceability.Models.Identifiers
                         return ("The EPC contains non-compatiable characters for a URN format.");
                     }
 
-                    string[] parts = epcStr.Split(":");
+                    string[] parts = epcStr.Split(':');
                     string[] parts2 = parts.Last().Split('.');
 
                     if (parts2.Count() < 3)
@@ -263,7 +263,7 @@ namespace OpenTraceability.Models.Identifiers
                         return ("The EPC contains non-compatiable characters for a URN format.");
                     }
 
-                    string[] parts = epcStr.Split(":");
+                    string[] parts = epcStr.Split(':');
                     string[] parts2 = parts.Last().Split('.');
 
                     if (parts2.Count() < 3)
@@ -326,7 +326,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string? epcStr, out EPC? epc, out string? error)
+        public static bool TryParse(string epcStr, out EPC epc, out string error)
         {
             try
             {
@@ -375,7 +375,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region Overrides
 
-        public static bool operator ==(EPC? obj1, EPC? obj2)
+        public static bool operator ==(EPC obj1, EPC obj2)
         {
             try
             {
@@ -408,7 +408,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool operator !=(EPC? obj1, EPC? obj2)
+        public static bool operator !=(EPC obj1, EPC obj2)
         {
             try
             {
@@ -441,7 +441,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             try
             {
@@ -500,7 +500,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IEquatable<EPC>
 
-        public bool Equals(EPC? epc)
+        public bool Equals(EPC epc)
         {
             try
             {
@@ -523,7 +523,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        private bool IsEquals(EPC? epc)
+        private bool IsEquals(EPC epc)
         {
             try
             {

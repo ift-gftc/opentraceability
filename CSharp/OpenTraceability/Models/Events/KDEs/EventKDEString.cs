@@ -7,8 +7,8 @@ namespace OpenTraceability.Models.Events.KDEs
     public class EventKDEString : EventKDEBase, IEventKDE
     {
         public Type ValueType => typeof(string);
-        public string? Value { get; set; }
-        public string? Type { get; set; }
+        public string Value { get; set; }
+        public string Type { get; set; }
         Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
 
         internal EventKDEString()
@@ -22,7 +22,7 @@ namespace OpenTraceability.Models.Events.KDEs
             this.Name = name;
         }
 
-        public JToken? GetJson()
+        public JToken GetJson()
         {
             if (string.IsNullOrWhiteSpace(Value))
             {
@@ -34,7 +34,7 @@ namespace OpenTraceability.Models.Events.KDEs
             }
         }
 
-        public XElement? GetXml()
+        public XElement GetXml()
         {
             if (string.IsNullOrWhiteSpace(Value))
             {

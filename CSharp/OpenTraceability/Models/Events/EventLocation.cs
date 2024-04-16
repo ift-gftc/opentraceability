@@ -16,6 +16,6 @@ namespace OpenTraceability.Models.Events
         }
 
         [OpenTraceability("id")]
-        public GLN? GLN { get; set; }
+        public GLN GLN { get; set; }
     }
 }

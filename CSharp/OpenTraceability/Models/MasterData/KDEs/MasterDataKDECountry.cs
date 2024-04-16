@@ -8,11 +8,11 @@ namespace OpenTraceability.Models.Events.KDEs
 {
     public class MasterDataKDECountry : MasterDataKDEBase, IMasterDataKDE
     {
-        public Country? Value { get; set; }
+        public Country Value { get; set; }
 
         public Type ValueType => typeof(Country);
 
-        public XElement? GetEPCISXml()
+        public XElement GetEPCISXml()
         {
             if (Value != null)
             {
@@ -27,12 +27,12 @@ namespace OpenTraceability.Models.Events.KDEs
             }
         }
 
-        public JToken? GetGS1WebVocabJson()
+        public JToken GetGS1WebVocabJson()
         {
             throw new NotImplementedException();
         }
 
-        public XElement? GetXml()
+        public XElement GetXml()
         {
             if (Value == null)
             {

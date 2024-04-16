@@ -28,7 +28,7 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceabilityJson("type")]
         [OpenTraceability("@type")]
-        public Uri? Type { get; set; }
+        public Uri Type { get; set; }
 
         public EventSourceType ParsedType
         {
@@ -36,11 +36,11 @@ namespace OpenTraceability.Models.Events
             {
                 EventSourceType type = EventSourceType.Unknown;
 
-                foreach (var e in Enum.GetValues<EventSourceType>())
+                foreach (var e in Enum.GetValues(typeof(EventSourceType)))
                 {
-                    if (EnumUtil.GetEnumAttributes<CBVAttribute>(e).Exists(e => e.Value.ToLower() == Type?.ToString().ToLower()))
+                    if (EnumUtil.GetEnumAttributes<CBVAttribute>(e).Exists(attribute => attribute.Value.ToLower() == Type?.ToString().ToLower()))
                     {
-                        return e;
+                        return (EventSourceType)e;
                     }
                 }
 
@@ -48,7 +48,7 @@ namespace OpenTraceability.Models.Events
             }
             set
             {
-                string? t = EnumUtil.GetEnumAttributes<CBVAttribute>(value).Where(e => e.Value.StartsWith("urn")).FirstOrDefault()?.Value;
+                string t = EnumUtil.GetEnumAttributes<CBVAttribute>(value).Where(e => e.Value.StartsWith("urn")).FirstOrDefault()?.Value;
                 if (!string.IsNullOrWhiteSpace(t))
                 {
                     this.Type = new Uri(t);
@@ -58,7 +58,7 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityJson("source")]
         [OpenTraceability("text()")]
-        public string? Value { get; set; }
+        public string Value { get; set; }
 
         public EventSource()
         {
