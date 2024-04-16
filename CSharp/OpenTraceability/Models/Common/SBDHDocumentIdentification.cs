@@ -1,4 +1,5 @@
 ﻿using OpenTraceability.Utility.Attributes;
+using System;
 
 namespace OpenTraceability.Models.Common
 {

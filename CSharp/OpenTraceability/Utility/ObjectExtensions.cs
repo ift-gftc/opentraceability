@@ -1,4 +1,5 @@
 ﻿using Force.Crc32;
+using System;
 using System.Text;
 
 namespace OpenTraceability.Utility

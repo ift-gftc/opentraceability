@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace OpenTraceability.Queries
@@ -277,7 +279,9 @@ namespace OpenTraceability.Queries
 
                             if (response.IsSuccessStatusCode)
                             {
-                                var json = (await response.Content.ReadFromJsonAsync<object>())?.ToString();
+                                var content = await response.Content.ReadAsStringAsync();
+                                var unformattedJson = JToken.FromObject(content).ToString(Formatting.None);
+                                var json = unformattedJson;
 
                                 if (json is null)
                                     throw new NullReferenceException("Error parsing the digital link response: JSON value is null");

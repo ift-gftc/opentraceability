@@ -24,7 +24,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             if (doc.MasterData.Count > 0)
             {
-                XElement? xEPCISHeader = xDocument.Element("EPCISHeader");
+                XElement xEPCISHeader = xDocument.Element("EPCISHeader");
                 if (xEPCISHeader == null)
                 {
                     xDocument.Add(new XElement("EPCISHeader", new XElement("extension", new XElement("EPCISMasterData", new XElement("VocabularyList")))));
@@ -78,7 +78,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 string id = mapping.Name;
                 PropertyInfo p = mapping.Property;
 
-                object? o = p.GetValue(md);
+                object o = p.GetValue(md);
                 if (o != null)
                 {
                     if (id == string.Empty)
@@ -88,13 +88,13 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                         {
                             string subID = subMapping.Name;
                             PropertyInfo subProperty = subMapping.Property;
-                            object? subObj = subProperty.GetValue(o);
+                            object subObj = subProperty.GetValue(o);
                             if (subObj != null)
                             {
                                 if (subObj.GetType() == typeof(List<LanguageString>))
                                 {
                                     List<LanguageString> l = (List<LanguageString>)subObj;
-                                    string? str = l.FirstOrDefault()?.Value;
+                                    string str = l.FirstOrDefault()?.Value;
                                     if (str != null)
                                     {
                                         XElement xAtt = new XElement("attribute", new XAttribute("id", subID));
@@ -104,7 +104,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                                 }
                                 else
                                 {
-                                    string? str = subObj.ToString();
+                                    string str = subObj.ToString();
                                     if (str != null)
                                     {
                                         XElement xAtt = new XElement("attribute", new XAttribute("id", subID));
@@ -126,7 +126,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                         IList l = (IList)o;
                         foreach (var i in l)
                         {
-                            string? str = i.ToString();
+                            string str = i.ToString();
                             if (str != null)
                             {
                                 XElement xAtt = new XElement("attribute", new XAttribute("id", id));
@@ -138,7 +138,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                     else if (o.GetType() == typeof(List<LanguageString>))
                     {
                         List<LanguageString> l = (List<LanguageString>)o;
-                        string? str = l.FirstOrDefault()?.Value;
+                        string str = l.FirstOrDefault()?.Value;
                         if (str != null)
                         {
                             XElement xAtt = new XElement("attribute", new XAttribute("id", id));
@@ -148,7 +148,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                     }
                     else
                     {
-                        string? str = o.ToString();
+                        string str = o.ToString();
                         if (str != null)
                         {
                             XElement xAtt = new XElement("attribute", new XAttribute("id", id));
@@ -161,7 +161,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
 
             foreach (IMasterDataKDE kde in md.KDEs)
             {
-                XElement? xKDE = kde.GetEPCISXml();
+                XElement xKDE = kde.GetEPCISXml();
                 if (xKDE != null)
                 {
                     xVocabEle.Add(xKDE);
@@ -175,10 +175,10 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             foreach (var property in t.GetProperties())
             {
-                object? value = property.GetValue(o);
+                object value = property.GetValue(o);
                 if (value != null)
                 {
-                    OpenTraceabilityAttribute? xmlAtt = property.GetCustomAttribute<OpenTraceabilityAttribute>();
+                    OpenTraceabilityAttribute xmlAtt = property.GetCustomAttribute<OpenTraceabilityAttribute>();
                     if (xmlAtt != null)
                     {
                         XElement xchild = new XElement(xmlAtt.Name);
@@ -188,7 +188,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                         }
                         else
                         {
-                            string? str = value.ToString();
+                            string str = value.ToString();
                             if (str != null)
                             {
                                 xchild.Value = str;

@@ -1,4 +1,7 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace OpenTraceability.Utility
@@ -70,7 +73,7 @@ namespace OpenTraceability.Utility
             {
                 str = r.Replace(str, "%SLASH%");
             }
-            return str.Split("%SLASH%").ToList();
+            return str.Split(new[] { "%SLASH%" }, StringSplitOptions.None).ToList();
         }
     }
 }

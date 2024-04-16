@@ -1,4 +1,7 @@
-﻿namespace OpenTraceability.Utility
+﻿using System;
+using System.Net.Http;
+
+namespace OpenTraceability.Utility
 {
     /// <summary>
     /// This is a helper class to grab an HTTP client from a pool so that we don't have to create a new one every time we need to make a request.
