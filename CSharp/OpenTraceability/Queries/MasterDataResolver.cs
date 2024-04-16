@@ -280,8 +280,8 @@ namespace OpenTraceability.Queries
                             if (response.IsSuccessStatusCode)
                             {
                                 var content = await response.Content.ReadAsStringAsync();
-                                var unformattedJson = JToken.FromObject(content).ToString(Formatting.None);
-                                var json = unformattedJson;
+                                var jObject = JsonConvert.DeserializeObject<object>(content);
+                                var json = JsonConvert.SerializeObject(jObject);
 
                                 if (json is null)
                                     throw new NullReferenceException("Error parsing the digital link response: JSON value is null");
