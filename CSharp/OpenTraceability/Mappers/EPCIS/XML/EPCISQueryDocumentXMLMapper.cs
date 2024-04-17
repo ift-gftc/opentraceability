@@ -4,10 +4,15 @@ using OpenTraceability.Mappers;
 using OpenTraceability.Mappers.EPCIS.XML;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Utility;
+using System;
 using System.Globalization;
-using System.Reflection.Metadata;
+using System.Linq;
+using System.Threading.Tasks;
+
+
+//using System.Reflection.Metadata;
 using System.Xml.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+//using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GS1.Mappers.EPCIS
 {
@@ -37,14 +42,14 @@ namespace GS1.Mappers.EPCIS
                 XNamespace epcisQueryXName = (document.EPCISVersion == EPCISVersion.V1) ? Constants.EPCISQUERY_1_XNAMESPACE : Constants.EPCISQUERY_2_XNAMESPACE;
 
                 // read the query name
-                XElement? xQueryName = xDoc.Root?.Element("EPCISBody")?.Element(epcisQueryXName + "QueryResults")?.Element("queryName");
+                XElement xQueryName = xDoc.Root?.Element("EPCISBody")?.Element(epcisQueryXName + "QueryResults")?.Element("queryName");
                 if (xQueryName != null)
                 {
                     document.QueryName = xQueryName.Value;
                 }
 
                 // read the events
-                XElement? xEventList = xDoc.Root?.Element("EPCISBody")?.Element(epcisQueryXName + "QueryResults")?.Element("resultsBody")?.Element("EventList")
+                XElement xEventList = xDoc.Root?.Element("EPCISBody")?.Element(epcisQueryXName + "QueryResults")?.Element("resultsBody")?.Element("EventList")
                     ?? throw new Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root");
                 if (xEventList != null)
                 {
@@ -96,19 +101,19 @@ namespace GS1.Mappers.EPCIS
                                   new XElement("resultsBody",
                                       new XElement("EventList")))));
 
-            XElement? xQueryName = xDoc.Root?.Element("EPCISBody")?.Element(epcisQueryXName + "QueryResults")?.Element("queryName");
+            XElement xQueryName = xDoc.Root?.Element("EPCISBody")?.Element(epcisQueryXName + "QueryResults")?.Element("queryName");
             if (xQueryName != null)
             {
                 xQueryName.Value = doc.QueryName;
             }
 
             // write the events
-            XElement? xEventList = xDoc.Root?.Element("EPCISBody")?.Element(epcisQueryXName + "QueryResults")?.Element("resultsBody")?.Element("EventList")
+            XElement xEventList = xDoc.Root?.Element("EPCISBody")?.Element(epcisQueryXName + "QueryResults")?.Element("resultsBody")?.Element("EventList")
                 ?? throw new Exception("Failed to get EPCISBody/EventList after adding it to the XDoc.Root");
             foreach (IEvent e in doc.Events)
             {
                 string xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
-                XElement? xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.EPCISVersion.Value);
+                XElement xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.EPCISVersion.Value);
                 if (e.EventType == EventType.TransformationEvent && doc.EPCISVersion.Value == EPCISVersion.V1)
                 {
                     xEvent = new XElement("extension", xEvent);

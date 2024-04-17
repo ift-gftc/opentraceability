@@ -1,6 +1,11 @@
 ﻿# Open Traceability (C#)
 This is an open-source library for handling traceability data in .NET using C#.
 
+## Release Notes
+### Version 1.4
+In version 1.4, the OpenTraceability C# project was updated to target .Net Standard 2.0. This update provides support for .NET Framework versions 4.6.1 and greater while maintaining support for .NET and .NET CORE 2.0+. This allows .NET framework projects to consume the OpenTraceability nuget package while preserving support for later versions of .NET Core and .NET.
+- Added support for .Net Standard 2.0
+
 ## Setup
 Before you can use the library you need to make sure to call the Setup method.
 

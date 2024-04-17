@@ -28,15 +28,15 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             //        <Vocabulary type="urn:epcglobal:epcis:vtype:Location">
             //        <Vocabulary type="urn:epcglobal:epcis:vtype:Party">
 
-            XElement? xVocabList = xMasterData.Element("VocabularyList");
+            XElement xVocabList = xMasterData.Element("VocabularyList");
             if (xVocabList != null)
             {
                 foreach (XElement xVocab in xVocabList.Elements())
                 {
-                    string? type = xVocab.Attribute("type")?.Value.ToLower();
+                    string type = xVocab.Attribute("type")?.Value.ToLower();
                     if (type != null)
                     {
-                        XElement? xVocabElementaryList = xVocab.Element("VocabularyElementList");
+                        XElement xVocabElementaryList = xVocab.Element("VocabularyElementList");
                         if (xVocabElementaryList != null)
                         {
                             foreach (XElement xVocabElement in xVocabElementaryList.Elements())
@@ -73,7 +73,8 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             // read the GLN from the id
             string id = xLocation.Attribute("id")?.Value ?? string.Empty;
             Type t = Setup.MasterDataTypes[type];
-            if (Activator.CreateInstance(t) is not Location loc)
+            var instance = Activator.CreateInstance(t);
+            if (!(instance is Location loc))
             {
                 throw new Exception($"Failed to create instance of Location from type {t}");
             }
@@ -125,7 +126,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 var subMappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(property.Property.PropertyType);
                 bool setAttribute = false;
-                object? subObject = Activator.CreateInstance(property.Property.PropertyType);
+                object subObject = Activator.CreateInstance(property.Property.PropertyType);
                 if (subObject != null)
                 {
                     foreach (XElement xeAtt in xMasterData.Elements("attribute"))
@@ -207,13 +208,13 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 // go through each property...
                 foreach (PropertyInfo p in t.GetProperties())
                 {
-                    OpenTraceabilityAttribute? xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
+                    OpenTraceabilityAttribute xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
                     if (xmlAtt != null)
                     {
-                        XElement? x = xeAtt.Element(xmlAtt.Name);
+                        XElement x = xeAtt.Element(xmlAtt.Name);
                         if (x != null)
                         {
-                            OpenTraceabilityObjectAttribute? objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
+                            OpenTraceabilityObjectAttribute objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
                             if (objAtt != null)
                             {
                                 object o = ReadKDEObject(x, p.PropertyType);
@@ -239,7 +240,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
             else if (p.PropertyType == typeof(List<string>))
             {
-                List<string>? cur = p.GetValue(o) as List<string>;
+                List<string> cur = p.GetValue(o) as List<string>;
                 if (cur == null)
                 {
                     cur = new List<string>();

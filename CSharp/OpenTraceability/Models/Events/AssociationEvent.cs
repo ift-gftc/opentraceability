@@ -1,7 +1,7 @@
 ﻿using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Identifiers;
-using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -10,7 +10,7 @@ namespace OpenTraceability.Models.Events
     public class AssociationEvent : EventBase, IEvent
     {
         [OpenTraceability("parentID", 7)]
-        public EPC? ParentID { get; set; }
+        public EPC ParentID { get; set; }
 
         [OpenTraceabilityProducts("childQuantityList", EPCISVersion.V2, EventProductType.Child, 9, OpenTraceabilityProductsListType.QuantityList)]
         [OpenTraceabilityProducts("childEPCs", EventProductType.Child, 8, OpenTraceabilityProductsListType.EPCList)]
@@ -20,18 +20,18 @@ namespace OpenTraceability.Models.Events
         public EventAction? Action { get; set; }
 
         [OpenTraceability("bizStep", 11)]
-        public Uri? BusinessStep { get; set; }
+        public Uri BusinessStep { get; set; }
 
         [OpenTraceability("disposition", 12)]
-        public Uri? Disposition { get; set; }
+        public Uri Disposition { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("readPoint", 13)]
-        public EventReadPoint? ReadPoint { get; set; }
+        public EventReadPoint ReadPoint { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("bizLocation", 14)]
-        public EventLocation? Location { get; set; }
+        public EventLocation Location { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("bizTransaction")]
@@ -55,16 +55,16 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityObject]
         [OpenTraceability("persistentDisposition", 19)]
-        public PersistentDisposition? PersistentDisposition { get; set; }
+        public PersistentDisposition PersistentDisposition { get; set; }
 
-        public EventILMD? ILMD { get => null; }
+        public EventILMD ILMD { get => null; }
 
 
         [OpenTraceabilityXmlIgnore]
         [OpenTraceability("type", 0)]
         public EventType EventType => EventType.AssociationEvent;
 
-        public EventILMD? GetILMD() => ILMD;
+        public EventILMD GetILMD() => ILMD;
 
         public ReadOnlyCollection<EventProduct> Products
         {

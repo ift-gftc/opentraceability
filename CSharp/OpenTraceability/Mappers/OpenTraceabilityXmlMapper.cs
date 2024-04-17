@@ -8,6 +8,7 @@ using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -23,11 +24,34 @@ namespace OpenTraceability.Mappers
     /// </summary>
     internal static class OpenTraceabilityXmlMapper
     {
-        public static XElement? ToXml(string xname, object? value, EPCISVersion version, bool required = false)
+        public static ConcurrentDictionary<string, Type> RegisteredKDEs { get; set; } = new ConcurrentDictionary<string, Type>();
+        public static IEventKDE InitializeKDE(string ns, string name)
+        {
+            IEventKDE kde = null;
+
+            string key = ns + ":" + name;
+            if (RegisteredKDEs.TryGetValue(key, out Type kdeType))
+            {
+                if (kdeType != null)
+                {
+                    kde = Activator.CreateInstance(kdeType) as IEventKDE;
+                }
+            }
+
+            if (kde != null)
+            {
+                kde.Namespace = ns;
+                kde.Name = name;
+            }
+
+            return kde;
+        }
+
+        public static XElement ToXml(string xname, object value, EPCISVersion version, bool required = false)
         {
             if (value != null)
             {
-                XElement? x = new XElement(xname);
+                XElement x = new XElement(xname);
                 XElement xvalue = x;
 
                 // make sure we have created the xml element correctly.
@@ -53,7 +77,7 @@ namespace OpenTraceability.Mappers
                         XName xchildname = t.GetCustomAttribute<OpenTraceabilityAttribute>()?.Name ?? throw new Exception("Failed to get xname from type. type = " + t.FullName);
                         foreach (var v in list)
                         {
-                            XElement? xListValue = ToXml(xchildname.ToString(), v, version, required);
+                            XElement xListValue = ToXml(xchildname.ToString(), v, version, required);
                             if (xListValue != null)
                             {
                                 xvalue.Add(xListValue);
@@ -71,7 +95,7 @@ namespace OpenTraceability.Mappers
                     OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetXmlTypeInfo(t);
                     foreach (var property in typeInfo.Properties.Where(p => p.Version == null || p.Version == version))
                     {
-                        object? obj = property.Property.GetValue(value);
+                        object obj = property.Property.GetValue(value);
                         if (obj != null)
                         {
                             XElement xvaluepointer = xvalue;
@@ -90,7 +114,7 @@ namespace OpenTraceability.Mappers
 
                             if (xchildname.StartsWith("@"))
                             {
-                                string? objStr = WriteObjectToString(obj);
+                                string objStr = WriteObjectToString(obj);
                                 if (!string.IsNullOrWhiteSpace(objStr))
                                 {
                                     XAttribute xatt = new XAttribute(xchildname.TrimStart('@'), objStr);
@@ -99,7 +123,7 @@ namespace OpenTraceability.Mappers
                             }
                             else if (xchildname == "text()")
                             {
-                                string? objStr = WriteObjectToString(obj);
+                                string objStr = WriteObjectToString(obj);
                                 if (!string.IsNullOrWhiteSpace(objStr))
                                 {
                                     xvaluepointer.Value = objStr;
@@ -166,7 +190,7 @@ namespace OpenTraceability.Mappers
                                 {
                                     if (property.IsObject)
                                     {
-                                        XElement? xchild = ToXml(property.ItemName ?? xchildname, o, version, property.Required);
+                                        XElement xchild = ToXml(property.ItemName ?? xchildname, o, version, property.Required);
                                         if (xchild != null)
                                         {
                                             xlist.Add(xchild);
@@ -174,7 +198,7 @@ namespace OpenTraceability.Mappers
                                     }
                                     else
                                     {
-                                        string? objStr = WriteObjectToString(o);
+                                        string objStr = WriteObjectToString(o);
                                         if (!string.IsNullOrWhiteSpace(objStr))
                                         {
                                             XElement xchild = new XElement(property.ItemName ?? xchildname, objStr);
@@ -185,7 +209,7 @@ namespace OpenTraceability.Mappers
                             }
                             else if (property.IsObject)
                             {
-                                XElement? xchild = ToXml(xchildname, obj, version, property.Required);
+                                XElement xchild = ToXml(xchildname, obj, version, property.Required);
                                 if (xchild != null)
                                 {
                                     xvaluepointer.Add(xchild);
@@ -193,7 +217,7 @@ namespace OpenTraceability.Mappers
                             }
                             else
                             {
-                                string? objStr = WriteObjectToString(obj);
+                                string objStr = WriteObjectToString(obj);
                                 if (!string.IsNullOrWhiteSpace(objStr))
                                 {
                                     XElement xchild = new XElement(xchildname, objStr);
@@ -223,15 +247,15 @@ namespace OpenTraceability.Mappers
 
                     if (typeInfo.ExtensionKDEs != null)
                     {
-                        object? obj = typeInfo.ExtensionKDEs.GetValue(value);
+                        object obj = typeInfo.ExtensionKDEs.GetValue(value);
                         if (obj != null && obj is IList<IEventKDE>)
                         {
-                            IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
+                            IList<IEventKDE> kdes = obj as IList<IEventKDE>;
                             if (kdes != null)
                             {
                                 foreach (var kde in kdes)
                                 {
-                                    XElement? xchild = kde.GetXml();
+                                    XElement xchild = kde.GetXml();
                                     if (xchild != null)
                                     {
                                         xvalue.Add(xchild);
@@ -243,15 +267,15 @@ namespace OpenTraceability.Mappers
 
                     if (typeInfo.ExtensionAttributes != null)
                     {
-                        object? obj = typeInfo.ExtensionAttributes.GetValue(value);
+                        object obj = typeInfo.ExtensionAttributes.GetValue(value);
                         if (obj != null && obj is IList<IEventKDE>)
                         {
-                            IList<IEventKDE>? kdes = obj as IList<IEventKDE>;
+                            IList<IEventKDE> kdes = obj as IList<IEventKDE>;
                             if (kdes != null)
                             {
                                 foreach (IEventKDE kde in kdes)
                                 {
-                                    XElement? xKDE = kde.GetXml();
+                                    XElement xKDE = kde.GetXml();
                                     if (xKDE != null)
                                     {
                                         xvalue.Add(new XAttribute(xKDE.Name, xKDE.Value));
@@ -293,7 +317,7 @@ namespace OpenTraceability.Mappers
                 if (value is IList)
                 {
                     IList list = (IList)value;
-                    OpenTraceabilityAttribute? att = type.GetCustomAttribute<OpenTraceabilityAttribute>();
+                    OpenTraceabilityAttribute att = type.GetCustomAttribute<OpenTraceabilityAttribute>();
                     if (att != null)
                     {
                         foreach (XElement xchild in x.Elements(att.Name))
@@ -316,8 +340,8 @@ namespace OpenTraceability.Mappers
                 {
                     OTMappingTypeInformation typeInfo = OTMappingTypeInformation.GetXmlTypeInfo(type);
 
-                    List<IEventKDE>? extensionKDEs = null;
-                    List<IEventKDE>? extensionAttributes = null;
+                    List<IEventKDE> extensionKDEs = null;
+                    List<IEventKDE> extensionAttributes = null;
 
                     if (typeInfo.ExtensionAttributes != null)
                     {
@@ -329,7 +353,7 @@ namespace OpenTraceability.Mappers
                         extensionKDEs = new List<IEventKDE>();
                     }
 
-                    OTMappingTypeInformationProperty? mappingProp;
+                    OTMappingTypeInformationProperty mappingProp;
 
                     foreach (XAttribute xatt in x.Attributes())
                     {
@@ -337,7 +361,7 @@ namespace OpenTraceability.Mappers
                         if (mappingProp != null)
                         {
                             string xchildname = mappingProp.Name.ToString();
-                            string? attValue = x.Attribute(xchildname.TrimStart('@'))?.Value;
+                            string attValue = x.Attribute(xchildname.TrimStart('@'))?.Value;
                             if (!string.IsNullOrEmpty(attValue))
                             {
                                 object o = ReadObjectFromString(attValue, mappingProp.Property.PropertyType);
@@ -354,7 +378,7 @@ namespace OpenTraceability.Mappers
                     mappingProp = typeInfo["text()"];
                     if (mappingProp != null)
                     {
-                        string? eleText = x.Value;
+                        string eleText = x.Value;
                         if (!string.IsNullOrWhiteSpace(eleText))
                         {
                             object o = ReadObjectFromString(eleText, mappingProp.Property.PropertyType);
@@ -373,7 +397,7 @@ namespace OpenTraceability.Mappers
                                 // see if we have a parent matching way...
                                 foreach (var mp in typeInfo.Properties.Where(p => p.Name.SplitXPath().First() == xchild.Name))
                                 {
-                                    XElement? xgrandchild = x.XPathSelectElement(mp.Name);
+                                    XElement xgrandchild = x.XPathSelectElement(mp.Name);
                                     if (xgrandchild != null)
                                     {
                                         ReadPropertyMapping(mp, xgrandchild, value, version);
@@ -410,9 +434,9 @@ namespace OpenTraceability.Mappers
             }
 
             return value;
-        }        
+        }
 
-        private static string? WriteObjectToString(object obj)
+        private static string WriteObjectToString(object obj)
         {
             if (obj == null)
             {
@@ -499,7 +523,7 @@ namespace OpenTraceability.Mappers
             }
             else if (mappingProp.IsArray)
             {
-                IList? list = mappingProp.Property.GetValue(value) as IList;
+                IList list = mappingProp.Property.GetValue(value) as IList;
                 if (list == null)
                 {
                     list = (IList)(Activator.CreateInstance(mappingProp.Property.PropertyType)
@@ -546,7 +570,7 @@ namespace OpenTraceability.Mappers
             }
             else
             {
-                string? eleText = xchild.Value;
+                string eleText = xchild.Value;
                 if (!string.IsNullOrWhiteSpace(eleText))
                 {
                     object o = ReadObjectFromString(eleText, mappingProp.Property.PropertyType);
@@ -600,7 +624,7 @@ namespace OpenTraceability.Mappers
             }
             else if (t == typeof(EventAction) || t == typeof(EventAction?))
             {
-                EventAction action = Enum.Parse<EventAction>(value);
+                EventAction action = (EventAction)Enum.Parse(typeof(EventAction), value);
                 return action;
             }
             else if (t == typeof(PGLN))
@@ -634,12 +658,12 @@ namespace OpenTraceability.Mappers
             // we need to parse the xml into an event KDE here...
 
             // check if it is a registered KDE...
-            IEventKDE? kde = IEventKDE.InitializeKDE(x.Name.NamespaceName, x.Name.LocalName);
+            IEventKDE kde = InitializeKDE(x.Name.NamespaceName, x.Name.LocalName);
 
             // if not, then check if the data type is specified and we recognize it
             if (kde == null)
             {
-                XAttribute? xsiType = x.Attribute((XNamespace)Constants.XSI_NAMESPACE + "type");
+                XAttribute xsiType = x.Attribute((XNamespace)Constants.XSI_NAMESPACE + "type");
                 if (xsiType != null)
                 {
                     switch (xsiType.Value)
@@ -682,7 +706,7 @@ namespace OpenTraceability.Mappers
             // we need to parse the xml into an event KDE here...
 
             // check if it is a registered KDE...
-            IEventKDE? kde = IEventKDE.InitializeKDE(x.Name.NamespaceName, x.Name.LocalName);
+            IEventKDE kde = InitializeKDE(x.Name.NamespaceName, x.Name.LocalName);
 
             // if not, check if it is a simple value or an object
             if (kde == null)

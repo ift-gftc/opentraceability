@@ -17,12 +17,12 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
     - name: Build
-      run: dotnet build -c Debug /p:Version=1.3.${{github.run_number}}-debug
+      run: dotnet build -c Debug /p:Version=1.4.${{github.run_number}}-debug
     - name: Test
       run: dotnet test -c Debug --no-build
     - name: Build
-      run: dotnet build -c Release /p:Version=1.3.${{github.run_number}}
+      run: dotnet build -c Release /p:Version=1.4.${{github.run_number}}
     - name: Pack nugets
-      run: dotnet pack -c Release /p:Version=1.3.${{github.run_number}} --no-build --output .
+      run: dotnet pack -c Release /p:Version=1.4.${{github.run_number}} --no-build --output .
     - name: Push to NuGet
       run: dotnet nuget push "*.nupkg" --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json

@@ -52,7 +52,7 @@ namespace OpenTraceability
         /// <summary>
         /// This will match the business step on the event to this action for profiling.
         /// </summary>
-        public string? BusinessStep { get; set; }
+        public string BusinessStep { get; set; }
 
         /// <summary>
         /// This is the C# class to deserialize the event into.
@@ -62,7 +62,7 @@ namespace OpenTraceability
         /// <summary>
         /// One or more KDEs required to be present on the event to be profiled as this event.
         /// </summary>
-        public List<OpenTraceabilityEventKDEProfile>? KDEProfiles { get; set; }
+        public List<OpenTraceabilityEventKDEProfile> KDEProfiles { get; set; }
 
         public OpenTraceabilityEventProfile(Type eventClassType, EventType eventType)
         {

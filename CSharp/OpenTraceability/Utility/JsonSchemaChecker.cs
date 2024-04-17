@@ -1,7 +1,11 @@
 ﻿using Json.Schema;
 using Nito.AsyncEx;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace OpenTraceability.Utility
 {
@@ -13,7 +17,7 @@ namespace OpenTraceability.Utility
         public static async Task<List<string>> IsValidAsync(string jsonStr, string schemaURL)
         {
             List<string> errors = new List<string>();
-            if (!_schemaCache.TryGetValue(schemaURL, out string? schemaStr))
+            if (!_schemaCache.TryGetValue(schemaURL, out string schemaStr))
             {
                 using (await _lock.LockAsync())
                 {

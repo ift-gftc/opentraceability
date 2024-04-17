@@ -1,16 +1,15 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Models.MasterData;
-using OpenTraceability.Utility;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
+using System.Net.Http;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace OpenTraceability.Queries
@@ -104,7 +103,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradeitem(DigitalLinkQueryOptions options, GTIN? gtin, EPCISBaseDocument doc, HttpClient client)
+        public static async Task ResolveTradeitem(DigitalLinkQueryOptions options, GTIN gtin, EPCISBaseDocument doc, HttpClient client)
         {
             if (gtin != null)
             {
@@ -120,7 +119,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveLocation(DigitalLinkQueryOptions options, GLN? gln, EPCISBaseDocument doc, HttpClient client)
+        public static async Task ResolveLocation(DigitalLinkQueryOptions options, GLN gln, EPCISBaseDocument doc, HttpClient client)
         {
             if (gln != null)
             {
@@ -136,7 +135,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradingParty(DigitalLinkQueryOptions options, PGLN? pgln, EPCISBaseDocument doc, HttpClient client)
+        public static async Task ResolveTradingParty(DigitalLinkQueryOptions options, PGLN pgln, EPCISBaseDocument doc, HttpClient client)
         {
             if (pgln != null)
             {
@@ -152,7 +151,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradeitem<T>(DigitalLinkQueryOptions options, GTIN? gtin, EPCISBaseDocument doc, HttpClient client) where T : Tradeitem
+        public static async Task ResolveTradeitem<T>(DigitalLinkQueryOptions options, GTIN gtin, EPCISBaseDocument doc, HttpClient client) where T : Tradeitem
         {
             if (gtin != null)
             {
@@ -167,7 +166,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveLocation<T>(DigitalLinkQueryOptions options, GLN? gln, EPCISBaseDocument doc, HttpClient client) where T : Location
+        public static async Task ResolveLocation<T>(DigitalLinkQueryOptions options, GLN gln, EPCISBaseDocument doc, HttpClient client) where T : Location
         {
             if (gln != null)
             {
@@ -182,7 +181,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradingParty<T>(DigitalLinkQueryOptions options, PGLN? pgln, EPCISBaseDocument doc, HttpClient client) where T : TradingParty
+        public static async Task ResolveTradingParty<T>(DigitalLinkQueryOptions options, PGLN pgln, EPCISBaseDocument doc, HttpClient client) where T : TradingParty
         {
             if (pgln != null)
             {
@@ -197,7 +196,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task<Tradeitem?> ResolveTradeitem(DigitalLinkQueryOptions options, GTIN? gtin, HttpClient client)
+        public static async Task<Tradeitem> ResolveTradeitem(DigitalLinkQueryOptions options, GTIN gtin, HttpClient client)
         {
             if (gtin != null)
             {
@@ -210,7 +209,7 @@ namespace OpenTraceability.Queries
             return null;
         }
 
-        public static async Task<Location?> ResolveLocation(DigitalLinkQueryOptions options, GLN? gln, HttpClient client)
+        public static async Task<Location> ResolveLocation(DigitalLinkQueryOptions options, GLN gln, HttpClient client)
         {
             if (gln != null)
             {
@@ -223,7 +222,7 @@ namespace OpenTraceability.Queries
             return null;
         }
 
-        public static async Task<TradingParty?> ResolveTradingParty(DigitalLinkQueryOptions options, PGLN? pgln, HttpClient client)
+        public static async Task<TradingParty> ResolveTradingParty(DigitalLinkQueryOptions options, PGLN pgln, HttpClient client)
         {
             if (pgln != null)
             {
@@ -236,7 +235,7 @@ namespace OpenTraceability.Queries
             return null;
         }
 
-        public static async Task<T?> ResolverMasterDataItem<T>(DigitalLinkQueryOptions options, string relativeURL, HttpClient client) where T : IVocabularyElement
+        public static async Task<T> ResolverMasterDataItem<T>(DigitalLinkQueryOptions options, string relativeURL, HttpClient client) where T : IVocabularyElement
         {
             var response = await ResolveMasterDataItem(typeof(T), options, relativeURL, client);
             if (response == null)
@@ -249,7 +248,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task<object?> ResolveMasterDataItem(Type type, DigitalLinkQueryOptions options, string relativeURL, HttpClient httpClient)
+        public static async Task<object> ResolveMasterDataItem(Type type, DigitalLinkQueryOptions options, string relativeURL, HttpClient httpClient)
         {
             if (options.URL == null)
             {
@@ -280,7 +279,9 @@ namespace OpenTraceability.Queries
 
                             if (response.IsSuccessStatusCode)
                             {
-                                var json = (await response.Content.ReadFromJsonAsync<object>())?.ToString();
+                                var content = await response.Content.ReadAsStringAsync();
+                                var jObject = JsonConvert.DeserializeObject<object>(content);
+                                var json = JsonConvert.SerializeObject(jObject);
 
                                 if (json is null)
                                     throw new NullReferenceException("Error parsing the digital link response: JSON value is null");

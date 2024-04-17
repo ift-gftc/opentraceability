@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
@@ -32,7 +34,7 @@ namespace OpenTraceability.Queries
 		/// </summary>
 		/// <param name="doc"></param>
 		/// <returns>The blob ID of the uploaded traceability data.</returns>
-		public async Task<string> Post(EPCISDocument doc, string? blob_id = null)
+		public async Task<string> Post(EPCISDocument doc, string blob_id = null)
 		{
 			if (blob_id == null)
             {

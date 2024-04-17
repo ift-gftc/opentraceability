@@ -2,6 +2,8 @@
 using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Utility;
+using System;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Mappers.EPCIS.JSON
@@ -25,7 +27,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 }
 
                 // read the master data
-                JObject? jMasterData = json["epcisHeader"]?["epcisMasterData"] as JObject;
+                JObject jMasterData = json["epcisHeader"]?["epcisMasterData"] as JObject;
                 if (jMasterData != null)
                 {
                     EPCISJsonMasterDataReader.ReadMasterData(doc, jMasterData);
@@ -36,7 +38,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 doc.SubscriptionID = json["epcisBody"]?["queryResults"]?["subscriptionID"]?.ToString() ?? string.Empty;
 
                 // read the events
-                JArray? jEventsList = json["epcisBody"]?["queryResults"]?["resultsBody"]?["eventList"] as JArray;
+                JArray jEventsList = json["epcisBody"]?["queryResults"]?["resultsBody"]?["eventList"] as JArray;
                 if (jEventsList != null)
                 {
                     foreach (JObject jEvent in jEventsList)
@@ -77,7 +79,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             JArray jEventsList = new JArray();
             foreach (IEvent e in doc.Events)
             {
-                JObject? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed) as JObject;
+                JObject jEvent = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed) as JObject;
                 if (jEvent != null)
                 {
                     EPCISDocumentBaseJsonMapper.PostWriteEventCleanUp(jEvent);

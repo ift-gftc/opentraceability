@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenTraceability.Utility
 {
@@ -20,7 +18,7 @@ namespace OpenTraceability.Utility
         {
             try
             {
-                FieldInfo? fi = value.GetType().GetRuntimeField(value.ToString() ?? string.Empty);
+                FieldInfo fi = value.GetType().GetRuntimeField(value.ToString() ?? string.Empty);
 
                 if (fi != null)
                 {
@@ -47,11 +45,11 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static string? GetEnumDisplayName(object value)
+        public static string GetEnumDisplayName(object value)
         {
             try
             {
-                FieldInfo? fi = value.GetType().GetRuntimeField(value.ToString() ?? string.Empty);
+                FieldInfo fi = value.GetType().GetRuntimeField(value.ToString() ?? string.Empty);
 
                 if (fi != null)
                 {
@@ -79,7 +77,7 @@ namespace OpenTraceability.Utility
         {
             try
             {
-                FieldInfo? fi = value.GetType().GetRuntimeField(value.ToString() ?? string.Empty);
+                FieldInfo fi = value.GetType().GetRuntimeField(value.ToString() ?? string.Empty);
 
                 if (fi != null)
                 {

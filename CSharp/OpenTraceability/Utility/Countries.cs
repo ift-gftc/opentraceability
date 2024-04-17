@@ -1,4 +1,6 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
 using System.Runtime.Serialization;
 using System.Text;
@@ -23,7 +25,7 @@ namespace OpenTraceability.Utility
 
         private static void Load()
         {
-            string? data = null;
+            string data = null;
             data = StaticData.ReadData("Countries.xml");
             XDocument xmlCountries = XDocument.Parse(data);
             foreach (XElement x in xmlCountries.Root.Elements())
@@ -205,7 +207,7 @@ namespace OpenTraceability.Utility
             return this.Abbreviation.ToString();
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (!(obj is Country))
             {
@@ -231,13 +233,13 @@ namespace OpenTraceability.Utility
             return this.ISO.GetHashCode();
         }
 
-        public bool Equals(Country? other)
+        public bool Equals(Country other)
         {
             if (other == null) return false;
             return (ISO == other.ISO);
         }
 
-        public int CompareTo(Country? other)
+        public int CompareTo(Country other)
         {
             if (other == null) return 1;
             return (ISO.CompareTo(other.ISO));

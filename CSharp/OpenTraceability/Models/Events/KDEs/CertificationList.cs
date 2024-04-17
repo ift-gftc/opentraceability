@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using OpenTraceability.Interfaces;
-using OpenTraceability.Models.Common;
+﻿using OpenTraceability.Models.Common;
 using OpenTraceability.Utility.Attributes;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace OpenTraceability.Models.Events.KDEs
 {

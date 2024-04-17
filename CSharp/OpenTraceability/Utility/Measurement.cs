@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenTraceability;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
@@ -218,7 +221,7 @@ namespace OpenTraceability.Utility
                 List<UOM> uoms = UOMS.List;
 
                 double dblValue = double.Parse(numberStr);
-                UOM? uom = UOMS.GetUOMFromUNCode(uomStr);
+                UOM uom = UOMS.GetUOMFromUNCode(uomStr);
                 if (uom == null)
                 {
                     uom = uoms.Find(u => u.Abbreviation.ToLower() == uomStr.ToLower() || uomStr.ToLower() == u.Name.ToLower());
@@ -246,9 +249,9 @@ namespace OpenTraceability.Utility
         /// </summary>
         /// <param name="strValue"></param>
         /// <returns></returns>
-        public static Measurement? TryParse(string strValue)
+        public static Measurement TryParse(string strValue)
         {
-            Measurement? measure = null;
+            Measurement measure = null;
             try
             {
                 if (!string.IsNullOrEmpty(strValue))
@@ -266,7 +269,7 @@ namespace OpenTraceability.Utility
             return measure;
         }
 
-        public static bool operator ==(Measurement? lhs, Measurement? rhs)
+        public static bool operator ==(Measurement lhs, Measurement rhs)
         {
             if (ReferenceEquals(lhs, rhs))
             {
@@ -287,7 +290,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static bool operator !=(Measurement? lhs, Measurement? rhs)
+        public static bool operator !=(Measurement lhs, Measurement rhs)
         {
             if (lhs == rhs)
             {
@@ -385,7 +388,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (!ReferenceEquals(obj, null))
             {
@@ -401,7 +404,7 @@ namespace OpenTraceability.Utility
             return (false);
         }
 
-        public int CompareTo(object? obj)
+        public int CompareTo(object obj)
         {
             if (!ReferenceEquals(obj, null))
             {
@@ -418,7 +421,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public int CompareTo(Measurement? other)
+        public int CompareTo(Measurement other)
         {
             if (ReferenceEquals(other, null))
             {

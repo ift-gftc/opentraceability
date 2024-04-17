@@ -13,13 +13,23 @@ namespace OpenTraceability.Models.Events.KDEs
 {
     public class EventKDEObject : EventKDEBase, IEventKDE
     {
-        private XElement? _xml = null;
-        private JToken? _json = null;
+        private XElement _xml = null;
+        private JToken _json = null;
 
         public Type ValueType => typeof(object);
-        public object? Value
+        public object Value
         {
-            get => (_xml != null) ? _xml : _json;
+            get
+            {
+                if (_xml != null)
+                {
+                    return _xml;
+                }
+                else
+                {
+                    return _json;
+                }
+            }
         }
 
         internal EventKDEObject()
@@ -39,7 +49,7 @@ namespace OpenTraceability.Models.Events.KDEs
             _json = json;
         }
 
-        public JToken? GetJson()
+        public JToken GetJson()
         {
             if (_xml != null)
             {
@@ -69,7 +79,7 @@ namespace OpenTraceability.Models.Events.KDEs
             _json = null;
         }
 
-        public XElement? GetXml()
+        public XElement GetXml()
         {
             if (_xml != null)
             {
@@ -78,7 +88,7 @@ namespace OpenTraceability.Models.Events.KDEs
             else if (_json != null)
             {
                 // convert _json to XElement
-                string? xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString()) as XmlDocument)?.OuterXml;
+                string xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString()) as XmlDocument)?.OuterXml;
                 if (!string.IsNullOrEmpty(xmlStr))
                 {
                     XElement x = new XElement((XNamespace)Namespace + Name, XElement.Parse(xmlStr));

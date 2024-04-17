@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
@@ -22,14 +26,14 @@ namespace OpenTraceability.Queries
         /// <param name="options">Options for querying a digital link resolver.</param>
         /// <param name="epc">The EPC to include in the relative URL.</param>
         /// <returns>The URI if it finds one, otherwise returns NULL.</returns>
-        public static async Task<Uri?> GetEPCISQueryInterfaceURL(DigitalLinkQueryOptions options, EPC epc, HttpClient client)
+        public static async Task<Uri> GetEPCISQueryInterfaceURL(DigitalLinkQueryOptions options, EPC epc, HttpClient client)
         {
             if (options.URL == null)
             {
                 throw new Exception("options.Uri is null on the DigitalLinkQueryOptions");
             }
 
-            string? relativeUrl = null;
+            string relativeUrl = null;
             switch (epc.Type)
             {
                 case EPCType.Class: relativeUrl = epc.GTIN?.ToDigitalLinkURL() + "/10/" + epc.SerialLotNumber; break;
@@ -72,7 +76,7 @@ namespace OpenTraceability.Queries
         /// <param name="options">Options for querying a digital link resolver.</param>
         /// <param name="pgln">The PGLN to include in the relative URL.</param>
         /// <returns>The URI if it finds one, otherwise returns NULL.</returns>
-        public static async Task<Uri?> GetEPCISQueryInterfaceURL(DigitalLinkQueryOptions options, PGLN pgln, HttpClient client)
+        public static async Task<Uri> GetEPCISQueryInterfaceURL(DigitalLinkQueryOptions options, PGLN pgln, HttpClient client)
         {
             if (options.URL == null)
             {
@@ -114,7 +118,7 @@ namespace OpenTraceability.Queries
         /// <param name="options">Options for talking to the EPCIS Query Interface.</param>
         /// <param name="epc">The EPC to perform the traceback on.</param>
         /// <returns>The summarized EPCIS query results.</returns>
-        public static async Task<EPCISQueryResults> Traceback(EPCISQueryInterfaceOptions options, EPC epc, HttpClient client, EPCISQueryParameters? additionalParameters = null)
+        public static async Task<EPCISQueryResults> Traceback(EPCISQueryInterfaceOptions options, EPC epc, HttpClient client, EPCISQueryParameters additionalParameters = null)
         {
             HashSet<EPC> queried_epcs = new HashSet<EPC>() { epc };
 
@@ -128,7 +132,7 @@ namespace OpenTraceability.Queries
             var results = await QueryEvents(options, paramters, client);
 
             // if an error occured, lets stop here and return the results that we have
-            if (results.Errors.Count > 0)
+            if (results.Errors.Count() > 0)
             {
                 return results;
             }
@@ -171,8 +175,8 @@ namespace OpenTraceability.Queries
                     {
                         epcs_to_query = new List<EPC>();
                         potential_epcs = r.Document.Events.SelectMany(e => e.Products)
-                                                          .Where(p => p.Type == EventProductType.Child || p.Type == EventProductType.Input)
-                                                          .Select(p => p.EPC)
+                                                          .Where(product => product.Type == EventProductType.Child || product.Type == EventProductType.Input)
+                                                          .Select(product => product.EPC)
                                                           .Distinct();
 
                         foreach (var e in potential_epcs)
@@ -211,8 +215,8 @@ namespace OpenTraceability.Queries
                     {
                         // find the next event recorded where one of the children is recorded in the event
                         var parent_id = ((IAggregationEvent)agg_evt).ParentID;
-                        var child_epcs = agg_evt.Products.Where(p => p.Type == EventProductType.Child).Select(p => p.EPC);
-                        var next_evt = results.Document.Events.Where(e => e.EventTime > agg_evt.EventTime && e.Products.Any(p => child_epcs.Contains(p.EPC))).OrderBy(e => e.EventTime).FirstOrDefault();
+                        var child_epcs = agg_evt.Products.Where(product => product.Type == EventProductType.Child).Select(product => product.EPC);
+                        var next_evt = results.Document.Events.Where(e => e.EventTime > agg_evt.EventTime && e.Products.Any(product => child_epcs.Contains(product.EPC))).OrderBy(e => e.EventTime).FirstOrDefault();
                         DateTimeOffset? next_evt_time = next_evt?.EventTime;
 
                         // if we couldn't find a next event time, take the max event time of all events
@@ -295,8 +299,8 @@ namespace OpenTraceability.Queries
             EPCISQueryResults results = new EPCISQueryResults();
 
             // execute the request
-            HttpResponseMessage? response = null;
-            string? responseBody = null;
+            HttpResponseMessage response = null;
+            string responseBody = null;
             try
             {
                 // calculate the host field for the request

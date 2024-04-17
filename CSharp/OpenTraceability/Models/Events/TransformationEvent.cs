@@ -2,6 +2,8 @@
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events
@@ -19,21 +21,21 @@ namespace OpenTraceability.Models.Events
         public EventAction? Action { get; set; }
 
         [OpenTraceability("transformationID", 11)]
-        public string? TransformationID { get; set; }
+        public string TransformationID { get; set; }
 
         [OpenTraceability("bizStep", 12)]
-        public Uri? BusinessStep { get; set; }
+        public Uri BusinessStep { get; set; }
 
         [OpenTraceability("disposition", 13)]
-        public Uri? Disposition { get; set; }
+        public Uri Disposition { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("readPoint", 14)]
-        public EventReadPoint? ReadPoint { get; set; }
+        public EventReadPoint ReadPoint { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("bizLocation", 15)]
-        public EventLocation? Location { get; set; }
+        public EventLocation Location { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("bizTransaction")]
@@ -57,17 +59,17 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityObject]
         [OpenTraceability("persistentDisposition", 20)]
-        public PersistentDisposition? PersistentDisposition { get; set; }
+        public PersistentDisposition PersistentDisposition { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("ilmd", 21)]
-        public T? ILMD { get; set; }
+        public T ILMD { get; set; }
 
         [OpenTraceabilityXmlIgnore]
         [OpenTraceability("type", 0)]
         public EventType EventType => EventType.TransformationEvent;
 
-        public EventILMD? GetILMD() => ILMD;
+        public EventILMD GetILMD() => ILMD;
 
         public ReadOnlyCollection<EventProduct> Products
         {

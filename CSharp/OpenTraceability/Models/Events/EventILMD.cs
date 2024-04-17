@@ -2,6 +2,8 @@
 using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
+using System;
+using System.Collections.Generic;
 
 namespace OpenTraceability.Models.Events
 {
@@ -12,7 +14,7 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "productionMethodForFishAndSeafoodCode")]
         [OpenTraceabilityJson("cbvmda:productionMethodForFishAndSeafoodCode")]
-        public string? ProductionMethodForFishAndSeafoodCode { get; set; }
+        public string ProductionMethodForFishAndSeafoodCode { get; set; }
 
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "itemExpirationDate")]
         [OpenTraceabilityJson("cbvmda:itemExpirationDate")]
@@ -30,12 +32,12 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "lotNumber")]
         [OpenTraceabilityJson("cbvmda:lotNumber")]
-        public string? LotNumber { get; set; }
+        public string LotNumber { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "certificationList")]
         [OpenTraceabilityJson("cbvmda:certificationList")]
-        public CertificationList? CertificationList { get; set; }
+        public CertificationList CertificationList { get; set; }
 
         [OpenTraceabilityExtensionElements]
         public List<IEventKDE> ExtensionKDEs { get; internal set; } = new List<IEventKDE>();

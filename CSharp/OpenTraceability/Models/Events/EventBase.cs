@@ -4,6 +4,8 @@ using OpenTraceability.Models.Events.KDEs;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events
@@ -70,24 +72,24 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceability("eventID", 4, EPCISVersion.V2)]
         [OpenTraceability("baseExtension/eventID", 4, EPCISVersion.V1)]
-        public Uri? EventID { get; set; }
+        public Uri EventID { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("errorDeclaration", 5, EPCISVersion.V2)]
         [OpenTraceability("baseExtension/errorDeclaration", 5, EPCISVersion.V1)]
-        public ErrorDeclaration? ErrorDeclaration { get; set; }
+        public ErrorDeclaration ErrorDeclaration { get; set; }
 
         [OpenTraceability("certificationInfo", 6, EPCISVersion.V2)]
-        public string? CertificationInfo { get; set; }
+        public string CertificationInfo { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "certificationList")]
         [OpenTraceabilityJson("cbvmda:certificationList")]
-        public CertificationList? CertificationList { get; set; }
+        public CertificationList CertificationList { get; set; }
 
         [OpenTraceability(Constants.CBVMDA_NAMESPACE, "informationProvider")]
         [OpenTraceabilityJson("cbvmda:informationProvider")]
-        public PGLN? InformationProvider { get; set; }
+        public PGLN InformationProvider { get; set; }
 
         [OpenTraceabilityExtensionElements]
         public List<IEventKDE> KDEs { get; set; } = new List<IEventKDE>();
@@ -98,9 +100,9 @@ namespace OpenTraceability.Models.Events
         /// <typeparam name="T">The C# type of the KDE.</typeparam>
         /// <param name="key">The key value of the KDE.</param>
         /// <returns>The instance of the IEventKDE that matches the parameters.</returns>
-        public T? GetKDE<T>(string ns, string name) where T : IEventKDE
+        public T GetKDE<T>(string ns, string name) where T : IEventKDE
         {
-            IEventKDE? kde = KDEs.Find(k => k.Namespace == ns && k.Name == name);
+            IEventKDE kde = KDEs.Find(k => k.Namespace == ns && k.Name == name);
             if (kde != null)
             {
                 if (kde is T)
@@ -116,9 +118,9 @@ namespace OpenTraceability.Models.Events
         /// </summary>
         /// <typeparam name="T">The C# type of the KDE.</typeparam>
         /// <returns>The instance of the IEventKDE that matches the parameters.</returns>
-        public T? GetKDE<T>() where T : IEventKDE
+        public T GetKDE<T>() where T : IEventKDE
         {
-            IEventKDE? kde = KDEs.Find(k => k.ValueType == typeof(T));
+            IEventKDE kde = KDEs.Find(k => k.ValueType == typeof(T));
             if (kde != null)
             {
                 if (kde is T)

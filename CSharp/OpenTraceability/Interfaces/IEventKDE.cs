@@ -15,59 +15,6 @@ namespace OpenTraceability.Interfaces
     /// </summary>
     public interface IEventKDE
     {
-        private static ConcurrentDictionary<string, Type> RegisteredKDEs = new ConcurrentDictionary<string, Type>();
-
-        /// <summary>
-        /// Registers a KDE so that it will be deserialized properly and serialized properly.
-        /// </summary>
-        /// <typeparam name="T">The C# type of the KDE.</typeparam>
-        /// <param name="ns">The full URI namespace for the KDE.</param>
-        /// <param name="name">The local name of the KDE.</param>
-        /// <exception cref="Exception"></exception>
-        public static void RegisterKDE<T>(string ns, string name) where T: IEventKDE, new()
-        {
-            string key = ns + ":" + name;
-            if (!RegisteredKDEs.ContainsKey(key))
-            {
-                RegisteredKDEs.TryAdd(key, typeof(T));
-            }
-            else
-            {
-                throw new Exception($"The KDE {key} is already registered with type {RegisteredKDEs[key].FullName}");
-            }
-        }
-
-        /// <summary>
-        /// Initializes a KDE from the namespace and name. The KDE needs to be registered with the "RegisterKDE" method prior to calling this.
-        /// </summary>
-        /// <param name="ns">The full URI namespace for the KDE.</param>
-        /// <param name="name">The local name of the KDE.</param>
-        /// <returns>The new copy of the IEventKDE that has been initialzied.</returns>
-        public static IEventKDE? InitializeKDE(string ns, string name)
-        {
-            IEventKDE? kde = null;
-
-            string key = ns + ":" + name;
-            if (RegisteredKDEs.TryGetValue(key, out Type? kdeType))
-            {
-                if (kdeType != null)
-                {
-                    kde = Activator.CreateInstance(kdeType) as IEventKDE;
-                }
-            }
-
-            if (kde != null)
-            {
-                kde.Namespace = ns;
-                kde.Name = name;
-            }
-
-            return kde;
-        }
-
-        /// <summary>
-        /// The namespace that the KDE sits under. This should be the full URI and not the prefix.
-        /// </summary>
         string Namespace { get; set; }
 
         /// <summary>
@@ -90,7 +37,7 @@ namespace OpenTraceability.Interfaces
         /// Gets the KDE in a JSON-LD format.
         /// </summary>
         /// <returns>The KDE expressed as JSON-LD.</returns>
-        JToken? GetJson();
+        JToken GetJson();
 
         /// <summary>
         /// Sets the KDE from the XML expression of it.
@@ -102,6 +49,6 @@ namespace OpenTraceability.Interfaces
         /// Gets the KDE in an XML format.
         /// </summary>
         /// <returns>The KDE expressed as XML.</returns>
-        XElement? GetXml();
+        XElement GetXml();
     }
 }

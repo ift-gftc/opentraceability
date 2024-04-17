@@ -8,7 +8,7 @@ namespace OpenTraceability.Utility
 {
     public static class DictionaryExtensions
     {
-        public static Dictionary<TValue, TKey> Reverse<TKey, TValue>(this IDictionary<TKey, TValue> source) where TValue : notnull
+        public static Dictionary<TValue, TKey> Reverse<TKey, TValue>(this IDictionary<TKey, TValue> source)
         {
             var dictionary = new Dictionary<TValue, TKey>();
             foreach (var entry in source)

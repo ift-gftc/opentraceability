@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
+using System;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Models.Events.KDEs
@@ -9,12 +10,12 @@ namespace OpenTraceability.Models.Events.KDEs
         public Type ValueType => typeof(DateTimeOffset?);
         public DateTimeOffset? Value { get; set; }
 
-        public JToken? GetJson()
+        public JToken GetJson()
         {
             throw new NotImplementedException();
         }
 
-        public XElement? GetXml()
+        public XElement GetXml()
         {
             throw new NotImplementedException();
         }

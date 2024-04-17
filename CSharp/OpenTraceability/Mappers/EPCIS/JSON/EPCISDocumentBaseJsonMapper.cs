@@ -3,6 +3,10 @@ using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Mappers.EPCIS.JSON
@@ -36,7 +40,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             document.EPCISVersion = EPCISVersion.V2;
 
             // read the creation date
-            string? creationDateAttributeStr = json["creationDate"]?.ToString();
+            string creationDateAttributeStr = json["creationDate"]?.ToString();
             if (!string.IsNullOrWhiteSpace(creationDateAttributeStr))
             {
                 document.CreationDate = creationDateAttributeStr.TryConvertToDateTimeOffset();
@@ -46,7 +50,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             document.Attributes = new Dictionary<string, string>();
 
             // we are going to break down the content into either namespaces, or links to contexts...
-            JArray? jContextArray = json["@context"] as JArray;
+            JArray jContextArray = json["@context"] as JArray;
             if (jContextArray != null)
             {
                 foreach (JToken jt in jContextArray)
@@ -70,7 +74,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     }
                     else
                     {
-                        string? val = jt.ToString();
+                        string val = jt.ToString();
 
                         if (!string.IsNullOrWhiteSpace(val))
                         {
@@ -209,7 +213,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         internal static Type GetEventTypeFromProfile(JObject jEvent)
         {
             Enum.TryParse<EventAction>(jEvent["action"]?.ToString(), out var action);
-            string? bizStep = jEvent["bizStep"]?.ToString();
+            string bizStep = jEvent["bizStep"]?.ToString();
             string eventType = jEvent["type"]?.ToString() ?? throw new Exception("type property not set on event " + jEvent.ToString());
 
             var profiles = Setup.Profiles.Where(p => p.EventType.ToString() == eventType && (p.Action == null || p.Action == action) && (p.BusinessStep == null || p.BusinessStep.ToLower() == bizStep?.ToLower())).OrderByDescending(p => p.SpecificityScore).ToList();
@@ -248,7 +252,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             List<string> errors = await JsonSchemaChecker.IsValidAsync(jsonStr, "https://ref.gs1.org/standards/epcis/epcis-json-schema.json");
             if (errors.Count > 0)
             {
-                throw new OpenTraceabilitySchemaException("Failed to validate JSON schema with errors:\n" + string.Join('\n', errors) + "\n\n and json " + json.ToString(Formatting.Indented));
+                throw new OpenTraceabilitySchemaException("Failed to validate JSON schema with errors:\n" + string.Join("\n", errors) + "\n\n and json " + json.ToString(Formatting.Indented));
             }
         }
 
@@ -312,7 +316,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 JObject jobj = (JObject)json;
                 foreach (var jprop in jobj.Properties())
                 {
-                    JToken? jvalue = jobj[jprop.Name];
+                    JToken jvalue = jobj[jprop.Name];
                     if (jvalue is JObject)
                     {
                         json[jprop.Name] = CompressVocab((JObject)jvalue);
@@ -335,7 +339,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
             else
             {
-                string? val = json.ToString();
+                string val = json.ToString();
                 if (val != null)
                 {
                     if (val.StartsWith("urn:epcglobal:cbv:btt:")
@@ -343,17 +347,17 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                      || val.StartsWith("urn:epcglobal:cbv:sdt:")
                      || val.StartsWith("urn:epcglobal:cbv:disp:"))
                     {
-                        val = val.Split(":").Last();
+                        val = val.Split(':').Last();
                         return JToken.FromObject(val);
                     }
                     else if (val.StartsWith("https://ref.gs1.org/cbv"))
                     {
-                        val = val.Split("-").Last();
+                        val = val.Split('-').Last();
                         return JToken.FromObject(val);
                     }
                     else if (val.StartsWith("https://gs1.org/voc/"))
                     {
-                        val = val.Split("/").Last();
+                        val = val.Split('/').Last();
                         return JToken.FromObject(val);
                     }
                 }
@@ -376,7 +380,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             JObject jEPCISContext = await JsonContextHelper.GetJsonLDContextAsync("https://ref.gs1.org/standards/epcis/epcis-context.jsonld");
             Dictionary<string, string> namespaces = JsonContextHelper.ScrapeNamespaces(jEPCISContext);
 
-            JArray? jEventList = json["epcisBody"]?["eventList"] as JArray;
+            JArray jEventList = json["epcisBody"]?["eventList"] as JArray;
             if (jEventList == null)
             {
                 jEventList = json["epcisBody"]?["queryResults"]?["resultsBody"]?["eventList"] as JArray;

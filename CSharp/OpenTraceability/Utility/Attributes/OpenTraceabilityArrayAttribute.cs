@@ -8,7 +8,7 @@ namespace OpenTraceability.Utility.Attributes
 {
     public class OpenTraceabilityArrayAttribute : System.Attribute
     {
-        public string? ItemName { get; set; }
+        public string ItemName { get; set; }
 
         public OpenTraceabilityArrayAttribute() { }
 

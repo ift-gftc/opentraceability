@@ -19,7 +19,7 @@ namespace OpenTraceability.Utility
         public static string ReadData(string path)
         {
             string result = string.Empty;
-            using (Stream? stream = typeof(StaticData).Assembly.GetManifestResourceStream("OpenTraceability.Utility.Data." + path))
+            using (Stream stream = typeof(StaticData).Assembly.GetManifestResourceStream("OpenTraceability.Utility.Data." + path))
             {
                 if (stream == null)
                 {

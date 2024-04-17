@@ -1,16 +1,19 @@
-﻿namespace OpenTraceability.Models.Common
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace OpenTraceability.Models.Common
 {
     public class Address : AnonymizedAddress
     {
-        public string? Address1 { get; set; }
-        public string? Address2 { get; set; }
-        public string? City { get; set; }
-        public string? State { get; set; }
-        public string? County { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string County { get; set; }
 
         public override string ToString()
         {
-            List<string?> pieces = new List<string?>()
+            List<string> pieces = new List<string>()
             {
                 Address1,
                 Address2,
@@ -24,7 +27,7 @@
             return addressStr;
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (obj == null)
             {
@@ -39,7 +42,7 @@
             return this.Equals(obj as Address);
         }
 
-        public bool Equals(Address? other)
+        public bool Equals(Address other)
         {
             if (other == null)
             {

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
+using System;
 using System.Xml.Linq;
 
 namespace OpenTraceability.Models.Events.KDEs
@@ -20,7 +21,7 @@ namespace OpenTraceability.Models.Events.KDEs
             this.Name = name;
         }
 
-        public JToken? GetJson()
+        public JToken GetJson()
         {
             if (Value == null)
             {
@@ -32,7 +33,7 @@ namespace OpenTraceability.Models.Events.KDEs
             }
         }
 
-        public XElement? GetXml()
+        public XElement GetXml()
         {
             if (Value == null)
             {

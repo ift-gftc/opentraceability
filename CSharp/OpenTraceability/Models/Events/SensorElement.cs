@@ -1,5 +1,6 @@
 ﻿using OpenTraceability.Interfaces;
 using OpenTraceability.Utility.Attributes;
+using System.Collections.Generic;
 
 namespace OpenTraceability.Models.Events
 {
@@ -7,7 +8,7 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceabilityObject]
         [OpenTraceability("sensorMetadata", 0)]
-        public SensorMetaData? MetaData { get; set; }
+        public SensorMetaData MetaData { get; set; }
 
         [OpenTraceabilityArray]
         [OpenTraceabilityObject]

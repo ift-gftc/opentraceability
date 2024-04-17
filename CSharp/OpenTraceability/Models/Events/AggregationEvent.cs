@@ -2,6 +2,7 @@
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -10,7 +11,7 @@ namespace OpenTraceability.Models.Events
     public class AggregationEvent<T> : EventBase, IAggregationEvent, IILMDEvent<T> where T : EventILMD
     {
         [OpenTraceability("parentID", 7)]
-        public EPC? ParentID { get; set; }
+        public EPC ParentID { get; set; }
 
         [OpenTraceabilityProducts("extension/childQuantityList", EPCISVersion.V1, EventProductType.Child, 21, OpenTraceabilityProductsListType.QuantityList)]
         [OpenTraceabilityProducts("childQuantityList", EPCISVersion.V2, EventProductType.Child, 15, OpenTraceabilityProductsListType.QuantityList)]
@@ -21,18 +22,18 @@ namespace OpenTraceability.Models.Events
         public EventAction? Action { get; set; }
 
         [OpenTraceability("bizStep", 10)]
-        public Uri? BusinessStep { get; set; }
+        public Uri BusinessStep { get; set; }
 
         [OpenTraceability("disposition", 11)]
-        public Uri? Disposition { get; set; }
+        public Uri Disposition { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("readPoint", 12)]
-        public EventReadPoint? ReadPoint { get; set; }
+        public EventReadPoint ReadPoint { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("bizLocation", 13)]
-        public EventLocation? Location { get; set; }
+        public EventLocation Location { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("bizTransaction")]
@@ -58,17 +59,17 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityObject]
         [OpenTraceability("persistentDisposition", 19, EPCISVersion.V2)]
-        public PersistentDisposition? PersistentDisposition { get; set; }
+        public PersistentDisposition PersistentDisposition { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("ilmd", 20, EPCISVersion.V2)]
-        public T? ILMD { get; set; }
+        public T ILMD { get; set; }
 
         [OpenTraceabilityXmlIgnore]
         [OpenTraceability("type", 0)]
         public EventType EventType => EventType.AggregationEvent;
 
-        public EventILMD? GetILMD() => ILMD;
+        public EventILMD GetILMD() => ILMD;
 
         public ReadOnlyCollection<EventProduct> Products
         {

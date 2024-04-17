@@ -3,9 +3,12 @@ using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
 using OpenTraceability.Mappers.EPCIS.XML;
 using OpenTraceability.Models.Events;
-using OpenTraceability.Utility;
-using System.Globalization;
-using System.Reflection.Metadata;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+
+//using System.Reflection.Metadata;
 using System.Xml.Linq;
 
 namespace GS1.Mappers.EPCIS
@@ -26,7 +29,7 @@ namespace GS1.Mappers.EPCIS
                 EPCISDocumentBaseXMLMapper.ValidateEPCISDocumentSchema(xDoc, doc.EPCISVersion.Value);
 
                 // read the events
-                XElement? xEventList = xDoc.Root?.Element("EPCISBody")?.Element("EventList");
+                XElement xEventList = xDoc.Root?.Element("EPCISBody")?.Element("EventList");
                 if (xEventList != null)
                 {
                     foreach (XElement xe in xEventList.Elements())
@@ -74,7 +77,7 @@ namespace GS1.Mappers.EPCIS
             foreach (IEvent e in doc.Events)
             {
                 string xname = EPCISDocumentBaseXMLMapper.GetEventXName(e);
-                XElement? xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.EPCISVersion.Value);
+                XElement xEvent = OpenTraceabilityXmlMapper.ToXml(xname, e, doc.EPCISVersion.Value);
                 if (e.EventType == EventType.TransformationEvent && doc.EPCISVersion.Value == EPCISVersion.V1)
                 {
                     xEvent = new XElement("extension", xEvent);

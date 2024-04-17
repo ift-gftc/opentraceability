@@ -1,4 +1,5 @@
 ﻿using OpenTraceability.Utility.Attributes;
+using System;
 
 namespace OpenTraceability.Models.Common
 {
@@ -6,19 +7,19 @@ namespace OpenTraceability.Models.Common
     {
         [OpenTraceabilityJson("gdst:certificationType")]
         [OpenTraceability(Constants.GDST_NAMESPACE, "certificationType")]
-        public string? CertificateType { get; set; }
+        public string CertificateType { get; set; }
 
         [OpenTraceability("certificationAgency")]
-        public string? Agency { get; set; }
+        public string Agency { get; set; }
 
         [OpenTraceability("certificationStandard")]
-        public string? Standard { get; set; }
+        public string Standard { get; set; }
 
         [OpenTraceability("certificationValue")]
-        public string? Value { get; set; }
+        public string Value { get; set; }
 
         [OpenTraceability("certificationIdentification")]
-        public string? Identification { get; set; }
+        public string Identification { get; set; }
 
         [OpenTraceability("certificationStartDate")]
         public DateTimeOffset? StartDate { get; set; }

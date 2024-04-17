@@ -26,10 +26,10 @@ namespace OpenTraceability.Utility
             return result;
         }
 
-        public static XElement? QueryXPath(this XElement x, string xpath)
+        public static XElement QueryXPath(this XElement x, string xpath)
         {
             List<string> xpath_parts = xpath.SplitXPath();
-            XElement? xfind = x.Element(xpath_parts[0]);
+            XElement xfind = x.Element(xpath_parts[0]);
             if (xfind == null)
             {
                 return xfind;
@@ -44,10 +44,10 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static JToken? QueryJPath(this JToken j, string jpath)
+        public static JToken QueryJPath(this JToken j, string jpath)
         {
             List<string> jpath_parts = jpath.Split('.').ToList();
-            JToken? jfind = j[jpath_parts[0]];
+            JToken jfind = j[jpath_parts[0]];
             if (jfind == null)
             {
                 return jfind;
@@ -64,7 +64,7 @@ namespace OpenTraceability.Utility
 
         public static DateTimeOffset? AttributeISODateTime(this XElement x, string attName)
         {
-            string? strValue = x.Attribute(attName)?.Value;
+            string strValue = x.Attribute(attName)?.Value;
 
             if (!string.IsNullOrEmpty(strValue))
             {
@@ -74,9 +74,9 @@ namespace OpenTraceability.Utility
             return null;
         }
 
-        public static Uri? AttributeURI(this XElement x, string attName)
+        public static Uri AttributeURI(this XElement x, string attName)
         {
-            string? strValue = x.Attribute(attName)?.Value;
+            string strValue = x.Attribute(attName)?.Value;
 
             if (!string.IsNullOrEmpty(strValue))
             {
@@ -98,7 +98,7 @@ namespace OpenTraceability.Utility
 
         public static bool? AttributeBoolean(this XElement x, string attName)
         {
-            string? strValue = x.Attribute(attName)?.Value;
+            string strValue = x.Attribute(attName)?.Value;
 
             if (!string.IsNullOrEmpty(strValue))
             {
@@ -120,7 +120,7 @@ namespace OpenTraceability.Utility
 
         public static double? AttributeDouble(this XElement x, string attName)
         {
-            string? strValue = x.Attribute(attName)?.Value;
+            string strValue = x.Attribute(attName)?.Value;
 
             if (!string.IsNullOrEmpty(strValue))
             {
@@ -140,9 +140,9 @@ namespace OpenTraceability.Utility
             return null;
         }
 
-        public static UOM? AttributeUOM(this XElement x, string attName)
+        public static UOM AttributeUOM(this XElement x, string attName)
         {
-            string? strValue = x.Attribute(attName)?.Value;
+            string strValue = x.Attribute(attName)?.Value;
 
             if (!string.IsNullOrEmpty(strValue))
             {
@@ -162,7 +162,7 @@ namespace OpenTraceability.Utility
             return null;
         }
 
-        public static void AddStringElement(this XElement x, XName xname, string? value)
+        public static void AddStringElement(this XElement x, XName xname, string value)
         {
             if (!string.IsNullOrWhiteSpace(value))
             {

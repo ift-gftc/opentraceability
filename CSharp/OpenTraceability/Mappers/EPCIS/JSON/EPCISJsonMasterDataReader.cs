@@ -29,7 +29,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             {
                 foreach (JObject jVocabListItem in jVocabList)
                 {
-                    string? type = jVocabListItem["type"]?.ToString()?.ToLower();
+                    string type = jVocabListItem["type"]?.ToString()?.ToLower();
                     if (type != null)
                     {
                         if (jVocabListItem["vocabularyElementList"] is JArray jVocabElementaryList)
@@ -68,9 +68,11 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             // read the GLN from the id
             string id = xLocation["id"]?.ToString() ?? string.Empty;
             Type t = Setup.MasterDataTypes[type];
-            if (Activator.CreateInstance(t) is not Location loc)
+
+            var instance = Activator.CreateInstance(t);
+            if (!(instance is Location loc))
             {
-                throw new Exception($"Failed to activate instance Location of {t}");
+                throw new Exception($"Failed to create instance of Location from type {t}");
             }
             else
             {
@@ -120,7 +122,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             {
                 var subMappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(property.Property.PropertyType);
                 bool setAttribute = false;
-                object? subObject = Activator.CreateInstance(property.Property.PropertyType);
+                object subObject = Activator.CreateInstance(property.Property.PropertyType);
                 if (subObject != null)
                 {
                     foreach (JObject jAtt in jMasterData["attributes"] as JArray)
@@ -166,7 +168,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 }
                 else if (readKDEs)
                 {
-                    JToken? jAttValue = jAtt["attribute"];
+                    JToken jAttValue = jAtt["attribute"];
                     if (jAttValue != null)
                     {
                         if (jAttValue is JObject)
@@ -209,13 +211,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 // go through each property...
                 foreach (PropertyInfo p in t.GetProperties())
                 {
-                    OpenTraceabilityAttribute? xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
+                    OpenTraceabilityAttribute xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
                     if (xmlAtt != null)
                     {
-                        JToken? x = j[xmlAtt.Name];
+                        JToken x = j[xmlAtt.Name];
                         if (x != null)
                         {
-                            OpenTraceabilityObjectAttribute? objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
+                            OpenTraceabilityObjectAttribute objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
                             if (objAtt != null)
                             {
                                 object o = ReadKDEObject(x, p.PropertyType);
@@ -241,7 +243,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
             else if (p.PropertyType == typeof(List<string>))
             {
-                List<string>? cur = p.GetValue(o) as List<string>;
+                List<string> cur = p.GetValue(o) as List<string>;
                 if (cur == null)
                 {
                     cur = new List<string>();

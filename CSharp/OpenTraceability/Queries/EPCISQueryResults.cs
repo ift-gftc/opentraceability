@@ -1,14 +1,14 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using OpenTraceability.Models.Events;
 
 namespace OpenTraceability.Queries
 {
-	public class EPCISQueryResults
+    public class EPCISQueryResults
 	{
 		/// <summary>
 		/// A summary of all of the EPCIS events.
 		/// </summary>
-		public EPCISQueryDocument? Document { get; set; }
+		public EPCISQueryDocument Document { get; set; }
 
 		/// <summary>
 		/// A summary of all HTTP requests that were performed while resolving

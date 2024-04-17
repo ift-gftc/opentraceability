@@ -1,25 +1,26 @@
 ﻿using Newtonsoft.Json;
 using OpenTraceability.Models.Identifiers;
+using System;
 
 namespace OpenTraceability.Utility
 {
     public class MeasurementConverter : JsonConverter<Measurement>
     {
-        public override void WriteJson(JsonWriter writer, Measurement? value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, Measurement value, JsonSerializer serializer)
         {
-            string? strValue = value?.ToString();
+            string strValue = value?.ToString();
             if (strValue != null)
             {
                 writer.WriteValue(strValue);
             }
         }
 
-        public override Measurement? ReadJson(JsonReader reader, Type objectType, Measurement? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override Measurement ReadJson(JsonReader reader, Type objectType, Measurement existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            string? strValue = reader.Value?.ToString();
+            string strValue = reader.Value?.ToString();
             if (strValue != null)
             {
-                Measurement? m = Measurement.TryParse(strValue);
+                Measurement m = Measurement.TryParse(strValue);
                 return m;
             }
             else
@@ -31,18 +32,18 @@ namespace OpenTraceability.Utility
 
     public class EPCConverter : JsonConverter<EPC>
     {
-        public override void WriteJson(JsonWriter writer, EPC? value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, EPC value, JsonSerializer serializer)
         {
-            string? strValue = value?.ToString();
+            string strValue = value?.ToString();
             if (strValue != null)
             {
                 writer.WriteValue(strValue);
             }
         }
 
-        public override EPC? ReadJson(JsonReader reader, Type objectType, EPC? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override EPC ReadJson(JsonReader reader, Type objectType, EPC existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            string? strValue = reader.Value?.ToString();
+            string strValue = reader.Value?.ToString();
             if (strValue != null)
             {
                 EPC epc = new EPC(strValue);
@@ -57,18 +58,18 @@ namespace OpenTraceability.Utility
 
     public class GTINConverter : JsonConverter<GTIN>
     {
-        public override void WriteJson(JsonWriter writer, GTIN? value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, GTIN value, JsonSerializer serializer)
         {
-            string? strValue = value?.ToString();
+            string strValue = value?.ToString();
             if (strValue != null)
             {
                 writer.WriteValue(strValue);
             }
         }
 
-        public override GTIN? ReadJson(JsonReader reader, Type objectType, GTIN? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override GTIN ReadJson(JsonReader reader, Type objectType, GTIN existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            string? strValue = reader.Value?.ToString();
+            string strValue = reader.Value?.ToString();
             if (strValue != null)
             {
                 GTIN gtin = new GTIN(strValue);
@@ -83,18 +84,18 @@ namespace OpenTraceability.Utility
 
     public class GLNConverter : JsonConverter<GLN>
     {
-        public override void WriteJson(JsonWriter writer, GLN? value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, GLN value, JsonSerializer serializer)
         {
-            string? strValue = value?.ToString();
+            string strValue = value?.ToString();
             if (strValue != null)
             {
                 writer.WriteValue(strValue);
             }
         }
 
-        public override GLN? ReadJson(JsonReader reader, Type objectType, GLN? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override GLN ReadJson(JsonReader reader, Type objectType, GLN existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            string? strValue = reader.Value?.ToString();
+            string strValue = reader.Value?.ToString();
             if (strValue != null)
             {
                 GLN gln = new GLN(strValue);
@@ -109,18 +110,18 @@ namespace OpenTraceability.Utility
 
     public class PGLNConverter : JsonConverter<PGLN>
     {
-        public override void WriteJson(JsonWriter writer, PGLN? value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, PGLN value, JsonSerializer serializer)
         {
-            string? strValue = value?.ToString();
+            string strValue = value?.ToString();
             if (strValue != null)
             {
                 writer.WriteValue(strValue);
             }
         }
 
-        public override PGLN? ReadJson(JsonReader reader, Type objectType, PGLN? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override PGLN ReadJson(JsonReader reader, Type objectType, PGLN existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            string? strValue = reader.Value?.ToString();
+            string strValue = reader.Value?.ToString();
             if (strValue != null)
             {
                 PGLN pgln = new PGLN(strValue);

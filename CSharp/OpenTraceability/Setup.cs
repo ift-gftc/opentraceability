@@ -83,9 +83,9 @@ namespace OpenTraceability
         /// </summary>
         /// <param name="type">This is the VocabularyElementList type value in the XML/JSON.</param>
         /// <param name="classType">This is the C# class to use when deserializing.</param>
-        public static void RegisterMasterDataType<T>(Type? defaultFor=null) where T : IVocabularyElement
+        public static void RegisterMasterDataType<T>(Type defaultFor=null) where T : IVocabularyElement
         {
-            IVocabularyElement? v = Activator.CreateInstance(typeof(T)) as IVocabularyElement;
+            IVocabularyElement v = Activator.CreateInstance(typeof(T)) as IVocabularyElement;
             if (v == null)
             {
                 throw new Exception("Failed to create an instance of type T using Activator.CreateInstance");
@@ -93,7 +93,7 @@ namespace OpenTraceability
 
             string type = v.EPCISType?.ToLower() ?? throw new Exception("The 'Type' property on the instance of T returned a NULL value.");
 
-            if (!MasterDataTypes.TryGetValue(type, out Type? t))
+            if (!MasterDataTypes.TryGetValue(type, out Type t))
             {
                 MasterDataTypes.TryAdd(type, typeof(T));
             }
@@ -104,7 +104,7 @@ namespace OpenTraceability
 
             if (defaultFor != null)
             {
-                if (!MasterDataTypeDefault.TryGetValue(defaultFor, out Type? t2))
+                if (!MasterDataTypeDefault.TryGetValue(defaultFor, out Type t2))
                 {
                     MasterDataTypeDefault.TryAdd(defaultFor, typeof(T));
                 }
@@ -126,9 +126,9 @@ namespace OpenTraceability
             RegisterMasterDataType<T>(typeof(TDefaultFor));
         }
 
-        public static Type? GetMasterDataTypeDefault(Type type)
+        public static Type GetMasterDataTypeDefault(Type type)
         {
-            if (MasterDataTypeDefault.TryGetValue(type, out Type? t))
+            if (MasterDataTypeDefault.TryGetValue(type, out Type t))
             {
                 return t;
             }

@@ -2,6 +2,8 @@
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace OpenTraceability.Models.Events
@@ -22,18 +24,18 @@ namespace OpenTraceability.Models.Events
         public EventAction? Action { get; set; }
 
         [OpenTraceability("bizStep", 9)]
-        public Uri? BusinessStep { get; set; }
+        public Uri BusinessStep { get; set; }
 
         [OpenTraceability("disposition", 10)]
-        public Uri? Disposition { get; set; }
+        public Uri Disposition { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("readPoint", 11)]
-        public EventReadPoint? ReadPoint { get; set; }
+        public EventReadPoint ReadPoint { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("bizLocation", 12)]
-        public EventLocation? Location { get; set; }
+        public EventLocation Location { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceabilityArray("bizTransaction")]
@@ -61,14 +63,14 @@ namespace OpenTraceability.Models.Events
         [OpenTraceabilityObject]
         [OpenTraceability("persistentDisposition", 18)]
         [OpenTraceability("extension/persistentDisposition", EPCISVersion.V1)]
-        public PersistentDisposition? PersistentDisposition { get; set; }
+        public PersistentDisposition PersistentDisposition { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability("ilmd", 19, EPCISVersion.V2)]
         [OpenTraceability("extension/ilmd", 23, EPCISVersion.V1)]
-        public T? ILMD { get; set; }
+        public T ILMD { get; set; }
 
-        public EventILMD? GetILMD() => ILMD;
+        public EventILMD GetILMD() => ILMD;
 
         public ReadOnlyCollection<EventProduct> Products
         {

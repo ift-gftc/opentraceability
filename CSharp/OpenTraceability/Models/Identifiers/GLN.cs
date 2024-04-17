@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OpenTraceability.Utility;
+using System;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace OpenTraceability.Models.Identifiers
@@ -83,7 +85,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static string? DetectGLNIssue(string glnStr)
+        public static string DetectGLNIssue(string glnStr)
         {
             try
             {
@@ -165,7 +167,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string glnStr, out GLN? gln, out string? error)
+        public static bool TryParse(string glnStr, out GLN gln, out string error)
         {
             try
             {
@@ -196,7 +198,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region Overrides
 
-        public static bool operator ==(GLN? obj1, GLN? obj2)
+        public static bool operator ==(GLN obj1, GLN obj2)
         {
             try
             {
@@ -226,7 +228,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool operator !=(GLN? obj1, GLN? obj2)
+        public static bool operator !=(GLN obj1, GLN obj2)
         {
             try
             {
@@ -259,7 +261,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             try
             {
@@ -318,7 +320,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IEquatable<GLN>
 
-        public bool Equals(GLN? gln)
+        public bool Equals(GLN gln)
         {
             try
             {
@@ -377,7 +379,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IComparable
 
-        public int CompareTo(GLN? gln)
+        public int CompareTo(GLN gln)
         {
             try
             {

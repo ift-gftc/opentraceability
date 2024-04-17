@@ -1,4 +1,5 @@
 ﻿using OpenTraceability.Utility.Attributes;
+using System;
 
 namespace OpenTraceability.Models.Common
 {
@@ -9,15 +10,15 @@ namespace OpenTraceability.Models.Common
 
         [OpenTraceabilityObject]
         [OpenTraceability(Constants.SBDH_NAMESPACE, "Sender")]
-        public SBDHOrganization? Sender { get; set; }
+        public SBDHOrganization Sender { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability(Constants.SBDH_NAMESPACE, "Receiver")]
-        public SBDHOrganization? Receiver { get; set; }
+        public SBDHOrganization Receiver { get; set; }
 
         [OpenTraceabilityObject]
         [OpenTraceability(Constants.SBDH_NAMESPACE, "DocumentIdentification")]
-        public SBDHDocumentIdentification? DocumentIdentification { get; set; }
+        public SBDHDocumentIdentification DocumentIdentification { get; set; }
 
         public static StandardBusinessDocumentHeader DummyHeader
         {

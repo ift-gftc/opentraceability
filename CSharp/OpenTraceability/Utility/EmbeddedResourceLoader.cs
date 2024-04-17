@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -19,7 +20,7 @@ namespace OpenTraceability.Utility
 
         private Assembly GetAssembly(string assemblyName)
         {
-            Assembly? assembly = null;
+            Assembly assembly = null;
             if (m_assemblyMap.ContainsKey(assemblyName))
             {
                 assembly = m_assemblyMap[assemblyName];
@@ -34,11 +35,11 @@ namespace OpenTraceability.Utility
 
         public byte[] ReadBytes(string assemblyName, string resourceName)
         {
-            byte[]? raw = null;
+            byte[] raw = null;
             try
             {
                 Assembly assembly = GetAssembly(assemblyName);
-                using (Stream? stream = assembly.GetManifestResourceStream(resourceName))
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
                 {
                     if (stream == null)
                     {
@@ -65,7 +66,7 @@ namespace OpenTraceability.Utility
             try
             {
                 Assembly assembly = GetAssembly(assemblyName);
-                using (Stream? stream = assembly.GetManifestResourceStream(resourceName))
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
                 {
                     if (stream == null)
                     {
@@ -92,9 +93,9 @@ namespace OpenTraceability.Utility
             return xDoc;
         }
 
-        public Stream? ReadStream(string assemblyName, string resourceName)
+        public Stream ReadStream(string assemblyName, string resourceName)
         {
-            Stream? stream = null;
+            Stream stream = null;
             try
             {
                 Assembly assembly = GetAssembly(assemblyName);
