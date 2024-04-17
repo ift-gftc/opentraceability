@@ -7,11 +7,16 @@ These open-source libraries would not be possible without great organizations wh
 - Gordon and Betty Moore Foundation
 - Walton Family Foundation
 
+## Release Notes
+### Version 1.4
+In version 1.4, the OpenTraceability C# project was updated to target the .Net Standard 2.0 framework. This update provides support for .NET Framework versions 4.6.1 and greater while maintaining support for .NET and .NET Core 2.0+. This allows .NET framework projects to consume the OpenTraceability nuget package while preserving support for later versions of .NET such as .NET 5 and greater.
+- Added support for .Net Standard 2.0
+
 ## Current Supported Programming Languages / Frameworks
 We currently support the following:
 - C#
-    - .NET 7 (supported)
-    - .NET Standard 2.0 (coming soon)
+    - .NET and .NET Core 2.0 to 8.0 (supported)
+    - .NET Framework 4.6.1 to 4.8.1 (supported)
 
 - Java (actively being translated and coming soon)
 - TypeScript (coming soon)
