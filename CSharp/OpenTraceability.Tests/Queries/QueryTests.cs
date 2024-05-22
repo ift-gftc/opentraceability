@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using OpenTraceability.GDST.MasterData;
 using OpenTraceability.Mappers;
+using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Queries;
 
 namespace OpenTraceability.Tests.Queries
@@ -184,6 +185,42 @@ namespace OpenTraceability.Tests.Queries
                 foreach (var p in e.Products)
                 {
                     EPCISQueryParameters parameters = new EPCISQueryParameters(p.EPC);
+                    var results = await client.QueryEvents(blob_id, parameters);
+                    Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the query events");
+                    Assert.That(results.Document.Events.Count, Is.EqualTo(1), "no events returned");
+                }
+            }
+        }
+
+        [Test]
+        [TestCase("aggregation_event_all_possible_fields.jsonld")]
+        public async Task QueryEventsByWildCardLotSerialNumber(string filename)
+        {
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+
+            // upload a blob of events
+            string data = OpenTraceabilityTests.ReadTestData(filename);
+            var doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
+            string blob_id = await client.Post(doc);
+
+            // query for the events for each epc in the blob
+            foreach (var e in doc.Events)
+            {
+                foreach (var p in e.Products.Where(x => x.EPC.Type == EPCType.Instance || x.EPC.Type == EPCType.Class))
+                {
+                    EPCISQueryParameters parameters = new();
+
+                    if(p.EPC.Type == EPCType.Class)
+                    {
+                        EPC epc = new EPC(EPCType.Class, p.EPC.GTIN, "*");
+                        parameters.query.MATCH_anyEPCClass= new List<string>() { epc.ToString() };
+                    }
+                    else
+                    {
+                        EPC epc = new EPC(p.EPC.Type, p.EPC.GTIN, "*");
+                        parameters.query.MATCH_anyEPC = new List<string>() { epc.ToString() };
+                    }
+                    
                     var results = await client.QueryEvents(blob_id, parameters);
                     Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the query events");
                     Assert.That(results.Document.Events.Count, Is.EqualTo(1), "no events returned");
