@@ -42,17 +42,17 @@ This ReadMe file should contain documentation on how to use the libraries in C# 
 This is an open-source library for handling traceability data in .NET using C#.
 
 ## Setup
-Before you can use the library you need to make sure to call the Setup method.
+Before you can use the library, you need to make sure to call the correct Setup method. The Setup method defines the event and master data profiles that are used to map from C# objects to EPCIS documents and vice versa.
 
-If you are just using the core library, you should call:
+Because the setup method controls how objects are mapped, you must call Setup method associated with the library you are using.
 
-`OpenTraceability.Setup.Initialize();`
+To use the core library, call:
+- `OpenTraceability.Setup.Initialize();`
 
-However, if you are using an extension library such as:
+To use an extension library such as the GDST extension library:
 - OpenTraceability.GDST
 
-Then you just need to call the setup method for that library such as:
-
+Call the setup method in the extension library you wish to use:
 - `OpenTraceability.GDST.Setup.Initialize();`
 
 And that will initialize everything you need.
@@ -65,7 +65,7 @@ to explore them.
 even without an extension library, the core library can still receive CTEs/KDEs from unknown extensions and namespaces and
 serialize/deserialize the data without losing any information.
 
-> More information on extensions can be found in the documentation later on. (coming soon)
+> More information on extensions can be found in the documentation later on.
 
 ### EPCIS Query Document / EPCIS Document
 These two objects inherit from the same base class `EPCISBaseDocument` and represent the two types of documents in EPCIS. They are 
@@ -221,6 +221,19 @@ DigitalLinkQueryOptions options = new DigitalLinkQueryOptions()
 
 await MasterDataResolver.ResolveMasterData(options, doc, client);
 ```
+
+If you are using an extension library, make sure to call the Master Data Resolver implemented in that library. For example, when using the GDST Extension library, call the GDSTMasterDataResolver:
+
+```csharp	
+DigitalLinkQueryOptions options = new DigitalLinkQueryOptions()
+{
+	URL = new Uri(url),
+	EnableStackTrace = true
+};
+
+await GDSTMasterDataResolver.ResolveGDSTMasterData(options, doc, client);
+```
+
 
 ## Finally
 You can always look in our unit tests for more examples of how to use the library.
@@ -436,8 +449,10 @@ for (IEvent e : doc.events) {
 }
 ```
 
-# GDST Extension
-The OpenTraceability libraries have been extended to support the CTE/KDE matrix from GDST. This includes the following model extensions:
+# Global Dialogue on Seafood Traceability (GDST)
+Model extensions as well as a GDST Master Data Resolver have been added to the OpenTraceability libraries to support the CTE/KDE matrix from GDST.
+
+This includes the following model extensions:
 
 > These examples are for Java, but will apply for the other libraries as well.
 
