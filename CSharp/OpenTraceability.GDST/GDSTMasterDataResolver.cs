@@ -16,8 +16,8 @@ namespace OpenTraceability.GDST
                 if (evt is IGDSTEvent)
                 {
                     IGDSTEvent gdstEvent = (IGDSTEvent)evt;
-                    await MasterDataResolver.ResolveTradingParty(options, gdstEvent.InformationProvider, doc, client);
-                    await MasterDataResolver.ResolveTradingParty(options, gdstEvent.ProductOwner, doc, client);
+                    await MasterDataResolver.ResolveTradingParty(options, gdstEvent.InformationProvider, doc, client, true);
+                    await MasterDataResolver.ResolveTradingParty(options, gdstEvent.ProductOwner, doc, client, true);
                 }
             }
         }

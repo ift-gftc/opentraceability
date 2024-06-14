@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using OpenTraceability.GDST.MasterData;
+using OpenTraceability.GDST.Queries;
 using OpenTraceability.Mappers;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Queries;
@@ -125,6 +126,44 @@ namespace OpenTraceability.Tests.Queries
 
                     // grab the master data
                     await client.ResolveMasterData(blob_id, results.Document);
+                    Assert.That(results.Document.MasterData.Count, Is.Not.EqualTo(0), "no master data resolved");
+
+                    if (results.Document.MasterData.Exists(m => m is GDSTLocation))
+                    {
+                        foundOneGDSTLocation = true;
+                    }
+                }
+            }
+
+            Assert.IsTrue(foundOneGDSTLocation, "Did not find GDSTLocation.");
+        }
+
+        [Test]
+        [TestCase("testserver_advancedfilters.jsonld")]
+        public async Task GDSTMasterData(string filename)
+        {
+            EPCISTestGDSTServerClient client = new EPCISTestGDSTServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+
+            // upload a blob of events
+            string data = OpenTraceabilityTests.ReadTestData(filename);
+            var doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
+            string blob_id = await client.Post(doc);
+
+            bool foundOneGDSTLocation = false;
+
+            // grab the traceability data...
+            foreach (var e in doc.Events)
+            {
+                foreach (var p in e.Products)
+                {
+                    EPCISQueryParameters parameters = new EPCISQueryParameters(p.EPC);
+                    var results = await client.QueryEvents(blob_id, parameters);
+                    Assert.IsNotNull(results.Document);
+                    Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the query events");
+                    Assert.That(results.Document.Events, Is.Not.Empty, "no events returned");
+
+                    // grab the master data
+                    await client.ResolveGDSTMasterData(blob_id, results.Document);
                     Assert.That(results.Document.MasterData.Count, Is.Not.EqualTo(0), "no master data resolved");
 
                     if (results.Document.MasterData.Exists(m => m is GDSTLocation))
