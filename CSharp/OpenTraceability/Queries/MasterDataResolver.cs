@@ -5,6 +5,7 @@ using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Models.MasterData;
+using OpenTraceability.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,14 +136,14 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradingParty(DigitalLinkQueryOptions options, PGLN pgln, EPCISBaseDocument doc, HttpClient client)
+        public static async Task ResolveTradingParty(DigitalLinkQueryOptions options, PGLN pgln, EPCISBaseDocument doc, HttpClient client, bool addGDSTExtensionHeader = false)
         {
             if (pgln != null)
             {
                 if (doc.GetMasterData<TradingParty>(pgln.ToString()) == null)
                 {
                     Type t = Setup.GetMasterDataTypeDefault(typeof(TradingParty)) ?? typeof(TradingParty);
-                    var tp = (await ResolveMasterDataItem(t, options, $"/417/{pgln}?linkType=gs1:masterData", client)) as TradingParty;
+                    var tp = (await ResolveMasterDataItem(t, options, $"/417/{pgln}?linkType=gs1:masterData", client, addGDSTExtensionHeader)) as TradingParty;
                     if (tp != null)
                     {
                         doc.MasterData.Add(tp);
@@ -248,7 +249,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task<object> ResolveMasterDataItem(Type type, DigitalLinkQueryOptions options, string relativeURL, HttpClient httpClient)
+        public static async Task<object> ResolveMasterDataItem(Type type, DigitalLinkQueryOptions options, string relativeURL, HttpClient httpClient, bool addGDSTExtension = false)
         {
             if (options.URL == null)
             {
@@ -274,6 +275,11 @@ namespace OpenTraceability.Queries
                             request = new HttpRequestMessage();
                             request.RequestUri = new Uri(link.link);
                             request.Method = HttpMethod.Get;
+
+                            if(addGDSTExtension)
+                            {
+                                request.Headers.AddGDSTExtensionHeader();
+                            }
 
                             response = await httpClient.SendAsync(request);
 
