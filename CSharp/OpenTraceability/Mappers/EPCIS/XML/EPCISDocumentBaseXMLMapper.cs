@@ -276,7 +276,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 // validate the schema depending on the version in the document
                 if (!EPCISDocumentBaseXMLMapper._schemaChecker.Validate(xdoc, "https://raw.githubusercontent.com/ift-gftc/doc.gdst/master/schemas/xml/epcis_1_2/EPCglobal-epcis-query-1_2.xsd", out string error))
                 {
-                    throw new Exception($"Failed to validate the XML schema for the EPCIS XML.\n" + error);
+                    throw new OpenTraceabilitySchemaException($"Failed to validate the XML schema for the EPCIS XML.\n" + error);
                 }
             }
             else
@@ -284,7 +284,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 // https://ref.gs1.org/standards/epcis/epcglobal-epcis-query-2_0.xsd
                 if (!EPCISDocumentBaseXMLMapper._schemaChecker.Validate(xdoc, "https://ref.gs1.org/standards/epcis/epcglobal-epcis-query-2_0.xsd", out string error))
                 {
-                    throw new Exception($"Failed to validate the XML schema for the EPCIS XML.\n" + error);
+                    throw new OpenTraceabilitySchemaException($"Failed to validate the XML schema for the EPCIS XML.\n" + error);
                 }
             }
         }
