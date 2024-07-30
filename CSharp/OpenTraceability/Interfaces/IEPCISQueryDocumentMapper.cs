@@ -30,14 +30,16 @@ namespace OpenTraceability.Interfaces
         /// Maps an EPCIS document into a string value.
         /// </summary>
         /// <param name="doc">The EPCIS Query Document to map into the string value.</param>
+        /// <param name="checkSchema">Whether the schema should be validated when mapping the document.</param>
         /// <returns>A string value representing the EPCIS Query document.</returns>
-        string Map(EPCISQueryDocument doc);
+        string Map(EPCISQueryDocument doc, bool checkSchema = true);
 
         /// <summary>
         /// Maps an EPCIS query document into a string value.
         /// </summary>
         /// <param name="doc">The EPCIS Query Document to map into the string value.</param>
+        /// <param name="checkSchema">Whether the schema should be validated when mapping the document.</param>
         /// <returns>A string value representing the EPCIS query document.</returns>
-        Task<string> MapAsync(EPCISQueryDocument doc);
+        Task<string> MapAsync(EPCISQueryDocument doc, bool checkSchema = true);
     }
 }
