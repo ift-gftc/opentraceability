@@ -59,12 +59,12 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
         }
 
-        public string Map(EPCISQueryDocument doc)
+        public string Map(EPCISQueryDocument doc, bool checkSchema = true)
         {
-            return MapAsync(doc).GetAwaiter().GetResult();
+            return MapAsync(doc, checkSchema).GetAwaiter().GetResult();
         }
 
-        public async Task<string> MapAsync(EPCISQueryDocument doc)
+        public async Task<string> MapAsync(EPCISQueryDocument doc, bool checkSchema = true)
         {
             if (doc.EPCISVersion != EPCISVersion.V2)
             {
@@ -107,7 +107,10 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             EPCISDocumentBaseJsonMapper.ConformEPCISJsonLD(json, doc.Namespaces);
 
             // validate the JSON-LD schema
-            await EPCISDocumentBaseJsonMapper.CheckSchemaAsync(json);
+            if (checkSchema)
+            {
+                await EPCISDocumentBaseJsonMapper.CheckSchemaAsync(json); 
+            }
 
             return json.ToString();
         }
