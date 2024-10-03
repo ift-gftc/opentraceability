@@ -149,5 +149,20 @@ namespace OpenTraceability.Tests.Events
 
             OpenTraceabilityTests.CompareJSON(json, jsonAfter);
         }
+
+        [Test]
+        [TestCase("EPCISQUERYDOCUMENT_with_errorDeclarations.jsonld")]
+        public void EPCISQueryDoc_ErrorDeclarations(string file)
+        {
+            // read object events from test data specified in the file argument
+            string json = OpenTraceabilityTests.ReadTestData(file);
+
+            // deserialize object events into C# models
+            EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(json);
+
+            // map the document to xml
+            string xml = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(doc);
+            Assert.IsFalse(string.IsNullOrEmpty(xml));
+        }
     }
 }
