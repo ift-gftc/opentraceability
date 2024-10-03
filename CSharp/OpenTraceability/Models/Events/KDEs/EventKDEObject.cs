@@ -87,8 +87,20 @@ namespace OpenTraceability.Models.Events.KDEs
             }
             else if (_json != null)
             {
-                // convert _json to XElement
-                string xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString()) as XmlDocument)?.OuterXml;
+                string xmlStr = string.Empty;
+
+                JObject j = _json as JObject;
+                if(j != null && j.Properties().Count() > 1)
+                {
+                    xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString(), Namespace + Name) as XmlDocument)?.OuterXml;
+                    XElement x = new XElement(XElement.Parse(xmlStr));
+                    return x;
+                }
+                else
+                {
+                    xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString()) as XmlDocument)?.OuterXml;
+                }
+
                 if (!string.IsNullOrEmpty(xmlStr))
                 {
                     XElement x = new XElement((XNamespace)Namespace + Name, XElement.Parse(xmlStr));
