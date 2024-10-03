@@ -90,8 +90,7 @@ namespace OpenTraceability.Models.Events.KDEs
                 string xmlStr = string.Empty;
 
                 JObject j = _json as JObject;
-                var properties = j.Properties().ToList();
-                if(properties.Count > 1)
+                if(j != null && j.Properties().Count() > 1)
                 {
                     xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString(), Namespace + Name) as XmlDocument)?.OuterXml;
                     XElement x = new XElement(XElement.Parse(xmlStr));
@@ -99,7 +98,7 @@ namespace OpenTraceability.Models.Events.KDEs
                 }
                 else
                 {
-                    xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString(), "root") as XmlDocument)?.OuterXml;
+                    xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString()) as XmlDocument)?.OuterXml;
                 }
 
                 if (!string.IsNullOrEmpty(xmlStr))
