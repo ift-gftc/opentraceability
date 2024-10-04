@@ -1323,7 +1323,16 @@
                         },
                         "gdst:productOwner": "urn:gdst:example.org:party:feedmill.1",
                         "cbvmda:informationProvider": "urn:gdst:example.org:party:fishfarm.1",
-                        "attachments": [],
+                      "attachments": [
+                        {
+                          "name": "Test",
+                          "description": "This is a test",
+                        },
+                        {
+                          "name": "Exam",
+                          "description": "This is harder than a test"
+                        }
+                      ],
                         "eventGlobalID": "CTE_urn:gdst:example.org:party:feedmill.1_NK1595771805556007344_IKA093E3821F1D852D6B8C4FA3FCBA078C48D912E53A9A33836C167C80F532ED03",
                         "eventTime": "2021-03-26T11:10:00Z",
                         "recordTime": "2024-10-05T02:20:16Z",

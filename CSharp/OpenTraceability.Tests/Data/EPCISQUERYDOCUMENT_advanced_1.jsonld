@@ -287,14 +287,7 @@
                         "gdst:productOwner": "urn:gdst:exampleorg.com:party:ex28402.ptp10602",
                         "cbvmda:informationProvider": "urn:gdst:exampleorg.com:party:ex28402.0",
                       "attachments": [
-                        {
-                          "name": "test.png",
-                          "size": 123
-                        },
-                        {
-                          "name": "exam.png",
-                          "size": 456
-                        }
+                        "item one", "item two"
                       ],
                         "eventGlobalID": "CTE_urn:gdst:exampleorg.com:party:ex28402.ptp10602_NK4217970371878165437_IK70F756DE63BEA1CEC4E57FAC93745F82831E2C922FF0037B3E45A5D95593CFC7",
                         "eventTime": "2024-02-08T20:27:19Z",

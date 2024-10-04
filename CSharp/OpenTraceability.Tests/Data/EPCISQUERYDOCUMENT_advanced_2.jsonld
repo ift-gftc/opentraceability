@@ -170,50 +170,64 @@
             "queryName": "SimpleEventQuery",
             "resultsBody": {
                 "eventList": [
-                    {
-                        "type": "AggregationEvent",
-                        "parentID": "urn:epc:id:sscc:08600031303.12382183213",
-                        "childEPCs": [],
-                        "action": "ADD",
-                        "bizStep": "packing",
-                        "disposition": "active",
-                        "bizLocation": {
-                            "id": "urn:gdst:exampleorg.com:location:loc:0-p.b1104445593"
-                        },
-                        "gdst:productOwner": "urn:gdst:exampleorg.com:party:ex28402.0",
-                        "cbvmda:informationProvider": "urn:gdst:exampleorg.com:party:ex28402.0",
-                        "eventTime": "2024-01-28T11:11:25Z",
-                        "recordTime": "2024-10-05T02:15:49Z",
-                        "eventTimeZoneOffset": "+00:00",
-                        "childQuantityList": [
-                            {
-                                "epcClass": "urn:gdst:exampleorg.com:product:lot:class:ex28402.0tuna01.processed-02-08-2024",
-                                "quantity": 5000.0,
-                                "uom": "KGM"
-                            }
-                        ],
-                        "eventID": "urn:uuid:2e7d45a0-8326-47df-a777-24a7a4123123",
-                        "cbvmda:certificationList": {
-                            "certification": [
-                                {
-                                    "certificationAgency": "test",
-                                    "certificationStandard": "test",
-                                    "certificationValue": "test",
-                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
-                                    "certificationIdentification": "test",
-                                    "referencedFileInformation": []
-                                },
-                                {
-                                    "certificationAgency": "test",
-                                    "certificationStandard": "test",
-                                    "certificationValue": "test",
-                                    "gdst:certificationType": "urn:gdst:certType:aggregatorLicense",
-                                    "certificationIdentification": "test",
-                                    "referencedFileInformation": []
-                                }
-                            ]
-                        }
+                  {
+                    "type": "AggregationEvent",
+                    "parentID": "urn:epc:id:sscc:08600031303.12382183213",
+                    "childEPCs": [],
+                    "action": "ADD",
+                    "bizStep": "packing",
+                    "disposition": "active",
+                    "bizLocation": {
+                      "id": "urn:gdst:exampleorg.com:location:loc:0-p.b1104445593"
                     },
+                    "gdst:productOwner": "urn:gdst:exampleorg.com:party:ex28402.0",
+                    "cbvmda:informationProvider": "urn:gdst:exampleorg.com:party:ex28402.0",
+                    "attachments": [
+                      [
+                        "item one",
+                        "item two"
+                      ],
+                      [
+                        "item three",
+                        "item four"
+                      ],
+                      "item five",
+                      {
+                        "item" : "six"
+                      }
+                    ],
+                    "eventTime": "2024-01-28T11:11:25Z",
+                    "recordTime": "2024-10-05T02:15:49Z",
+                    "eventTimeZoneOffset": "+00:00",
+                    "childQuantityList": [
+                      {
+                        "epcClass": "urn:gdst:exampleorg.com:product:lot:class:ex28402.0tuna01.processed-02-08-2024",
+                        "quantity": 5000.0,
+                        "uom": "KGM"
+                      }
+                    ],
+                    "eventID": "urn:uuid:2e7d45a0-8326-47df-a777-24a7a4123123",
+                    "cbvmda:certificationList": {
+                      "certification": [
+                        {
+                          "certificationAgency": "test",
+                          "certificationStandard": "test",
+                          "certificationValue": "test",
+                          "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                          "certificationIdentification": "test",
+                          "referencedFileInformation": []
+                        },
+                        {
+                          "certificationAgency": "test",
+                          "certificationStandard": "test",
+                          "certificationValue": "test",
+                          "gdst:certificationType": "urn:gdst:certType:aggregatorLicense",
+                          "certificationIdentification": "test",
+                          "referencedFileInformation": []
+                        }
+                      ]
+                    }
+                  },
                     {
                         "type": "AggregationEvent",
                         "parentID": "urn:epc:id:sscc:08600031303.12382183213",
