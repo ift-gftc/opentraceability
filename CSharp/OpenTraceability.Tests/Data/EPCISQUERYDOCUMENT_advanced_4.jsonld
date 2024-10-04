@@ -1,0 +1,296 @@
+
+
+{
+    
+    "@context": [
+        "https://ref.gs1.org/standards/epcis/epcis-context.jsonld",
+        {
+            "xsi": "http://www.w3.org/2001/XMLSchema-instance"
+        },
+        {
+            "gdst": "https://traceability-dialogue.org/epcis"
+        },
+        {
+            "sbdh": "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+        },
+        {
+            "epcisq": "urn:epcglobal:epcis-query:xsd:1"
+        }
+    ],
+    "type": "EPCISQueryDocument",
+    "epcisHeader": {
+        "StandardBusinessDocumentHeader": {
+            "HeaderVersion": "1.2.2",
+            "Sender": [
+                {
+                    "Identifier": {
+                        "Authority": "GS1",
+                        "Value": "urn:gdst:exampleorg.com:party:ex28402.0"
+                    },
+                    "ContactInformation": []
+                }
+            ],
+            "Receiver": [
+                {
+                    "Identifier": {
+                        "Authority": "GS1",
+                        "Value": "urn:gdst:exampleorg.com:party:exgdst_compliance_process.0"
+                    },
+                    "ContactInformation": []
+                }
+            ],
+            "DocumentIdentification": {
+                "Standard": "EPCIS 1.2.2",
+                "TypeVersion": "1.2",
+                "InstanceIdentifier": "0207c1fb-029b-41f2-9ca2-420f569547db",
+                "Type": "EPCIS Document",
+                "CreationDateAndTime": "2024-10-04T19:20:43.7185312Z"
+            }
+        },
+        "EPCISMasterData": {
+            "vocabularyList": [
+                {
+                    "vocabularyElementList": [
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "urn:gdst:exampleorg.com:party:unknown.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+                                    "attribute": "urn:gdst:exampleorg.com:party:unknown.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "SSCC"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:product:class:system.0sscc"
+                        },
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Yellowfin Tuna"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "Whole"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Thunnus albacares"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "YFT"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:product:class:ex28402.0tuna01"
+                        }
+                    ],
+                    "type": "urn:epcglobal:epcis:vtype:EPCClass"
+                },
+                {
+                    "vocabularyElementList": [
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28401.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28401.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Processing Plant"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#latitude",
+                                    "attribute": "0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#longitude",
+                                    "attribute": "0"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:location:loc:0-p.b1104445593"
+                        }
+                    ],
+                    "type": "urn:epcglobal:epcis:vtype:Location"
+                },
+                {
+                    "vocabularyElementList": [
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "UNKNOWN"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:party:unknown.0"
+                        },
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Test Processor 28402"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:party:ex28402.0"
+                        },
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Test Farm 28401"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:party:ex28401.0"
+                        }
+                    ],
+                    "type": "urn:epcglobal:epcis:vtype:Party"
+                }
+            ]
+        }
+    },
+    "epcisBody": {
+        "queryResults": {
+            "queryName": "SimpleEventQuery",
+            "resultsBody": {
+                "eventList": [
+                    {
+                        "type": "AggregationEvent",
+                        "parentID": "urn:epc:id:sscc:08600031303.12382183213",
+                        "childEPCs": [],
+                        "action": "ADD",
+                        "bizStep": "packing",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:exampleorg.com:location:loc:0-p.b1104445593"
+                        },
+                        "gdst:productOwner": "urn:gdst:exampleorg.com:party:ex28402.0",
+                        "cbvmda:informationProvider": "urn:gdst:exampleorg.com:party:ex28402.0",
+                        "eventTime": "2024-01-28T11:11:25Z",
+                        "recordTime": "2024-10-05T02:15:49Z",
+                        "eventTimeZoneOffset": "+00:00",
+                        "childQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:exampleorg.com:product:lot:class:ex28402.0tuna01.processed-02-08-2024",
+                                "quantity": 5000.0,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "eventID": "urn:uuid:2e7d45a0-8326-47df-a777-24a7a4123123",
+                        "cbvmda:certificationList": {
+                            "certification": [
+                                {
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                    "certificationIdentification": "test",
+                                    "referencedFileInformation": []
+                                },
+                                {
+                                    "certificationAgency": "test",
+                                    "certificationStandard": "test",
+                                    "certificationValue": "test",
+                                    "gdst:certificationType": "urn:gdst:certType:aggregatorLicense",
+                                    "certificationIdentification": "test",
+                                    "referencedFileInformation": []
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "TransformationEvent",
+                        "inputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:exampleorg.com:product:lot:class:ex28402.0tuna01.commingle-02-08-2024",
+                                "quantity": 55.7918652,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "outputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:exampleorg.com:product:lot:class:ex28402.0tuna01.processed-02-08-2024",
+                                "quantity": 55.7918652,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "transformationID": "a601672c-1f32-4405-8aa0-bf76a198d039",
+                        "bizStep": "commissioning",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:exampleorg.com:location:loc:0-p.b1104445593"
+                        },
+                        "ilmd": {
+                            "cbvmda:lotNumber": "processed-02-08-2024",
+                            "cbvmda:productionDate": "2024-02-09T04:30:57Z",
+                            "cbvmda:itemExpirationDate": "2023-02-08T20:30:57Z",
+                            "cbvmda:countryOfOrigin": "United States",
+                            "cbvmda:certificationList": {
+                                "certification": [
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    },
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    },
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    },
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    }
+                                ]
+                            }
+                        },
+                        "gdst:productOwner": "urn:gdst:exampleorg.com:party:ex28402.0",
+                        "cbvmda:informationProvider": "urn:gdst:exampleorg.com:party:ex28402.0",
+                        "gdst:humanWelfarePolicy": "test",
+                        "eventTime": "2024-02-08T20:30:57Z",
+                        "recordTime": "2024-10-05T02:15:49Z",
+                        "eventTimeZoneOffset": "-03:00",
+                        "eventID": "urn:uuid:9553669b-2942-42a2-8c10-400968fd056a"
+                    }
+                ]
+            }
+        }
+    },
+    "schemaVersion": "2.0",
+    "creationDate": "2024-10-04T19:20:43.7135604Z"
+
+}

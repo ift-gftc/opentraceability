@@ -1,0 +1,787 @@
+{
+  "@context": [
+    "https://ref.gs1.org/standards/epcis/epcis-context.jsonld",
+    { "xsi": "http://www.w3.org/2001/XMLSchema-instance" },
+    { "gdst": "https://traceability-dialogue.org/epcis" },
+    { "sbdh": "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" },
+    { "epcisq": "urn:epcglobal:epcis-query:xsd:1" }
+  ],
+  "type": "EPCISQueryDocument",
+  "epcisHeader": {
+    "StandardBusinessDocumentHeader": {
+      "HeaderVersion": "1.2.2",
+      "Sender": [
+        {
+          "Identifier": {
+            "Authority": "GS1",
+            "Value": "urn:gdst:traceregister.com:party:tr28402.0"
+          },
+          "ContactInformation": []
+        }
+      ],
+      "Receiver": [
+        {
+          "Identifier": {
+            "Authority": "GS1",
+            "Value": "urn:gdst:traceregister.com:party:trgdst_compliance_process.0"
+          },
+          "ContactInformation": []
+        }
+      ],
+      "DocumentIdentification": {
+        "Standard": "EPCIS 1.2.2",
+        "TypeVersion": "1.2",
+        "InstanceIdentifier": "7a611d62-efa0-4ea8-9300-f4e06c748843",
+        "Type": "EPCIS Document",
+        "CreationDateAndTime": "2024-10-02T21:35:12.2326771Z"
+      }
+    },
+    "EPCISMasterData": {
+      "vocabularyList": [
+        {
+          "vocabularyElementList": [
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28402.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28402.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "Yellowfin Tuna"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                  "attribute": "Whole"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                  "attribute": "Thunnus albacares"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                  "attribute": "YFT"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:product:class:tr28402.0tuna01"
+            },
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28402.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28402.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "MSC FZ ALBACORE TUNA WHOLE ROUND"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                  "attribute": "WHL"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:product:class:tr28402.0msc_fz_albacore_tuna_whole_round"
+            },
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28402.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28402.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "Shrimp Feed"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:product:class:tr28402.0feed1"
+            },
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28402.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28402.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "White Shrimp Fryling"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                  "attribute": "Penaeus vannamei"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                  "attribute": "PNV"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:product:class:tr28402.0fryling1"
+            }
+          ],
+          "type": "urn:epcglobal:epcis:vtype:EPCClass"
+        },
+        {
+          "vocabularyElementList": [
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28401.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28401.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Transshipment Vessel"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#latitude",
+                  "attribute": "0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#longitude",
+                  "attribute": "0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#vesselName",
+                  "attribute": "Transshipment Vessel"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#vesselID",
+                  "attribute": "123"
+                },
+                {
+                  "id": "urn:gdst:kde#imoNumber",
+                  "attribute": "123"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#vesselFlagState",
+                  "attribute": "US"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:location:loc:0-v.b1555670139"
+            },
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28401.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28401.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Vessel 1"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#latitude",
+                  "attribute": "0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#longitude",
+                  "attribute": "0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#vesselName",
+                  "attribute": "Vessel 1"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#vesselID",
+                  "attribute": "123"
+                },
+                {
+                  "id": "urn:gdst:kde#imoNumber",
+                  "attribute": "123"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#vesselFlagState",
+                  "attribute": "US"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:location:loc:0-v.b2006251450"
+            },
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28401.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28401.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Offload Port"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#latitude",
+                  "attribute": "0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#longitude",
+                  "attribute": "0"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:location:loc:0-l.a143257639"
+            },
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28401.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28401.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Processing Plant"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#latitude",
+                  "attribute": "0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#longitude",
+                  "attribute": "0"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:location:loc:0-p.b1104445593"
+            },
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28402.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:traceregister.com:party:tr28402.0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Tran Van Kha"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#city",
+                  "attribute": "Dam Doi District"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#state",
+                  "attribute": "Ca Mau Province"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#postalCode",
+                  "attribute": "970000"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#countryCode",
+                  "attribute": "VN"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#latitude",
+                  "attribute": "0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#longitude",
+                  "attribute": "0"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:location:loc:tr28402.1ecceb2c-c78d-48ed-b979-2a63177341b2"
+            }
+          ],
+          "type": "urn:epcglobal:epcis:vtype:Location"
+        },
+        {
+          "vocabularyElementList": [
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Test Processor 28402"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:party:tr28402.0"
+            },
+            {
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Test Farm 28401"
+                }
+              ],
+              "id": "urn:gdst:traceregister.com:party:tr28401.0"
+            }
+          ],
+          "type": "urn:epcglobal:epcis:vtype:Party"
+        }
+      ]
+    }
+  },
+  "epcisBody": {
+    "queryResults": {
+      "queryName": "SimpleEventQuery",
+      "resultsBody": {
+        "eventList": [
+          {
+            "type": "ObjectEvent",
+            "epcList": [],
+            "action": "OBSERVE",
+            "bizStep": "urn:gdst:bizStep:transshipment",
+            "disposition": "urn:gdst:disposition:entering_commerce",
+            "bizLocation": { "id": "urn:gdst:traceregister.com:location:loc:0-v.b1555670139" },
+            "gdst:productOwner": "urn:gdst:traceregister.com:party:tr28402.0",
+            "cbvmda:informationProvider": "urn:gdst:traceregister.com:party:tr28402.0",
+            "transshipmentCountry": 840,
+            "transshipStartDate": "2024-02-07T22:54:29",
+            "transshipEndDate": "2024-02-07T22:54:29",
+            "cbvmda:unloadingPort": "PORT",
+            "eventTime": "2024-02-07T22:54:29Z",
+            "recordTime": "2024-10-03T04:34:29Z",
+            "eventTimeZoneOffset": "-03:00",
+            "quantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0tuna01.lot-02072024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              }
+            ],
+            "eventID": "urn:uuid:0038bdc2-cad3-43eb-88f5-c93eda34ec43",
+            "cbvmda:certificationList": {
+              "certification": [
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:transshipmentAuth",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                },
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                },
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                }
+              ]
+            }
+          },
+          {
+            "type": "ObjectEvent",
+            "epcList": [],
+            "action": "ADD",
+            "bizStep": "urn:gdst:bizStep:fishingEvent",
+            "disposition": "active",
+            "readPoint": { "id": "geo:0,0" },
+            "bizLocation": { "id": "urn:gdst:traceregister.com:location:loc:0-v.b2006251450" },
+            "gdst:productOwner": "urn:gdst:traceregister.com:party:tr28402.0",
+            "cbvmda:informationProvider": "urn:gdst:traceregister.com:party:tr28402.0",
+            "eventTime": "2024-02-07T22:53:15Z",
+            "recordTime": "2024-10-03T04:34:29Z",
+            "eventTimeZoneOffset": "-03:00",
+            "quantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0tuna01.lot-02072024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              }
+            ],
+            "ilmd": {
+              "cbvmda:productionMethodForFishAndSeafoodCode": "MARINE_FISHERY",
+              "cbvmda:lotNumber": "lot-02072024",
+              "harvestStartDate": "2024-02-07T22:53:15",
+              "cbvmda:certificationList": {
+                "certification": [
+                  {
+                    "certificationAgency": "test",
+                    "certificationStandard": "test",
+                    "certificationValue": "test",
+                    "gdst:certificationType": "urn:gdst:certType:fishingAuth",
+                    "certificationEffectiveEndDateTime": "2022-02-01T00:00:00",
+                    "certificationEffectiveStartDateTime": "2021-02-01T00:00:00",
+                    "certificationIdentification": "test",
+                    "referencedFileInformation": []
+                  },
+                  {
+                    "certificationAgency": "test",
+                    "certificationStandard": "test",
+                    "certificationValue": "test",
+                    "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                    "certificationIdentification": "test",
+                    "referencedFileInformation": []
+                  },
+                  {
+                    "certificationAgency": "test",
+                    "certificationStandard": "test",
+                    "certificationValue": "test",
+                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                    "certificationEffectiveEndDateTime": "2023-02-01T00:00:00",
+                    "certificationEffectiveStartDateTime": "2022-02-01T00:00:00",
+                    "certificationIdentification": "test",
+                    "referencedFileInformation": []
+                  }
+                ]
+              },
+              "cbvmda:vesselCatchInformationList": {
+                "cbvmda:vesselCatchInformation": [
+                  {
+                    "cbvmda:catchArea": "urn:gdst:fao:87",
+                    "cbvmda:fishingGearTypeCode": "urn:gdst:gear:2.2",
+                    "cbvmda:economicZone": "urn:gdst:eez:per",
+                    "cbvmda:vesselName": "Vessel 1",
+                    "cbvmda:vesselID": "123",
+                    "cbvmda:vesselFlagState": "US",
+                    "gdst:imoNumber": "123",
+                    "gdst:vesselPublicRegistry": "123",
+                    "gdst:fisheryImprovementProject": "test",
+                    "gdst:rfmoArea": "urn:gdst:rfmo:cecaf",
+                    "gdst:gpsAvailability": true,
+                    "gdst:satelliteTrackingAuthority": "123",
+                    "gdst:subnationalPermitArea": "test",
+                    "captain": "test",
+                    "fishingTripID": "test",
+                    "fishingPermit": "",
+                    "gdst:vesselTripDate": "2024-02-07T06:21:54Z"
+                  }
+                ]
+              }
+            },
+            "eventID": "urn:uuid:07c512db-e59a-4e08-9803-30fde80b6079"
+          },
+          {
+            "type": "ObjectEvent",
+            "epcList": [],
+            "action": "OBSERVE",
+            "bizStep": "shipping",
+            "bizLocation": { "id": "urn:gdst:traceregister.com:location:loc:0-l.a143257639" },
+            "gdst:productOwner": "urn:gdst:traceregister.com:party:tr28402.0",
+            "cbvmda:informationProvider": "urn:gdst:traceregister.com:party:tr28402.0",
+            "eventTime": "2024-02-07T22:55:10Z",
+            "recordTime": "2024-10-03T04:34:29Z",
+            "eventTimeZoneOffset": "-03:00",
+            "quantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0tuna01.lot-02072024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              }
+            ],
+            "eventID": "urn:uuid:17686800-bfd5-4ba1-a746-fca6f1c0f3dc",
+            "cbvmda:certificationList": {
+              "certification": [
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                }
+              ]
+            }
+          },
+          {
+            "type": "ObjectEvent",
+            "epcList": [],
+            "action": "OBSERVE",
+            "bizStep": "urn:gdst:bizStep:landing",
+            "bizLocation": { "id": "urn:gdst:traceregister.com:location:loc:0-l.a143257639" },
+            "gdst:productOwner": "urn:gdst:traceregister.com:party:tr28402.0",
+            "cbvmda:informationProvider": "urn:gdst:traceregister.com:party:tr28402.0",
+            "landingStartDate": "2024-02-07T22:54:58",
+            "landingEndDate": "2024-02-07T22:54:58",
+            "cbvmda:unloadingPort": "test",
+            "eventTime": "2024-02-07T22:54:58Z",
+            "recordTime": "2024-10-03T04:34:29Z",
+            "eventTimeZoneOffset": "-03:00",
+            "quantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0tuna01.lot-02072024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              }
+            ],
+            "eventID": "urn:uuid:42f45aae-6bba-4e94-95f7-c0f27726a46e",
+            "cbvmda:certificationList": {
+              "certification": [
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:landingAuth",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                },
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                }
+              ]
+            }
+          },
+          {
+            "type": "ObjectEvent",
+            "epcList": [],
+            "action": "OBSERVE",
+            "bizStep": "receiving",
+            "bizLocation": { "id": "urn:gdst:traceregister.com:location:loc:0-p.b1104445593" },
+            "gdst:productOwner": "urn:gdst:traceregister.com:party:tr28402.0",
+            "cbvmda:informationProvider": "urn:gdst:traceregister.com:party:tr28402.0",
+            "eventTime": "2024-02-08T20:30:12Z",
+            "recordTime": "2024-10-03T04:34:29Z",
+            "eventTimeZoneOffset": "-03:00",
+            "quantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0msc_fz_albacore_tuna_whole_round.farm-02-08-2024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              }
+            ],
+            "eventID": "urn:uuid:6589cb24-3fa6-4056-b84d-7776a4652739",
+            "cbvmda:certificationList": {
+              "certification": [
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                }
+              ]
+            }
+          },
+          {
+            "type": "TransformationEvent",
+            "inputQuantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0msc_fz_albacore_tuna_whole_round.farm-02-08-2024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              },
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0tuna01.lot-02072024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              }
+            ],
+            "outputQuantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0tuna01.commingle-02-08-2024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              }
+            ],
+            "transformationID": "b0383004-b009-49db-9688-f0f6a8220749",
+            "bizStep": "urn:gdst:bizStep:commingling",
+            "disposition": "active",
+            "bizLocation": { "id": "urn:gdst:traceregister.com:location:loc:0-p.b1104445593" },
+            "ilmd": {
+              "cbvmda:lotNumber": "commingle-02-08-2024",
+              "cbvmda:productionDate": "2024-02-09T04:30:26Z"
+            },
+            "gdst:productOwner": "urn:gdst:traceregister.com:party:tr28402.0",
+            "cbvmda:informationProvider": "urn:gdst:traceregister.com:party:tr28402.0",
+            "gdst:humanWelfarePolicy": "",
+            "eventTime": "2024-02-08T20:30:26Z",
+            "recordTime": "2024-10-03T04:34:29Z",
+            "eventTimeZoneOffset": "-03:00",
+            "eventID": "urn:uuid:69c06113-8202-48a4-a8c1-87e9ac1ce7d3"
+          },
+          {
+            "type": "ObjectEvent",
+            "epcList": [],
+            "action": "OBSERVE",
+            "bizStep": "receiving",
+            "bizLocation": { "id": "urn:gdst:traceregister.com:location:loc:0-p.b1104445593" },
+            "gdst:productOwner": "urn:gdst:traceregister.com:party:tr28402.0",
+            "cbvmda:informationProvider": "urn:gdst:traceregister.com:party:tr28402.0",
+            "eventTime": "2024-02-07T22:55:42Z",
+            "recordTime": "2024-10-03T04:34:29Z",
+            "eventTimeZoneOffset": "-03:00",
+            "quantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0tuna01.lot-02072024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              }
+            ],
+            "eventID": "urn:uuid:b4404e07-9edf-4219-a50e-ab5f7e23e966",
+            "cbvmda:certificationList": {
+              "certification": [
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                }
+              ]
+            }
+          },
+          {
+            "type": "TransformationEvent",
+            "inputQuantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0feed1.feed-02-08-2024",
+                "quantity": 55.3382728,
+                "uom": "KGM"
+              },
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0fryling1.hatch-02-08-2024",
+                "quantity": 559.2794292,
+                "uom": "KGM"
+              }
+            ],
+            "outputQuantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0msc_fz_albacore_tuna_whole_round.farm-02-08-2024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              }
+            ],
+            "bizStep": "urn:gdst:bizStep:farmHarvest",
+            "disposition": "active",
+            "bizLocation": { "id": "urn:gdst:traceregister.com:location:loc:tr28402.1ecceb2c-c78d-48ed-b979-2a63177341b2" },
+            "ilmd": {
+              "cbvmda:productionMethodForFishAndSeafoodCode": "AQUACULTURE",
+              "cbvmda:lotNumber": "farm-02-08-2024",
+              "gdst:aquacultureMethod": "urn:traceregister.com:RearingMethod.Bag",
+              "cbvmda:certificationList": {
+                "certification": [
+                  {
+                    "certificationAgency": "test",
+                    "certificationStandard": "test",
+                    "certificationValue": "test",
+                    "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                    "certificationIdentification": "test",
+                    "referencedFileInformation": []
+                  },
+                  {
+                    "certificationAgency": "test",
+                    "certificationStandard": "test",
+                    "certificationValue": "test",
+                    "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                    "certificationIdentification": "test",
+                    "referencedFileInformation": []
+                  },
+                  {
+                    "certificationAgency": "test",
+                    "certificationStandard": "test",
+                    "certificationValue": "test",
+                    "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                    "certificationIdentification": "test",
+                    "referencedFileInformation": []
+                  }
+                ]
+              }
+            },
+            "gdst:productOwner": "urn:gdst:traceregister.com:party:tr28402.0",
+            "cbvmda:informationProvider": "urn:gdst:traceregister.com:party:tr28402.0",
+            "eventTime": "2024-02-08T20:28:15Z",
+            "recordTime": "2024-10-03T04:34:29Z",
+            "eventTimeZoneOffset": "-03:00",
+            "eventID": "urn:uuid:b939ad24-0226-4373-aa71-a19c7758313e"
+          },
+          {
+            "type": "ObjectEvent",
+            "epcList": [],
+            "action": "OBSERVE",
+            "bizStep": "urn:gdst:bizStep:transshipment",
+            "disposition": "urn:gdst:disposition:entering_commerce",
+            "bizLocation": { "id": "urn:gdst:traceregister.com:location:loc:0-v.b1555670139" },
+            "gdst:productOwner": "urn:gdst:traceregister.com:party:tr28402.0",
+            "cbvmda:informationProvider": "urn:gdst:traceregister.com:party:tr28402.0",
+            "transshipmentCountry": 840,
+            "transshipStartDate": "2024-02-07T22:54:29",
+            "transshipEndDate": "2024-02-07T22:54:29",
+            "cbvmda:unloadingPort": "PORT",
+            "eventTime": "2024-02-07T22:54:29Z",
+            "recordTime": "2024-10-03T04:34:29Z",
+            "eventTimeZoneOffset": "-03:00",
+            "baseExtension": {
+              "eventID": "urn:uuid:e80e77e0-ae16-4a5c-a5e6-44ff7f26f381",
+              "errorDeclaration": {
+                "declarationTime": "2022-10-05T00:37:31",
+                "correctiveEventIDs": [ "urn:uuid:0038bdc2-cad3-43eb-88f5-c93eda34ec43" ]
+              }
+            },
+            "quantityList": [
+              {
+                "epcClass": "urn:gdst:traceregister.com:product:lot:class:tr28402.0tuna01.lot-02072024",
+                "quantity": 55.7918652,
+                "uom": "KGM"
+              }
+            ],
+            "cbvmda:certificationList": {
+              "certification": [
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:transshipmentAuth",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                },
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                },
+                {
+                  "certificationAgency": "test",
+                  "certificationStandard": "test",
+                  "certificationValue": "test",
+                  "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                  "certificationIdentification": "test",
+                  "referencedFileInformation": []
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "schemaVersion": "2.0",
+  "creationDate": "2024-10-02T21:35:12.2326771Z"
+}
