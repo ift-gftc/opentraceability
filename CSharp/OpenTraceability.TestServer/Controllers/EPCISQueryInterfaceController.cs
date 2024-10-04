@@ -77,7 +77,14 @@ public class EPCISQueryInterfaceController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex);
-            throw;
+
+            // if the write to the response has already begun, we cannot alter the response
+            if (HttpContext.Response.HasStarted)
+            {
+                throw;
+            }
+
+            return StatusCode(500, ex.ToString());
         }
     }
 
@@ -174,6 +181,6 @@ public class EPCISQueryInterfaceController : ControllerBase
         }
     }
 
-    
+
 }
 
