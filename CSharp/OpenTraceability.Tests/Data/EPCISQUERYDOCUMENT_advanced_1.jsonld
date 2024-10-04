@@ -1,0 +1,485 @@
+{
+    
+    "@context": [
+        "https://ref.gs1.org/standards/epcis/epcis-context.jsonld",
+        {
+            "xsi": "http://www.w3.org/2001/XMLSchema-instance"
+        },
+        {
+            "gdst": "https://traceability-dialogue.org/epcis"
+        },
+        {
+            "sbdh": "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+        },
+        {
+            "epcisq": "urn:epcglobal:epcis-query:xsd:1"
+        }
+    ],
+    "type": "EPCISQueryDocument",
+    "epcisHeader": {
+        "StandardBusinessDocumentHeader": {
+            "HeaderVersion": "1.2.2",
+            "Sender": [
+                {
+                    "Identifier": {
+                        "Authority": "GS1",
+                        "Value": "urn:gdst:exampleorg.com:party:ex28402.0"
+                    },
+                    "ContactInformation": []
+                }
+            ],
+            "Receiver": [
+                {
+                    "Identifier": {
+                        "Authority": "GS1",
+                        "Value": "urn:gdst:exampleorg.com:party:exgdst_compliance_process.0"
+                    },
+                    "ContactInformation": []
+                }
+            ],
+            "DocumentIdentification": {
+                "Standard": "EPCIS 1.2.2",
+                "TypeVersion": "1.2",
+                "InstanceIdentifier": "ef5efc43-a924-4a93-8d1d-6d10a352f80f",
+                "Type": "EPCIS Document",
+                "CreationDateAndTime": "2024-10-04T19:20:46.7353196Z"
+            }
+        },
+        "EPCISMasterData": {
+            "vocabularyList": [
+                {
+                    "vocabularyElementList": [
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "Shrimp Feed"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:product:class:ex28402.0feed1"
+                        },
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "White Shrimp Fryling"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                                    "attribute": "Penaeus vannamei"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                                    "attribute": "PNV"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:product:class:ex28402.0fryling1"
+                        },
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "MSC FZ ALBACORE TUNA WHOLE ROUND"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "WHL"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:product:class:ex28402.0msc_fz_albacore_tuna_whole_round"
+                        }
+                    ],
+                    "type": "urn:epcglobal:epcis:vtype:EPCClass"
+                },
+                {
+                    "vocabularyElementList": [
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.ptp10602"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Feedmill1"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#streetAddressOne",
+                                    "attribute": "Thành phố Qui Nhơn"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#state",
+                                    "attribute": "Binh Dinh Province"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#countryCode",
+                                    "attribute": "VN"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#latitude",
+                                    "attribute": "0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#longitude",
+                                    "attribute": "0"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:location:loc:ex28402.4b4869c1-01b4-4766-ae1f-653759b965c1"
+                        },
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.ptp-17561"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Hatchery1"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#streetAddressOne",
+                                    "attribute": "An Nhon"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#state",
+                                    "attribute": "Binh Dinh Province"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#countryCode",
+                                    "attribute": "VN"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#latitude",
+                                    "attribute": "0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#longitude",
+                                    "attribute": "0"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:location:loc:ex28402.1a937253-cc47-4292-aaef-34480284d9b3"
+                        },
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#informationProvider",
+                                    "attribute": "urn:gdst:exampleorg.com:party:ex28402.0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Tran Van Kha"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#city",
+                                    "attribute": "Dam Doi District"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#state",
+                                    "attribute": "Ca Mau Province"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#postalCode",
+                                    "attribute": "970000"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#countryCode",
+                                    "attribute": "VN"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#latitude",
+                                    "attribute": "0"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#longitude",
+                                    "attribute": "0"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:location:loc:ex28402.1ecceb2c-c78d-48ed-b979-2a63177341b2"
+                        }
+                    ],
+                    "type": "urn:epcglobal:epcis:vtype:Location"
+                },
+                {
+                    "vocabularyElementList": [
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Test Processor 28402"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:party:ex28402.0"
+                        },
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Feed Mill #1"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:party:ex28402.ptp10602"
+                        },
+                        {
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Hatchery #1"
+                                }
+                            ],
+                            "id": "urn:gdst:exampleorg.com:party:ex28402.ptp-17561"
+                        }
+                    ],
+                    "type": "urn:epcglobal:epcis:vtype:Party"
+                }
+            ]
+        }
+    },
+    "epcisBody": {
+        "queryResults": {
+            "queryName": "SimpleEventQuery",
+            "resultsBody": {
+                "eventList": [
+                    {
+                        "type": "ObjectEvent",
+                        "epcList": [],
+                        "action": "ADD",
+                        "bizStep": "commissioning",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:exampleorg.com:location:loc:ex28402.4b4869c1-01b4-4766-ae1f-653759b965c1"
+                        },
+                        "gdst:productOwner": "urn:gdst:exampleorg.com:party:ex28402.ptp10602",
+                        "cbvmda:informationProvider": "urn:gdst:exampleorg.com:party:ex28402.0",
+                      "attachments": [
+                        {
+                          "name": "test.png",
+                          "size": 123
+                        },
+                        {
+                          "name": "exam.png",
+                          "size": 456
+                        }
+                      ],
+                        "eventGlobalID": "CTE_urn:gdst:exampleorg.com:party:ex28402.ptp10602_NK4217970371878165437_IK70F756DE63BEA1CEC4E57FAC93745F82831E2C922FF0037B3E45A5D95593CFC7",
+                        "eventTime": "2024-02-08T20:27:19Z",
+                        "recordTime": "2024-10-05T02:15:49Z",
+                        "eventTimeZoneOffset": "-03:00",
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:exampleorg.com:product:lot:class:ex28402.0feed1.feed-02-08-2024",
+                                "quantity": 55.3382728,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "ilmd": {
+                            "cbvmda:lotNumber": "feed-02-08-2024",
+                            "cbvmda:productionDate": "2024-02-09T04:27:19Z",
+                            "gdst:proteinSource": "wild caught",
+                            "cbvmda:itemExpirationDate": "2023-02-08T20:27:19Z",
+                            "cbvmda:countryOfOrigin": "United States",
+                            "cbvmda:certificationList": {
+                                "certification": [
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    },
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    },
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    },
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    }
+                                ]
+                            }
+                        },
+                        "eventID": "urn:uuid:442a7cab-cf87-4269-8a65-8913f9431316"
+                    },
+                    {
+                        "type": "ObjectEvent",
+                        "epcList": [],
+                        "action": "ADD",
+                        "bizStep": "urn:gdst:bizStep:hatching",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:exampleorg.com:location:loc:ex28402.1a937253-cc47-4292-aaef-34480284d9b3"
+                        },
+                        "gdst:productOwner": "urn:gdst:exampleorg.com:party:ex28402.ptp-17561",
+                        "cbvmda:informationProvider": "urn:gdst:exampleorg.com:party:ex28402.0",
+                        "eventTime": "2024-02-08T20:27:53Z",
+                        "recordTime": "2024-10-05T02:15:49Z",
+                        "eventTimeZoneOffset": "-03:00",
+                        "quantityList": [
+                            {
+                                "epcClass": "urn:gdst:exampleorg.com:product:lot:class:ex28402.0fryling1.hatch-02-08-2024",
+                                "quantity": 559.2794292,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "ilmd": {
+                            "cbvmda:lotNumber": "hatch-02-08-2024",
+                            "harvestStartDate": "2024-02-08T20:27:53",
+                            "harvestEndDate": "2024-02-08T20:27:53",
+                            "gdst:broodstockSource": "Domestic",
+                            "cbvmda:certificationList": {
+                                "certification": [
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    },
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    },
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    }
+                                ]
+                            }
+                        },
+                        "eventID": "urn:uuid:a8f051cb-9a80-44ee-ad37-24bc1c1cee88"
+                    },
+                    {
+                        "type": "TransformationEvent",
+                        "inputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:exampleorg.com:product:lot:class:ex28402.0feed1.feed-02-08-2024",
+                                "quantity": 55.3382728,
+                                "uom": "KGM"
+                            },
+                            {
+                                "epcClass": "urn:gdst:exampleorg.com:product:lot:class:ex28402.0fryling1.hatch-02-08-2024",
+                                "quantity": 559.2794292,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "outputQuantityList": [
+                            {
+                                "epcClass": "urn:gdst:exampleorg.com:product:lot:class:ex28402.0msc_fz_albacore_tuna_whole_round.farm-02-08-2024",
+                                "quantity": 55.7918652,
+                                "uom": "KGM"
+                            }
+                        ],
+                        "bizStep": "urn:gdst:bizStep:farmHarvest",
+                        "disposition": "active",
+                        "bizLocation": {
+                            "id": "urn:gdst:exampleorg.com:location:loc:ex28402.1ecceb2c-c78d-48ed-b979-2a63177341b2"
+                        },
+                        "ilmd": {
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "AQUACULTURE",
+                            "cbvmda:lotNumber": "farm-02-08-2024",
+                            "gdst:aquacultureMethod": "urn:exampleorg.com:RearingMethod.Bag",
+                            "cbvmda:certificationList": {
+                                "certification": [
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    },
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    },
+                                    {
+                                        "certificationAgency": "test",
+                                        "certificationStandard": "test",
+                                        "certificationValue": "test",
+                                        "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                                        "certificationIdentification": "test",
+                                        "referencedFileInformation": []
+                                    }
+                                ]
+                            }
+                        },
+                        "gdst:productOwner": "urn:gdst:exampleorg.com:party:ex28402.0",
+                        "cbvmda:informationProvider": "urn:gdst:exampleorg.com:party:ex28402.0",
+                        "eventTime": "2024-02-08T20:28:15Z",
+                        "recordTime": "2024-10-05T02:15:49Z",
+                        "eventTimeZoneOffset": "-03:00",
+                        "eventID": "urn:uuid:b939ad24-0226-4373-aa71-a19c7758313e"
+                    }
+                ]
+            }
+        }
+    },
+    "schemaVersion": "2.0",
+    "creationDate": "2024-10-04T19:20:46.7303197Z"
+
+}

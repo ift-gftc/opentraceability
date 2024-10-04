@@ -89,12 +89,24 @@ namespace OpenTraceability.Models.Events.KDEs
             {
                 string xmlStr = string.Empty;
 
+                JArray jArray = _json as JArray;
                 JObject j = _json as JObject;
-                if(j != null && j.Properties().Count() > 1)
+                if (j != null && j.Properties().Count() > 1)
                 {
                     xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString(), Namespace + Name) as XmlDocument)?.OuterXml;
                     XElement x = new XElement(XElement.Parse(xmlStr));
                     return x;
+                }
+                else if (jArray != null)
+                {
+                    XElement xList = new XElement(Namespace + Name);
+                    foreach (JObject jObject in jArray)
+                    {
+                        string itemXML = (JsonConvert.DeserializeXmlNode(jObject.ToString(), "Item") as XmlDocument)?.OuterXml;
+                        XElement xItem = new XElement(XElement.Parse(itemXML));
+                        xList.Add(xItem);
+                    }
+                    return xList;
                 }
                 else
                 {

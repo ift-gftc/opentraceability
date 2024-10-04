@@ -75,4 +75,25 @@
 		<Folder Include="Queries\" />
 		<Folder Include="Configurations\" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Data\EPCISQUERYDOCUMENT_advanced_1.jsonld">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Data\EPCISQUERYDOCUMENT_advanced_2.jsonld">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Data\EPCISQUERYDOCUMENT_advanced_3.jsonld">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Data\EPCISQUERYDOCUMENT_advanced_4.jsonld">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Data\EPCISQUERYDOCUMENT_advanced_5.jsonld">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Data\EPCISQUERYDOCUMENT_advanced_6.jsonld">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
 </Project>

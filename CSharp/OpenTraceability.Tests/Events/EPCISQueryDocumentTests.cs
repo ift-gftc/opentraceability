@@ -152,6 +152,12 @@ namespace OpenTraceability.Tests.Events
 
         [Test]
         [TestCase("EPCISQUERYDOCUMENT_with_errorDeclarations.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_1.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_2.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_3.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_4.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_5.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_6.jsonld")]
         public void EPCISQueryDoc_ErrorDeclarations(string file)
         {
             // read object events from test data specified in the file argument
