@@ -178,6 +178,24 @@ namespace OpenTraceability.Tests.Events
 
         [Test]
         [TestCase("EPCISQUERYDOCUMENT_with_errorDeclarations.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_1.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_2.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_3.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_4.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_5.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_7.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_8.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_9.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_10.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_11.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_12.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_13.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_14.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_15.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_16.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_17.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_18.jsonld")]
+        [TestCase("EPCISQUERYDOCUMENT_advanced_19.jsonld")]
         public void EPCISQueryDoc_ErrorDeclarations(string file)
         {
             // read object events from test data specified in the file argument
@@ -189,6 +207,12 @@ namespace OpenTraceability.Tests.Events
             // map the document to xml
             string xml = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(doc);
             Assert.IsFalse(string.IsNullOrEmpty(xml));
+
+            EPCISQueryDocument docAfter = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(xml);
+            Assert.IsNotNull(docAfter);
+
+            string jsonAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(docAfter);
+            Assert.IsFalse(string.IsNullOrEmpty(jsonAfter));
         }
     }
 }

@@ -1,0 +1,49 @@
+{
+  "@context": [
+    "https://ref.gs1.org/standards/epcis/epcis-context.jsonld",
+    { "xsi": "http://www.w3.org/2001/XMLSchema-instance" },
+    { "gdst": "https://traceability-dialogue.org/epcis" },
+    { "sbdh": "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" },
+    { "epcisq": "urn:epcglobal:epcis-query:xsd:1" }
+  ],
+  "type": "EPCISQueryDocument",
+  "epcisHeader": {
+    "StandardBusinessDocumentHeader": {
+      "HeaderVersion": "1.2.2",
+      "Sender": [
+        {
+          "Identifier": {
+            "Authority": "GS1",
+            "Value": "urn:gdst:traceregister.com:party:tr28402.0"
+          },
+          "ContactInformation": []
+        }
+      ],
+      "Receiver": [
+        {
+          "Identifier": {
+            "Authority": "GS1",
+            "Value": "urn:gdst:traceregister.com:party:trgdst_compliance_process.0"
+          },
+          "ContactInformation": []
+        }
+      ],
+      "DocumentIdentification": {
+        "Standard": "EPCIS 1.2.2",
+        "TypeVersion": "1.2",
+        "InstanceIdentifier": "26ef9aad-eca3-41d5-a3a7-0ec7242956b0",
+        "Type": "EPCIS Document",
+        "CreationDateAndTime": "2024-10-02T21:16:58.9334653Z"
+      }
+    },
+    "EPCISMasterData": { "vocabularyList": [] }
+  },
+  "epcisBody": {
+    "queryResults": {
+      "queryName": "SimpleEventQuery",
+      "resultsBody": { "eventList": [] }
+    }
+  },
+  "schemaVersion": "2.0",
+  "creationDate": "2024-10-02T21:16:58.8734607Z"
+}
