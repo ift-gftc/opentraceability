@@ -1,4 +1,5 @@
-﻿using OpenTraceability.GDST;
+﻿using Newtonsoft.Json.Linq;
+using OpenTraceability.GDST;
 using OpenTraceability.Mappers;
 using OpenTraceability.Models.Events;
 using System;
@@ -88,6 +89,31 @@ namespace OpenTraceability.Tests.Events
 
             OpenTraceabilityTests.CompareXML(x1.ToString(), x2.ToString());
         }
+
+        [Test]
+        [TestCase("bad_data_01.log")]
+        [TestCase("bad_data_02.log")]
+        [TestCase("bad_data_03.log")]
+        [TestCase("bad_data_04.log")]
+        [TestCase("bad_data_05.log")]
+        [TestCase("bad_data_06.log")]
+        public void JSON_LD_to_XML_1_2(string file)
+        {
+            // read object events from test data specified in the file argument
+            string stringJson = OpenTraceabilityTests.ReadTestData(file);
+            JObject j = JObject.Parse(stringJson);
+            string epcisJson = j["Content"].ToString();
+
+            // deserialize object events into C# models
+            EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(epcisJson);
+
+            // serialize into XML
+            string xml = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(doc);
+
+            // convert back into JSON-LD
+            string jsonAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc);
+        }
+
 
         [Test]
         [TestCase("EPCISQueryDocument.jsonld")]
