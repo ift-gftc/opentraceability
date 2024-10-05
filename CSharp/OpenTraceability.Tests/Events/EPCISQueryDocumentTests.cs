@@ -112,6 +112,9 @@ namespace OpenTraceability.Tests.Events
 
             // convert back into JSON-LD
             string jsonAfter = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc);
+
+            // again!
+            string xml2 = OpenTraceabilityMappers.EPCISQueryDocument.XML.Map(doc);
         }
 
 

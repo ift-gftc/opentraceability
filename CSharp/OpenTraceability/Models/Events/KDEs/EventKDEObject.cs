@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using OpenTraceability.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,26 +52,36 @@ namespace OpenTraceability.Models.Events.KDEs
 
         public JToken GetJson()
         {
-            if (_xml != null)
+            try
             {
-                // convert _xml to JObject
-                using (XmlReader xmlReader = _xml.CreateReader())
+                if (_xml != null)
                 {
-                    XmlDocument xmlDoc = new XmlDocument();
-                    xmlDoc.Load(xmlReader);
+                    // convert _xml to JObject
+                    using (XmlReader xmlReader = _xml.CreateReader())
+                    {
+                        XmlDocument xmlDoc = new XmlDocument();
+                        xmlDoc.Load(xmlReader);
 
-                    var j = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.Indented, true);
-                    return JToken.Parse(j);
+                        var j = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.Indented, true);
+                        return JToken.Parse(j);
+                    }
+                }
+                else if (_json != null)
+                {
+                    return _json;
+                }
+                else
+                {
+                    return null;
                 }
             }
-            else if (_json != null)
+            catch (Exception ex)
             {
-                return _json;
-            }
-            else
-            {
+                Console.WriteLine(ex);
+                Debug.WriteLine(ex);
+                Trace.WriteLine(ex);
                 return null;
-            }
+            }   
         }
 
         public void SetFromXml(XElement xml)
@@ -81,61 +92,71 @@ namespace OpenTraceability.Models.Events.KDEs
 
         public XElement GetXml()
         {
-            if (_xml != null)
+            try
             {
-                return _xml;
-            }
-            else if (_json != null)
-            {
-                string xmlStr = string.Empty;
-
-                JArray jArray = _json as JArray;
-                JObject j = _json as JObject;
-                if (j != null && j.Properties().Count() > 1)
+                if (_xml != null)
                 {
-                    xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString(), Namespace + Name) as XmlDocument)?.OuterXml;
-                    XElement x = new XElement(XElement.Parse(xmlStr));
-                    return x;
+                    return _xml;
                 }
-                else if (jArray != null)
+                else if (_json != null)
                 {
-                    XElement xList = new XElement(Namespace + Name);
-                    foreach (var jItem in jArray)
+                    string xmlStr = string.Empty;
+
+                    JArray jArray = _json as JArray;
+                    JObject j = _json as JObject;
+                    if (j != null && j.Properties().Count() > 1)
                     {
-                        JObject jObj = jItem as JObject;
-                        if(jObj != null)
-                        {
-                            string itemXML = (JsonConvert.DeserializeXmlNode(jObj.ToString(), $"{Namespace}{Name}-item") as XmlDocument)?.OuterXml;
-                            XElement xItem = new XElement(XElement.Parse(itemXML));
-                            xList.Add(xItem);
-                        }
-                        else if (jItem as JArray == null)
-                        {
-                            XElement xItem = new XElement($"{Namespace}{Name}-item", jItem.ToString());
-                            xList.Add(xItem);
-                        }
+                        xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString(), Namespace + Name) as XmlDocument)?.OuterXml;
+                        XElement x = new XElement(XElement.Parse(xmlStr));
+                        return x;
                     }
-                    return xList;
-                }
-                else
-                {
-                    xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString()) as XmlDocument)?.OuterXml;
-                }
+                    else if (jArray != null)
+                    {
+                        XElement xList = new XElement(Namespace + Name);
+                        foreach (var jItem in jArray)
+                        {
+                            JObject jObj = jItem as JObject;
+                            if (jObj != null)
+                            {
+                                string itemXML = (JsonConvert.DeserializeXmlNode(jObj.ToString(), $"{Namespace}{Name}-item") as XmlDocument)?.OuterXml;
+                                XElement xItem = new XElement(XElement.Parse(itemXML));
+                                xList.Add(xItem);
+                            }
+                            else if (jItem as JArray == null)
+                            {
+                                XElement xItem = new XElement($"{Namespace}{Name}-item", jItem.ToString());
+                                xList.Add(xItem);
+                            }
+                        }
+                        return xList;
+                    }
+                    else
+                    {
+                        xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString()) as XmlDocument)?.OuterXml;
+                    }
 
-                if (!string.IsNullOrEmpty(xmlStr))
-                {
-                    XElement x = new XElement((XNamespace)Namespace + Name, XElement.Parse(xmlStr));
-                    return x;
+                    if (!string.IsNullOrEmpty(xmlStr))
+                    {
+                        XElement x = new XElement((XNamespace)Namespace + Name, XElement.Parse(xmlStr));
+                        return x;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else
                 {
                     return null;
                 }
             }
-            else
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
+                Debug.WriteLine(ex);
+                Trace.WriteLine(ex);
                 return null;
-            }
+            }            
         }
     }
 }
