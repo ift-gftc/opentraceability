@@ -132,6 +132,8 @@ namespace OpenTraceability.Queries
         {
             List<string> queryParameters = new List<string>();
 
+            string encodedPipe = HttpUtility.UrlEncode("|");
+
             // go through each property on the on the query
             foreach (var prop in typeof(EPCISQuery).GetProperties())
             {
@@ -149,7 +151,7 @@ namespace OpenTraceability.Queries
                     List<string> list = prop.GetValue(query) as List<string>;
                     if (list != null && list.Count > 0)
                     {
-                        string queryParam = $"{prop.Name}={string.Join("|", list.Select(l => HttpUtility.UrlEncode(l)))}";
+                        string queryParam = $"{prop.Name}={string.Join(encodedPipe, list.Select(l => HttpUtility.UrlEncode(l)))}";
                         queryParameters.Add(queryParam);
                     }
                 }
@@ -158,7 +160,7 @@ namespace OpenTraceability.Queries
                     List<Uri> list = prop.GetValue(query) as List<Uri>;
                     if (list != null && list.Count > 0)
                     {
-                        string queryParam = $"{prop.Name}={string.Join("|", list.Select(l => HttpUtility.UrlEncode(l.ToString())))}";
+                        string queryParam = $"{prop.Name}={string.Join(encodedPipe, list.Select(l => HttpUtility.UrlEncode(l.ToString())))}";
                         queryParameters.Add(queryParam);
                     }
                 }
