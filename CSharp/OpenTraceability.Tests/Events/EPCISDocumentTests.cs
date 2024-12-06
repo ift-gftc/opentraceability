@@ -131,6 +131,7 @@ namespace OpenTraceability.Tests.Events
         [TestCase("transaction_event_all_possible_fields.jsonld")]
         [TestCase("transformation_event_all_possible_fields.jsonld")]
         [TestCase("wholechainbug01.jsonld")]
+        [TestCase("farm_harvest_event_object.jsonld")]
         public void JSONLD(string file)
         {
             // read object events from test data specified in the file argument

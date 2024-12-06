@@ -1,0 +1,117 @@
+﻿{
+  "@context": [
+    "https://ref.gs1.org/standards/epcis/epcis-context.jsonld",
+    {
+      "gdst": "https://traceability-dialogue.org/epcis"
+    }
+  ],
+  "type": "EPCISDocument",
+  "creationDate": "2024-11-25T21:21:59.1838429+00:00",
+  "schemaVersion": "2.0",
+  "epcisHeader": {
+    "epcisMasterData": {
+      "vocabularyList": [
+        {
+          "type": "urn:epcglobal:epcis:vtype:EPCClass",
+          "vocabularyElementList": [
+            {
+              "id": "urn:gdst:example.org:product:class:test.test",
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "test"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "urn:epcglobal:epcis:vtype:Location",
+          "vocabularyElementList": [
+            {
+              "id": "urn:gdst:example.org:location:loc:test.test",
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "test"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#contact",
+                  "attribute": "test"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#email",
+                  "attribute": "test"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#streetAddressOne",
+                  "attribute": "test"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#city",
+                  "attribute": "test"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#state",
+                  "attribute": "test"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#countryCode",
+                  "attribute": "BR"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#latitude",
+                  "attribute": "0"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#longitude",
+                  "attribute": "0"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "urn:epcglobal:epcis:vtype:Party",
+          "vocabularyElementList": [
+            {
+              "id": "urn:gdst:example.org:party:test.0",
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "test"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "epcisBody": {
+    "eventList": [
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2024-11-11T08:00:00.0000000+00:00",
+        "recordTime": "2024-11-14T15:15:50.6724380+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:00000000-0000-0000-0000-000000000000",
+        "epcList": [],
+        "action": "ADD",
+        "bizStep": "urn:gdst:bizStep:farmHarvest",
+        "disposition": "active",
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:test.test"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:test.test.test",
+            "quantity": 1
+          }
+        ],
+        "gdst:productOwner": "urn:gdst:example.org:party:test.0",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:test.0"
+      }
+    ]
+  }
+}

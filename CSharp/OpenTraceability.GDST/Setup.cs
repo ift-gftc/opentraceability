@@ -28,7 +28,8 @@ namespace OpenTraceability.GDST
                     OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTTransshipmentEvent), EventType.ObjectEvent, "urn:gdst:bizStep:transshipment", Models.Events.EventAction.OBSERVE));
                     OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTLandingEvent), EventType.ObjectEvent, "urn:gdst:bizstep:landing", Models.Events.EventAction.OBSERVE));
                     OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTHatchingEvent), EventType.ObjectEvent, "urn:gdst:bizstep:hatching", Models.Events.EventAction.ADD));
-                    OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTFarmHarvestEvent), EventType.TransformationEvent, "urn:gdst:bizstep:farmharvest"));
+                    OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTFarmHarvestTransformationEvent), EventType.TransformationEvent, "urn:gdst:bizstep:farmharvest"));
+                    OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTFarmHarvestObjectEvent), EventType.ObjectEvent, "urn:gdst:bizstep:farmharvest"));
                     OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTProcessingEvent), EventType.TransformationEvent, "urn:epcglobal:cbv:bizstep:commissioning"));
                     OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTProcessingEvent), EventType.TransformationEvent, "https://ref.gs1.org/cbv/BizStep-commissioning"));
                     OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTReceiveEvent), EventType.ObjectEvent, "urn:epcglobal:cbv:bizstep:receiving", Models.Events.EventAction.OBSERVE));
