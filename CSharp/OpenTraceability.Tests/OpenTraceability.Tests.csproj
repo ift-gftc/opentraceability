@@ -19,6 +19,7 @@
 		<None Remove="data\EPCISQUERYDOCUMENT_with_errorDeclarations.jsonld" />
 		<None Remove="Data\EPCISQueryDocument_with_masterdata.jsonld" />
 		<None Remove="Data\epc_tests.json" />
+		<None Remove="data\farm_harvest_event_object.jsonld" />
 		<None Remove="Data\gdst_data_withmasterdata.jsonld" />
 		<None Remove="Data\gdst_extensions_01.xml" />
 		<None Remove="Data\gdst_extensions_02.xml" />
