@@ -23,7 +23,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        private static Regex _isURICompatibleCharsRegex = new Regex(@"(.*[^._\-:*0-9A-Za-z])", RegexOptions.Compiled);
+        private static Regex _isURICompatibleCharsRegex = new Regex(@"(.*[^._\-/%:*0-9A-Za-z])", RegexOptions.Compiled);
 
         /// <summary>
         /// Tries and converts a string value into a DateTimeOffset using the ISO standard format. If it fails, it returns null.

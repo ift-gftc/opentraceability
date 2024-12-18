@@ -16,5 +16,17 @@
         "type": "Class",
         "gtin": "urn:gdst:example.org:product:class:processor.2u",
         "lotOrSerial": "v1-0122-2022"
+    },
+    {
+        "epc": "urn:gdst:example.org:product:lot:class:company.product.something/more/and/more",
+        "type": "Class",
+        "gtin": "urn:gdst:example.org:product:class:company.product",
+        "lotOrSerial": "something/more/and/more"
+    },
+    {
+        "epc": "urn:gdst:example.org:product:lot:class:company.pr%c3%b3d%c3%bact%c3%a9.something",
+        "type": "Class",
+        "gtin": "urn:gdst:example.org:product:class:company.pr%c3%b3d%c3%bact%c3%a9",
+        "lotOrSerial": "something"
     }
 ]
