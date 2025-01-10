@@ -13,6 +13,8 @@
 		<RepositoryUrl>https://github.com/ift-gftc/opentraceability</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>epcis;open;traceability;ift;gdst</PackageTags>
+		<NullableReferenceTypes>true</NullableReferenceTypes>
+		<LangVersion>8.0</LangVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
