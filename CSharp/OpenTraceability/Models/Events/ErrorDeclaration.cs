@@ -1,10 +1,8 @@
 ﻿using OpenTraceability.Interfaces;
-using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using JetBrains.Annotations;
 
 namespace OpenTraceability.Models.Events
 {
