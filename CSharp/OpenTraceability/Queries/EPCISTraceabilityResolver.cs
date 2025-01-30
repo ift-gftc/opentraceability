@@ -118,7 +118,7 @@ namespace OpenTraceability.Queries
         /// <param name="options">Options for talking to the EPCIS Query Interface.</param>
         /// <param name="epc">The EPC to perform the traceback on.</param>
         /// <returns>The summarized EPCIS query results.</returns>
-        public static async Task<EPCISQueryResults> Traceback(EPCISQueryInterfaceOptions options, EPC epc, HttpClient client, EPCISQueryParameters additionalParameters = null)
+        public static async Task<EPCISQueryResults> Traceback(EPCISQueryInterfaceOptions options, EPC epc, HttpClient client, EPCISQueryParameters additionalParameters = null, bool enforceSchema = true)
         {
             HashSet<EPC> queried_epcs = new HashSet<EPC>() { epc };
 
@@ -167,7 +167,7 @@ namespace OpenTraceability.Queries
                     {
                         p.Merge(additionalParameters);
                     }
-                    var r = await QueryEvents(options, p, client);
+                    var r = await QueryEvents(options, p, client, enforceSchema);
 
                     results.Merge(r);
 
@@ -252,7 +252,7 @@ namespace OpenTraceability.Queries
         /// </summary>
         /// <param name="options">The options that power the request.</param>
         /// <returns>EPCIS Query Results</returns>
-		public static async Task<EPCISQueryResults> QueryEvents(EPCISQueryInterfaceOptions options, EPCISQueryParameters parameters, HttpClient client)
+		public static async Task<EPCISQueryResults> QueryEvents(EPCISQueryInterfaceOptions options, EPCISQueryParameters parameters, HttpClient client, bool enforceSchema = true)
         {
             // determine the mapper for deserialize the contents
             IEPCISQueryDocumentMapper mapper = OpenTraceabilityMappers.EPCISQueryDocument.JSON;
@@ -318,6 +318,12 @@ namespace OpenTraceability.Queries
                     }
                     catch (OpenTraceabilitySchemaException schemaEx)
                     {
+                        if (!enforceSchema)
+                        {
+                            var doc = mapper.Map(responseBody, false);
+                            results.Document = doc;
+                        }
+
                         results.Errors.Add(new EPCISQueryError()
                         {
                             Type = EPCISQueryErrorType.Schema,
