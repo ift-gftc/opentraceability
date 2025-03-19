@@ -206,6 +206,26 @@ namespace OpenTraceability.Models.Events
                     }
                 }
 
+                // filter: EQ_action
+                if (parameters.query.EQ_action?.Any() == true)
+                {
+                    List<string> actions = parameters.query.EQ_action.Where(x => !string.IsNullOrEmpty(x)).Select(x => x.ToLower()).ToList();
+                    if (evt.Action?.ToString() == null || !actions.Contains(evt.Action.ToString().ToLower()))
+                    {
+                        continue;
+                    }
+                }
+
+                // filter: eventTypes
+                if (parameters.query.eventTypes?.Any() == true)
+                {
+                    List<string> eventTypes = parameters.query.eventTypes.Where(x => !string.IsNullOrEmpty(x)).Select(x => x.ToLower()).ToList();
+                    if (!eventTypes.Contains(evt.EventType.ToString().ToLower()))
+                    {
+                        continue;
+                    }
+                }
+
                 events.Add(evt);
             }
 
