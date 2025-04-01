@@ -210,7 +210,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
         }
 
-        internal static Type GetEventTypeFromProfile(JObject jEvent)
+        public static Type GetEventTypeFromProfile(JObject jEvent)
         {
             Enum.TryParse<EventAction>(jEvent["action"]?.ToString(), out var action);
             string bizStep = jEvent["bizStep"]?.ToString();
