@@ -16,6 +16,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Update="README_MSC.md">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\OpenTraceability.GDST\OpenTraceability.GDST.csproj" />
 	</ItemGroup>
 
