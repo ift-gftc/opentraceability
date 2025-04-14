@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<Title>Open Traceability - MSC Extension</Title>
+		<Description>Open source libraries for working with EPCIS in C# with extensions for MSC.</Description>
+		<Copyright>MIT</Copyright>
+		<PackageProjectUrl>https://github.com/ift-gftc/opentraceability</PackageProjectUrl>
+		<PackageReadmeFile>MSC_README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/ift-gftc/opentraceability</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>epcis;open;traceability;ift;gdst</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\OpenTraceability.GDST\OpenTraceability.GDST.csproj" />
+	</ItemGroup>
+
+</Project>
