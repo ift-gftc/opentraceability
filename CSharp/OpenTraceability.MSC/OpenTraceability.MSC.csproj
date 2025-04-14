@@ -9,7 +9,7 @@
 		<Description>Open source libraries for working with EPCIS in C# with extensions for MSC.</Description>
 		<Copyright>MIT</Copyright>
 		<PackageProjectUrl>https://github.com/ift-gftc/opentraceability</PackageProjectUrl>
-		<PackageReadmeFile>MSC_README.md</PackageReadmeFile>
+		<PackageReadmeFile>README_MSC.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/ift-gftc/opentraceability</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>epcis;open;traceability;ift;gdst</PackageTags>
