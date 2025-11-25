@@ -90,9 +90,9 @@ public class DiagnosticsToolIntegrationTests
 
         var firstEpc = sourceDoc.Events.SelectMany(e => e.Products).Select(p => p.EPC).First();
 
-        var options = new EPCISQueryInterfaceOptions
+        var options = new DigitalLinkQueryOptions
         {
-            URL = new Uri($"https://localhost:4001/epcis/{blobId}"),
+            URL = new Uri($"https://localhost:4001/digitallink/{blobId}"),
             Version = EPCISVersion.V2,
             Format = OpenTraceability.Mappers.EPCISDataFormat.JSON
         };
@@ -120,9 +120,9 @@ public class DiagnosticsToolIntegrationTests
         using HttpClient client = new HttpClient();
         client.BaseAddress = new Uri("https://localhost:4002/");
 
-        var options = new EPCISQueryInterfaceOptions
+        var options = new DigitalLinkQueryOptions
         {
-            URL = new Uri($"https://localhost:4001/epcis/{blobId}"),
+            URL = new Uri($"https://localhost:4001/digitallink/{blobId}"),
             Version = EPCISVersion.V2,
             Format = OpenTraceability.Mappers.EPCISDataFormat.JSON
         };

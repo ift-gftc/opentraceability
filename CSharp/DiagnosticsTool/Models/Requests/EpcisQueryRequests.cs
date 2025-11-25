@@ -11,7 +11,7 @@ public class QueryEventsRequest
 
 public class TracebackRequest
 {
-    public EPCISQueryInterfaceOptions Options { get; set; } = new EPCISQueryInterfaceOptions();
+    public DigitalLinkQueryOptions Options { get; set; } = new DigitalLinkQueryOptions();
     public string EPC { get; set; } = string.Empty;
     public EPCISQueryParameters? AdditionalParameters { get; set; }
     public bool ResolveMasterData { get; set; }

@@ -190,6 +190,8 @@ public class DiagnosticsController : ControllerBase
             client.DefaultRequestHeaders.Add("X-API-Key", request.Options.APIKey);
         }
 
+        // The traceback request takes an epcis query interface options, so the query interface url should have already been resolved
+
         // Resolve the EPCIS Query Interface URL from the digital link URL in the request.
         var diagnosticsReport = new DiagnosticsReport();
         var url = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(new DigitalLinkQueryOptions()

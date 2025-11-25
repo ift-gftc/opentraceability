@@ -329,7 +329,7 @@
             var request = new TracebackRequest
             {
                 EPC = manualEpc,
-                Options = new EPCISQueryInterfaceOptions
+                Options = new DigitalLinkQueryOptions
                 {
                     URL = new Uri(manualUrl),
                     Version = Enum.Parse<OpenTraceability.Models.Events.EPCISVersion>(manualVersion),
