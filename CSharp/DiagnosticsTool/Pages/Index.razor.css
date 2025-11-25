@@ -1,0 +1,42 @@
+.toggle-switch {
+    position: relative;
+    appearance: none;
+    width: 52px;
+    height: 28px;
+    background: #cbd5e1;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.toggle-switch:checked {
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
+}
+
+.toggle-switch::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch:checked::before {
+    transform: translateX(24px);
+}
+
+.toggle-switch:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.toggle-switch:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+}

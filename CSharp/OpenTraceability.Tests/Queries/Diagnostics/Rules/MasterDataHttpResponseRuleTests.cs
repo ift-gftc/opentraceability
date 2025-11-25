@@ -47,7 +47,7 @@ public class MasterDataHttpResponseRuleTests
         Assert.That(results[0].Type, Is.EqualTo(DiagnosticsValidationType.HttpError));
         Assert.That(results[0].RuleKey, Is.EqualTo("OT_DIAG_RULE_MD_HTTP_RESPONSE"));
         Assert.That(results[0].Message, Does.Contain("404"));
-        Assert.That(results[0].Message, Does.Contain("NotFound"));
+        Assert.That(results[0].Message, Does.Contain("could not be found"));
     }
 
     [Test]

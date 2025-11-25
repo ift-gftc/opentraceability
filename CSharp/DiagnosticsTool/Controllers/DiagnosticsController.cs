@@ -158,20 +158,64 @@ public class DiagnosticsController : ControllerBase
 
         RewriteTestUrl(request.Options);
 
+        // Resolve the EPCIS Query Interface URL from the digital link URL in the request.
         var diagnosticsReport = new DiagnosticsReport();
-        var client = _httpClientFactory.CreateClient("default");
-        var results = await EPCISTraceabilityResolver.Traceback(request.Options, epc, client, request.AdditionalParameters, diagnosticsReport);
-
-        var envelope = new DiagnosticsEnvelope<EPCISQueryResults>
+        var url = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(new DigitalLinkQueryOptions()
         {
-            Data = results,
-            Diagnostics = diagnosticsReport
-        };
+            URL = request.Options.URL,
+        }, epc, _httpClientFactory.CreateClient("default"), diagnosticsReport);
 
-        var cacheId = _cache.Add(envelope);
-        Response.Headers["X-Diagnostics-Id"] = cacheId;
+        if (url != null)
+        {
+            var client = _httpClientFactory.CreateClient("default");
+            var results = await EPCISTraceabilityResolver.Traceback(new EPCISQueryInterfaceOptions()
+            {
+                URL = url,
+                EnableStackTrace = request.Options.EnableStackTrace,
+                Version = request.Options.Version,
+                Format = request.Options.Format
+            }, epc, client, request.AdditionalParameters, diagnosticsReport);
 
-        return Ok(envelope);
+            // Resolve master data if requested
+            if (request.ResolveMasterData && results?.Document != null)
+            {
+                // Create DigitalLinkQueryOptions from EPCISQueryInterfaceOptions
+                var digitalLinkOptions = new DigitalLinkQueryOptions
+                {
+                    URL = request.Options.URL,
+                    Version = request.Options.Version,
+                    Format = request.Options.Format
+                };
+
+                await OpenTraceability.Queries.MasterDataResolver.ResolveMasterData(
+                    digitalLinkOptions,
+                    results.Document,
+                    client,
+                    diagnosticsReport);
+            }
+
+            var envelope = new DiagnosticsEnvelope<EPCISQueryResults>
+            {
+                Data = results,
+                Diagnostics = diagnosticsReport
+            };
+
+            var cacheId = _cache.Add(envelope);
+            Response.Headers["X-Diagnostics-Id"] = cacheId;
+
+            return Ok(envelope);
+        }
+        else
+        {
+            var envelope = new DiagnosticsEnvelope<EPCISQueryResults>
+            {
+                Data = null,
+                Diagnostics = diagnosticsReport
+            };
+            var cacheId = _cache.Add(envelope);
+            Response.Headers["X-Diagnostics-Id"] = cacheId;
+            return Ok(envelope);
+        }
     }
 
     private void RewriteTestUrl(DigitalLinkQueryOptions? options)

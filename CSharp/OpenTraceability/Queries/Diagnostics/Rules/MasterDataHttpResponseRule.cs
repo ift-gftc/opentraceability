@@ -13,7 +13,7 @@ public class MasterDataHttpResponseRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_MD_HTTP_RESPONSE";
 
-    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public async Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
     {
         var results = new List<DiagnosticsValidationResult>();
 
@@ -31,15 +31,28 @@ public class MasterDataHttpResponseRule : IDiagnosticsRequestRule
         // Validate HTTP status code
         if (!response.IsSuccessStatusCode)
         {
-            results.Add(new DiagnosticsValidationResult
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                Level = LogLevel.Error,
-                Type = DiagnosticsValidationType.HttpError,
-                RuleKey = Key,
-                Message = $"Master Data Resolver returned non-success status code: {(int)response.StatusCode} {response.StatusCode}"
-            });
+                results.Add(new DiagnosticsValidationResult
+                {
+                    Level = LogLevel.Error,
+                    Type = DiagnosticsValidationType.HttpError,
+                    RuleKey = Key,
+                    Message = $"Master Data Resolver returned a 404 error code indicating that the data associated with the identifier could not be found."
+                });
+            }
+            else
+            {
+                results.Add(new DiagnosticsValidationResult
+                {
+                    Level = LogLevel.Error,
+                    Type = DiagnosticsValidationType.HttpError,
+                    RuleKey = Key,
+                    Message = $"Master Data Resolver returned non-success status code: {(int)response.StatusCode} {response.StatusCode}"
+                });
+            }
         }
 
-        return Task.FromResult(results);
+        return results;
     }
 }

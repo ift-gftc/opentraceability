@@ -19,12 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="ComplianceTool.TestSolutionProvider">
-      <HintPath>..\..\GDSTTools.TestSolutionProvider\bin\Debug\net9.0\ComplianceTool.TestSolutionProvider.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="README_TESTSERVER.md">
       <PackagePath>\</PackagePath>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

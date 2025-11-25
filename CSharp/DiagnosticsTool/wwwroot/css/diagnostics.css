@@ -16,6 +16,356 @@
     --shadow-hover: 0 32px 55px rgba(15, 23, 42, 0.16);
 }
 
+/* Print Styles */
+@media print {
+    .do-not-print, .screen-only {
+        display: none !important;
+    }
+
+    .print-only {
+        display: block !important;
+    }
+
+    body {
+        background: white;
+        font-size: 9pt;
+        line-height: 1.3;
+    }
+
+    .print-view {
+        max-width: 100%;
+        padding: 0;
+        position: relative;
+        padding-bottom: 2.5rem;
+    }
+
+    .print-header {
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .print-header h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 16pt;
+        font-weight: bold;
+        color: #0f172a;
+    }
+
+    .print-meta {
+        font-size: 8pt;
+        color: #64748b;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .print-meta code {
+        font-size: 7pt;
+        background: #f1f5f9;
+        padding: 0.1rem 0.3rem;
+        border-radius: 2px;
+    }
+
+    .print-section {
+        margin-bottom: 1.5rem;
+        page-break-inside: avoid;
+    }
+
+    .print-section h2 {
+        margin: 0 0 0.75rem 0;
+        font-size: 11pt;
+        font-weight: bold;
+        color: #0f172a;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .print-subsection-title {
+        margin: 1rem 0 0.5rem 0;
+        font-size: 9pt;
+        font-weight: bold;
+        color: #0f172a;
+    }
+
+    .print-metrics {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .print-metric {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 9pt;
+    }
+
+    .print-metric-label {
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    .print-metric-value {
+        font-weight: bold;
+        color: #0f172a;
+    }
+
+    .print-metric-value.good {
+        color: #047857;
+    }
+
+    .print-metric-value.bad {
+        color: #b91c1c;
+    }
+
+    .print-request-summary-list {
+        list-style: none;
+        margin: 0.5rem 0 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .print-request-summary-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.5rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 3px;
+        font-size: 8pt;
+        flex-wrap: wrap;
+    }
+
+    .print-request-summary-title {
+        font-weight: 600;
+        color: #0f172a;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .print-request-summary-timestamp {
+        font-size: 7pt;
+        color: #64748b;
+        font-family: monospace;
+    }
+
+    .print-request {
+        margin-bottom: 1.5rem;
+        page-break-inside: avoid;
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem;
+        border-radius: 4px;
+    }
+
+    .print-request-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        flex-wrap: wrap;
+    }
+
+    .print-request-title {
+        font-weight: bold;
+        font-size: 10pt;
+        color: #0f172a;
+    }
+
+    .print-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.15rem 0.4rem;
+        border-radius: 3px;
+        font-size: 7pt;
+        font-weight: 600;
+        background: #e0e7ff;
+        color: #2563eb;
+    }
+
+    .print-badge-danger {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .print-badge-warning {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .print-timestamp {
+        font-size: 8pt;
+        color: #64748b;
+        margin-left: auto;
+    }
+
+    .print-duration {
+        font-size: 7pt;
+        font-family: monospace;
+        color: #64748b;
+    }
+
+    .print-request-content h4 {
+        margin: 0.75rem 0 0.3rem 0;
+        font-size: 9pt;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+    }
+
+    .print-code {
+        margin: 0.3rem 0;
+        padding: 0.4rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 3px;
+        font-size: 7pt;
+        line-height: 1.3;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+        word-break: break-all;
+        max-height: none;
+    }
+
+    .print-validation-list {
+        list-style: none;
+        margin: 0.3rem 0 0 0;
+        padding: 0;
+    }
+
+    .print-validation {
+        display: grid;
+        grid-template-columns: auto auto 1fr;
+        gap: 0.3rem 0.5rem;
+        align-items: center;
+        padding: 0.3rem;
+        margin-bottom: 0.25rem;
+        border-radius: 3px;
+        font-size: 8pt;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        page-break-inside: avoid;
+    }
+
+    .print-validation-level {
+        display: inline-flex;
+        padding: 0.1rem 0.3rem;
+        border-radius: 2px;
+        font-size: 7pt;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: white;
+    }
+
+    .print-validation-type {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 8pt;
+    }
+
+    .print-validation-message {
+        grid-column: 1 / -1;
+        color: #64748b;
+        font-size: 8pt;
+    }
+
+    .print-level-error {
+        background: #fef2f2;
+        border-color: #fecaca;
+    }
+
+    .print-level-error .print-validation-level {
+        background: #b91c1c;
+    }
+
+    .print-level-warning {
+        background: #fffbeb;
+        border-color: #fde68a;
+    }
+
+    .print-level-warning .print-validation-level {
+        background: #b45309;
+    }
+
+    .print-level-info {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+    }
+
+    .print-level-info .print-validation-level {
+        background: #2563eb;
+    }
+
+    .print-level-verbose {
+        background: #f5f3ff;
+        border-color: #ddd6fe;
+    }
+
+    .print-level-verbose .print-validation-level {
+        background: #7c3aed;
+    }
+
+    .print-level-default {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+    }
+
+    .print-level-default .print-validation-level {
+        background: #64748b;
+    }
+
+    .print-muted {
+        color: #94a3b8;
+        font-size: 8pt;
+        font-style: italic;
+    }
+
+    .print-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0.5rem 1rem;
+        border-top: 1px solid #e2e8f0;
+        background: white;
+        font-size: 7pt;
+        color: #64748b;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Ensure content doesn't overlap with footer */
+    @page {
+        margin-bottom: 2cm;
+    }
+}
+
+/* Screen-only: hide print view by default */
+@media screen {
+    .print-only {
+        display: none !important;
+    }
+
+    .screen-only {
+        display: block;
+    }
+}
+
+@media print {
+    .do-not-print {
+        display: none;
+    }
+}
+
 *,
 *::before,
 *::after {

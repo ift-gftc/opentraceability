@@ -1,9 +1,16 @@
 @page "/"
 @inject DiagnosticsTool.Services.IDiagnosticsEnvelopeCache Cache
 @inject DiagnosticsTool.Services.ITestService TestService
+@inject IHttpClientFactory HttpClientFactory
 @using DiagnosticsTool.Services
 @using DiagnosticsTool.Models.Responses
 @using DiagnosticsTool.Models.Tests
+@using DiagnosticsTool.Models.Requests
+@using OpenTraceability.Queries
+@using OpenTraceability.Mappers
+@using System.Net.Http.Headers
+@using System.Text
+@using System.Text.Json
 
 @{
     var entries = Cache.GetEntries().OrderByDescending(e => e.CreatedUtc).ToList();
@@ -115,6 +122,111 @@
     }
 </section>
 
+<section class="card" style="margin-top: 20px;">
+    <h2 class="section-title">Manual Traceback Test</h2>
+    <p class="muted" style="margin-bottom: 1.5rem;">Execute a traceback diagnostics test by providing the required parameters.</p>
+    
+    @if (!string.IsNullOrEmpty(manualTestError))
+    {
+        <div class="alert error">@manualTestError</div>
+    }
+    
+    <div style="margin-bottom: 1rem;">
+        <label for="manual-epc" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">EPC <span style="color: red;">*</span></label>
+        <input id="manual-epc" 
+               type="text" 
+               class="form-control" 
+               placeholder="urn:epc:id:sgtin:0614141.107346.2019"
+               @bind="manualEpc"
+               disabled="@isManualTestRunning"
+               style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;" />
+        <small class="muted" style="display: block; margin-top: 0.25rem;">
+            Enter the EPC to traceback (e.g., GTIN+Serial, GTIN+Lot, or SSCC)
+        </small>
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+        <label for="manual-url" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">EPCIS Query Interface URL <span style="color: red;">*</span></label>
+        <input id="manual-url" 
+               type="text" 
+               class="form-control" 
+               placeholder="https://example.com/epcis/query"
+               @bind="manualUrl"
+               disabled="@isManualTestRunning"
+               style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;" />
+        <small class="muted" style="display: block; margin-top: 0.25rem;">
+            Enter the EPCIS Query Interface endpoint URL
+        </small>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <div>
+            <label for="manual-version" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">EPCIS Version</label>
+            <select id="manual-version" 
+                    class="form-control"
+                    @bind="manualVersion"
+                    disabled="@isManualTestRunning"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="V2">EPCIS 2.0</option>
+                <option value="V1">EPCIS 1.2</option>
+            </select>
+        </div>
+        
+        <div>
+            <label for="manual-format" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Data Format</label>
+            <select id="manual-format" 
+                    class="form-control"
+                    @bind="manualFormat"
+                    disabled="@isManualTestRunning"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="JSON">JSON</option>
+                <option value="XML">XML</option>
+            </select>
+        </div>
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; user-select: none;">
+            <input type="checkbox" 
+                   @bind="manualResolveMasterData"
+                   disabled="@isManualTestRunning"
+                   class="toggle-switch" />
+            <span style="font-weight: 500;">Resolve Master Data</span>
+        </label>
+        <small class="muted" style="display: block; margin-top: 0.5rem; margin-left: 3.5rem;">
+            Enable this option to automatically resolve master data (tradeitems, locations, trading parties) from digital link resolvers during traceback
+        </small>
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+        <label for="manual-additional-params" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Additional Query Parameters (JSON)</label>
+        <textarea id="manual-additional-params" 
+                  class="form-control" 
+                  rows="4"
+                  placeholder='{"query": {"GE_eventTime": "2024-01-01T00:00:00Z"}}'
+                  @bind="manualAdditionalParams"
+                  disabled="@isManualTestRunning"
+                  style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-family: monospace; font-size: 0.9rem;"></textarea>
+        <small class="muted" style="display: block; margin-top: 0.25rem;">
+            Optional: Additional EPCIS query parameters in JSON format (e.g., event time filters, biz step filters)
+        </small>
+    </div>
+    
+    <div>
+        <button class="btn" disabled="@isManualTestRunning" @onclick="ExecuteTracebackAsync">
+            @if (isManualTestRunning)
+            {
+                <span class="spinner"></span>
+                <span>Running Traceback...</span>
+            }
+            else
+            {
+                <span>Execute Traceback</span>
+            }
+        </button>
+    </div>
+</section>
+
 <p class="footer-note">Explore the REST API via <a href="/swagger" target="_blank" rel="noopener">/swagger</a>. All
     endpoints are versioned under <code>/api/v1</code>.</p>
 
@@ -122,6 +234,16 @@
     private List<DiagnosticsToolTestSummary> tests = new();
     private string? runningTestId;
     private string? errorMessage;
+    
+    // Manual traceback test fields
+    private string manualEpc = string.Empty;
+    private string manualUrl = string.Empty;
+    private string manualVersion = "V2";
+    private string manualFormat = "JSON";
+    private string manualAdditionalParams = string.Empty;
+    private bool manualResolveMasterData = false;
+    private bool isManualTestRunning = false;
+    private string? manualTestError;
 
     protected override void OnInitialized()
     {
@@ -174,6 +296,121 @@
         }
     }
 
+    private async Task ExecuteTracebackAsync()
+    {
+        // Validation
+        if (string.IsNullOrWhiteSpace(manualEpc))
+        {
+            manualTestError = "EPC is required.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(manualUrl))
+        {
+            manualTestError = "EPCIS Query Interface URL is required.";
+            return;
+        }
+
+        if (!Uri.TryCreate(manualUrl, UriKind.Absolute, out _))
+        {
+            manualTestError = "Invalid URL format.";
+            return;
+        }
+
+        isManualTestRunning = true;
+        manualTestError = null;
+        StateHasChanged();
+
+        try
+        {
+            var baseUri = new Uri(NavigationManager.BaseUri);
+            
+            // Build the TracebackRequest
+            var request = new TracebackRequest
+            {
+                EPC = manualEpc,
+                Options = new EPCISQueryInterfaceOptions
+                {
+                    URL = new Uri(manualUrl),
+                    Version = Enum.Parse<OpenTraceability.Models.Events.EPCISVersion>(manualVersion),
+                    Format = Enum.Parse<EPCISDataFormat>(manualFormat),
+                    EnableStackTrace = true
+                },
+                ResolveMasterData = manualResolveMasterData
+            };
+
+            // Parse additional parameters if provided
+            if (!string.IsNullOrWhiteSpace(manualAdditionalParams))
+            {
+                try
+                {
+                    var additionalParams = JsonSerializer.Deserialize<EPCISQueryParameters>(
+                        manualAdditionalParams,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    request.AdditionalParameters = additionalParams;
+                }
+                catch (JsonException ex)
+                {
+                    manualTestError = $"Invalid JSON in additional parameters: {ex.Message}";
+                    return;
+                }
+            }
+
+            // Serialize the request
+            var requestJson = JsonSerializer.Serialize(request, new JsonSerializerOptions 
+            { 
+                WriteIndented = false,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            // Make the HTTP POST request to the traceback endpoint
+            var client = HttpClientFactory.CreateClient("default");
+            var endpointUri = new Uri(baseUri, "api/v1/diagnostics/epcis/query/traceback");
+            
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Post, endpointUri);
+            requestMessage.Content = new StringContent(requestJson, Encoding.UTF8);
+            requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await client.SendAsync(requestMessage);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                manualTestError = $"Request failed with status {(int)response.StatusCode}: {responseBody}";
+                return;
+            }
+
+            // Extract diagnostics ID from response headers
+            string? diagnosticsId = null;
+            if (response.Headers.TryGetValues("X-Diagnostics-Id", out var values))
+            {
+                diagnosticsId = values.FirstOrDefault();
+            }
+
+            if (!string.IsNullOrEmpty(diagnosticsId))
+            {
+                NavigationManager.NavigateTo($"/diagnostics/{diagnosticsId}");
+            }
+            else
+            {
+                manualTestError = "Test executed successfully but no diagnostics ID was returned.";
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            manualTestError = $"HTTP request failed: {ex.Message}";
+        }
+        catch (Exception ex)
+        {
+            manualTestError = $"Failed to execute traceback test: {ex.Message}";
+        }
+        finally
+        {
+            isManualTestRunning = false;
+            StateHasChanged();
+        }
+    }
+    
     void GoToDetails(string id) => NavigationManager.NavigateTo($"/diagnostics/{id}");
 
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;

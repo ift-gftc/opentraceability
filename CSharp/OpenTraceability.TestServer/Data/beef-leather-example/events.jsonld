@@ -1,0 +1,331 @@
+{
+    "@context": [
+        "https://ref.gs1.org/standards/epcis/2.0.0/epcis-context.jsonld",
+        {
+            "example": "http://example.com/"
+        }
+    ],
+    "type": "EPCISDocument",
+    "schemaVersion": "2.0",
+    "creationDate": "2025-11-17T15:18:00Z",
+    "epcisHeader": {
+        "epcisMasterData": {
+            "vocabularyList": [
+                // PRODUCT DEFINITIONS
+                {
+                    "type": "urn:epcglobal:epcis:vtype:epcclass",
+                    "vocabularyElementList": [
+                        // CATTLE DEFINITION
+                        {
+                            "id": "https://id.gs1.org/01/10000082345676",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "CATTLE"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                                    "attribute": "WHL"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "https://id.gs1.org/417/0847976000005"
+                                }
+                            ]
+                        },
+                        // STEAKS DEFINITION
+                        {
+                            "id": "https://id.gs1.org/01/10000082345676",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                                    "attribute": "12-PCK FRZN BLK RIBEYE STEAKS PRIME"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "https://id.gs1.org/417/1234567089453"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                // LOCATIONS
+                {
+                    "type": "urn:epcglobal:epcis:vtype:location",
+                    "vocabularyElementList": [
+                        // RANCH LOCATION
+                        {
+                            "id": "https://id.gs1.org/414/1234567089451",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "https://id.gs1.org/417/1234567089453"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Ranch #423"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#state",
+                                    "attribute": "TX"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#countryCode",
+                                    "attribute": "US"
+                                }
+                            ]
+                        },
+                        // SLAUGHTERHOUSE LOCATION
+                        {
+                            "id": "https://id.gs1.org/414/1234567089452",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "https://id.gs1.org/417/1234567089453"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Slaughter House #032"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#city",
+                                    "attribute": "San Marcos"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#state",
+                                    "attribute": "TX"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#countryCode",
+                                    "attribute": "US"
+                                }
+                            ]
+                        },
+                        // DISTRUBTION CENTER LOCATION
+                        {
+                            "id": "https://id.gs1.org/414/1234567089453",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:owning_party",
+                                    "attribute": "https://id.gs1.org/417/1234567089453"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "Distribution Center #001"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#city",
+                                    "attribute": "Houston"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#state",
+                                    "attribute": "TX"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#countryCode",
+                                    "attribute": "US"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                // PARTIES (ORGANIZATIONS)
+                {
+                    "type": "urn:epcglobal:epcis:vtype:party",
+                    "vocabularyElementList": [
+                        // INTERNATIONAL COW FARMIGN CONGLOMERATE
+                        {
+                            "id": "https://id.gs1.org/417/1234567089453",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "International Cow Farming Conglomerate Inc."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "epcisBody": {
+        "eventList": [
+            // BIRTH EVENT
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2023-01-01T09:00:00Z",
+                "eventTimeZoneOffset": "+00:00",
+                "quantityList": [
+                    {
+                        "epcClass": "https://id.gs1.org/01/10000082345676/10/CATTLE20230101",
+                        "quantity": 100,
+                        "uom": "EA"
+                    }
+                ],
+                "action": "ADD",
+                "bizStep": "commissioning",
+                "disposition": "active",
+                "bizLocation": {
+                    "id": "https://id.gs1.org/414/1234567089451"
+                }
+            },
+            // SHIPPING CATTLE TO SLAUGHTERHOUSE
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2025-11-05T10:00:00Z",
+                "eventTimeZoneOffset": "+00:00",
+                "quantityList": [
+                    {
+                        "epcClass": "https://id.gs1.org/01/10000082345676/10/CATTLE20230101",
+                        "quantity": 100,
+                        "uom": "EA"
+                    }
+                ],
+                "action": "OBSERVE",
+                "bizStep": "shipping",
+                "disposition": "in_transit",
+                "bizLocation": {
+                    "id": "https://id.gs1.org/414/1234567089451"
+                },
+                "sourceList": [
+                    {
+                        "source": "https://id.gs1.org/414/1234567089451",
+                        "type": "location"
+                    }
+                ],
+                "destinationList": [
+                    {
+                        "destination": "https://id.gs1.org/414/1234567089452",
+                        "type": "location"
+                    }
+                ]
+            },
+            // RECEIVING CATTLE TO SLAUGHTERHOUSE
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2025-11-06T09:00:00Z",
+                "eventTimeZoneOffset": "+00:00",
+                "quantityList": [
+                    {
+                        "epcClass": "https://id.gs1.org/01/10000082345676/10/CATTLE20230101",
+                        "quantity": 100,
+                        "uom": "EA"
+                    }
+                ],
+                "action": "OBSERVE",
+                "bizStep": "receiving",
+                "disposition": "active",
+                "bizLocation": {
+                    "id": "https://id.gs1.org/414/1234567089452"
+                }
+            },
+            // TRANSFORMATION EVENT - SLAUGHTERING CATTLE INTO STEAKS
+            {
+                "type": "TransformationEvent",
+                "eventTime": "2025-11-07T10:00:00Z",
+                "eventTimeZoneOffset": "+00:00",
+                "inputQuantityList": [
+                    {
+                        "epcClass": "https://id.gs1.org/01/10000082345676/10/CATTLE20230101",
+                        "quantity": 100,
+                        "uom": "EA"
+                    }
+                ],
+                "outputQuantityList": [
+                    {
+                        "epcClass": "https://id.gs1.org/01/10000082345676/10/STEAKS20251107",
+                        "quantity": 10000,
+                        "uom": "KGM"
+                    }
+                ],
+                "bizStep": "commissioning",
+                "disposition": "active",
+                "bizLocation": {
+                    "id": "https://id.gs1.org/414/1234567089452"
+                }
+            },
+            // AGGREGATION EVENT - PACKING STEAKS INTO A SSCC
+            {
+                "type": "AggregationEvent",
+                "eventTime": "2025-11-08T11:00:00Z",
+                "eventTimeZoneOffset": "+00:00",
+                "parentID": "https://id.gs1.org/00/106141412345678908",
+                "childQuantityList": [
+                    {
+                        "epcClass": "https://id.gs1.org/01/10000082345676/10/STEAKS20251107",
+                        "quantity": 10000,
+                        "uom": "KGM"
+                    }
+                ],
+                "action": "ADD",
+                "bizStep": "packing",
+                "disposition": "active",
+                "bizLocation": {
+                    "id": "https://id.gs1.org/414/1234567089452"
+                }
+            },
+            // SHIPPING SSCC TO DISTRIBUTION CENTER
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2025-11-10T10:00:00Z",
+                "eventTimeZoneOffset": "+00:00",
+                "epcList": [
+                    "https://id.gs1.org/00/106141412345678908"
+                ],
+                "action": "OBSERVE",
+                "bizStep": "shipping",
+                "disposition": "in_transit",
+                "bizLocation": {
+                    "id": "https://id.gs1.org/414/1234567089452"
+                },
+                "sourceList": [
+                    {
+                        "source": "https://id.gs1.org/414/1234567089452",
+                        "type": "location"
+                    }
+                ],
+                "destinationList": [
+                    {
+                        "destination": "https://id.gs1.org/414/1234567089453",
+                        "type": "location"
+                    }
+                ]
+            },
+            // RECEIVING SSCC AT DISTRIBUTION CENTER
+            {
+                "type": "ObjectEvent",
+                "eventTime": "2025-11-11T09:00:00Z",
+                "eventTimeZoneOffset": "+00:00",
+                "epcList": [
+                    "https://id.gs1.org/00/106141412345678908"
+                ],
+                "action": "OBSERVE",
+                "bizStep": "receiving",
+                "disposition": "active",
+                "bizLocation": {
+                    "id": "https://id.gs1.org/414/1234567089453"
+                }
+            },
+            // UNPACKING SSCC AT DISTRUBUTION CENTER
+            {
+                "type": "AggregationEvent",
+                "eventTime": "2025-11-12T10:00:00Z",
+                "eventTimeZoneOffset": "+00:00",
+                "parentID": "https://id.gs1.org/00/106141412345678908",
+                "childQuantityList": [
+                    {
+                        "epcClass": "https://id.gs1.org/01/10000082345676/10/STEAKS20251107",
+                        "quantity": 10000,
+                        "uom": "KGM"
+                    }
+                ],
+                "action": "DELETE",
+                "bizStep": "unpacking",
+                "disposition": "active",
+                "bizLocation": {
+                    "id": "https://id.gs1.org/414/1234567089453"
+                }
+            }
+        ]
+    }
+}

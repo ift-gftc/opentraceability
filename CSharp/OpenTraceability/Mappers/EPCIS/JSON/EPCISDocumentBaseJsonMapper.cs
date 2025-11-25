@@ -374,8 +374,11 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         internal static async Task<string> NormalizeEPCISJsonLDAsync(string jEPCISStr)
         {
             // convert into XDocument
-            var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
-            JObject json = JsonConvert.DeserializeObject<JObject>(jEPCISStr, settings) ?? throw new Exception("Failed to parse json from string. " + jEPCISStr);
+            JsonLoadSettings loadSettings = new JsonLoadSettings
+            {
+                CommentHandling = CommentHandling.Ignore,
+            };
+            JObject json = JObject.Parse(jEPCISStr, loadSettings);
 
             JObject jEPCISContext = await JsonContextHelper.GetJsonLDContextAsync("https://ref.gs1.org/standards/epcis/epcis-context.jsonld");
             Dictionary<string, string> namespaces = JsonContextHelper.ScrapeNamespaces(jEPCISContext);

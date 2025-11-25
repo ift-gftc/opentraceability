@@ -115,6 +115,43 @@ namespace OpenTraceability.Models.Identifiers
                 {
                     this.Type = EPCType.SSCC;
                 }
+                // DIGITAL LINK URI CHECK
+                else if (epcStr.StartsWith("https://id.gs1.org"))
+                {
+                    List<string> parts = epcStr.Split('?').First().Substring("https://id.gs1.org".Length).Split('/').Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+
+                    Dictionary<string, string> applicationIdentifiers = new();
+                    if (parts.Count >= 2)
+                    {
+                        for (int i = 0; i < parts.Count; i += 2)
+                        {
+                            string key = parts[i];
+                            string value = parts[i + 1];
+                            applicationIdentifiers[key] = value;
+                        }
+                    }
+
+                    // CHECK IF IS SSCC (00)
+                    if (applicationIdentifiers.ContainsKey("00"))
+                    {
+                        this.Type = EPCType.SSCC;
+                        this.SerialLotNumber = applicationIdentifiers["00"];
+                    }
+                    // CHECK IF IS CLASS (01 + 10)
+                    else if (applicationIdentifiers.ContainsKey("01") && applicationIdentifiers.ContainsKey("10"))
+                    {
+                        this.Type = EPCType.Class;
+                        this.GTIN = new GTIN(applicationIdentifiers["01"]);
+                        this.SerialLotNumber = applicationIdentifiers["10"];
+                    }
+                    // CHECK IF IS INSTANCE (01 + 21)
+                    else if (applicationIdentifiers.ContainsKey("01") && applicationIdentifiers.ContainsKey("21"))
+                    {
+                        this.Type = EPCType.Instance;
+                        this.GTIN = new GTIN(applicationIdentifiers["01"]);
+                        this.SerialLotNumber = applicationIdentifiers["21"];
+                    }
+                }
                 else if (Uri.IsWellFormedUriString(epcStr, UriKind.Absolute) && epcStr.StartsWith("http") && epcStr.Contains("/obj/"))
                 {
                     this.Type = EPCType.Instance;
@@ -371,6 +408,24 @@ namespace OpenTraceability.Models.Identifiers
         {
             EPC epc = new EPC(this.ToString());
             return epc;
+        }
+
+        public string ToDigitalLinkURI()
+        {
+            if (this._epcStr.StartsWith("https://id.gs1.org"))
+            {
+                return this._epcStr.Substring("https://id.gs1.org".Length);
+            }
+
+            string? relativeUrl = null;
+            switch (this.Type)
+            {
+                case EPCType.Class: relativeUrl = this.GTIN?.ToDigitalLinkURL() + "/10/" + this.SerialLotNumber; break;
+                case EPCType.Instance: relativeUrl = this.GTIN?.ToDigitalLinkURL() + "/21/" + this.SerialLotNumber; break;
+                case EPCType.SSCC: relativeUrl = "00/" + this.ToString(); break;
+                default: throw new Exception($"Cannot build Digital Link URL with EPC {this}. We need either GTIN+LOT, GTIN+SERIAL, or SSCC.");
+            }
+            return relativeUrl;
         }
 
         #region Overrides

@@ -32,7 +32,7 @@ public class EPCISHttpRequestRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_EPCIS_HTTP_REQUEST";
 
-    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public async Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
     {
         if (obj == null)
         {
@@ -71,7 +71,7 @@ public class EPCISHttpRequestRule : IDiagnosticsRequestRule
         // VALIDATION #3: Host Header Validation
         ValidateHostHeader(headers, results);
 
-        return Task.FromResult(results);
+        return results;
     }
 
     private void ValidateEPCISV1Headers(HttpRequestHeaders headers, List<DiagnosticsValidationResult> results)

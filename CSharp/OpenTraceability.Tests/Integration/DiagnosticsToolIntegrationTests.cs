@@ -8,6 +8,7 @@ using OpenTraceability.Models.Events;
 using OpenTraceability.Queries;
 using DiagnosticsTool.Models.Requests;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.TestHost;
 
 namespace OpenTraceability.Tests.Integration;
 
@@ -16,21 +17,21 @@ namespace OpenTraceability.Tests.Integration;
 public class DiagnosticsToolIntegrationTests
 {
     private static IWebHost? _epcisTestServer;
+    private static IWebHost? _diagnosticsTool;
     private static IConfiguration? _config;
-    private WebApplicationFactory<Program>? _diagnosticsFactory;
 
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
         _config = OpenTraceabilityTests.GetConfiguration("appsettings.TestServer");
         _epcisTestServer = OpenTraceability.TestServer.WebServiceFactory.Create("https://localhost:4001", _config);
-        _diagnosticsFactory = new WebApplicationFactory<Program>();
+        _diagnosticsTool = DiagnosticsTool.WebServiceFactory.Create("https://localhost:4002", _config);
     }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        _diagnosticsFactory?.Dispose();
+        _diagnosticsTool?.Dispose();
         _epcisTestServer?.Dispose();
     }
 
@@ -43,7 +44,8 @@ public class DiagnosticsToolIntegrationTests
         var sourceDoc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
         string blobId = await epcisClient.Post(sourceDoc);
 
-        var http = _diagnosticsFactory!.CreateClient();
+        using HttpClient client = new HttpClient();
+        client.BaseAddress = new Uri("https://localhost:4002/");
 
         foreach (var evt in sourceDoc.Events)
         {
@@ -58,7 +60,7 @@ public class DiagnosticsToolIntegrationTests
                 var parameters = new EPCISQueryParameters(prod.EPC);
                 var request = new QueryEventsRequest { Options = options, Parameters = parameters };
 
-                var response = await http.PostAsJsonAsync("/api/v1/diagnostics/epcis/query/events", request);
+                var response = await client.PostAsJsonAsync("/api/v1/diagnostics/epcis/query/events", request);
                 Assert.That(response.IsSuccessStatusCode, Is.True, $"DiagnosticsTool returned HTTP {(int)response.StatusCode}");
 
                 string json = await response.Content.ReadAsStringAsync();
@@ -83,7 +85,8 @@ public class DiagnosticsToolIntegrationTests
         var sourceDoc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
         string blobId = await epcisClient.Post(sourceDoc);
 
-        var http = _diagnosticsFactory!.CreateClient();
+        using HttpClient client = new HttpClient();
+        client.BaseAddress = new Uri("https://localhost:4002/");
 
         var firstEpc = sourceDoc.Events.SelectMany(e => e.Products).Select(p => p.EPC).First();
 
@@ -96,7 +99,37 @@ public class DiagnosticsToolIntegrationTests
 
         var request = new TracebackRequest { Options = options, EPC = firstEpc.ToString() };
 
-        var response = await http.PostAsJsonAsync("/api/v1/diagnostics/epcis/query/traceback", request);
+        var response = await client.PostAsJsonAsync("/api/v1/diagnostics/epcis/query/traceback", request);
+        Assert.That(response.IsSuccessStatusCode, Is.True, $"DiagnosticsTool returned HTTP {(int)response.StatusCode}");
+
+        string json = await response.Content.ReadAsStringAsync();
+        var j = JObject.Parse(json);
+        var eventsToken = j.SelectToken("Data.Document.Events") ?? j.SelectToken("data.document.events");
+        Assert.That(eventsToken, Is.Not.Null, "Events token missing");
+        Assert.That(eventsToken!.Type, Is.EqualTo(JTokenType.Array));
+        Assert.That(eventsToken!.Count(), Is.GreaterThan(0), "No events returned");
+        var requestsToken = j.SelectToken("Diagnostics.Requests") ?? j.SelectToken("diagnostics.requests");
+        Assert.That(requestsToken, Is.Not.Null, "Diagnostics requests missing");
+        Assert.That(requestsToken!.Count(), Is.GreaterThan(0), "No diagnostics requests captured");
+    }
+
+    [Test]
+    [TestCase("beef-leather-example", "https://id.gs1.org/00/106141412345678908")]
+    public async Task Traceback_Default_Data(string blobId, string epc)
+    {
+        using HttpClient client = new HttpClient();
+        client.BaseAddress = new Uri("https://localhost:4002/");
+
+        var options = new EPCISQueryInterfaceOptions
+        {
+            URL = new Uri($"https://localhost:4001/epcis/{blobId}"),
+            Version = EPCISVersion.V2,
+            Format = OpenTraceability.Mappers.EPCISDataFormat.JSON
+        };
+
+        var request = new TracebackRequest { Options = options, EPC = epc };
+
+        var response = await client.PostAsJsonAsync("/api/v1/diagnostics/epcis/query/traceback", request);
         Assert.That(response.IsSuccessStatusCode, Is.True, $"DiagnosticsTool returned HTTP {(int)response.StatusCode}");
 
         string json = await response.Content.ReadAsStringAsync();
