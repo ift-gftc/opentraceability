@@ -55,6 +55,14 @@ public class DiagnosticsController : ControllerBase
 
         var diagnosticsReport = new DiagnosticsReport();
         var client = _httpClientFactory.CreateClient("default");
+
+        // Add API key header if provided
+        if (!string.IsNullOrWhiteSpace(request.Options.APIKey))
+        {
+            client.DefaultRequestHeaders.Remove("X-API-Key");
+            client.DefaultRequestHeaders.Add("X-API-Key", request.Options.APIKey);
+        }
+
         var url = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(request.Options, epc, client, diagnosticsReport);
 
         var envelope = new DiagnosticsEnvelope<ResolvedUrlResult>
@@ -91,6 +99,14 @@ public class DiagnosticsController : ControllerBase
 
         var diagnosticsReport = new DiagnosticsReport();
         var client = _httpClientFactory.CreateClient("default");
+
+        // Add API key header if provided
+        if (!string.IsNullOrWhiteSpace(request.Options.APIKey))
+        {
+            client.DefaultRequestHeaders.Remove("X-API-Key");
+            client.DefaultRequestHeaders.Add("X-API-Key", request.Options.APIKey);
+        }
+
         var url = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(request.Options, pgln, client, diagnosticsReport);
 
         var envelope = new DiagnosticsEnvelope<ResolvedUrlResult>
@@ -124,6 +140,14 @@ public class DiagnosticsController : ControllerBase
 
         var diagnosticsReport = new DiagnosticsReport();
         var client = _httpClientFactory.CreateClient("default");
+
+        // Add API key header if provided
+        if (!string.IsNullOrWhiteSpace(request.Options.APIKey))
+        {
+            client.DefaultRequestHeaders.Remove("X-API-Key");
+            client.DefaultRequestHeaders.Add("X-API-Key", request.Options.APIKey);
+        }
+
         var results = await EPCISTraceabilityResolver.QueryEvents(request.Options, request.Parameters, client, diagnosticsReport);
 
         var envelope = new DiagnosticsEnvelope<EPCISQueryResults>
@@ -158,19 +182,28 @@ public class DiagnosticsController : ControllerBase
 
         RewriteTestUrl(request.Options);
 
+        HttpClient client = _httpClientFactory.CreateClient("default");
+        // Add API key header if provided
+        if (!string.IsNullOrWhiteSpace(request.Options.APIKey))
+        {
+            client.DefaultRequestHeaders.Remove("X-API-Key");
+            client.DefaultRequestHeaders.Add("X-API-Key", request.Options.APIKey);
+        }
+
         // Resolve the EPCIS Query Interface URL from the digital link URL in the request.
         var diagnosticsReport = new DiagnosticsReport();
         var url = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(new DigitalLinkQueryOptions()
         {
             URL = request.Options.URL,
-        }, epc, _httpClientFactory.CreateClient("default"), diagnosticsReport);
+            APIKey = request.Options.APIKey,
+        }, epc, client, diagnosticsReport);
 
         if (url != null)
         {
-            var client = _httpClientFactory.CreateClient("default");
             var results = await EPCISTraceabilityResolver.Traceback(new EPCISQueryInterfaceOptions()
             {
                 URL = url,
+                APIKey = request.Options.APIKey,
                 EnableStackTrace = request.Options.EnableStackTrace,
                 Version = request.Options.Version,
                 Format = request.Options.Format
@@ -183,6 +216,7 @@ public class DiagnosticsController : ControllerBase
                 var digitalLinkOptions = new DigitalLinkQueryOptions
                 {
                     URL = request.Options.URL,
+                    APIKey = request.Options.APIKey,
                     Version = request.Options.Version,
                     Format = request.Options.Format
                 };
