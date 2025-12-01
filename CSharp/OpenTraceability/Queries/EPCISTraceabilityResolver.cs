@@ -40,17 +40,10 @@ namespace OpenTraceability.Queries
                 throw new Exception("options.Uri is null on the DigitalLinkQueryOptions");
             }
 
-            string? relativeUrl = null;
-            switch (epc.Type)
-            {
-                case EPCType.Class: relativeUrl = epc.GTIN?.ToDigitalLinkURL() + "/10/" + epc.SerialLotNumber; break;
-                case EPCType.Instance: relativeUrl = epc.GTIN?.ToDigitalLinkURL() + "/21/" + epc.SerialLotNumber; break;
-                case EPCType.SSCC: relativeUrl = "00/" + epc.ToString(); break;
-                default: throw new Exception($"Cannot build Digital Link URL with EPC {epc}. We need either GTIN+LOT, GTIN+SERIAL, or SSCC.");
-            }
+            string? relativeUrl = epc.ToDigitalLinkURI();
 
             relativeUrl += "?linkType=gs1:epcis";
-            string fullURL = options.URL + relativeUrl;
+            string fullURL = string.Join("/", [options.URL.ToString().TrimEnd('/'), relativeUrl.TrimStart('/')]);
 
             HttpRequestMessage request = new HttpRequestMessage();
             request.RequestUri = new Uri(fullURL);
@@ -441,6 +434,11 @@ namespace OpenTraceability.Queries
             }
             catch (Exception ex)
             {
+                if (report != null)
+                {
+                    report.CurrentRequest.AddException(ex);
+                }
+
                 results.Errors.Add(new EPCISQueryError()
                 {
                     Type = EPCISQueryErrorType.Exception,

@@ -1,0 +1,217 @@
+@using DiagnosticsTool.Models.Responses
+@using OpenTraceability.Queries.Diagnostics
+@using System.Net.Http
+
+<div class="print-view">
+    <div class="print-header">
+        <h1>Diagnostics Report</h1>
+        <div class="print-meta">
+            <span>ID: <code>@CacheId</code></span>
+            <span>Captured: @CreatedUtc.ToString("u")</span>
+            <span>Schema Errors: @(Envelope.HasSchemaErrors ? "Yes" : "No")</span>
+        </div>
+    </div>
+
+    <section class="print-section">
+        <h2>Summary</h2>
+        <div class="print-metrics">
+            <div class="print-metric">
+                <span class="print-metric-label">Requests:</span>
+                <span class="print-metric-value">@Envelope.Diagnostics.Requests.Count</span>
+            </div>
+            <div class="print-metric">
+                <span class="print-metric-label">Validations:</span>
+                <span class="print-metric-value">@Envelope.Diagnostics.Validations.Count</span>
+            </div>
+            <div class="print-metric">
+                <span class="print-metric-label">Schema Errors:</span>
+                <span class="print-metric-value @(Envelope.HasSchemaErrors ? "bad" : "good")">@(Envelope.HasSchemaErrors ? "Yes" : "No")</span>
+            </div>
+        </div>
+
+        @if (Envelope.Diagnostics.Requests.Count > 0)
+        {
+            <h3 class="print-subsection-title">Requests Overview</h3>
+            <ul class="print-request-summary-list">
+                @foreach (var r in Envelope.Diagnostics.Requests.Select((r, i) => new { r, i }))
+                {
+                    var errorCount = GetErrorCount(r.r.Validations);
+                    var warningCount = GetWarningCount(r.r.Validations);
+                    
+                    <li class="print-request-summary-item">
+                        <span class="print-badge">@(@r.i + 1)</span>
+                        <span class="print-request-summary-title">@r.r.Title</span>
+                        <span class="print-request-summary-timestamp">@FormatTimelineTimestamp(r.r.Start, r.r.End)</span>
+                        @if (errorCount > 0)
+                        {
+                            <span class="print-badge print-badge-danger">@errorCount errors</span>
+                        }
+                        @if (warningCount > 0)
+                        {
+                            <span class="print-badge print-badge-warning">@warningCount warnings</span>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+
+    <section class="print-section">
+        <h2>Global Validations</h2>
+        @if (!Envelope.Diagnostics.Validations.Any())
+        {
+            <p class="print-muted">No validations recorded.</p>
+        }
+        else
+        {
+            <ul class="print-validation-list">
+                @foreach (var v in SortValidations(Envelope.Diagnostics.Validations))
+                {
+                    <li class="print-validation print-@ValidationLevelClass(v.Level)">
+                        <span class="print-validation-level">@v.Level</span>
+                        <span class="print-validation-type">@v.Type</span>
+                        <span class="print-validation-message">@v.Message</span>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+
+    <section class="print-section">
+        <h2>Requests (chronological)</h2>
+        @if (Envelope.Diagnostics.Requests.Count == 0)
+        {
+            <p class="print-muted">No requests recorded.</p>
+        }
+        else
+        {
+            @foreach (var r in Envelope.Diagnostics.Requests.Select((r, i) => new { r, i }))
+            {
+                var errorCount = GetErrorCount(r.r.Validations);
+                var warningCount = GetWarningCount(r.r.Validations);
+                
+                <div class="print-request">
+                    <div class="print-request-header">
+                        <span class="print-badge">@(@r.i + 1)</span>
+                        <span class="print-request-title">@(r.r.Title)</span>
+                        @if (errorCount > 0)
+                        {
+                            <span class="print-badge print-badge-danger">@errorCount errors</span>
+                        }
+                        @if (warningCount > 0)
+                        {
+                            <span class="print-badge print-badge-warning">@warningCount warnings</span>
+                        }
+                        <span class="print-timestamp">@FormatTimelineTimestamp(r.r.Start, r.r.End)</span>
+                        <span class="print-duration">@FormatDuration(r.r.Start, r.r.End)</span>
+                    </div>
+                    
+                    <div class="print-request-content">
+                        <h4>Request Options</h4>
+                        <pre class="print-code">@Json(r.r.RequestOptions)</pre>
+                        
+                        <h4>HTTP Request</h4>
+                        <pre class="print-code">@FormatHttpRequest(r.r.HttpRequest)</pre>
+                        
+                        <h4>HTTP Response</h4>
+                        <pre class="print-code">@FormatHttpResponse(r.r.HttpResponse)</pre>
+                        
+                        <h4>Response Body</h4>
+                        <pre class="print-code">@(string.IsNullOrWhiteSpace(r.r.ResponseBody) ? "(empty)" : r.r.ResponseBody)</pre>
+                        
+                        @if (r.r.Validations.Any())
+                        {
+                            <h4>Request Validations (@r.r.Validations.Count)</h4>
+                            <ul class="print-validation-list">
+                                @foreach (var v in SortValidations(r.r.Validations))
+                                {
+                                    <li class="print-validation print-@ValidationLevelClass(v.Level)">
+                                        <span class="print-validation-level">@v.Level</span>
+                                        <span class="print-validation-type">@v.Type</span>
+                                        <span class="print-validation-message">@v.Message</span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </section>
+
+    <div class="print-footer">
+        <span>Diagnostics ID: @CacheId</span>
+        <span>|</span>
+        <span>Captured: @CreatedUtc.ToString("u")</span>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required IDiagnosticsEnvelope Envelope { get; set; }
+    [Parameter] public required string CacheId { get; set; }
+    [Parameter] public required DateTime CreatedUtc { get; set; }
+
+    string Json(object? o) => o == null ? "null" : System.Text.Json.JsonSerializer.Serialize(o, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+    string FormatHttpRequest(HttpRequestMessage? request) => request?.ToString() ?? "null";
+    string FormatHttpResponse(HttpResponseMessage? response) => response?.ToString() ?? "null";
+    
+    string FormatTimelineTimestamp(DateTime start, DateTime end)
+    {
+        var reference = end != default ? end : start;
+        if (reference == default)
+        {
+            return "N/A";
+        }
+
+        return reference.ToLocalTime().ToString("g");
+    }
+
+    string FormatDuration(DateTime start, DateTime end)
+    {
+        if (start == default || end == default)
+        {
+            return "N/A";
+        }
+
+        var duration = end - start;
+        if (duration.TotalMilliseconds < 0)
+        {
+            duration = TimeSpan.Zero;
+        }
+
+        return $"{duration.TotalMilliseconds:n0} ms";
+    }
+
+    static IEnumerable<DiagnosticsValidationResult> SortValidations(IEnumerable<DiagnosticsValidationResult> validations)
+    {
+        return validations
+            .OrderBy(v => v.Level switch
+            {
+                OpenTraceability.LogLevel.Error => 0,
+                OpenTraceability.LogLevel.Warning => 1,
+                OpenTraceability.LogLevel.Info => 2,
+                OpenTraceability.LogLevel.Debug => 3,
+                _ => 4
+            })
+            .ThenBy(v => v.Type.ToString());
+    }
+
+    static string ValidationLevelClass(OpenTraceability.LogLevel level) => level switch
+    {
+        OpenTraceability.LogLevel.Error => "level-error",
+        OpenTraceability.LogLevel.Warning => "level-warning",
+        OpenTraceability.LogLevel.Info => "level-info",
+        OpenTraceability.LogLevel.Debug => "level-verbose",
+        _ => "level-default"
+    };
+
+    static int GetErrorCount(IEnumerable<DiagnosticsValidationResult> validations)
+    {
+        return validations.Count(v => v.Level == OpenTraceability.LogLevel.Error);
+    }
+
+    static int GetWarningCount(IEnumerable<DiagnosticsValidationResult> validations)
+    {
+        return validations.Count(v => v.Level == OpenTraceability.LogLevel.Warning);
+    }
+}

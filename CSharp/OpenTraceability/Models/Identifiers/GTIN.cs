@@ -3,6 +3,7 @@ using OpenTraceability.Utility;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 namespace OpenTraceability.Models.Identifiers
 {
@@ -70,6 +71,10 @@ namespace OpenTraceability.Models.Identifiers
                 {
                     return string.Empty;
                 }
+                else if (this._gtinStr.StartsWith("https://id.gs1.org"))
+                {
+                    return this._gtinStr.Substring("https://id.gs1.org".Length);
+                }
                 else if (IsGS1GTIN())
                 {
                     string[] gtinParts = _gtinStr.Split(':').Last().Split('.');
@@ -94,7 +99,7 @@ namespace OpenTraceability.Models.Identifiers
         /// </summary>
         /// <param name="gtinStr">The GTIN string.</param>
         /// <returns>An error if a problem is detected, otherwise returns NULL if no problem detected and the GTIN is valid.</returns>
-        public static string DetectGTINIssue(string gtinStr)
+        public static string? DetectGTINIssue(string gtinStr)
         {
             try
             {
@@ -149,6 +154,14 @@ namespace OpenTraceability.Models.Identifiers
                 }
                 else
                 {
+                    // DIGITAL LINK URI CHECK
+                    Regex regex = new Regex(@"^(https:\/\/id.gs1.org)(.*)(\/01\/)(.*)");
+                    var match = regex.Match(gtinStr);
+                    if (match.Success)
+                    {
+                        return (null);
+                    }
+
                     return ("The GTIN is not in a valid EPCIS URI format or in GS1 GTIN-14 format.");
                 }
             }

@@ -1,14 +1,9 @@
 #nullable enable
 using DiagnosticsTool;
-using DiagnosticsTool.Models.Tests;
 using DiagnosticsTool.Services;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using NUnit.Framework;
 
 namespace OpenTraceability.Tests.Diagnostics
 {
@@ -55,6 +50,16 @@ namespace OpenTraceability.Tests.Diagnostics
             {
                 Assert.That(envelope!.Diagnostics.Validations.Count, Is.GreaterThanOrEqualTo(0));
                 Assert.That(envelope.Diagnostics.Requests, Is.Not.Empty, "Bad digital link test should capture request diagnostics.");
+                var request = envelope.Diagnostics.Requests.First();
+                if(request.HttpRequest?.Headers.TryGetValues("x-api-key", out var apiKeyHeader) == true)
+                {
+                    var headerValue = apiKeyHeader.FirstOrDefault();
+                    Assert.That(apiKeyHeader, Is.Not.Null, "x-api-key header should be present in the request.");
+                }
+                else
+                {
+                    Assert.Fail("Missing x-api-key header in the request.");
+                }
             }
         }
 

@@ -26,9 +26,6 @@ namespace OpenTraceability.Queries
     {
         public static async Task ResolveMasterData(DigitalLinkQueryOptions options, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null)
         {
-            // DIAGNOSTICS: Create a new request.
-            report?.NewRequest("Resolve Master Data", options);
-
             // find all master data we have not resolved yet...
             foreach (var evt in doc.Events)
             {
@@ -116,7 +113,7 @@ namespace OpenTraceability.Queries
                 if (doc.GetMasterData<Tradeitem>(gtin.ToString()) == null)
                 {
                     Type t = Setup.GetMasterDataTypeDefault(typeof(Tradeitem)) ?? typeof(Tradeitem);
-                    var ti = (await ResolveMasterDataItem(t, options, $"/01/{gtin}?linkType=gs1:masterData", client, false, gtin.ToString(), report)) as Tradeitem;
+                    var ti = (await ResolveMasterDataItem(t, options, $"{gtin.ToDigitalLinkURL()}?linkType=gs1:masterData", client, false, gtin.ToString(), report)) as Tradeitem;
                     if (ti != null)
                     {
                         doc.MasterData.Add(ti);
@@ -132,7 +129,7 @@ namespace OpenTraceability.Queries
                 if (doc.GetMasterData<Location>(gln.ToString()) == null)
                 {
                     Type t = Setup.GetMasterDataTypeDefault(typeof(Location)) ?? typeof(Location);
-                    var l = (await ResolveMasterDataItem(t, options, $"/414/{gln}?linkType=gs1:masterData", client, false, gln.ToString(), report)) as Location;
+                    var l = (await ResolveMasterDataItem(t, options, $"{gln.ToDigitalLinkURL()}?linkType=gs1:masterData", client, false, gln.ToString(), report)) as Location;
                     if (l != null)
                     {
                         doc.MasterData.Add(l);
@@ -148,7 +145,7 @@ namespace OpenTraceability.Queries
                 if (doc.GetMasterData<TradingParty>(pgln.ToString()) == null)
                 {
                     Type t = Setup.GetMasterDataTypeDefault(typeof(TradingParty)) ?? typeof(TradingParty);
-                    var tp = (await ResolveMasterDataItem(t, options, $"/417/{pgln}?linkType=gs1:masterData", client, addGDSTExtensionHeader, pgln.ToString(), report)) as TradingParty;
+                    var tp = (await ResolveMasterDataItem(t, options, $"{pgln.ToDigitalLinkURL()}?linkType=gs1:masterData", client, addGDSTExtensionHeader, pgln.ToString(), report)) as TradingParty;
                     if (tp != null)
                     {
                         doc.MasterData.Add(tp);
@@ -163,7 +160,7 @@ namespace OpenTraceability.Queries
             {
                 if (doc.GetMasterData<Tradeitem>(gtin.ToString()) == null)
                 {
-                    var ti = await ResolverMasterDataItem<T>(options, $"/01/{gtin}?linkType=gs1:masterData", client, gtin, report);
+                    var ti = await ResolverMasterDataItem<T>(options, $"{gtin.ToDigitalLinkURL()}?linkType=gs1:masterData", client, gtin, report);
                     if (ti != null)
                     {
                         doc.MasterData.Add(ti);
@@ -178,7 +175,7 @@ namespace OpenTraceability.Queries
             {
                 if (doc.GetMasterData<Location>(gln.ToString()) == null)
                 {
-                    var l = await ResolverMasterDataItem<T>(options, $"/414/{gln}?linkType=gs1:masterData", client, gln, report);
+                    var l = await ResolverMasterDataItem<T>(options, $"{gln.ToDigitalLinkURL()}?linkType=gs1:masterData", client, gln, report);
                     if (l != null)
                     {
                         doc.MasterData.Add(l);
@@ -193,7 +190,7 @@ namespace OpenTraceability.Queries
             {
                 if (doc.GetMasterData<TradingParty>(pgln.ToString()) == null)
                 {
-                    var tp = await ResolverMasterDataItem<T>(options, $"/417/{pgln}?linkType=gs1:masterData", client, pgln, report);
+                    var tp = await ResolverMasterDataItem<T>(options, $"{pgln.ToDigitalLinkURL()}?linkType=gs1:masterData", client, pgln, report);
                     if (tp != null)
                     {
                         doc.MasterData.Add(tp);
@@ -206,7 +203,7 @@ namespace OpenTraceability.Queries
         {
             if (gtin != null)
             {
-                var ti = await ResolverMasterDataItem<Tradeitem>(options, $"/01/{gtin}?linkType=gs1:masterData", client, gtin, report);
+                var ti = await ResolverMasterDataItem<Tradeitem>(options, $"{gtin.ToDigitalLinkURL()}?linkType=gs1:masterData", client, gtin, report);
                 if (ti != null)
                 {
                     return ti;
@@ -219,7 +216,7 @@ namespace OpenTraceability.Queries
         {
             if (gln != null)
             {
-                var l = await ResolverMasterDataItem<Location>(options, $"/414/{gln}?linkType=gs1:masterData", client, gln, report);
+                var l = await ResolverMasterDataItem<Location>(options, $"{gln.ToDigitalLinkURL()}?linkType=gs1:masterData", client, gln, report);
                 if (l != null)
                 {
                     return l;
@@ -232,7 +229,7 @@ namespace OpenTraceability.Queries
         {
             if (pgln != null)
             {
-                var tp = await ResolverMasterDataItem<TradingParty>(options, $"/417/{pgln}?linkType=gs1:masterData", client, pgln, report);
+                var tp = await ResolverMasterDataItem<TradingParty>(options, $"{pgln.ToDigitalLinkURL()}?linkType=gs1:masterData", client, pgln, report);
                 if (tp != null)
                 {
                     return tp;
@@ -254,112 +251,152 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task<object> ResolveMasterDataItem(Type type, DigitalLinkQueryOptions options, string relativeURL, HttpClient httpClient, bool addGDSTExtension = false, object? originalIdentifier = null, DiagnosticsReport? report = null)
+        public static async Task<object?> ResolveMasterDataItem(Type type, DigitalLinkQueryOptions options, string relativeURL, HttpClient httpClient, bool addGDSTExtension = false, object? originalIdentifier = null, DiagnosticsReport? report = null)
         {
             // DIAGNOSTICS: Create a new request.
-            report?.NewRequest("Resolve Master Data", options);
+            report?.NewRequest("Resolve Master Data Link", options);
 
-            if (options.URL == null)
+            try
             {
-                throw new Exception("options.Uri is null on the DigitalLinkQueryOptions");
-            }
-
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri(options.URL.ToString().TrimEnd('/') + "/" + relativeURL.TrimStart('/'));
-            request.Method = HttpMethod.Get;
-
-            var response = await httpClient.SendAsync(request);
-
-            // DIAGNOSTICS: Execute the rule to validate the HTTP response.
-            if (report != null)
-            {
-                await report.ExecuteRuleAsync<MasterDataHttpResponseRule>(response);
-            }
-
-            if (response.IsSuccessStatusCode)
-            {
-                string responseStr = await response.Content.ReadAsStringAsync();
-
-                // DIAGNOSTICS: Execute the rule to validate the JSON schema for digital links.
-                if (report != null)
+                if (options.URL == null)
                 {
-                    await report.ExecuteRuleAsync<DigitalLinkJsonSchemaRule>(responseStr);
+                    throw new Exception("options.Uri is null on the DigitalLinkQueryOptions");
                 }
 
-                var links = JsonConvert.DeserializeObject<List<DigitalLink>>(responseStr)?.Select(d => d as DigitalLink).ToList() ?? new List<DigitalLink>();
-                if (links.Count > 0)
+                HttpRequestMessage request = new HttpRequestMessage();
+                request.RequestUri = new Uri(options.URL.ToString().TrimEnd('/') + "/" + relativeURL.TrimStart('/'));
+                request.Method = HttpMethod.Get;
+
+                // DIAGNOSTICS: Execute the rule to validate the HTTP response.
+                if (report != null)
                 {
-                    foreach (var link in links)
+                    report.CurrentRequest.HttpRequest = request;
+                }
+
+                var response = await httpClient.SendAsync(request);
+
+                // DIAGNOSTICS: Execute the rule to validate the HTTP response.
+                if (report?.CurrentRequest != null)
+                {
+                    report.CurrentRequest.HttpResponse = response;
+                    await report.CurrentRequest.ExecuteRuleAsync<MasterDataHttpResponseRule>(response);
+                }
+
+                string responseStr = await response.Content.ReadAsStringAsync();
+                if (report?.CurrentRequest != null)
+                {
+                    report.CurrentRequest.ResponseBody = responseStr;
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // DIAGNOSTICS: Execute the rule to validate the JSON schema for digital links.
+                    if (report?.CurrentRequest != null)
                     {
-                        try
+                        await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkJsonSchemaRule>(responseStr);
+                    }
+
+                    var links = JsonConvert.DeserializeObject<List<DigitalLink>>(responseStr)?.Select(d => d as DigitalLink).ToList() ?? new List<DigitalLink>();
+                    if (links.Count > 0)
+                    {
+                        foreach (var link in links)
                         {
-                            request = new HttpRequestMessage();
-                            request.RequestUri = new Uri(link.link);
-                            request.Method = HttpMethod.Get;
+                            // DIAGNOSTICS: Create a new request.
+                            report?.NewRequest("Resolve Master Data", options);
 
-                            if (addGDSTExtension)
+                            try
                             {
-                                request.Headers.AddGDSTExtensionHeader();
-                            }
+                                request = new HttpRequestMessage();
+                                request.RequestUri = new Uri(link.link);
+                                request.Method = HttpMethod.Get;
 
-                            response = await httpClient.SendAsync(request);
-
-                            // DIAGNOSTICS: Execute the rule to validate the master data HTTP response.
-                            if (report != null)
-                            {
-                                await report.ExecuteRuleAsync<MasterDataHttpResponseRule>(response);
-                            }
-
-                            if (response.IsSuccessStatusCode)
-                            {
-                                var content = await response.Content.ReadAsStringAsync();
-                                var jObject = JsonConvert.DeserializeObject<object>(content);
-                                var json = JsonConvert.SerializeObject(jObject);
-
-                                if (json is null)
-                                    throw new NullReferenceException("Error parsing the digital link response: JSON value is null");
-
-                                // DIAGNOSTICS: Execute the rule to validate the master data JSON schema.
-                                if (report != null)
+                                if (report?.CurrentRequest != null)
                                 {
-                                    await report.ExecuteRuleAsync<MasterDataJsonSchemaRule>(json);
+                                    report.CurrentRequest.HttpRequest = request;
                                 }
 
-                                var item = OpenTraceabilityMappers.MasterData.GS1WebVocab.Map(type, json);
-                                if (item != null)
+                                if (addGDSTExtension)
                                 {
-                                    if (item.ID == null)
+                                    request.Headers.AddGDSTExtensionHeader();
+                                }
+
+                                response = await httpClient.SendAsync(request);
+
+                                // DIAGNOSTICS: Execute the rule to validate the master data HTTP response.
+                                if (report?.CurrentRequest != null)
+                                {
+                                    report.CurrentRequest.HttpResponse = response;
+                                    await report.CurrentRequest.ExecuteRuleAsync<MasterDataHttpResponseRule>(response);
+                                }
+
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    var content = await response.Content.ReadAsStringAsync();
+                                    var jObject = JsonConvert.DeserializeObject<object>(content);
+                                    var json = JsonConvert.SerializeObject(jObject);
+
+                                    if (json is null)
+                                        throw new NullReferenceException("Error parsing the digital link response: JSON value is null");
+
+                                    // DIAGNOSTICS: Execute the rule to validate the master data JSON schema.
+                                    if (report?.CurrentRequest != null)
                                     {
-                                        throw new Exception($"While resolve a {type} through the GS1 Digital Link Resolver, the {type} returned " +
-                                            $"had an empty or invalid Identifier. The link that was resolved was " + link + " and the results was " + json);
+                                        report.CurrentRequest.ResponseBody = content;
+                                        await report.CurrentRequest.ExecuteRuleAsync<MasterDataJsonSchemaRule>(json);
                                     }
-                                    else
+
+                                    var item = OpenTraceabilityMappers.MasterData.GS1WebVocab.Map(type, json);
+                                    if (item != null)
                                     {
-                                        // DIAGNOSTICS: Execute the rule to validate that the response matches the query.
-                                        if (report != null && originalIdentifier != null)
+                                        if (item.ID == null)
                                         {
-                                            await report.ExecuteRuleAsync<MasterDataValidResponseRule>(originalIdentifier, item);
+                                            throw new Exception($"While resolve a {type} through the GS1 Digital Link Resolver, the {type} returned " +
+                                                $"had an empty or invalid Identifier. The link that was resolved was " + link + " and the results was " + json);
                                         }
+                                        else
+                                        {
+                                            // DIAGNOSTICS: Execute the rule to validate that the response matches the query.
+                                            if (report?.CurrentRequest != null && originalIdentifier != null)
+                                            {
+                                                await report.CurrentRequest.ExecuteRuleAsync<MasterDataValidResponseRule>(originalIdentifier, item);
+                                            }
 
-                                        return item;
+                                            return item;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    var content = await response.Content.ReadAsStringAsync();
+                                    if (report?.CurrentRequest != null)
+                                    {
+                                        report.CurrentRequest.ResponseBody = content;
                                     }
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex);
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex);
+                            }
                         }
                     }
                 }
-            }
-            else
-            {
-                string contentStr = await response.Content.ReadAsStringAsync();
-                throw new HttpRequestException($"There was an error trying to fetch digital links from {relativeURL} - {contentStr} - {response.ToString()}");
-            }
+                else
+                {
+                    // DO NOTHING
+                }
 
-            return null;
+                return null;
+            }
+            catch (Exception ex)
+            {
+                if (report != null && report.CurrentRequest != null)
+                {
+                    report.CurrentRequest.AddException(ex);
+                }
+
+                return null;
+            }            
         }
     }
 }

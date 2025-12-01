@@ -15,14 +15,21 @@ namespace OpenTraceability.TestServer.Controllers;
 [Route("digitallink")]
 public class DigitalLinkController : ControllerBase
 {
+    IConfiguration _config;
+
+    public DigitalLinkController(IConfiguration config)
+    {
+        _config = config;
+    }
+
     [HttpGet]
     [Route("{blob_id}/417/{pgln}")]
     [Route("{blob_id}/pgln/{pgln}")]
-    public Task<IActionResult> GetPartyLinks(string blob_id, string pgln, [FromQuery] string linkType)
+    public async Task<IActionResult> GetPartyLinks(string blob_id, string pgln, [FromQuery] string linkType)
     {
         try
         {
-            string baseURL = Request.GetDisplayUrl().Split("/digitallink/").First();
+            string baseURL = GetBaseURL();
 
             List<DigitalLink> links = new List<DigitalLink>();
 
@@ -40,13 +47,13 @@ public class DigitalLinkController : ControllerBase
             {
                 links.Add(new DigitalLink()
                 {
-                    link = baseURL + $"/masterdata/{blob_id}/{pgln}",
+                    link = baseURL + $"/masterdata/{blob_id}/party/{pgln}",
                     linkType = "gs1:epcis",
                     authRequired = true
                 });
             }
 
-            return Task.FromResult<IActionResult>(Ok(links));
+            return Ok(links);
         }
         catch (Exception ex)
         {
@@ -58,11 +65,11 @@ public class DigitalLinkController : ControllerBase
     [HttpGet]
     [Route("{blob_id}/414/{gln}")]
     [Route("{blob_id}/gln/{gln}")]
-    public Task<IActionResult> GetLocationLinks(string blob_id, string gln, [FromQuery] string linkType)
+    public async Task<IActionResult> GetLocationLinks(string blob_id, string gln, [FromQuery] string linkType)
     {
         try
         {
-            string baseURL = Request.GetDisplayUrl().Split("/digitallink/").First();
+            string baseURL = GetBaseURL();
 
             List<DigitalLink> links = new List<DigitalLink>();
 
@@ -80,13 +87,13 @@ public class DigitalLinkController : ControllerBase
             {
                 links.Add(new DigitalLink()
                 {
-                    link = baseURL + $"/masterdata/{blob_id}/{gln}",
+                    link = baseURL + $"/masterdata/{blob_id}/location/{gln}",
                     linkType = "gs1:epcis",
                     authRequired = true
                 });
             }
 
-            return Task.FromResult<IActionResult>(Ok(links));
+            return Ok(links);
         }
         catch (Exception ex)
         {
@@ -98,11 +105,11 @@ public class DigitalLinkController : ControllerBase
     [HttpGet]
     [Route("{blob_id}/01/{gtin}")]
     [Route("{blob_id}/gtin/{gtin}")]
-    public Task<IActionResult> GetTradeitemLinks(string blob_id, string gtin, [FromQuery] string linkType)
+    public async Task<IActionResult> GetTradeitemLinks(string blob_id, string gtin, [FromQuery] string linkType)
     {
         try
         {
-            string baseURL = Request.GetDisplayUrl().Split("/digitallink/").First();
+            string baseURL = GetBaseURL();
 
             List<DigitalLink> links = new List<DigitalLink>();
 
@@ -120,13 +127,13 @@ public class DigitalLinkController : ControllerBase
             {
                 links.Add(new DigitalLink()
                 {
-                    link = baseURL + $"/masterdata/{blob_id}/{gtin}",
+                    link = baseURL + $"/masterdata/{blob_id}/product/{gtin}",
                     linkType = "gs1:epcis",
                     authRequired = true
                 });
             }
 
-            return Task.FromResult<IActionResult>(Ok(links));
+            return Ok(links);
         }
         catch (Exception ex)
         {
@@ -142,7 +149,7 @@ public class DigitalLinkController : ControllerBase
     {
         try
         {
-            string baseURL = Request.GetDisplayUrl().Split("/digitallink/").First();
+            string baseURL = GetBaseURL();
 
             List<DigitalLink> links = new List<DigitalLink>();
 
@@ -172,7 +179,7 @@ public class DigitalLinkController : ControllerBase
     {
         try
         {
-            string baseURL = Request.GetDisplayUrl().Split("/digitallink/").First();
+            string baseURL = GetBaseURL();
 
             List<DigitalLink> links = new List<DigitalLink>();
 
@@ -212,7 +219,7 @@ public class DigitalLinkController : ControllerBase
     {
         try
         {
-            string baseURL = Request.GetDisplayUrl().Split("/digitallink/").First();
+            string baseURL = GetBaseURL();
 
             List<DigitalLink> links = new List<DigitalLink>();
 
@@ -243,5 +250,10 @@ public class DigitalLinkController : ControllerBase
             Console.WriteLine(ex);
             throw;
         }
+    }
+
+    internal string GetBaseURL()
+    {
+        return _config["BaseURL"] ?? Request.GetDisplayUrl().Split("/digitallink/").First();
     }
 }

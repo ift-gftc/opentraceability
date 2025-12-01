@@ -66,6 +66,9 @@ namespace DiagnosticsTool
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Initialize for the event profile mappings.
+            OpenTraceability.Setup.Initialize();
+
             app.UseWebSockets();
 
             if (env.IsDevelopment())

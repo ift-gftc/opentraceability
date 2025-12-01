@@ -8,35 +8,54 @@ using OpenTraceability.TestServer.Services.Interfaces;
 
 namespace OpenTraceability.TestServer.Services
 {
-	/// <summary>
-	/// An implementation of the IEPCISBlobService that uses SQL Lite to store
-	/// the blobs.
-	/// </summary>
-	public class EPCISBlobSqlLiteService : IEPCISBlobService
-	{
-		IConfiguration _config;
+    /// <summary>
+    /// An implementation of the IEPCISBlobService that uses SQL Lite to store
+    /// the blobs.
+    /// </summary>
+    public class EPCISBlobSqlLiteService : IEPCISBlobService
+    {
+        IConfiguration _config;
 
         static object cacheLock = new object();
         static ConcurrentDictionary<string, (EPCISBlob blob, DateTime lastAccess)> _blobCache = new ConcurrentDictionary<string, (EPCISBlob blob, DateTime lastAccess)>();
 
-		public EPCISBlobSqlLiteService(IConfiguration config)
-		{
-			_config = config;
-		}
+        public EPCISBlobSqlLiteService(IConfiguration config)
+        {
+            _config = config;
+        }
 
-        public Task<EPCISBlob?> LoadBlob(string id)
+        public async Task<EPCISBlob?> LoadBlob(string id)
         {
             try
             {
                 if (_blobCache.TryGetValue(id, out var b))
                 {
                     b.lastAccess = DateTime.UtcNow;
-                    return Task.FromResult<EPCISBlob?>(b.blob);
+                    return b.blob;
+                }
+
+                EPCISBlob? blob = await LoadDefaultBlob(id);
+                if (blob != null)
+                {
+                    lock (cacheLock)
+                    {
+                        if (!_blobCache.ContainsKey(id) && _blobCache.Values.Count > 5)
+                        {
+                            var oldest = _blobCache.OrderBy(v => v.Value.lastAccess).First();
+                            _blobCache.TryRemove(oldest.Key, out _);
+                            _blobCache.TryAdd(id, (blob, DateTime.UtcNow));
+                        }
+                        else
+                        {
+                            _blobCache[id] = (blob, DateTime.UtcNow);
+                        }
+                    }
+                    return blob;
                 }
 
                 string cs = _config.GetConnectionString("sqlite") ?? throw new Exception("No connection string 'sqlite' found in appsettings.");
 
-                // TODO: connect to the database
+                // connect to the database
                 using var con = new SqliteConnection(cs);
                 con.Open();
 
@@ -48,7 +67,7 @@ namespace OpenTraceability.TestServer.Services
 
                 using SqliteDataReader rdr = cmd.ExecuteReader();
 
-                EPCISBlob? blob = null;
+                blob = null;
                 while (rdr.Read())
                 {
                     // read the blob
@@ -88,7 +107,7 @@ namespace OpenTraceability.TestServer.Services
                 //});
 
                 // return the blob
-                return Task.FromResult(blob);
+                return blob;
             }
             catch (Exception ex)
             {
@@ -97,15 +116,67 @@ namespace OpenTraceability.TestServer.Services
             }
         }
 
+        /// <summary>
+        /// This function loads a default embedded EPCIS blob from the assembly resources. This
+        /// can be used for testing purposes when we want the blob data to be default loaded
+        /// into the test server.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        internal Task<EPCISBlob?> LoadDefaultBlob(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return Task.FromResult<EPCISBlob?>(null);
+            }
+
+            string executingDirectory = AppContext.BaseDirectory;
+
+            // Get the assembly containing the embedded resources
+            var assembly = typeof(EPCISBlobSqlLiteService).Assembly;
+
+            // Find the embedded resource that ends with {id}.epcis.jsonld
+            string targetResourceSuffix = $"{id}.events.jsonld".Replace("-", "_");
+            var resources = assembly.GetManifestResourceNames();
+            string? resourceName = resources.FirstOrDefault(r => r.EndsWith(targetResourceSuffix, StringComparison.OrdinalIgnoreCase));
+
+            if (resourceName == null)
+            {
+                return Task.FromResult<EPCISBlob?>(null);
+            }
+
+            // Load the embedded resource
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null)
+            {
+                return Task.FromResult<EPCISBlob?>(null);
+            }
+
+            using var reader = new StreamReader(stream);
+            string rawData = reader.ReadToEnd();
+
+            // Create the EPCISBlob
+            var blob = new EPCISBlob
+            {
+                ID = id,
+                Format = EPCISDataFormat.JSON,
+                Version = EPCISVersion.V2,
+                RawData = rawData,
+                Created = DateTime.UtcNow
+            };
+
+            return Task.FromResult<EPCISBlob?>(blob);
+        }
+
         public Task<bool> SaveBlob(EPCISBlob blob)
         {
-			string cs = _config.GetConnectionString("sqlite") ?? throw new Exception("No connection string 'sqlite' found in appsettings.");
+            string cs = _config.GetConnectionString("sqlite") ?? throw new Exception("No connection string 'sqlite' found in appsettings.");
 
-            // TODO: connect to the database
+            // connect to the database
             using var con = new SqliteConnection(cs);
             con.Open();
 
-            // TODO: if blob already exists, then delete it
+            // if blob already exists, then delete it
             {
                 string stm = "DELETE FROM data WHERE ID=@id";
                 using var cmd = new SqliteCommand(stm, con);
@@ -113,7 +184,7 @@ namespace OpenTraceability.TestServer.Services
                 cmd.ExecuteNonQuery();
             }
 
-            // TODO: write blob into database
+            // write blob into database
             {
                 string cmdText = @"INSERT INTO data(id, format, version, raw_data, created)
                                    VALUES(@id, @format, @version, @raw_data, @created)";

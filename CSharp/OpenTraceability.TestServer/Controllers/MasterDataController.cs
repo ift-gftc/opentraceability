@@ -17,8 +17,8 @@ public class MasterDataController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{blob_id}/{identifier}")]
-    public async Task<IActionResult> GetMasterData(string blob_id, string identifier)
+    [Route("{blob_id}/{type}/{identifier}")]
+    public async Task<IActionResult> GetMasterData(string blob_id, string type, string identifier)
     {
         try
         {
@@ -34,7 +34,17 @@ public class MasterDataController : ControllerBase
             // convert blob into EPCIS Document
             var doc = blob.ToEPCISDocument();
 
-            var masterDataItem = doc.MasterData.FirstOrDefault(m => m.ID?.ToLower() == identifier.ToLower());
+            // create a digital link URI version of the identifier as well.
+            string dlUriId;
+            switch (type)
+            {
+                case "product": dlUriId = $"https://id.gs1.org/01/{identifier}"; break;
+                case "location": dlUriId = $"https://id.gs1.org/414/{identifier}"; break;
+                case "party": dlUriId = $"https://id.gs1.org/417/{identifier}"; break;
+                default: return BadRequest($"unknown master data type {type}");
+            }
+
+            var masterDataItem = doc.MasterData.FirstOrDefault(m => m.ID?.ToLower() == identifier.ToLower() || m.ID?.ToLower() == dlUriId.ToLower());
             if (masterDataItem == null)
             {
                 return NotFound($"Did not find master data for identifier {identifier}");

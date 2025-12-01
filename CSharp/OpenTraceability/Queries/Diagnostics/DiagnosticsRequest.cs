@@ -87,4 +87,16 @@ public class DiagnosticsRequest
         var results = await rule.ExecuteAsync(parameters);
         Validations.AddRange(results);
     }
+
+    public void AddException(Exception ex)
+    {
+        var validation = new DiagnosticsValidationResult
+        {
+            Level = LogLevel.Error,
+            Message = ex.Message,
+            RuleKey = "EXCEPTION",
+            Type = DiagnosticsValidationType.GeneralError
+        };
+        Validations.Add(validation);
+    }
 }

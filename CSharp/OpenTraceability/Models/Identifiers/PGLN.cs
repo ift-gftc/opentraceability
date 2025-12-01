@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
-using OpenTraceability.Utility;
-using System;
+﻿using System;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using OpenTraceability.Utility;
 
 namespace OpenTraceability.Models.Identifiers
 {
@@ -39,7 +40,11 @@ namespace OpenTraceability.Models.Identifiers
         {
             try
             {
-                if (IsGS1PGLN())
+                if (this._pglnStr.StartsWith("https://id.gs1.org"))
+                {
+                    return this._pglnStr.Substring("https://id.gs1.org".Length);
+                }
+                else if (IsGS1PGLN())
                 {
                     string[] gtinParts = _pglnStr.Split(':').Last().Split('.');
                     string pgln = gtinParts[0] + gtinParts[1];
@@ -138,6 +143,14 @@ namespace OpenTraceability.Models.Identifiers
                 }
                 else
                 {
+                    // DIGITAL LINK URI CHECK
+                    Regex regex = new Regex(@"^(https:\/\/id.gs1.org)(.*)(\/417\/)(.*)");
+                    var match = regex.Match(pglnStr);
+                    if (match.Success)
+                    {
+                        return (null);
+                    }
+
                     return ("The PGLN is not in a valid EPCIS URI format or in GS1 (P)GLN-13 format. PGLN = " + pglnStr);
                 }
             }
