@@ -337,10 +337,28 @@
         background: white;
         font-size: 7pt;
         color: #64748b;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 0.5rem;
+        display: block;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.25rem;
+    }
+
+    .print-footer-span {
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+    .print-footer .report-disclaimer {
+        font-size: 6pt !important; 
+        line-height: 1.2 !important;
+    }
+
+    .report-disclaimer {
+        display: block !important;
+        margin-top: 0.4rem;
+        max-width: 100% !important;
+        text-align: left;
+        line-height: 1.1;
     }
 
     /* Ensure content doesn't overlap with footer */
@@ -364,6 +382,17 @@
     .do-not-print {
         display: none;
     }
+}
+
+.report-disclaimer {
+    font-size: 0.74rem;
+    text-align:center;
+    color: #64748b;
+    max-width: 420px;
+    line-height: 1.2;
+    opacity: 0.9;
+    font-style: italic;
+    display: inline;
 }
 
 *,
