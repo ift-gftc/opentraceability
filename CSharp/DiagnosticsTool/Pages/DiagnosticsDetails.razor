@@ -131,7 +131,8 @@ else
                 </div>
                 <div class="metric-card">
                     <div class="metric-label">Schema Errors</div>
-                    <div class="metric-value @(envelope.HasSchemaErrors ? "bad" : "good")">@(envelope.HasSchemaErrors ? "Yes" : "No")
+                    <div class="metric-value @(envelope.HasSchemaErrors ? "bad" : "good")">
+                        @(envelope.HasSchemaErrors ? "Yes" : "No")
                     </div>
                 </div>
             </div>
@@ -171,7 +172,7 @@ else
                     {
                         var errorCount = GetErrorCount(r.r.Validations);
                         var warningCount = GetWarningCount(r.r.Validations);
-                        
+
                         <li class="timeline-item">
                             <div class="timeline-axis">
                                 <span class="timeline-dot"></span>
@@ -235,5 +236,9 @@ else
             <h2 class="section-title">Raw Data (Envelope Data)</h2>
             <pre class="code-block">@Json(envelope.DataObject)</pre>
         </section>
+
+        <div class="page-footer">
+            <ReportDisclaimer />
+        </div>
     </div>
 }
