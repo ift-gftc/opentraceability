@@ -15,6 +15,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\ReportDisclaimer.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Pages\ReportDisclaimer.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.0" />
