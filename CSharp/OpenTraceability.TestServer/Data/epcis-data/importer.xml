@@ -1,0 +1,427 @@
+<epcisq:EPCISQueryDocument xmlns:cbv="https://ref.gs1.org/cbv/" xmlns:gs1="https://gs1.org/voc/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:gdst="https://traceability-dialogue.org/epcis" creationDate="2025-12-11T20:33:43.9171067+00:00" schemaVersion="2.0" xmlns:epcisq="urn:epcglobal:epcis-query:xsd:2" xmlns:cbvmda="urn:epcglobal:cbv:mda">
+  <EPCISHeader>
+    <StandardBusinessDocumentHeader xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+      <Sender>
+        <ContactInformation />
+      </Sender>
+      <Receiver>
+        <ContactInformation />
+      </Receiver>
+      <DocumentIdentification />
+    </StandardBusinessDocumentHeader>
+    <extension>
+      <EPCISMasterData>
+        <VocabularyList>
+          <Vocabulary type="urn:epcglobal:epcis:vtype:EPCClass">
+            <VocabularyElementList>
+              <VocabularyElement id="urn:epc:idpat:sgtin:08600031303.00">
+                <attribute id="urn:epcglobal:cbv:mda#descriptionShort">Canned Yellowfin Tuna</attribute>
+                <attribute id="urn:epcglobal:cbv:mda#tradeItemConditionCode">OTH</attribute>
+                <attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName">Thunnus albacares</attribute>
+                <attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode">YFT</attribute>
+              </VocabularyElement>
+              <VocabularyElement id="urn:epc:idpat:sgtin:08600031304.00">
+                <attribute id="urn:epcglobal:cbv:mda#descriptionShort">4oz Salmon Steak</attribute>
+                <attribute id="urn:epcglobal:cbv:mda#tradeItemConditionCode">OTH</attribute>
+                <attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName">Salmo salar</attribute>
+                <attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode">SAL</attribute>
+              </VocabularyElement>
+              <VocabularyElement id="urn:epc:idpat:sgtin:08600031305.00">
+                <attribute id="urn:epcglobal:cbv:mda#descriptionShort">Fried Cod Strip</attribute>
+                <attribute id="urn:epcglobal:cbv:mda#tradeItemConditionCode">OTH</attribute>
+                <attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName">Gadus Morhua</attribute>
+                <attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode">COD</attribute>
+              </VocabularyElement>
+            </VocabularyElementList>
+          </Vocabulary>
+          <Vocabulary type="urn:epcglobal:epcis:vtype:Location">
+            <VocabularyElementList>
+              <VocabularyElement id="urn:gdst:example.org:location:loc:importer01.0">
+                <attribute id="urn:epcglobal:cbv:mda#name">Importer</attribute>
+              </VocabularyElement>
+            </VocabularyElementList>
+          </Vocabulary>
+          <Vocabulary type="urn:epcglobal:epcis:vtype:Party">
+            <VocabularyElementList>
+              <VocabularyElement id="urn:gdst:example.org:party:importer01.0">
+                <attribute id="urn:epcglobal:cbv:mda#name">Importer</attribute>
+              </VocabularyElement>
+              <VocabularyElement id="urn:gdst:example.org:party:processor01.0">
+                <attribute id="urn:epcglobal:cbv:mda#name">Secondary Processor</attribute>
+              </VocabularyElement>
+            </VocabularyElementList>
+          </Vocabulary>
+        </VocabularyList>
+      </EPCISMasterData>
+    </extension>
+  </EPCISHeader>
+  <EPCISBody>
+    <epcisq:QueryResults>
+      <queryName>9f5c1347-9f38-4668-a262-a1c6df977ad5</queryName>
+      <resultsBody>
+        <EventList>
+          <ObjectEvent>
+            <eventTime>2025-08-25T00:00:00.0000000+00:00</eventTime>
+            <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+            <eventID>urn:uuid:9f57502d-9939-44cc-ae98-6fd9fd9f6b02</eventID>
+            <epcList />
+            <action>OBSERVE</action>
+            <bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
+            <bizLocation>
+              <id>urn:gdst:example.org:location:loc:importer01.0</id>
+            </bizLocation>
+            <quantityList>
+              <quantityElement>
+                <epcClass>urn:epc:class:lgtin:08600031303.00.abc12320250825</epcClass>
+                <quantity>45246</quantity>
+                <uom>KGM</uom>
+              </quantityElement>
+            </quantityList>
+            <sourceList>
+              <source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</source>
+              <source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</source>
+            </sourceList>
+            <destinationList>
+              <destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
+              <destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
+            </destinationList>
+            <gdst:productOwner>urn:gdst:example.org:party:importer01.0</gdst:productOwner>
+            <gdst:transportType>AIR</gdst:transportType>
+            <gdst:transportVehicleID>1ae243ff-31d3-4884-954f-c2992a8a51c8</gdst:transportVehicleID>
+            <gdst:transportNumber>707b9b9c-bb98-4038-960f-2110c26fb405</gdst:transportNumber>
+            <gdst:transportProviderID>cbca5b8e-c1c2-45d5-98e6-9f66417478be</gdst:transportProviderID>
+            <cbvmda:certificationList>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+              </certification>
+            </cbvmda:certificationList>
+            <cbvmda:informationProvider>urn:gdst:example.org:party:importer01.0</cbvmda:informationProvider>
+          </ObjectEvent>
+          <ObjectEvent>
+            <eventTime>2025-08-25T00:00:00.0000000+00:00</eventTime>
+            <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+            <eventID>urn:uuid:983c8804-256a-4194-bb6f-6fd0be75a5dd</eventID>
+            <errorDeclaration>
+              <declarationTime>2025-12-11T20:33:34.5237589+00:00</declarationTime>
+              <correctiveEventIDs>
+                <correctiveEventID>urn:uuid:9f57502d-9939-44cc-ae98-6fd9fd9f6b02</correctiveEventID>
+              </correctiveEventIDs>
+            </errorDeclaration>
+            <epcList />
+            <action>OBSERVE</action>
+            <bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
+            <bizLocation>
+              <id>urn:gdst:example.org:location:loc:importer01.0</id>
+            </bizLocation>
+            <quantityList>
+              <quantityElement>
+                <epcClass>urn:epc:class:lgtin:08600031303.00.abc12320250825</epcClass>
+                <quantity>45246</quantity>
+                <uom>KGM</uom>
+              </quantityElement>
+            </quantityList>
+            <sourceList>
+              <source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</source>
+              <source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</source>
+            </sourceList>
+            <destinationList>
+              <destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
+              <destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
+            </destinationList>
+            <gdst:productOwner>urn:gdst:example.org:party:importer01.0</gdst:productOwner>
+            <gdst:transportType>AIR</gdst:transportType>
+            <gdst:transportVehicleID>1ae243ff-31d3-4884-954f-c2992a8a51c8</gdst:transportVehicleID>
+            <gdst:transportNumber>707b9b9c-bb98-4038-960f-2110c26fb405</gdst:transportNumber>
+            <gdst:transportProviderID>cbca5b8e-c1c2-45d5-98e6-9f66417478be</gdst:transportProviderID>
+            <cbvmda:certificationList>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+              </certification>
+            </cbvmda:certificationList>
+            <cbvmda:informationProvider>urn:gdst:example.org:party:importer01.0</cbvmda:informationProvider>
+          </ObjectEvent>
+          <ObjectEvent>
+            <eventTime>2025-08-25T00:00:00.0000000+00:00</eventTime>
+            <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+            <eventID>urn:uuid:ffae7588-4eab-4697-a556-8daff7cd3410</eventID>
+            <epcList />
+            <action>OBSERVE</action>
+            <bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
+            <bizLocation>
+              <id>urn:gdst:example.org:location:loc:importer01.0</id>
+            </bizLocation>
+            <quantityList>
+              <quantityElement>
+                <epcClass>urn:epc:class:lgtin:08600031304.00.abc12320250825</epcClass>
+                <quantity>38657</quantity>
+                <uom>KGM</uom>
+              </quantityElement>
+            </quantityList>
+            <sourceList>
+              <source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</source>
+              <source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</source>
+            </sourceList>
+            <destinationList>
+              <destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
+              <destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
+            </destinationList>
+            <gdst:productOwner>urn:gdst:example.org:party:importer01.0</gdst:productOwner>
+            <gdst:transportType>AIR</gdst:transportType>
+            <gdst:transportVehicleID>6a8fdd7d-6884-4936-bef7-b013022ec681</gdst:transportVehicleID>
+            <gdst:transportNumber>38465a78-fe92-450f-b723-9310e0b88267</gdst:transportNumber>
+            <gdst:transportProviderID>de994465-3b2c-42ec-bc20-3b99091efb4f</gdst:transportProviderID>
+            <cbvmda:certificationList>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+              </certification>
+            </cbvmda:certificationList>
+            <cbvmda:informationProvider>urn:gdst:example.org:party:importer01.0</cbvmda:informationProvider>
+          </ObjectEvent>
+          <ObjectEvent>
+            <eventTime>2025-08-25T00:00:00.0000000+00:00</eventTime>
+            <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+            <eventID>urn:uuid:b605c55d-e168-4470-a592-29928753db77</eventID>
+            <errorDeclaration>
+              <declarationTime>2025-12-11T20:33:35.2264094+00:00</declarationTime>
+              <correctiveEventIDs>
+                <correctiveEventID>urn:uuid:ffae7588-4eab-4697-a556-8daff7cd3410</correctiveEventID>
+              </correctiveEventIDs>
+            </errorDeclaration>
+            <epcList />
+            <action>OBSERVE</action>
+            <bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
+            <bizLocation>
+              <id>urn:gdst:example.org:location:loc:importer01.0</id>
+            </bizLocation>
+            <quantityList>
+              <quantityElement>
+                <epcClass>urn:epc:class:lgtin:08600031304.00.abc12320250825</epcClass>
+                <quantity>38657</quantity>
+                <uom>KGM</uom>
+              </quantityElement>
+            </quantityList>
+            <sourceList>
+              <source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</source>
+              <source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</source>
+            </sourceList>
+            <destinationList>
+              <destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
+              <destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
+            </destinationList>
+            <gdst:productOwner>urn:gdst:example.org:party:importer01.0</gdst:productOwner>
+            <gdst:transportType>AIR</gdst:transportType>
+            <gdst:transportVehicleID>6a8fdd7d-6884-4936-bef7-b013022ec681</gdst:transportVehicleID>
+            <gdst:transportNumber>38465a78-fe92-450f-b723-9310e0b88267</gdst:transportNumber>
+            <gdst:transportProviderID>de994465-3b2c-42ec-bc20-3b99091efb4f</gdst:transportProviderID>
+            <cbvmda:certificationList>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+              </certification>
+            </cbvmda:certificationList>
+            <cbvmda:informationProvider>urn:gdst:example.org:party:importer01.0</cbvmda:informationProvider>
+          </ObjectEvent>
+          <ObjectEvent>
+            <eventTime>2025-08-25T00:00:00.0000000+00:00</eventTime>
+            <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+            <eventID>urn:uuid:f005955d-1603-4c48-a1ce-d957981ee801</eventID>
+            <epcList />
+            <action>OBSERVE</action>
+            <bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
+            <bizLocation>
+              <id>urn:gdst:example.org:location:loc:importer01.0</id>
+            </bizLocation>
+            <quantityList>
+              <quantityElement>
+                <epcClass>urn:epc:class:lgtin:08600031305.00.abc12320250825</epcClass>
+                <quantity>12902</quantity>
+                <uom>KGM</uom>
+              </quantityElement>
+            </quantityList>
+            <sourceList>
+              <source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</source>
+              <source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</source>
+            </sourceList>
+            <destinationList>
+              <destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
+              <destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
+            </destinationList>
+            <gdst:productOwner>urn:gdst:example.org:party:importer01.0</gdst:productOwner>
+            <gdst:transportType>AIR</gdst:transportType>
+            <gdst:transportVehicleID>2cfa757a-b92e-4a1b-b112-b24d3dac7e3f</gdst:transportVehicleID>
+            <gdst:transportNumber>8060326d-3212-458a-a641-b8467d086d84</gdst:transportNumber>
+            <gdst:transportProviderID>3a445f9e-a9ae-4d5f-8e29-61a8541514b4</gdst:transportProviderID>
+            <cbvmda:certificationList>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+              </certification>
+            </cbvmda:certificationList>
+            <cbvmda:informationProvider>urn:gdst:example.org:party:importer01.0</cbvmda:informationProvider>
+          </ObjectEvent>
+          <ObjectEvent>
+            <eventTime>2025-08-25T00:00:00.0000000+00:00</eventTime>
+            <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+            <eventID>urn:uuid:b0160019-de08-49aa-a241-2e1a62c8d755</eventID>
+            <errorDeclaration>
+              <declarationTime>2025-12-11T20:33:35.8858059+00:00</declarationTime>
+              <correctiveEventIDs>
+                <correctiveEventID>urn:uuid:f005955d-1603-4c48-a1ce-d957981ee801</correctiveEventID>
+              </correctiveEventIDs>
+            </errorDeclaration>
+            <epcList />
+            <action>OBSERVE</action>
+            <bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
+            <bizLocation>
+              <id>urn:gdst:example.org:location:loc:importer01.0</id>
+            </bizLocation>
+            <quantityList>
+              <quantityElement>
+                <epcClass>urn:epc:class:lgtin:08600031305.00.abc12320250825</epcClass>
+                <quantity>12902</quantity>
+                <uom>KGM</uom>
+              </quantityElement>
+            </quantityList>
+            <sourceList>
+              <source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</source>
+              <source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</source>
+            </sourceList>
+            <destinationList>
+              <destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
+              <destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
+            </destinationList>
+            <gdst:productOwner>urn:gdst:example.org:party:importer01.0</gdst:productOwner>
+            <gdst:transportType>AIR</gdst:transportType>
+            <gdst:transportVehicleID>2cfa757a-b92e-4a1b-b112-b24d3dac7e3f</gdst:transportVehicleID>
+            <gdst:transportNumber>8060326d-3212-458a-a641-b8467d086d84</gdst:transportNumber>
+            <gdst:transportProviderID>3a445f9e-a9ae-4d5f-8e29-61a8541514b4</gdst:transportProviderID>
+            <cbvmda:certificationList>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+              </certification>
+            </cbvmda:certificationList>
+            <cbvmda:informationProvider>urn:gdst:example.org:party:importer01.0</cbvmda:informationProvider>
+          </ObjectEvent>
+          <ObjectEvent>
+            <eventTime>2025-08-24T15:00:00.0000000+00:00</eventTime>
+            <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+            <eventID>urn:uuid:baf30eb2-6f6f-47d2-aeb2-1dbb63ae80a5</eventID>
+            <epcList />
+            <action>OBSERVE</action>
+            <bizStep>https://ref.gs1.org/cbv/BizStep-receiving</bizStep>
+            <bizLocation>
+              <id>urn:gdst:example.org:location:loc:importer01.0</id>
+            </bizLocation>
+            <quantityList>
+              <quantityElement>
+                <epcClass>urn:epc:class:lgtin:08600031303.00.abc12320250825</epcClass>
+                <quantity>45246</quantity>
+                <uom>KGM</uom>
+              </quantityElement>
+            </quantityList>
+            <sourceList>
+              <source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor01.0</source>
+              <source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor01.0</source>
+            </sourceList>
+            <destinationList>
+              <destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
+              <destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
+            </destinationList>
+            <gdst:productOwner>urn:gdst:example.org:party:importer01.0</gdst:productOwner>
+            <gdst:transportType>AIR</gdst:transportType>
+            <gdst:transportVehicleID>effaf57d-183e-4c44-9357-13d619957294</gdst:transportVehicleID>
+            <gdst:transportNumber>f6f06630-ab81-4699-97b4-8571c1b16f65</gdst:transportNumber>
+            <gdst:transportProviderID>c9f27ccf-954e-42f4-b5b7-0a6bad8d7700</gdst:transportProviderID>
+            <cbvmda:certificationList>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:humanPolicy</gdst:certificationType>
+              </certification>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+              </certification>
+            </cbvmda:certificationList>
+            <cbvmda:informationProvider>urn:gdst:example.org:party:importer01.0</cbvmda:informationProvider>
+          </ObjectEvent>
+          <ObjectEvent>
+            <eventTime>2025-08-24T18:00:00.0000000+00:00</eventTime>
+            <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+            <eventID>urn:uuid:8454ea87-e434-4830-bb36-5c7313e0e994</eventID>
+            <epcList />
+            <action>OBSERVE</action>
+            <bizStep>https://ref.gs1.org/cbv/BizStep-receiving</bizStep>
+            <bizLocation>
+              <id>urn:gdst:example.org:location:loc:importer01.0</id>
+            </bizLocation>
+            <quantityList>
+              <quantityElement>
+                <epcClass>urn:epc:class:lgtin:08600031304.00.abc12320250825</epcClass>
+                <quantity>38657</quantity>
+                <uom>KGM</uom>
+              </quantityElement>
+            </quantityList>
+            <sourceList>
+              <source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor01.0</source>
+              <source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor01.0</source>
+            </sourceList>
+            <destinationList>
+              <destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
+              <destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
+            </destinationList>
+            <gdst:productOwner>urn:gdst:example.org:party:importer01.0</gdst:productOwner>
+            <gdst:transportType>AIR</gdst:transportType>
+            <gdst:transportVehicleID>162b699f-16d9-4045-9539-2e8e8fe0deac</gdst:transportVehicleID>
+            <gdst:transportNumber>4b3cd6e8-9f07-42a4-8e1e-587b671126a9</gdst:transportNumber>
+            <gdst:transportProviderID>687d52ce-ae4b-489f-b4cb-8716538a7092</gdst:transportProviderID>
+            <cbvmda:certificationList>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:humanPolicy</gdst:certificationType>
+              </certification>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+              </certification>
+            </cbvmda:certificationList>
+            <cbvmda:informationProvider>urn:gdst:example.org:party:importer01.0</cbvmda:informationProvider>
+          </ObjectEvent>
+          <ObjectEvent>
+            <eventTime>2025-08-24T18:00:00.0000000+00:00</eventTime>
+            <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+            <eventID>urn:uuid:68e701ee-81b7-479f-95dd-97b8dab4d950</eventID>
+            <epcList />
+            <action>OBSERVE</action>
+            <bizStep>https://ref.gs1.org/cbv/BizStep-receiving</bizStep>
+            <bizLocation>
+              <id>urn:gdst:example.org:location:loc:importer01.0</id>
+            </bizLocation>
+            <quantityList>
+              <quantityElement>
+                <epcClass>urn:epc:class:lgtin:08600031305.00.abc12320250825</epcClass>
+                <quantity>12902</quantity>
+                <uom>KGM</uom>
+              </quantityElement>
+            </quantityList>
+            <sourceList>
+              <source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor01.0</source>
+              <source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor01.0</source>
+            </sourceList>
+            <destinationList>
+              <destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
+              <destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
+            </destinationList>
+            <gdst:productOwner>urn:gdst:example.org:party:importer01.0</gdst:productOwner>
+            <gdst:transportType>AIR</gdst:transportType>
+            <gdst:transportVehicleID>66fbfa4b-faa3-4b2d-a740-621770633794</gdst:transportVehicleID>
+            <gdst:transportNumber>0ac970d2-b3ab-40e6-b064-0fd4b5f525ab</gdst:transportNumber>
+            <gdst:transportProviderID>e2b37ee4-7c21-470d-b0b2-a3a2d9a38c0d</gdst:transportProviderID>
+            <cbvmda:certificationList>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:humanPolicy</gdst:certificationType>
+              </certification>
+              <certification>
+                <gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+              </certification>
+            </cbvmda:certificationList>
+            <cbvmda:informationProvider>urn:gdst:example.org:party:importer01.0</cbvmda:informationProvider>
+          </ObjectEvent>
+        </EventList>
+      </resultsBody>
+    </epcisq:QueryResults>
+  </EPCISBody>
+</epcisq:EPCISQueryDocument>
