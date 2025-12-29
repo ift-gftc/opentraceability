@@ -1,4 +1,4 @@
-﻿<epcisq:EPCISQueryDocument xmlns:cbv="https://ref.gs1.org/cbv/" xmlns:gs1="https://gs1.org/voc/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:gdst="https://traceability-dialogue.org/epcis" creationDate="2025-12-11T20:33:53.5978972+00:00" schemaVersion="2.0" xmlns:epcisq="urn:epcglobal:epcis-query:xsd:2" xmlns:cbvmda="urn:epcglobal:cbv:mda">
+﻿<epcisq:EPCISQueryDocument xmlns:cbv="https://ref.gs1.org/cbv/" xmlns:gs1="https://gs1.org/voc/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:gdst="https://traceability-dialogue.org/epcis" creationDate="2025-12-11T20:33:59.5723668+00:00" schemaVersion="2.0" xmlns:epcisq="urn:epcglobal:epcis-query:xsd:2" xmlns:cbvmda="urn:epcglobal:cbv:mda">
 	<EPCISHeader>
 		<StandardBusinessDocumentHeader xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
 			<Sender>
@@ -14,37 +14,49 @@
 				<VocabularyList>
 					<Vocabulary type="urn:epcglobal:epcis:vtype:EPCClass">
 						<VocabularyElementList>
-							<VocabularyElement id="urn:epc:idpat:sgtin:08600031303.00">
-								<attribute id="urn:epcglobal:cbv:mda#descriptionShort">Canned Yellowfin Tuna</attribute>
-								<attribute id="urn:epcglobal:cbv:mda#tradeItemConditionCode">OTH</attribute>
-								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName">Thunnus albacares</attribute>
-								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode">YFT</attribute>
-							</VocabularyElement>
 							<VocabularyElement id="urn:gdst:example.org:product:class:processor01.yellowfintunafillets">
 								<attribute id="urn:epcglobal:cbv:mda#descriptionShort">Yellowfin Tuna Fillets</attribute>
 								<attribute id="urn:epcglobal:cbv:mda#tradeItemConditionCode">OTH</attribute>
 								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName">Thunnus albacares</attribute>
 								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode">YFT</attribute>
 							</VocabularyElement>
+							<VocabularyElement id="urn:gdst:example.org:product:class:processor01.atlanticsalmonfilets">
+								<attribute id="urn:epcglobal:cbv:mda#descriptionShort">Atlantic Salmon Filets</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#tradeItemConditionCode">OTH</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName">Salmo salar</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode">SAL</attribute>
+							</VocabularyElement>
+							<VocabularyElement id="urn:gdst:example.org:product:class:processor02.yellowfintunawhole">
+								<attribute id="urn:epcglobal:cbv:mda#descriptionShort">Yellowfin Tuna Whole</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#tradeItemConditionCode">WHL</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName">Thunnus albacares</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode">YFT</attribute>
+							</VocabularyElement>
+							<VocabularyElement id="urn:gdst:example.org:product:class:processor02.atlanticsalmonwhole">
+								<attribute id="urn:epcglobal:cbv:mda#descriptionShort">Atlantic Salmon Whole</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#tradeItemConditionCode">WHL</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName">Salmo salar</attribute>
+								<attribute id="urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode">SAL</attribute>
+							</VocabularyElement>
 						</VocabularyElementList>
 					</Vocabulary>
 					<Vocabulary type="urn:epcglobal:epcis:vtype:Location">
 						<VocabularyElementList>
-							<VocabularyElement id="urn:gdst:example.org:location:loc:processor01.0">
-								<attribute id="urn:epcglobal:cbv:mda#name">Secondary Processor</attribute>
+							<VocabularyElement id="urn:gdst:example.org:location:loc:processor02.0">
+								<attribute id="urn:epcglobal:cbv:mda#name">Primary Processor</attribute>
 							</VocabularyElement>
 						</VocabularyElementList>
 					</Vocabulary>
 					<Vocabulary type="urn:epcglobal:epcis:vtype:Party">
 						<VocabularyElementList>
+							<VocabularyElement id="urn:gdst:example.org:party:processor02.0">
+								<attribute id="urn:epcglobal:cbv:mda#name">Primary Processor</attribute>
+							</VocabularyElement>
 							<VocabularyElement id="urn:gdst:example.org:party:processor01.0">
 								<attribute id="urn:epcglobal:cbv:mda#name">Secondary Processor</attribute>
 							</VocabularyElement>
-							<VocabularyElement id="urn:gdst:example.org:party:importer01.0">
-								<attribute id="urn:epcglobal:cbv:mda#name">Importer</attribute>
-							</VocabularyElement>
-							<VocabularyElement id="urn:gdst:example.org:party:processor02.0">
-								<attribute id="urn:epcglobal:cbv:mda#name">Primary Processor</attribute>
+							<VocabularyElement id="urn:gdst:example.org:party:vessel01.0">
+								<attribute id="urn:epcglobal:cbv:mda#name">Vessel 01</attribute>
 							</VocabularyElement>
 						</VocabularyElementList>
 					</Vocabulary>
@@ -58,159 +70,14 @@
 			<resultsBody>
 				<EventList>
 					<ObjectEvent>
-						<eventTime>2025-08-23T15:00:00.0000000+00:00</eventTime>
+						<eventTime>2025-08-21T06:00:00.0000000+00:00</eventTime>
 						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
-						<eventID>urn:uuid:a1328cc2-ea42-4a66-812e-cfba39d9d6ec</eventID>
+						<eventID>urn:uuid:2dc16067-32cf-44c9-b046-6b345320f849</eventID>
 						<epcList />
 						<action>OBSERVE</action>
 						<bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
 						<bizLocation>
-							<id>urn:gdst:example.org:location:loc:processor01.0</id>
-						</bizLocation>
-						<quantityList>
-							<quantityElement>
-								<epcClass>urn:epc:class:lgtin:08600031303.00.abc12320250825</epcClass>
-								<quantity>45246</quantity>
-								<uom>KGM</uom>
-							</quantityElement>
-						</quantityList>
-						<sourceList>
-							<source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor01.0</source>
-							<source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor01.0</source>
-						</sourceList>
-						<destinationList>
-							<destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
-							<destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
-						</destinationList>
-						<gdst:productOwner>urn:gdst:example.org:party:processor01.0</gdst:productOwner>
-						<gdst:transportType>AIR</gdst:transportType>
-						<gdst:transportVehicleID>effaf57d-183e-4c44-9357-13d619957294</gdst:transportVehicleID>
-						<gdst:transportNumber>f6f06630-ab81-4699-97b4-8571c1b16f65</gdst:transportNumber>
-						<gdst:transportProviderID>c9f27ccf-954e-42f4-b5b7-0a6bad8d7700</gdst:transportProviderID>
-						<cbvmda:certificationList>
-							<certification>
-								<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
-							</certification>
-						</cbvmda:certificationList>
-						<cbvmda:informationProvider>urn:gdst:example.org:party:processor01.0</cbvmda:informationProvider>
-					</ObjectEvent>
-					<ObjectEvent>
-						<eventTime>2025-08-23T15:00:00.0000000+00:00</eventTime>
-						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
-						<eventID>urn:uuid:f2acf379-1fa7-4baf-ac7b-34554e9986ba</eventID>
-						<errorDeclaration>
-							<declarationTime>2025-12-11T20:33:34.5239293+00:00</declarationTime>
-							<correctiveEventIDs>
-								<correctiveEventID>urn:uuid:a1328cc2-ea42-4a66-812e-cfba39d9d6ec</correctiveEventID>
-							</correctiveEventIDs>
-						</errorDeclaration>
-						<epcList />
-						<action>OBSERVE</action>
-						<bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
-						<bizLocation>
-							<id>urn:gdst:example.org:location:loc:processor01.0</id>
-						</bizLocation>
-						<quantityList>
-							<quantityElement>
-								<epcClass>urn:epc:class:lgtin:08600031303.00.abc12320250825</epcClass>
-								<quantity>45246</quantity>
-								<uom>KGM</uom>
-							</quantityElement>
-						</quantityList>
-						<sourceList>
-							<source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor01.0</source>
-							<source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor01.0</source>
-						</sourceList>
-						<destinationList>
-							<destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:importer01.0</destination>
-							<destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:importer01.0</destination>
-						</destinationList>
-						<gdst:productOwner>urn:gdst:example.org:party:processor01.0</gdst:productOwner>
-						<gdst:transportType>AIR</gdst:transportType>
-						<gdst:transportVehicleID>effaf57d-183e-4c44-9357-13d619957294</gdst:transportVehicleID>
-						<gdst:transportNumber>f6f06630-ab81-4699-97b4-8571c1b16f65</gdst:transportNumber>
-						<gdst:transportProviderID>c9f27ccf-954e-42f4-b5b7-0a6bad8d7700</gdst:transportProviderID>
-						<cbvmda:certificationList>
-							<certification>
-								<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
-							</certification>
-						</cbvmda:certificationList>
-						<cbvmda:informationProvider>urn:gdst:example.org:party:processor01.0</cbvmda:informationProvider>
-					</ObjectEvent>
-					<ObjectEvent>
-						<eventTime>2025-08-22T15:00:00.0000000+00:00</eventTime>
-						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
-						<eventID>urn:uuid:2f93fc22-5594-4758-9904-8985047346bc</eventID>
-						<epcList />
-						<action>OBSERVE</action>
-						<bizStep>https://ref.gs1.org/cbv/BizStep-storing</bizStep>
-						<bizLocation>
-							<id>urn:gdst:example.org:location:loc:processor01.0</id>
-						</bizLocation>
-						<quantityList>
-							<quantityElement>
-								<epcClass>urn:epc:class:lgtin:08600031303.00.abc12320250825</epcClass>
-								<quantity>45246</quantity>
-								<uom>KGM</uom>
-							</quantityElement>
-						</quantityList>
-						<gdst:productOwner>urn:gdst:example.org:party:processor01.0</gdst:productOwner>
-						<gdst:humanWelfarePolicy>3p</gdst:humanWelfarePolicy>
-						<cbvmda:informationProvider>urn:gdst:example.org:party:processor01.0</cbvmda:informationProvider>
-					</ObjectEvent>
-					<TransformationEvent>
-						<eventTime>2025-08-22T13:00:00.0000000+00:00</eventTime>
-						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
-						<eventID>urn:uuid:235ff6ea-ef04-4504-81e0-34ac36dce670</eventID>
-						<inputQuantityList>
-							<quantityElement>
-								<epcClass>urn:gdst:example.org:product:lot:class:processor01.yellowfintunafillets.2025121114333454</epcClass>
-								<quantity>39343</quantity>
-								<uom>KGM</uom>
-							</quantityElement>
-							<quantityElement>
-								<epcClass>urn:gdst:example.org:product:lot:class:processor01.yellowfintunafillets.2025121114333455</epcClass>
-								<quantity>19667</quantity>
-								<uom>KGM</uom>
-							</quantityElement>
-						</inputQuantityList>
-						<outputQuantityList>
-							<quantityElement>
-								<epcClass>urn:epc:class:lgtin:08600031303.00.abc12320250825</epcClass>
-								<quantity>45246</quantity>
-								<uom>KGM</uom>
-							</quantityElement>
-						</outputQuantityList>
-						<bizStep>https://ref.gs1.org/cbv/BizStep-commissioning</bizStep>
-						<bizLocation>
-							<id>urn:gdst:example.org:location:loc:processor01.0</id>
-						</bizLocation>
-						<ilmd>
-							<gdst:processingType>complete</gdst:processingType>
-							<cbvmda:countryOfOrigin>EC</cbvmda:countryOfOrigin>
-							<cbvmda:lotNumber>2025121114333455</cbvmda:lotNumber>
-							<cbvmda:certificationList>
-								<certification>
-									<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
-								</certification>
-								<certification>
-									<gdst:certificationType>urn:gdst:certtype:humanPolicy</gdst:certificationType>
-								</certification>
-							</cbvmda:certificationList>
-						</ilmd>
-						<gdst:productOwner>urn:gdst:example.org:party:processor01.0</gdst:productOwner>
-						<gdst:humanWelfarePolicy>3p</gdst:humanWelfarePolicy>
-						<cbvmda:informationProvider>urn:gdst:example.org:party:processor01.0</cbvmda:informationProvider>
-					</TransformationEvent>
-					<ObjectEvent>
-						<eventTime>2025-08-22T06:00:00.0000000+00:00</eventTime>
-						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
-						<eventID>urn:uuid:c3d83f2e-8a2a-406b-ad18-4afcf16a5afe</eventID>
-						<epcList />
-						<action>OBSERVE</action>
-						<bizStep>https://ref.gs1.org/cbv/BizStep-receiving</bizStep>
-						<bizLocation>
-							<id>urn:gdst:example.org:location:loc:processor01.0</id>
+							<id>urn:gdst:example.org:location:loc:processor02.0</id>
 						</bizLocation>
 						<quantityList>
 							<quantityElement>
@@ -232,11 +99,319 @@
 							<destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor01.0</destination>
 							<destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor01.0</destination>
 						</destinationList>
-						<gdst:productOwner>urn:gdst:example.org:party:processor01.0</gdst:productOwner>
+						<gdst:productOwner>urn:gdst:example.org:party:processor02.0</gdst:productOwner>
 						<gdst:transportType>AIR</gdst:transportType>
 						<gdst:transportVehicleID>ebd1f921-aea0-428c-81f4-1fb5db237d76</gdst:transportVehicleID>
 						<gdst:transportNumber>dbbb9bf7-d286-4cb8-b71c-e78653b7e26a</gdst:transportNumber>
 						<gdst:transportProviderID>d376ee95-95f7-4221-9c30-d9c0a741b102</gdst:transportProviderID>
+						<cbvmda:certificationList>
+							<certification>
+								<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+							</certification>
+						</cbvmda:certificationList>
+						<cbvmda:informationProvider>urn:gdst:example.org:party:processor02.0</cbvmda:informationProvider>
+					</ObjectEvent>
+					<ObjectEvent>
+						<eventTime>2025-08-21T06:00:00.0000000+00:00</eventTime>
+						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+						<eventID>urn:uuid:8b430de0-2b00-4480-8e1b-c24e569c07ba</eventID>
+						<errorDeclaration>
+							<declarationTime>2025-12-11T20:33:34.5600838+00:00</declarationTime>
+							<correctiveEventIDs>
+								<correctiveEventID>urn:uuid:2dc16067-32cf-44c9-b046-6b345320f849</correctiveEventID>
+							</correctiveEventIDs>
+						</errorDeclaration>
+						<epcList />
+						<action>OBSERVE</action>
+						<bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
+						<bizLocation>
+							<id>urn:gdst:example.org:location:loc:processor02.0</id>
+						</bizLocation>
+						<quantityList>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor01.yellowfintunafillets.2025121114333454</epcClass>
+								<quantity>39343</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor01.yellowfintunafillets.2025121114333455</epcClass>
+								<quantity>19667</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+						</quantityList>
+						<sourceList>
+							<source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor02.0</source>
+							<source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor02.0</source>
+						</sourceList>
+						<destinationList>
+							<destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor01.0</destination>
+							<destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor01.0</destination>
+						</destinationList>
+						<gdst:productOwner>urn:gdst:example.org:party:processor02.0</gdst:productOwner>
+						<gdst:transportType>AIR</gdst:transportType>
+						<gdst:transportVehicleID>ebd1f921-aea0-428c-81f4-1fb5db237d76</gdst:transportVehicleID>
+						<gdst:transportNumber>dbbb9bf7-d286-4cb8-b71c-e78653b7e26a</gdst:transportNumber>
+						<gdst:transportProviderID>d376ee95-95f7-4221-9c30-d9c0a741b102</gdst:transportProviderID>
+						<cbvmda:certificationList>
+							<certification>
+								<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+							</certification>
+						</cbvmda:certificationList>
+						<cbvmda:informationProvider>urn:gdst:example.org:party:processor02.0</cbvmda:informationProvider>
+					</ObjectEvent>
+					<ObjectEvent>
+						<eventTime>2025-08-20T08:00:00.0000000+00:00</eventTime>
+						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+						<eventID>urn:uuid:5fa450e5-d252-49c3-b36f-05a180037c9f</eventID>
+						<epcList />
+						<action>OBSERVE</action>
+						<bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
+						<bizLocation>
+							<id>urn:gdst:example.org:location:loc:processor02.0</id>
+						</bizLocation>
+						<quantityList>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor01.atlanticsalmonfilets.2025121114333524</epcClass>
+								<quantity>41000</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+						</quantityList>
+						<sourceList>
+							<source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor02.0</source>
+							<source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor02.0</source>
+						</sourceList>
+						<destinationList>
+							<destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor01.0</destination>
+							<destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor01.0</destination>
+						</destinationList>
+						<gdst:productOwner>urn:gdst:example.org:party:processor02.0</gdst:productOwner>
+						<gdst:transportType>AIR</gdst:transportType>
+						<gdst:transportVehicleID>ea074a07-835f-4468-9405-95f6680cf63c</gdst:transportVehicleID>
+						<gdst:transportNumber>4d70e4d7-2fea-43f0-a83f-3daafa9b3780</gdst:transportNumber>
+						<gdst:transportProviderID>328f9159-00d5-4935-92ba-c8a9fe753690</gdst:transportProviderID>
+						<cbvmda:certificationList>
+							<certification>
+								<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+							</certification>
+						</cbvmda:certificationList>
+						<cbvmda:informationProvider>urn:gdst:example.org:party:processor02.0</cbvmda:informationProvider>
+					</ObjectEvent>
+					<ObjectEvent>
+						<eventTime>2025-08-20T08:00:00.0000000+00:00</eventTime>
+						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+						<eventID>urn:uuid:4865a495-4e5b-49bf-aa5f-00f4188de85a</eventID>
+						<errorDeclaration>
+							<declarationTime>2025-12-11T20:33:35.2442026+00:00</declarationTime>
+							<correctiveEventIDs>
+								<correctiveEventID>urn:uuid:5fa450e5-d252-49c3-b36f-05a180037c9f</correctiveEventID>
+							</correctiveEventIDs>
+						</errorDeclaration>
+						<epcList />
+						<action>OBSERVE</action>
+						<bizStep>https://ref.gs1.org/cbv/BizStep-shipping</bizStep>
+						<bizLocation>
+							<id>urn:gdst:example.org:location:loc:processor02.0</id>
+						</bizLocation>
+						<quantityList>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor01.atlanticsalmonfilets.2025121114333524</epcClass>
+								<quantity>41000</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+						</quantityList>
+						<sourceList>
+							<source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor02.0</source>
+							<source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor02.0</source>
+						</sourceList>
+						<destinationList>
+							<destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor01.0</destination>
+							<destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor01.0</destination>
+						</destinationList>
+						<gdst:productOwner>urn:gdst:example.org:party:processor02.0</gdst:productOwner>
+						<gdst:transportType>AIR</gdst:transportType>
+						<gdst:transportVehicleID>ea074a07-835f-4468-9405-95f6680cf63c</gdst:transportVehicleID>
+						<gdst:transportNumber>4d70e4d7-2fea-43f0-a83f-3daafa9b3780</gdst:transportNumber>
+						<gdst:transportProviderID>328f9159-00d5-4935-92ba-c8a9fe753690</gdst:transportProviderID>
+						<cbvmda:certificationList>
+							<certification>
+								<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+							</certification>
+						</cbvmda:certificationList>
+						<cbvmda:informationProvider>urn:gdst:example.org:party:processor02.0</cbvmda:informationProvider>
+					</ObjectEvent>
+					<TransformationEvent>
+						<eventTime>2025-08-21T04:00:00.0000000+00:00</eventTime>
+						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+						<eventID>urn:uuid:4c8fe4af-7db9-4278-915a-e263ccc1cda1</eventID>
+						<inputQuantityList>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333457</epcClass>
+								<quantity>9425</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333459</epcClass>
+								<quantity>29776</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333460</epcClass>
+								<quantity>3064</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333462</epcClass>
+								<quantity>1150</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333463</epcClass>
+								<quantity>12699</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333465</epcClass>
+								<quantity>8608</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+						</inputQuantityList>
+						<outputQuantityList>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor01.yellowfintunafillets.2025121114333454</epcClass>
+								<quantity>39343</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor01.yellowfintunafillets.2025121114333455</epcClass>
+								<quantity>19667</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+						</outputQuantityList>
+						<bizStep>https://ref.gs1.org/cbv/BizStep-commissioning</bizStep>
+						<bizLocation>
+							<id>urn:gdst:example.org:location:loc:processor02.0</id>
+						</bizLocation>
+						<ilmd>
+							<gdst:processingType>complete</gdst:processingType>
+							<cbvmda:countryOfOrigin>EC</cbvmda:countryOfOrigin>
+							<cbvmda:lotNumber>2025121114333465</cbvmda:lotNumber>
+							<cbvmda:certificationList>
+								<certification>
+									<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+								</certification>
+								<certification>
+									<gdst:certificationType>urn:gdst:certtype:humanPolicy</gdst:certificationType>
+								</certification>
+							</cbvmda:certificationList>
+						</ilmd>
+						<gdst:productOwner>urn:gdst:example.org:party:processor02.0</gdst:productOwner>
+						<gdst:humanWelfarePolicy>3p</gdst:humanWelfarePolicy>
+						<cbvmda:informationProvider>urn:gdst:example.org:party:processor02.0</cbvmda:informationProvider>
+					</TransformationEvent>
+					<TransformationEvent>
+						<eventTime>2025-08-20T06:00:00.0000000+00:00</eventTime>
+						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+						<eventID>urn:uuid:150d8164-71fc-4c9d-a490-bbc7ca88cb94</eventID>
+						<inputQuantityList>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.atlanticsalmonwhole.2025121114333525</epcClass>
+								<quantity>12424</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.atlanticsalmonwhole.2025121114333527</epcClass>
+								<quantity>26676</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.atlanticsalmonwhole.2025121114333529</epcClass>
+								<quantity>8127</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+						</inputQuantityList>
+						<outputQuantityList>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor01.atlanticsalmonfilets.2025121114333524</epcClass>
+								<quantity>41000</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+						</outputQuantityList>
+						<bizStep>https://ref.gs1.org/cbv/BizStep-commissioning</bizStep>
+						<bizLocation>
+							<id>urn:gdst:example.org:location:loc:processor02.0</id>
+						</bizLocation>
+						<ilmd>
+							<gdst:processingType>complete</gdst:processingType>
+							<cbvmda:countryOfOrigin>EC</cbvmda:countryOfOrigin>
+							<cbvmda:lotNumber>2025121114333529</cbvmda:lotNumber>
+							<cbvmda:certificationList>
+								<certification>
+									<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+								</certification>
+								<certification>
+									<gdst:certificationType>urn:gdst:certtype:humanPolicy</gdst:certificationType>
+								</certification>
+							</cbvmda:certificationList>
+						</ilmd>
+						<gdst:productOwner>urn:gdst:example.org:party:processor02.0</gdst:productOwner>
+						<gdst:humanWelfarePolicy>3p</gdst:humanWelfarePolicy>
+						<cbvmda:informationProvider>urn:gdst:example.org:party:processor02.0</cbvmda:informationProvider>
+					</TransformationEvent>
+					<ObjectEvent>
+						<eventTime>2025-08-20T20:00:00.0000000+00:00</eventTime>
+						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+						<eventID>urn:uuid:5de90650-685d-4230-96f3-f12e9022e541</eventID>
+						<epcList />
+						<action>OBSERVE</action>
+						<bizStep>https://ref.gs1.org/cbv/BizStep-receiving</bizStep>
+						<bizLocation>
+							<id>urn:gdst:example.org:location:loc:processor02.0</id>
+						</bizLocation>
+						<quantityList>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333457</epcClass>
+								<quantity>9425</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333459</epcClass>
+								<quantity>29776</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333460</epcClass>
+								<quantity>3064</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333462</epcClass>
+								<quantity>1150</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333463</epcClass>
+								<quantity>12699</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.yellowfintunawhole.2025121114333465</epcClass>
+								<quantity>8608</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+						</quantityList>
+						<sourceList>
+							<source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:vessel01.0</source>
+							<source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:vessel01.0</source>
+						</sourceList>
+						<destinationList>
+							<destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor02.0</destination>
+							<destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor02.0</destination>
+						</destinationList>
+						<gdst:productOwner>urn:gdst:example.org:party:processor02.0</gdst:productOwner>
+						<gdst:transportType>AIR</gdst:transportType>
+						<gdst:transportVehicleID>7e90badf-a66f-4e17-8933-c11b9267f4c8</gdst:transportVehicleID>
+						<gdst:transportNumber>876d886d-7562-466e-bec7-c6058995ecd1</gdst:transportNumber>
+						<gdst:transportProviderID>3e618d21-a8a2-4b64-a3ff-d5300f33eb5e</gdst:transportProviderID>
 						<cbvmda:certificationList>
 							<certification>
 								<gdst:certificationType>urn:gdst:certtype:humanPolicy</gdst:certificationType>
@@ -245,7 +420,57 @@
 								<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
 							</certification>
 						</cbvmda:certificationList>
-						<cbvmda:informationProvider>urn:gdst:example.org:party:processor01.0</cbvmda:informationProvider>
+						<cbvmda:informationProvider>urn:gdst:example.org:party:processor02.0</cbvmda:informationProvider>
+					</ObjectEvent>
+					<ObjectEvent>
+						<eventTime>2025-08-19T23:00:00.0000000+00:00</eventTime>
+						<eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+						<eventID>urn:uuid:a648b5d0-efa1-41e0-9fa2-64b0c64a1186</eventID>
+						<epcList />
+						<action>OBSERVE</action>
+						<bizStep>https://ref.gs1.org/cbv/BizStep-receiving</bizStep>
+						<bizLocation>
+							<id>urn:gdst:example.org:location:loc:processor02.0</id>
+						</bizLocation>
+						<quantityList>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.atlanticsalmonwhole.2025121114333525</epcClass>
+								<quantity>12424</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.atlanticsalmonwhole.2025121114333527</epcClass>
+								<quantity>26676</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+							<quantityElement>
+								<epcClass>urn:gdst:example.org:product:lot:class:processor02.atlanticsalmonwhole.2025121114333529</epcClass>
+								<quantity>8127</quantity>
+								<uom>KGM</uom>
+							</quantityElement>
+						</quantityList>
+						<sourceList>
+							<source type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:vessel01.0</source>
+							<source type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:vessel01.0</source>
+						</sourceList>
+						<destinationList>
+							<destination type="https://ref.gs1.org/cbv/SDT-owning_party">urn:gdst:example.org:party:processor02.0</destination>
+							<destination type="https://ref.gs1.org/cbv/SDT-location">urn:gdst:example.org:location:loc:processor02.0</destination>
+						</destinationList>
+						<gdst:productOwner>urn:gdst:example.org:party:processor02.0</gdst:productOwner>
+						<gdst:transportType>AIR</gdst:transportType>
+						<gdst:transportVehicleID>76845c1d-ab6c-4616-adbd-335845c6e1ba</gdst:transportVehicleID>
+						<gdst:transportNumber>aab106b5-831d-410f-83c4-f7b87e83bfd5</gdst:transportNumber>
+						<gdst:transportProviderID>2a3c1b4e-fdd2-4ca7-aeac-f33df91d6940</gdst:transportProviderID>
+						<cbvmda:certificationList>
+							<certification>
+								<gdst:certificationType>urn:gdst:certtype:humanPolicy</gdst:certificationType>
+							</certification>
+							<certification>
+								<gdst:certificationType>urn:gdst:certtype:harvestcoc</gdst:certificationType>
+							</certification>
+						</cbvmda:certificationList>
+						<cbvmda:informationProvider>urn:gdst:example.org:party:processor02.0</cbvmda:informationProvider>
 					</ObjectEvent>
 				</EventList>
 			</resultsBody>
