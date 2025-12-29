@@ -25,7 +25,11 @@ namespace OpenTraceability.TestServer.Controllers
             {
                 return BadRequest("Base Url is not configured.");
             }
-            string documentIdentifier = pgln.Split(":").LastOrDefault();
+            if(string.IsNullOrEmpty(pgln))
+            {
+                return BadRequest("pgln is required.");
+            }
+            string? documentIdentifier = pgln.Split(":").LastOrDefault();
             if (string.IsNullOrEmpty(documentIdentifier))
             {
                 return BadRequest("Invalid pgln.");
