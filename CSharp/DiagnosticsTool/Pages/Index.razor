@@ -158,6 +158,20 @@
             Enter the EPCIS Query Interface endpoint URL
         </small>
     </div>
+
+    <div style="margin-bottom: 1rem;">
+        <label for="manual-api-key" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">EPCIS Query Interface API Key <span style="color: red;">*</span></label>
+        <input id="manual-url"
+               type="password"
+               class="form-control"
+               placeholder="abc-123"
+               @bind="manualAPIKey"
+               disabled="@isManualTestRunning"
+               style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;" />
+        <small class="muted" style="display: block; margin-top: 0.25rem;">
+            Enter the EPCIS Query Interface endpoint API Key
+        </small>
+    </div>
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
         <div>
@@ -238,6 +252,7 @@
     // Manual traceback test fields
     private string manualEpc = string.Empty;
     private string manualUrl = string.Empty;
+    private string manualAPIKey = string.Empty;
     private string manualVersion = "V2";
     private string manualFormat = "JSON";
     private string manualAdditionalParams = string.Empty;
@@ -334,9 +349,10 @@
                     URL = new Uri(manualUrl),
                     Version = Enum.Parse<OpenTraceability.Models.Events.EPCISVersion>(manualVersion),
                     Format = Enum.Parse<EPCISDataFormat>(manualFormat),
-                    EnableStackTrace = true
+                    EnableStackTrace = true,
+                    APIKey = manualAPIKey
                 },
-                ResolveMasterData = manualResolveMasterData
+                ResolveMasterData = manualResolveMasterData,
             };
 
             // Parse additional parameters if provided

@@ -1,6 +1,7 @@
 @page "/diagnostics/{cacheId}"
 @using DiagnosticsTool.Services
 @using DiagnosticsTool.Models.Responses
+@using Newtonsoft.Json
 @using OpenTraceability.Queries.Diagnostics
 @using System.Net.Http
 @inject IDiagnosticsEnvelopeCache Cache
@@ -21,7 +22,7 @@
         }
     }
 
-    string Json(object? o) => o == null ? "null" : System.Text.Json.JsonSerializer.Serialize(o, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+    string Json(object? o) => o == null ? "null" : JsonConvert.SerializeObject(o, Formatting.Indented);
     string FormatHttpRequest(HttpRequestMessage? request) => request?.ToString() ?? "null";
     string FormatHttpResponse(HttpResponseMessage? response) => response?.ToString() ?? "null";
     string FormatTimelineTimestamp(DateTime start, DateTime end)
