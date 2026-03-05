@@ -13,6 +13,14 @@ namespace OpenTraceability.Tests.Identifiers
     public class IdentifierTests
     {
         [Test]
+        [TestCase("urn:epc:idpat:sgtin:008600031303.0")]
+        public void ParseGTIN(string gtinRaw)
+        {
+            GTIN gtin = new GTIN(gtinRaw);
+            string digitalLinkURL = gtin.ToDigitalLinkURL();
+        }
+
+        [Test]
         [TestCase("epc_tests.json")]
         public void EPCTests(string file)
         {
