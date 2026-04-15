@@ -49,9 +49,10 @@ namespace OpenTraceability.Queries
             request.RequestUri = new Uri(fullURL);
             request.Method = HttpMethod.Get;
 
-            // calculate the host field for the request
-            string host = options.URL.Host;
-            request.Headers.Host = host;
+            // Don't manually set the host, as this can cause issues with redirects
+            //// calculate the host field for the request
+            //string host = options.URL.Host;
+            //request.Headers.Host = host;
 
             // set accept to "application/json"
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -127,9 +128,10 @@ namespace OpenTraceability.Queries
             request.RequestUri = new Uri(options.URL + relativeUrl);
             request.Method = HttpMethod.Get;
 
-            // calculate the host field for the request
-            string host = options.URL.Host;
-            request.Headers.Host = host;
+            // Do not manually set the host, as this can cause issues with redirects
+            //// calculate the host field for the request
+            //string host = options.URL.Host;
+            //request.Headers.Host = host;
 
             // set accept to "application/json"
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -369,11 +371,11 @@ namespace OpenTraceability.Queries
                 throw new Exception($"Unrecognized EPCISVersion {options.Version} on the options.");
             }
 
-            // ensure Host header is set BEFORE diagnostics rule executes so the rule does not report a missing host
-            if (request.RequestUri != null)
-            {
-                request.Headers.Host = request.RequestUri.Host;
-            }
+            //// ensure Host header is set BEFORE diagnostics rule executes so the rule does not report a missing host
+            //if (request.RequestUri != null)
+            //{
+            //    request.Headers.Host = request.RequestUri.Host;
+            //}
 
             // DIAGNOSTICS: Execute the rule to validate the HTTP request headers.
             if (report != null)
@@ -389,9 +391,10 @@ namespace OpenTraceability.Queries
             string? responseBody = null;
             try
             {
-                // calculate the host field for the request
-                string host = request.RequestUri?.Host ?? "localhost";
-                request.Headers.Host = host;
+                // Don't manually set the host, as this can cause issues with redirects
+                //// calculate the host field for the request
+                //string host = request.RequestUri?.Host ?? "localhost";
+                //request.Headers.Host = host;
 
                 response = await client.SendAsync(request);
                 responseBody = await response.Content.ReadAsStringAsync();

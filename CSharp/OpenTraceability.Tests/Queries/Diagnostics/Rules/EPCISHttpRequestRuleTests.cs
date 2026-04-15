@@ -113,21 +113,24 @@ public class EPCISHttpRequestRuleTests
         Assert.That(results.Any(r => r.Message.Contains("does not contain expected media type")), Is.True);
     }
 
-    [Test]
-    public async Task ExecuteAsync_WithMissingHostHeader_ShouldReturnError()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "https://example.com");
-        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        // No Host header
+    // Host header is populated dynamically by the client to allow proper SSL handling with redirects
+    // Checking for it before the request is executed is not necessary and forces the caller to manaully
+    // set the host which causes further downstream issues with SSL hanlding.
+    //[Test]
+    //public async Task ExecuteAsync_WithMissingHostHeader_ShouldReturnError()
+    //{
+    //    // Arrange
+    //    var request = new HttpRequestMessage(HttpMethod.Get, "https://example.com");
+    //    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+    //    // No Host header
 
-        // Act
-        var results = await _rule.ExecuteAsync(request.Headers, EPCISVersion.V2, EPCISDataFormat.JSON);
+    //    // Act
+    //    var results = await _rule.ExecuteAsync(request.Headers, EPCISVersion.V2, EPCISDataFormat.JSON);
 
-        // Assert
-        Assert.That(results, Is.Not.Null);
-        Assert.That(results.Any(r => r.Message.Contains("Host header is missing")), Is.True);
-    }
+    //    // Assert
+    //    Assert.That(results, Is.Not.Null);
+    //    Assert.That(results.Any(r => r.Message.Contains("Host header is missing")), Is.True);
+    //}
 
     [Test]
     public void ExecuteAsync_WithInsufficientParameters_ShouldThrowArgumentException()

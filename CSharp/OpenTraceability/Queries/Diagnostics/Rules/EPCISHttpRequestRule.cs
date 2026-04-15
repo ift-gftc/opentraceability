@@ -68,8 +68,11 @@ public class EPCISHttpRequestRule : IDiagnosticsRequestRule
         // VALIDATION #2: Accept Header Validation
         ValidateAcceptHeader(headers, format, results);
 
-        // VALIDATION #3: Host Header Validation
-        ValidateHostHeader(headers, results);
+        // Host header is populated dynamically by the client to allow proper SSL handling with redirects
+        // checking for it before the request is executed is not necessary and forces the caller to manaully
+        // set the host which causes further downstream issues with SSL hanlding.
+        //// VALIDATION #3: Host Header Validation
+        //ValidateHostHeader(headers, results);
 
         return results;
     }
