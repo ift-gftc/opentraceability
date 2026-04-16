@@ -5,3 +5,4 @@
 /Java/opentraceability/.gradle
 /Java/opentraceability/.idea
 /.vs
+/CSharp/OpenTraceability.TestServer/epcis.db

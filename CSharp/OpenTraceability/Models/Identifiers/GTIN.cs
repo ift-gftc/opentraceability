@@ -63,6 +63,26 @@ namespace OpenTraceability.Models.Identifiers
             return _gtinStr.Contains(":idpat:sgtin:");
         }
 
+        public string? ToGTIN14()
+        {
+            if(this.IsGS1GTIN())
+            {
+                string[] gtinParts = _gtinStr.Split(':').Last().Split('.');
+                string productIDMinusIndicatorDigit = gtinParts[1].Substring(1);
+                string gtin14 = gtinParts[1][0] + gtinParts[0] + productIDMinusIndicatorDigit;
+                gtin14 = gtin14 + GS1Util.CalculateGTIN14CheckSum(gtin14);
+                return gtin14;
+            }
+            else if (_gtinStr.Length == 14 && _gtinStr.IsOnlyDigits())
+            {
+                return _gtinStr;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public string ToDigitalLinkURL()
         {
             try
@@ -77,9 +97,7 @@ namespace OpenTraceability.Models.Identifiers
                 }
                 else if (IsGS1GTIN())
                 {
-                    string[] gtinParts = _gtinStr.Split(':').Last().Split('.');
-                    string gtin14 = gtinParts[1][0] + gtinParts[0] + gtinParts[1].Skip(1);
-                    gtin14 = gtin14 + GS1Util.CalculateGTIN14CheckSum(gtin14);
+                    string? gtin14 = ToGTIN14();
                     return $"01/{gtin14}";
                 }
                 else

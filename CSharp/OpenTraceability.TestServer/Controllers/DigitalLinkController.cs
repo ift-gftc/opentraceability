@@ -48,7 +48,7 @@ public class DigitalLinkController : ControllerBase
                 links.Add(new DigitalLink()
                 {
                     link = baseURL + $"/masterdata/{blob_id}/party/{pgln}",
-                    linkType = "gs1:epcis",
+                    linkType = "gs1:masterData",
                     authRequired = true
                 });
             }
@@ -88,7 +88,7 @@ public class DigitalLinkController : ControllerBase
                 links.Add(new DigitalLink()
                 {
                     link = baseURL + $"/masterdata/{blob_id}/location/{gln}",
-                    linkType = "gs1:epcis",
+                    linkType = "gs1:masterData",
                     authRequired = true
                 });
             }
@@ -128,7 +128,7 @@ public class DigitalLinkController : ControllerBase
                 links.Add(new DigitalLink()
                 {
                     link = baseURL + $"/masterdata/{blob_id}/product/{gtin}",
-                    linkType = "gs1:epcis",
+                    linkType = "gs1:masterData",
                     authRequired = true
                 });
             }
@@ -198,7 +198,7 @@ public class DigitalLinkController : ControllerBase
                 links.Add(new DigitalLink()
                 {
                     link = baseURL + $"/masterdata/{blob_id}/{gtin}",
-                    linkType = "gs1:epcis",
+                    linkType = "gs1:masterData",
                     authRequired = true
                 });
             }
@@ -238,7 +238,7 @@ public class DigitalLinkController : ControllerBase
                 links.Add(new DigitalLink()
                 {
                     link = baseURL + $"/masterdata/{blob_id}/{gtin}",
-                    linkType = "gs1:epcis",
+                    linkType = "gs1:masterData",
                     authRequired = true
                 });
             }

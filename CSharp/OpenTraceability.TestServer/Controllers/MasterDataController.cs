@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OpenTraceability.Mappers;
+using OpenTraceability.Models.Identifiers;
 using OpenTraceability.TestServer.Services.Interfaces;
 
 namespace OpenTraceability.TestServer.Controllers;
@@ -45,6 +46,21 @@ public class MasterDataController : ControllerBase
             }
 
             var masterDataItem = doc.MasterData.FirstOrDefault(m => m.ID?.ToLower() == identifier.ToLower() || m.ID?.ToLower() == dlUriId.ToLower());
+            if (masterDataItem == null && type == "product")
+            {
+                masterDataItem = doc.MasterData.FirstOrDefault(m =>
+                {
+                    if (m.VocabularyType != Interfaces.VocabularyType.Tradeitem)
+                        return false;
+
+                    GTIN gtin = new GTIN(m.ID);
+                    string? gtin14 = gtin.ToGTIN14();
+                    if (!string.IsNullOrEmpty(gtin14) && gtin14 == identifier)
+                        return true;
+
+                    return false;
+                });
+            }
             if (masterDataItem == null)
             {
                 return NotFound($"Did not find master data for identifier {identifier}");
