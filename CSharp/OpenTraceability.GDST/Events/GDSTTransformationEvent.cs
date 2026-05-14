@@ -4,15 +4,17 @@ using OpenTraceability.Utility.Attributes;
 
 namespace OpenTraceability.GDST.Events
 {
-    public class GDSTAggregationEvent : AggregationEvent<GDSTILMD>, IGDSTProductOwnerEvent
+    public class GDSTTransformationEvent : TransformationEvent<GDSTILMD>, IGDSTILMDEvent, IGDSTProductOwnerEvent
     {
         [OpenTraceabilityJson("gdst:productOwner")]
         public PGLN? ProductOwner { get; set; }
 
-        public GDSTAggregationEvent()
+        [OpenTraceabilityJson("gdst:humanWelfarePolicy")]
+        public string? HumanWelfarePolicy { get; set; }
+
+        public GDSTTransformationEvent()
         {
-            BusinessStep = new Uri("urn:epcglobal:cbv:bizstep:packing");
-            Action = EventAction.ADD;
+            BusinessStep = new Uri("urn:epcglobal:cbv:bizstep:commissioning");
             Disposition = new Uri("active", UriKind.RelativeOrAbsolute);
         }
     }

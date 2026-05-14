@@ -1,5 +1,7 @@
-﻿using OpenTraceability.GDST.Events;
+using OpenTraceability.GDST.Events;
+using OpenTraceability.GDST.MasterData;
 using OpenTraceability.Models.Events;
+using OpenTraceability.Models.MasterData;
 using OpenTraceability.Queries;
 
 namespace OpenTraceability.GDST
@@ -8,16 +10,18 @@ namespace OpenTraceability.GDST
     {
         public static async Task ResolveGDSTMasterData(DigitalLinkQueryOptions options, EPCISBaseDocument doc, HttpClient client)
         {
-            await MasterDataResolver.ResolveMasterData(options, doc, client);
+            await MasterDataResolver.ResolveMasterData<GDSTTradeItem, GDSTLocation, TradingParty>(options, doc, client);
 
-            // find all master data we have not resolved yet...
-            foreach (var evt in doc.Events)
+            foreach (var evt in doc.Events.OfType<IGDSTEvent>())
             {
-                if (evt is IGDSTEvent)
+                if (evt.InformationProvider is not null)
                 {
-                    IGDSTEvent gdstEvent = (IGDSTEvent)evt;
-                    await MasterDataResolver.ResolveTradingParty(options, gdstEvent.InformationProvider, doc, client);
-                    await MasterDataResolver.ResolveTradingParty(options, gdstEvent.ProductOwner, doc, client);
+                    await MasterDataResolver.ResolveTradingParty(options, evt.InformationProvider, doc, client);
+                }
+
+                if (evt is IGDSTProductOwnerEvent productOwnerEvent && productOwnerEvent.ProductOwner is not null)
+                {
+                    await MasterDataResolver.ResolveTradingParty(options, productOwnerEvent.ProductOwner, doc, client);
                 }
             }
         }

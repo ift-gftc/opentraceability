@@ -1,16 +1,25 @@
-﻿using OpenTraceability.Models.MasterData;
-using OpenTraceability.Utility.Attributes;
+using OpenTraceability.Models.MasterData;
 using OpenTraceability.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenTraceability.Utility.Attributes;
 
 namespace OpenTraceability.GDST.MasterData
 {
     public class GDSTLocation : Location
     {
+        [OpenTraceabilityArray]
+        [OpenTraceabilityObject]
+        [OpenTraceabilityJson("gdst:locationClassification")]
+        [OpenTraceabilityMasterData("urn:gdst:kde#locationClassification")]
+        public List<GDSTClassification> LocationClassification { get; set; } = new List<GDSTClassification>();
+
+        [OpenTraceabilityJson("geoLocation")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#geoLocation")]
+        public string? GeoLocation { get; set; }
+
+        [OpenTraceabilityJson("geoFence")]
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#geoFence")]
+        public string? GeoFence { get; set; }
+
         [OpenTraceabilityJson("cbvmda:vesselFlagState")]
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#vesselFlagState")]
         public Country? VesselFlagState { get; set; }

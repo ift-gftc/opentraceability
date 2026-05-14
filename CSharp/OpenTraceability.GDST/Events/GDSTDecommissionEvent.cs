@@ -4,15 +4,15 @@ using OpenTraceability.Utility.Attributes;
 
 namespace OpenTraceability.GDST.Events
 {
-    public class GDSTComminglingEvent: TransformationEvent<GDSTILMD>, IGDSTILMDEvent   
+    public class GDSTDecommissionEvent : ObjectEvent<GDSTILMD>, IGDSTProductOwnerEvent
     {
-        [OpenTraceability(Constants.GDST_NAMESPACE, "productOwner")]
         [OpenTraceabilityJson("gdst:productOwner")]
         public PGLN? ProductOwner { get; set; }
 
-        public GDSTComminglingEvent()
+        public GDSTDecommissionEvent()
         {
-            this.BusinessStep = new Uri("urn:gdst:bizStep:commingling");
+            BusinessStep = new Uri("urn:epcglobal:cbv:bizstep:destroying");
+            Action = EventAction.DELETE;
         }
     }
 }

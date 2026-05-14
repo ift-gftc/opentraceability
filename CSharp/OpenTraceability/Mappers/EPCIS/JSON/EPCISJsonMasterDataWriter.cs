@@ -111,23 +111,32 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                             }
                         }
                     }
-                    else if (p.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
-                    {
-                        JObject jAttribute = new JObject(new JProperty("id", id), new JProperty("attribute", WriteObject(p.PropertyType, o)));
-                        jAttributes.Add(jAttribute);
-                    }
                     else if (p.GetCustomAttribute<OpenTraceabilityArrayAttribute>() != null)
                     {
                         IList l = (IList)o;
                         foreach (var i in l)
                         {
-                            string str = i.ToString();
-                            if (str != null)
+                            JToken? value;
+                            if (p.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
                             {
-                                JObject jAttribute = new JObject(new JProperty("id", id), new JProperty("attribute", str));
+                                value = WriteObject(i.GetType(), i);
+                            }
+                            else
+                            {
+                                value = i.ToString();
+                            }
+
+                            if (value != null)
+                            {
+                                JObject jAttribute = new JObject(new JProperty("id", id), new JProperty("attribute", value));
                                 jAttributes.Add(jAttribute);
                             }
                         }
+                    }
+                    else if (p.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
+                    {
+                        JObject jAttribute = new JObject(new JProperty("id", id), new JProperty("attribute", WriteObject(p.PropertyType, o)));
+                        jAttributes.Add(jAttribute);
                     }
                     else if (o.GetType() == typeof(List<LanguageString>))
                     {
@@ -169,22 +178,45 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             JObject j = new JObject();
             foreach (var property in t.GetProperties())
             {
+                if (property.GetIndexParameters().Length > 0)
+                {
+                    continue;
+                }
+
                 object value = property.GetValue(o);
                 if (value != null)
                 {
                     OpenTraceabilityAttribute xmlAtt = property.GetCustomAttribute<OpenTraceabilityAttribute>();
-                    if (xmlAtt != null)
+                    OpenTraceabilityJsonAttribute jsonAtt = property.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
+                    string? name = jsonAtt?.Name ?? xmlAtt?.Name;
+                    if (name != null)
                     {
-                        if (property.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
+                        if (property.GetCustomAttribute<OpenTraceabilityArrayAttribute>() != null && value is IList list)
                         {
-                            j[xmlAtt.Name] = WriteObject(property.PropertyType, value);
+                            JArray array = new JArray();
+                            foreach (var item in list)
+                            {
+                                if (property.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
+                                {
+                                    array.Add(WriteObject(item.GetType(), item));
+                                }
+                                else
+                                {
+                                    array.Add(item.ToString());
+                                }
+                            }
+                            j[name] = array;
+                        }
+                        else if (property.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
+                        {
+                            j[name] = WriteObject(property.PropertyType, value);
                         }
                         else
                         {
                             string str = value.ToString();
                             if (str != null)
                             {
-                                j[xmlAtt.Name] = str;
+                                j[name] = str;
                             }
                         }
                     }
