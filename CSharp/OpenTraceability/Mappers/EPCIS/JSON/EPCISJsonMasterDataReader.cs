@@ -54,7 +54,14 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         {
             // read the GTIN from the id
             string id = xTradeitem["id"]?.ToString() ?? string.Empty;
-            Tradeitem tradeitem = new Tradeitem();
+            Type t = Setup.MasterDataTypes[type];
+
+            var instance = Activator.CreateInstance(t);
+            if (!(instance is Tradeitem tradeitem))
+            {
+                throw new Exception($"Failed to create instance of Tradeitem from type {t}");
+            }
+
             tradeitem.GTIN = new Models.Identifiers.GTIN(id);
             tradeitem.EPCISType = type;
 
@@ -162,8 +169,26 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 {
                     if (!TrySetValueType(jAtt["attribute"]?.ToString() ?? string.Empty, propMapping.Property, md))
                     {
-                        object value = ReadKDEObject(jAtt, propMapping.Property.PropertyType);
-                        propMapping.Property.SetValue(md, value);
+                        JToken? attribute = jAtt["attribute"];
+                        if (propMapping.Property.GetCustomAttribute<OpenTraceabilityArrayAttribute>() != null && propMapping.Property.GetValue(md) is IList list)
+                        {
+                            if (attribute is JArray array)
+                            {
+                                foreach (JToken item in array)
+                                {
+                                    list.Add(ReadKDEObject(item, propMapping.Property.PropertyType.GenericTypeArguments[0]));
+                                }
+                            }
+                            else if (attribute != null)
+                            {
+                                list.Add(ReadKDEObject(attribute, propMapping.Property.PropertyType.GenericTypeArguments[0]));
+                            }
+                        }
+                        else if (attribute != null)
+                        {
+                            object value = ReadKDEObject(attribute, propMapping.Property.PropertyType);
+                            propMapping.Property.SetValue(md, value);
+                        }
                     }
                 }
                 else if (readKDEs)
@@ -199,11 +224,16 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 IList list = (IList)value;
                 if (j is JArray)
                 {
-                    foreach (JObject xchild in (JArray)j)
+                    foreach (JToken xchild in (JArray)j)
                     {
                         object child = ReadKDEObject(xchild, t.GenericTypeArguments[0]);
                         list.Add(child);
                     }
+                }
+                else if (j != null)
+                {
+                    object child = ReadKDEObject(j, t.GenericTypeArguments[0]);
+                    list.Add(child);
                 }
             }
             else
@@ -212,15 +242,18 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 foreach (PropertyInfo p in t.GetProperties())
                 {
                     OpenTraceabilityAttribute xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
-                    if (xmlAtt != null)
+                    OpenTraceabilityJsonAttribute jsonAtt = p.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
+                    string? name = jsonAtt?.Name ?? xmlAtt?.Name;
+                    if (name != null)
                     {
-                        JToken x = j[xmlAtt.Name];
+                        JToken x = j[name];
                         if (x != null)
                         {
                             OpenTraceabilityObjectAttribute objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
                             if (objAtt != null)
                             {
                                 object o = ReadKDEObject(x, p.PropertyType);
+                                p.SetValue(value, o);
                             }
                             else if (!TrySetValueType(x.ToString(), p, value))
                             {
