@@ -15,7 +15,6 @@ namespace OpenTraceability.GDST.Events
         public GDSTTransformationEvent()
         {
             BusinessStep = new Uri("urn:epcglobal:cbv:bizstep:commissioning");
-            Disposition = new Uri("active", UriKind.RelativeOrAbsolute);
         }
     }
 }

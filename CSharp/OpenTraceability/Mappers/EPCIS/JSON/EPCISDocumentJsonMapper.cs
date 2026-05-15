@@ -46,8 +46,9 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 JArray jEventList = json["epcisBody"]?["eventList"] as JArray;
                 if (jEventList != null)
                 {
-                    foreach (JObject jEvent in jEventList)
+                    foreach (JToken jToken in jEventList)
                     {
+                        if (jToken is not JObject jEvent) continue;
                         Type eventType = EPCISDocumentBaseJsonMapper.GetEventTypeFromProfile(jEvent);
                         IEvent e = (IEvent)OpenTraceabilityJsonLDMapper.FromJson(jEvent, eventType, doc.Namespaces);
                         doc.Events.Add(e);

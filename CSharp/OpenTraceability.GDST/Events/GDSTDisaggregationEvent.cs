@@ -13,7 +13,6 @@ namespace OpenTraceability.GDST.Events
         {
             BusinessStep = new Uri("urn:epcglobal:cbv:bizstep:unpacking");
             Action = EventAction.DELETE;
-            Disposition = new Uri("inactive", UriKind.RelativeOrAbsolute);
         }
     }
 }

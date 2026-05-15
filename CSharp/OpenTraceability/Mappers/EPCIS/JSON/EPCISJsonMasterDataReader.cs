@@ -27,21 +27,24 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         {
             if (jMasterData["vocabularyList"] is JArray jVocabList)
             {
-                foreach (JObject jVocabListItem in jVocabList)
+                foreach (JToken jVocabListToken in jVocabList)
                 {
-                    string type = jVocabListItem["type"]?.ToString()?.ToLower();
+                    if (jVocabListToken is not JObject jVocabListItem) continue;
+                    string typeRaw = jVocabListItem["type"]?.ToString();
+                    string type = typeRaw?.ToLower();
                     if (type != null)
                     {
                         if (jVocabListItem["vocabularyElementList"] is JArray jVocabElementaryList)
                         {
-                            foreach (JObject jVocabEle in jVocabElementaryList)
+                            foreach (JToken jVocabEleToken in jVocabElementaryList)
                             {
+                                if (jVocabEleToken is not JObject jVocabEle) continue;
                                 switch (type)
                                 {
-                                    case "urn:epcglobal:epcis:vtype:epcclass": ReadTradeitem(doc, jVocabEle, type); break;
-                                    case "urn:epcglobal:epcis:vtype:location": ReadLocation(doc, jVocabEle, type); break;
-                                    case "urn:epcglobal:epcis:vtype:party": ReadTradingParty(doc, jVocabEle, type); break;
-                                    default: ReadUnknown(doc, jVocabEle, type); break;
+                                    case "urn:epcglobal:epcis:vtype:epcclass": ReadTradeitem(doc, jVocabEle, typeRaw); break;
+                                    case "urn:epcglobal:epcis:vtype:location": ReadLocation(doc, jVocabEle, typeRaw); break;
+                                    case "urn:epcglobal:epcis:vtype:party": ReadTradingParty(doc, jVocabEle, typeRaw); break;
+                                    default: ReadUnknown(doc, jVocabEle, typeRaw); break;
                                 }
                             }
                         }
@@ -54,7 +57,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         {
             // read the GTIN from the id
             string id = xTradeitem["id"]?.ToString() ?? string.Empty;
-            Type t = Setup.MasterDataTypes[type];
+            Type t = Setup.MasterDataTypes[type.ToLower()];
 
             var instance = Activator.CreateInstance(t);
             if (!(instance is Tradeitem tradeitem))
@@ -74,7 +77,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         {
             // read the GLN from the id
             string id = xLocation["id"]?.ToString() ?? string.Empty;
-            Type t = Setup.MasterDataTypes[type];
+            Type t = Setup.MasterDataTypes[type.ToLower()];
 
             var instance = Activator.CreateInstance(t);
             if (!(instance is Location loc))

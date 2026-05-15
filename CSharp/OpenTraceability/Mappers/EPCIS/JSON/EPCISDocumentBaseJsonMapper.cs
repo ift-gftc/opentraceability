@@ -183,7 +183,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             // set the creation date
             if (doc.CreationDate != null)
             {
-                json["creationDate"] = doc.CreationDate.Value.ToString("O");
+                json["creationDate"] = doc.CreationDate.Value.ToUniversalTime().ToString("O");
             }
 
             json["schemaVersion"] = "2.0";
@@ -378,7 +378,8 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             {
                 CommentHandling = CommentHandling.Ignore,
             };
-            JObject json = JObject.Parse(jEPCISStr, loadSettings);
+            var jsonReaderSettings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
+            JObject json = JsonConvert.DeserializeObject<JObject>(jEPCISStr, jsonReaderSettings) ?? JObject.Parse(jEPCISStr, loadSettings);
 
             JObject jEPCISContext = await JsonContextHelper.GetJsonLDContextAsync("https://ref.gs1.org/standards/epcis/epcis-context.jsonld");
             Dictionary<string, string> namespaces = JsonContextHelper.ScrapeNamespaces(jEPCISContext);
@@ -390,9 +391,12 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
             if (jEventList != null)
             {
-                foreach (JObject jEvent in jEventList)
+                foreach (JToken jToken in jEventList)
                 {
-                    JsonContextHelper.ExpandVocab(jEvent, jEPCISContext, namespaces);
+                    if (jToken is JObject jEvent)
+                    {
+                        JsonContextHelper.ExpandVocab(jEvent, jEPCISContext, namespaces);
+                    }
                 }
             }
 

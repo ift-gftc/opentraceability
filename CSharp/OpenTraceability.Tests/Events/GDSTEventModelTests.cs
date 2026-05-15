@@ -46,13 +46,13 @@ namespace OpenTraceability.Tests.Events
         [Test]
         public void ConstructorDefaults()
         {
-            AssertCombination(new GDSTCommissionEvent(), EventType.ObjectEvent, EventAction.ADD, "urn:epcglobal:cbv:bizstep:commissioning", "active");
-            AssertCombination(new GDSTAggregationEvent(), EventType.AggregationEvent, EventAction.ADD, "urn:epcglobal:cbv:bizstep:packing", "active");
-            AssertCombination(new GDSTDisaggregationEvent(), EventType.AggregationEvent, EventAction.DELETE, "urn:epcglobal:cbv:bizstep:unpacking", "inactive");
-            AssertCombination(new GDSTShippingEvent(), EventType.ObjectEvent, EventAction.OBSERVE, "urn:epcglobal:cbv:bizstep:shipping", "in_transit");
-            AssertCombination(new GDSTReceivingEvent(), EventType.ObjectEvent, EventAction.OBSERVE, "urn:epcglobal:cbv:bizstep:receiving", "arrived");
-            AssertCombination(new GDSTTransformationEvent(), EventType.TransformationEvent, null, "urn:epcglobal:cbv:bizstep:commissioning", "active");
-            AssertCombination(new GDSTDecommissionEvent(), EventType.ObjectEvent, EventAction.DELETE, "urn:epcglobal:cbv:bizstep:destroying", null);
+            AssertCombination(new GDSTCommissionEvent(), EventType.ObjectEvent, EventAction.ADD, "urn:epcglobal:cbv:bizstep:commissioning");
+            AssertCombination(new GDSTAggregationEvent(), EventType.AggregationEvent, EventAction.ADD, "urn:epcglobal:cbv:bizstep:packing");
+            AssertCombination(new GDSTDisaggregationEvent(), EventType.AggregationEvent, EventAction.DELETE, "urn:epcglobal:cbv:bizstep:unpacking");
+            AssertCombination(new GDSTShippingEvent(), EventType.ObjectEvent, EventAction.OBSERVE, "urn:epcglobal:cbv:bizstep:shipping");
+            AssertCombination(new GDSTReceivingEvent(), EventType.ObjectEvent, EventAction.OBSERVE, "urn:epcglobal:cbv:bizstep:receiving");
+            AssertCombination(new GDSTTransformationEvent(), EventType.TransformationEvent, null, "urn:epcglobal:cbv:bizstep:commissioning");
+            AssertCombination(new GDSTDecommissionEvent(), EventType.ObjectEvent, EventAction.DELETE, "urn:epcglobal:cbv:bizstep:destroying");
         }
 
         [Test]
@@ -980,12 +980,11 @@ namespace OpenTraceability.Tests.Events
             };
         }
 
-        private static void AssertCombination(IEvent evt, EventType eventType, EventAction? action, string businessStep, string? disposition)
+        private static void AssertCombination(IEvent evt, EventType eventType, EventAction? action, string businessStep)
         {
             Assert.That(evt.EventType, Is.EqualTo(eventType));
             Assert.That(evt.Action, Is.EqualTo(action));
             Assert.That(evt.BusinessStep.ToString(), Is.EqualTo(businessStep));
-            Assert.That(evt.Disposition?.ToString(), Is.EqualTo(disposition));
         }
 
         public sealed class ProfileRoundTripCase

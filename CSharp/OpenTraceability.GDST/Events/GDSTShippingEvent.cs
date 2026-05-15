@@ -12,7 +12,6 @@ namespace OpenTraceability.GDST.Events
         {
             BusinessStep = new Uri("urn:epcglobal:cbv:bizstep:shipping");
             Action = EventAction.OBSERVE;
-            Disposition = new Uri("in_transit", UriKind.RelativeOrAbsolute);
         }
     }
 }

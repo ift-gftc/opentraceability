@@ -613,7 +613,7 @@ namespace OpenTraceability.Mappers
             }
             else if (t == typeof(Uri))
             {
-                Uri v = new Uri(value);
+                Uri v = new Uri(value, UriKind.RelativeOrAbsolute);
                 return v;
             }
             else if (t == typeof(TimeSpan) || t == typeof(TimeSpan?))

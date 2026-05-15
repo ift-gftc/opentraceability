@@ -115,12 +115,6 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                             }
                         }
                     }
-                    else if (p.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
-                    {
-                        XElement xAtt = new XElement("attribute", new XAttribute("id", id));
-                        WriteObject(xAtt, p.PropertyType, o);
-                        xVocabEle.Add(xAtt);
-                    }
                     else if (p.GetCustomAttribute<OpenTraceabilityArrayAttribute>() != null)
                     {
                         IList l = (IList)o;
@@ -134,6 +128,12 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                                 xVocabEle.Add(xAtt);
                             }
                         }
+                    }
+                    else if (p.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
+                    {
+                        XElement xAtt = new XElement("attribute", new XAttribute("id", id));
+                        WriteObject(xAtt, p.PropertyType, o);
+                        xVocabEle.Add(xAtt);
                     }
                     else if (o.GetType() == typeof(List<LanguageString>))
                     {
@@ -175,8 +175,9 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             foreach (var property in t.GetProperties())
             {
+                if (property.GetIndexParameters().Length > 0) continue;
                 object value = property.GetValue(o);
-                if (value != null)
+                if (value != null && !(value is System.Collections.ICollection col && col.Count == 0))
                 {
                     OpenTraceabilityAttribute xmlAtt = property.GetCustomAttribute<OpenTraceabilityAttribute>();
                     if (xmlAtt != null)
