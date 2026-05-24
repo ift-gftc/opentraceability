@@ -1,5 +1,4 @@
 ﻿using OpenTraceability.Interfaces;
-using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
 using System;
 using System.Collections.Generic;
@@ -22,10 +21,10 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceabilityJson("reason")]
         [OpenTraceability("@type")]
-        public Uri Reason { get; set; }
+        public Uri? Reason { get; set; }
 
         [OpenTraceability("declarationTime")]
-        public DateTimeOffset? DeclarationTime { get; set; }
+        public DateTimeOffset DeclarationTime { get; set; }
 
         [OpenTraceabilityArray("correctiveEventID")]
         [OpenTraceability("correctiveEventIDs")]

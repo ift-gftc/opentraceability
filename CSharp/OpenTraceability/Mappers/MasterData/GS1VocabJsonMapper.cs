@@ -13,7 +13,7 @@ namespace OpenTraceability.Mappers.MasterData
             if (vocab.Context == null)
             {
                 vocab.Context = JObject.Parse(@"{
-                                    ""cbvmda"": ""urn:epcglobal:cbvmda:mda"",
+                                    ""cbvmda"": ""urn:epcglobal:cbv:mda"",
                                     ""xsd"": ""http://www.w3.org/2001/XMLSchema#"",
                                     ""gs1"": ""http://gs1.org/voc/"",
                                     ""@vocab"": ""http://gs1.org/voc/"",
