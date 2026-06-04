@@ -18,6 +18,18 @@ namespace OpenTraceability.Tests.Events
     public class MasterDataTests
     {
         [Test]
+        [TestCase("gs1-vocab-products01.json", VocabularyType.Tradeitem)]
+        public void GS1WebVocab_VocabularyElement_Deserializes(string file, VocabularyType vocabularyType)
+        {
+            // read object events from test data specified in the file argument
+            string json = OpenTraceabilityTests.ReadTestData(file);
+
+            // map into a trade item
+            VocabularyElement element = (VocabularyElement)OpenTraceabilityMappers.MasterData.GS1WebVocab.Map<VocabularyElement>(json);
+            Assert.That(element.VocabularyType == vocabularyType);
+        }
+
+        [Test]
         [TestCase("gs1-vocab-products01.json")]
         public void GS1WebVocab_Products(string file)
         {
