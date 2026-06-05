@@ -10,6 +10,7 @@ using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Queries;
 using OpenTraceability.TestServer.Core.Data.Entities;
+using OpenTraceability.Utility;
 
 namespace OpenTraceability.TestServer.Core.Data
 {
@@ -312,7 +313,7 @@ namespace OpenTraceability.TestServer.Core.Data
             {
                 if (evt.EventID == null)
                 {
-                    evt.EventID = new Uri("urn:opentraceability:synthetic:" + ComputeEventFingerprint(evt, namespaces));
+                    evt.EventID = new Uri(EventHashGenerator.GenerateHash(evt));
                 }
             }
         }
