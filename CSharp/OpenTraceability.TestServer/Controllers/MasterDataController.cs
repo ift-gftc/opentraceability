@@ -1,83 +1,87 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OpenTraceability.Mappers;
-using OpenTraceability.Models.Identifiers;
-using OpenTraceability.TestServer.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using OpenTraceability.Interfaces;
+using OpenTraceability.TestServer.Core.Services;
+using OpenTraceability.TestServer.Infrastructure;
 
 namespace OpenTraceability.TestServer.Controllers;
 
+[ApiController]
+[Authorize]
 [Route("masterdata")]
 public class MasterDataController : ControllerBase
 {
-    private IEPCISBlobService _blobService;
-    private IConfiguration _config;
+    private readonly MasterDataService _masterData;
+    private readonly IngestionService _ingestionService;
+    private readonly SupportedModules _modules;
 
-    public MasterDataController(IEPCISBlobService blobService, IConfiguration config)
+    public MasterDataController(MasterDataService masterData, IngestionService ingestionService, SupportedModules modules)
     {
-        _blobService = blobService;
-        _config = config;
+        _masterData = masterData;
+        _ingestionService = ingestionService;
+        _modules = modules;
     }
 
-    [HttpGet]
-    [Route("{blob_id}/{type}/{identifier}")]
-    public async Task<IActionResult> GetMasterData(string blob_id, string type, string identifier)
+    /// <summary>Returns the module-minified master data definition for a single identifier.</summary>
+    [HttpGet("{type}/{identifier}")]
+    public async Task<IActionResult> GetMasterData(string type, string identifier)
+    {
+        string datasetId = Request.GetDatasetId();
+        string? json = await _masterData.GetMasterDataJsonAsync(datasetId, identifier, _modules.Modules);
+        if (json == null)
+        {
+            return NotFound($"Did not find master data for identifier {identifier}");
+        }
+        return Content(json, "application/json");
+    }
+
+    /// <summary>Returns all master data definitions of a given type (product / location / party).</summary>
+    [HttpGet("{type}")]
+    public async Task<IActionResult> GetMasterDataDefinitions(string type)
+    {
+        if (!TryMapVocabularyType(type, out var vocabType))
+        {
+            return BadRequest($"unknown master data type {type}");
+        }
+        string datasetId = Request.GetDatasetId();
+        string json = await _masterData.GetMasterDataDefinitionsJsonAsync(datasetId, vocabType, _modules.Modules);
+        return Content(json, "application/json");
+    }
+
+    /// <summary>Ingests GS1 Web Vocab JSON-LD master data (single object or array).</summary>
+    [HttpPost]
+    public async Task<IActionResult> PostMasterData()
     {
         try
         {
-            // load the blob
-            var blob = await _blobService.LoadBlob(blob_id);
+            Request.EnableBuffering();
+            Request.Body.Position = 0;
+            string rawBody = await new StreamReader(Request.Body).ReadToEndAsync();
 
-            // throw an error if the blob does not exist
-            if (blob == null)
-            {
-                return BadRequest("blob does not exist");
-            }
-
-            // convert blob into EPCIS Document
-            var doc = blob.ToEPCISDocument();
-
-            // create a digital link URI version of the identifier as well.
-            string dlUriId;
-            switch (type)
-            {
-                case "product": dlUriId = $"https://id.gs1.org/01/{identifier}"; break;
-                case "location": dlUriId = $"https://id.gs1.org/414/{identifier}"; break;
-                case "party": dlUriId = $"https://id.gs1.org/417/{identifier}"; break;
-                default: return BadRequest($"unknown master data type {type}");
-            }
-
-            var masterDataItem = doc.MasterData.FirstOrDefault(m => m.ID?.ToLower() == identifier.ToLower() || m.ID?.ToLower() == dlUriId.ToLower());
-            if (masterDataItem == null && type == "product")
-            {
-                masterDataItem = doc.MasterData.FirstOrDefault(m =>
-                {
-                    if (m.VocabularyType != Interfaces.VocabularyType.Tradeitem)
-                        return false;
-
-                    GTIN gtin = new GTIN(m.ID);
-                    string? gtin14 = gtin.ToGTIN14();
-                    if (!string.IsNullOrEmpty(gtin14) && gtin14 == identifier)
-                        return true;
-
-                    return false;
-                });
-            }
-            if (masterDataItem == null)
-            {
-                return NotFound($"Did not find master data for identifier {identifier}");
-            }
-            else
-            {
-                string json = OpenTraceabilityMappers.MasterData.GS1WebVocab.Map(masterDataItem);
-
-                await this.Response.WriteAsync(json);
-
-                return Empty;
-            }
+            string datasetId = Request.GetDatasetId();
+            int count = await _ingestionService.IngestMasterDataAsync(datasetId, rawBody);
+            return Ok(new { masterDataStored = count });
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            throw;
+            return BadRequest("Failed to ingest master data: " + ex.Message);
+        }
+    }
+
+    private static bool TryMapVocabularyType(string type, out VocabularyType vocabType)
+    {
+        switch (type.ToLower())
+        {
+            case "product":
+            case "tradeitem":
+                vocabType = VocabularyType.Tradeitem; return true;
+            case "location":
+                vocabType = VocabularyType.Location; return true;
+            case "party":
+            case "tradingparty":
+                vocabType = VocabularyType.TradingParty; return true;
+            default:
+                vocabType = VocabularyType.Unknown; return false;
         }
     }
 }
