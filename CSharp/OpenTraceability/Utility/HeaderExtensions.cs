@@ -29,5 +29,28 @@ namespace OpenTraceability.Utility
                 }
             }
         }
+
+        /// <summary>
+        /// Applies an optional X-API-Key and any additional custom headers to the request. Each header is
+        /// only added if the request does not already contain it, and adding never throws.
+        /// </summary>
+        public static void ApplyOptionHeaders(this HttpRequestHeaders headers, string? apiKey, IDictionary<string, string>? customHeaders)
+        {
+            if (!string.IsNullOrEmpty(apiKey) && !headers.Contains("X-API-Key"))
+            {
+                headers.TryAddWithoutValidation("X-API-Key", apiKey);
+            }
+
+            if (customHeaders != null)
+            {
+                foreach (var header in customHeaders)
+                {
+                    if (!string.IsNullOrEmpty(header.Key) && !headers.Contains(header.Key))
+                    {
+                        headers.TryAddWithoutValidation(header.Key, header.Value);
+                    }
+                }
+            }
+        }
     }
 }

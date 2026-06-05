@@ -27,6 +27,13 @@
                             "id": "urn:gdst:example.org:product:class:feedmill.1",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Feed"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Fish Feed"
                                 },
@@ -39,6 +46,20 @@
                         {
                             "id": "urn:gdst:example.org:product:class:hatchery.1",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Developing"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Tuna Fryling"
@@ -61,6 +82,20 @@
                             "id": "urn:gdst:wholechain.com:product:class:fishcompany.sal-fry",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Developing"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Salmon Fry"
                                 },
@@ -82,6 +117,20 @@
                             "id": "urn:gdst:example.org:product:class:fisherman01.tuna",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "WildCaught"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Whole Yellowfin Tuna"
                                 },
@@ -94,6 +143,20 @@
                         {
                             "id": "urn:gdst:example.org:product:class:fishfarm.1",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Mature"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Farmed Tuna"
@@ -116,6 +179,13 @@
                             "id": "urn:gdst:example.org:product:class:processor.10",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Tuna"
                                 },
@@ -136,6 +206,13 @@
                         {
                             "id": "urn:gdst:example.org:product:class:processor.2",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Can of Tuna"
@@ -158,6 +235,20 @@
                             "id": "urn:gdst:wholechain.com:product:class:fishcompany.tuna",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "WildCaught"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Whole Yellowfin Tuna"
                                 },
@@ -178,6 +269,13 @@
                         {
                             "id": "urn:gdst:wholechain.com:product:class:fishcompany.sal-whole",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Whole Salmon"
@@ -200,6 +298,13 @@
                             "id": "urn:gdst:wholechain.com:product:class:fishcompany.hgtuna",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "HG Yellowfin Tuna"
                                 },
@@ -220,6 +325,13 @@
                         {
                             "id": "urn:gdst:wholechain.com:product:class:processingcompany.tunafilet",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Processed Filets"
@@ -319,7 +431,7 @@
                         "eventID": "urn:uuid:0ed30680-7f6e-428b-a916-71595059606f",
                         "epcList": [],
                         "action": "ADD",
-                        "bizStep": "urn:gdst:bizStep:hatching",
+                        "bizStep": "commissioning",
                         "disposition": "active",
                         "bizLocation": {
                             "id": "urn:gdst:example.org:location:loc:hatchery.1"
@@ -372,7 +484,7 @@
                         "eventID": "urn:uuid:bedb0a63-5463-4349-9093-a727c2cb94ec",
                         "epcList": [],
                         "action": "ADD",
-                        "bizStep": "urn:gdst:bizStep:hatching",
+                        "bizStep": "commissioning",
                         "disposition": "active",
                         "bizLocation": {
                             "id": "urn:gdst:wholechain.com:location:loc:fishcompany.portsd"
@@ -423,7 +535,7 @@
                         "eventID": "urn:uuid:299e0545-76ed-4eba-8470-0db0dac191a9",
                         "epcList": [],
                         "action": "ADD",
-                        "bizStep": "urn:gdst:bizStep:fishingEvent",
+                        "bizStep": "commissioning",
                         "disposition": "active",
                         "bizLocation": {
                             "id": "urn:epc:id:sgln:08600031303.1.0"
@@ -456,7 +568,7 @@
                                     }
                                 ]
                             },
-                            "cbvmda:productionMethodForFishAndSeafoodCode": "MARINE_FISHERY",
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "wild-caught",
                             "cbvmda:lotNumber": "V1-0122-2022",
                             "cbvmda:certificationList": {
                                 "certification": [
@@ -513,14 +625,14 @@
                                 "uom": "KGM"
                             }
                         ],
-                        "bizStep": "urn:gdst:bizStep:farmHarvest",
+                        "bizStep": "commissioning",
                         "disposition": "active",
                         "bizLocation": {
                             "id": "urn:gdst:example.org:location:loc:fishfarm.1"
                         },
                         "ilmd": {
                             "gdst:aquacultureMethod": "intensive ponds",
-                            "cbvmda:productionMethodForFishAndSeafoodCode": "AQUACULTURE",
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "aquaculture",
                             "cbvmda:lotNumber": "FARMED-TUNA-01192022",
                             "cbvmda:certificationList": {
                                 "certification": [
@@ -607,7 +719,7 @@
                         "eventID": "urn:uuid:970f1561-9860-41a8-8333-0326c84d5d32",
                         "epcList": [],
                         "action": "OBSERVE",
-                        "bizStep": "urn:gdst:bizStep:transshipment",
+                        "bizStep": "shipping",
                         "disposition": "active",
                         "readPoint": {
                             "id": "geo:-34.3232,1.232"
@@ -695,7 +807,7 @@
                         "eventID": "urn:uuid:a785c7b0-2576-4ade-9879-3911096a177d",
                         "epcList": [],
                         "action": "OBSERVE",
-                        "bizStep": "urn:gdst:bizStep:landing",
+                        "bizStep": "receiving",
                         "disposition": "active",
                         "readPoint": {
                             "id": "geo:0,0"
@@ -840,7 +952,7 @@
                                 "uom": "KGM"
                             }
                         ],
-                        "bizStep": "urn:gdst:bizstep:commingling",
+                        "bizStep": "commissioning",
                         "disposition": "active",
                         "bizLocation": {
                             "id": "urn:gdst:example.org:location:loc:processor.plant1"
@@ -1073,7 +1185,7 @@
                         "eventID": "urn:uuid:574d3866-134d-4f43-92d1-384b4e8bb46c",
                         "epcList": [],
                         "action": "ADD",
-                        "bizStep": "urn:gdst:bizStep:fishingEvent",
+                        "bizStep": "commissioning",
                         "disposition": "active",
                         "bizLocation": {
                             "id": "urn:gdst:wholechain.com:location:loc:fishcompany.boat1"
@@ -1106,7 +1218,7 @@
                                     }
                                 ]
                             },
-                            "cbvmda:productionMethodForFishAndSeafoodCode": "MARINE_FISHERY",
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "wild-caught",
                             "cbvmda:lotNumber": "23423445"
                         },
                         "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
@@ -1145,7 +1257,7 @@
                         "eventID": "urn:uuid:24e5d229-d4b3-413f-94eb-e59392c9a4a2",
                         "epcList": [],
                         "action": "ADD",
-                        "bizStep": "urn:gdst:bizStep:fishingEvent",
+                        "bizStep": "commissioning",
                         "disposition": "active",
                         "bizLocation": {
                             "id": "urn:gdst:wholechain.com:location:loc:fishcompany.boat1"
@@ -1178,7 +1290,7 @@
                                     }
                                 ]
                             },
-                            "cbvmda:productionMethodForFishAndSeafoodCode": "MARINE_FISHERY",
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "wild-caught",
                             "cbvmda:lotNumber": "23423"
                         },
                         "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
@@ -1234,7 +1346,7 @@
                                 "uom": "KGM"
                             }
                         ],
-                        "bizStep": "urn:gdst:bizstep:commingling",
+                        "bizStep": "commissioning",
                         "disposition": "active",
                         "bizLocation": {
                             "id": "urn:gdst:wholechain.com:location:loc:fishcompany.boat1"
@@ -1299,14 +1411,14 @@
                             }
                         ],
                         "transformationID": "",
-                        "bizStep": "urn:gdst:bizStep:farmHarvest",
+                        "bizStep": "commissioning",
                         "disposition": "active",
                         "bizLocation": {
                             "id": "urn:gdst:wholechain.com:location:loc:fishcompany.portsd"
                         },
                         "ilmd": {
                             "gdst:aquacultureMethod": "Intensive",
-                            "cbvmda:productionMethodForFishAndSeafoodCode": "AQUACULTURE"
+                            "cbvmda:productionMethodForFishAndSeafoodCode": "aquaculture"
                         },
                         "gdst:productOwner": "urn:gdst:wholechain.com:party:fishcompany.0",
                         "cbvmda:certificationList": {
@@ -1409,7 +1521,7 @@
                         "eventID": "urn:uuid:74129d97-3c7c-462f-a04d-6468d85ce62e",
                         "epcList": [],
                         "action": "OBSERVE",
-                        "bizStep": "urn:gdst:bizStep:transshipment",
+                        "bizStep": "shipping",
                         "disposition": "active",
                         "readPoint": {
                             "id": "geo:-34.3232,1.232"
@@ -1460,7 +1572,7 @@
                         "eventID": "urn:uuid:c057ba84-6ed1-405f-af09-460a57ac7186",
                         "epcList": [],
                         "action": "OBSERVE",
-                        "bizStep": "urn:gdst:bizStep:landing",
+                        "bizStep": "receiving",
                         "disposition": "active",
                         "readPoint": {
                             "id": "geo:-34.3232,1.232"

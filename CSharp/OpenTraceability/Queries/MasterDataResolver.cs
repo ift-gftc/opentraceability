@@ -267,6 +267,9 @@ namespace OpenTraceability.Queries
                 request.RequestUri = new Uri(options.URL.ToString().TrimEnd('/') + "/" + relativeURL.TrimStart('/'));
                 request.Method = HttpMethod.Get;
 
+                // apply the optional API key and any custom headers (e.g. X-Dataset-Id) from the options
+                request.Headers.ApplyOptionHeaders(options.APIKey, options.Headers);
+
                 // DIAGNOSTICS: Execute the rule to validate the HTTP response.
                 if (report != null)
                 {
@@ -309,6 +312,9 @@ namespace OpenTraceability.Queries
                                 request = new HttpRequestMessage();
                                 request.RequestUri = new Uri(link.link);
                                 request.Method = HttpMethod.Get;
+
+                                // apply the optional API key and any custom headers (e.g. X-Dataset-Id) from the options
+                                request.Headers.ApplyOptionHeaders(options.APIKey, options.Headers);
 
                                 if (report?.CurrentRequest != null)
                                 {
