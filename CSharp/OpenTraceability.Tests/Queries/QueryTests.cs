@@ -229,6 +229,7 @@ namespace OpenTraceability.Tests.Queries
                     EPCISQueryParameters parameters = new EPCISQueryParameters(p.EPC);
                     var results = await client.QueryEvents(parameters);
                     Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the query events");
+                    Assert.That(results.Document, Is.Not.Null);
                     Assert.That(results.Document.Events.Count, Is.EqualTo(1), "no events returned");
                 }
             }
@@ -265,6 +266,7 @@ namespace OpenTraceability.Tests.Queries
 
                     var results = await client.QueryEvents(parameters);
                     Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the query events");
+                    Assert.That(results.Document, Is.Not.Null);
                     Assert.That(results.Document.Events.Count, Is.EqualTo(1), "no events returned");
                 }
             }
@@ -282,12 +284,13 @@ namespace OpenTraceability.Tests.Queries
             await client.Post(doc);
 
             // query for the events for each epc in the blob
-            EPCISQueryParameters parameters = new EPCISQueryParameters(new Models.Identifiers.EPC(epc));
+            EPCISQueryParameters parameters = new EPCISQueryParameters(new EPC(epc));
             parameters.query.EQ_bizStep = new List<string>() { bizStep };
             parameters.query.EQ_bizLocation = new List<Uri>() { new Uri(bizLocation) };
 
             var results = await client.QueryEvents(parameters);
             Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the query events");
+            Assert.That(results.Document, Is.Not.Null);
             Assert.That(results.Document.Events.Count, Is.EqualTo(1), "no events returned");
         }
 
@@ -302,7 +305,7 @@ namespace OpenTraceability.Tests.Queries
             var doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
             await client.Post(doc);
 
-            var results = await client.Traceback(new Models.Identifiers.EPC("urn:gdst:example.org:product:lot:class:processor.2u.v1-0122-2022"));
+            var results = await client.Traceback(new EPC("urn:gdst:example.org:product:lot:class:processor.2u.v1-0122-2022"));
             Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the traceback events");
             Assert.That(results.Document, Is.Not.Null);
             Assert.That(results.Document.Events.Count, Is.EqualTo(16), "expected 16 events");
@@ -321,39 +324,15 @@ namespace OpenTraceability.Tests.Queries
 
             List<string> uniqueEventIDs = doc.Events.Select(e => e.EventID.ToString()).Distinct().ToList();
 
-            var results = await client.Traceback(new Models.Identifiers.EPC("urn:epc:id:sscc:08600031303.0003"));
+            var results = await client.Traceback(new EPC("urn:epc:id:sscc:08600031303.0003"));
             Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the traceback events");
             Assert.That(results.Document, Is.Not.Null);
             Assert.That(results.Document.Events.Count, Is.EqualTo(18));
 
-            var results2 = await client.Traceback(new Models.Identifiers.EPC("urn:epc:id:sscc:0614141.1234567890"));
+            var results2 = await client.Traceback(new EPC("urn:epc:id:sscc:0614141.1234567890"));
             Assert.That(results2.Errors.Count, Is.EqualTo(0), "errors found in the traceback events");
             Assert.That(results2.Document, Is.Not.Null);
             Assert.That(results2.Document.Events.Count, Is.EqualTo(13));
         }
-
-        //[Test]
-        //public async Task TracebackHarness()
-        //{
-
-
-        //    HttpClient client = new HttpClient();
-        //    client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
-        //    client.DefaultRequestHeaders.Add("Accept", "*/*");
-
-        //    var result = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(new DigitalLinkQueryOptions()
-        //    {
-        //        Format = EPCISDataFormat.JSON,
-        //        EnableStackTrace = true,
-        //        URL = new Uri(digitalLinkURL),
-        //    }, new Models.Identifiers.EPC(epc), client);
-
-        //    var epcisResults = await EPCISTraceabilityResolver.Traceback(new EPCISQueryInterfaceOptions()
-        //    {
-        //        URL = result,
-        //        Version = Models.Events.EPCISVersion.V2,
-        //        Format = EPCISDataFormat.JSON
-        //    }, new Models.Identifiers.EPC(epc), client);
-        //}
     }
 }

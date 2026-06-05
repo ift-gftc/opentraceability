@@ -22,13 +22,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Data\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Data\beef-leather-example\events.jsonld" />
-	</ItemGroup>
-	<ItemGroup>
 		<Folder Include="Services\" />
 		<Folder Include="Services\Interfaces\" />
 		<Folder Include="Models\" />

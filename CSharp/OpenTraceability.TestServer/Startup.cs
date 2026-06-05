@@ -51,6 +51,7 @@ namespace OpenTraceability.TestServer
                 services.AddScoped<EpcisQueryService>();
                 services.AddScoped<MasterDataService>();
                 services.AddScoped<IngestionService>();
+                services.AddScoped<SeedingService>();
 
                 // ---- host-only services ----
                 services.AddSingleton<SupportedModules>();
@@ -100,6 +101,11 @@ namespace OpenTraceability.TestServer
             {
                 var store = scope.ServiceProvider.GetRequiredService<ITraceabilityStore>();
                 store.InitializeAsync().GetAwaiter().GetResult();
+
+                // seed bundled datasets (one dataset per folder under SeedData/)
+                var seeder = scope.ServiceProvider.GetRequiredService<SeedingService>();
+                seeder.SeedFromDirectoryAsync(Path.Combine(AppContext.BaseDirectory, "SeedData"))
+                      .GetAwaiter().GetResult();
             }
 
             if (app is WebApplication webApp)

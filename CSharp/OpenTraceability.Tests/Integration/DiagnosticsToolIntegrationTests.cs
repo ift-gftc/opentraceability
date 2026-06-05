@@ -55,7 +55,10 @@ public class DiagnosticsToolIntegrationTests
                 {
                     URL = new Uri($"https://localhost:4001/epcis"), // remove trailing slash so controller builds correct URL
                     Version = EPCISVersion.V2,
-                    Format = OpenTraceability.Mappers.EPCISDataFormat.JSON
+                    Format = OpenTraceability.Mappers.EPCISDataFormat.JSON,
+                    APIKey = "test",
+                    Headers = new Dictionary<string, string> { { "X-Dataset-Id", blobId } },
+                    EnableStackTrace = true
                 };
                 var parameters = new EPCISQueryParameters(prod.EPC);
                 var request = new QueryEventsRequest { Options = options, Parameters = parameters };
@@ -92,9 +95,12 @@ public class DiagnosticsToolIntegrationTests
 
         var options = new DigitalLinkQueryOptions
         {
-            URL = new Uri($"https://localhost:4001/digitallink/{blobId}"),
+            URL = new Uri($"https://localhost:4001/digitallink"),
             Version = EPCISVersion.V2,
-            Format = OpenTraceability.Mappers.EPCISDataFormat.JSON
+            Format = OpenTraceability.Mappers.EPCISDataFormat.JSON,
+            APIKey = "test",
+            Headers = new Dictionary<string, string> { { "X-Dataset-Id", blobId } },
+            EnableStackTrace = true
         };
 
         var request = new TracebackRequest { Options = options, EPC = firstEpc.ToString() };
@@ -122,9 +128,12 @@ public class DiagnosticsToolIntegrationTests
 
         var options = new DigitalLinkQueryOptions
         {
-            URL = new Uri($"https://localhost:4001/digitallink/{blobId}"),
+            URL = new Uri($"https://localhost:4001/digitallink"),
             Version = EPCISVersion.V2,
-            Format = OpenTraceability.Mappers.EPCISDataFormat.JSON
+            Format = OpenTraceability.Mappers.EPCISDataFormat.JSON,
+            APIKey = "test",
+            Headers = new Dictionary<string, string> { { "X-Dataset-Id", blobId } },
+            EnableStackTrace = true
         };
 
         var request = new TracebackRequest { Options = options, EPC = epc };

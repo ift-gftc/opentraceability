@@ -38,9 +38,17 @@ namespace OpenTraceability.TestServer.Core.Data
 
             var ns = MergeNamespaces(namespaces);
 
+            // EPCIS eventID is optional. Assign a deterministic id (derived from the event's content)
+            // to any event missing one so storage keys are stable and re-ingesting the same event is
+            // idempotent rather than creating duplicate rows.
+            EnsureEventIds(list, ns);
+
+            // Deduplicate by EventID within the batch, keeping the last occurrence (upsert: last wins).
+            list = list.GroupBy(e => e.EventID!.ToString()).Select(g => g.Last()).ToList();
+
             using var ctx = await _contextFactory.CreateDbContextAsync();
 
-            var eventIds = list.Select(e => e.EventID.ToString()).ToList();
+            var eventIds = list.Select(e => e.EventID!.ToString()).ToList();
 
             var existing = await ctx.Events
                 .Where(e => e.DatasetId == datasetId && eventIds.Contains(e.EventId))
@@ -72,7 +80,13 @@ namespace OpenTraceability.TestServer.Core.Data
 
         public async Task UpsertMasterDataAsync(string datasetId, IEnumerable<IVocabularyElement> masterData)
         {
-            var list = masterData.Where(m => !string.IsNullOrEmpty(m.ID)).ToList();
+            // Deduplicate by identifier within the batch (last wins). The identifier is the storage key,
+            // so a document that declares the same id more than once is an upsert, not a constraint error.
+            var list = masterData
+                .Where(m => !string.IsNullOrEmpty(m.ID))
+                .GroupBy(m => m.ID.ToLower())
+                .Select(g => g.Last())
+                .ToList();
             if (list.Count == 0) return;
 
             using var ctx = await _contextFactory.CreateDbContextAsync();
@@ -288,6 +302,34 @@ namespace OpenTraceability.TestServer.Core.Data
                 }
             }
             return merged;
+        }
+
+        // EPCIS eventID is optional. Give every event lacking one a deterministic synthetic id derived
+        // from its serialized content, so the same event always maps to the same storage key.
+        private static void EnsureEventIds(List<IEvent> events, Dictionary<string, string> namespaces)
+        {
+            foreach (var evt in events)
+            {
+                if (evt.EventID == null)
+                {
+                    evt.EventID = new Uri("urn:opentraceability:synthetic:" + ComputeEventFingerprint(evt, namespaces));
+                }
+            }
+        }
+
+        private static string ComputeEventFingerprint(IEvent evt, Dictionary<string, string> namespaces)
+        {
+            var doc = new EPCISQueryDocument
+            {
+                EPCISVersion = EPCISVersion.V2,
+                Header = StandardBusinessDocumentHeader.DummyHeader,
+                Namespaces = new Dictionary<string, string>(namespaces)
+            };
+            doc.Events.Add(evt);
+            string json = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc, checkSchema: false);
+
+            byte[] hash = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(json));
+            return Convert.ToHexString(hash).ToLowerInvariant();
         }
 
         private static TraceabilityEvent ToEventRecord(string datasetId, IEvent evt, Dictionary<string, string> namespaces)
