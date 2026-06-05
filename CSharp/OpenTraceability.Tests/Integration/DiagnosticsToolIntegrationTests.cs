@@ -39,7 +39,7 @@ public class DiagnosticsToolIntegrationTests
     [TestCase("aggregation_event_all_possible_fields.jsonld")]
     public async Task QueryEvents_EndToEnd(string filename)
     {
-        var epcisClient = new EPCISTestServerClient("https://localhost:4001", OpenTraceability.Mappers.EPCISDataFormat.JSON, EPCISVersion.V2);
+        var epcisClient = new EPCISTestServerClient("https://localhost:4001", "test", OpenTraceability.Mappers.EPCISDataFormat.JSON, EPCISVersion.V2);
         string data = OpenTraceabilityTests.ReadTestData(filename);
         var sourceDoc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
         string blobId = await epcisClient.Post(sourceDoc);
@@ -53,7 +53,7 @@ public class DiagnosticsToolIntegrationTests
             {
                 var options = new EPCISQueryInterfaceOptions
                 {
-                    URL = new Uri($"https://localhost:4001/epcis/{blobId}"), // remove trailing slash so controller builds correct URL
+                    URL = new Uri($"https://localhost:4001/epcis"), // remove trailing slash so controller builds correct URL
                     Version = EPCISVersion.V2,
                     Format = OpenTraceability.Mappers.EPCISDataFormat.JSON
                 };
@@ -80,7 +80,7 @@ public class DiagnosticsToolIntegrationTests
     [TestCase("traceback_tests.jsonld")]
     public async Task Traceback_EndToEnd(string filename)
     {
-        var epcisClient = new EPCISTestServerClient("https://localhost:4001", OpenTraceability.Mappers.EPCISDataFormat.JSON, EPCISVersion.V2);
+        var epcisClient = new EPCISTestServerClient("https://localhost:4001", "test", OpenTraceability.Mappers.EPCISDataFormat.JSON, EPCISVersion.V2);
         string data = OpenTraceabilityTests.ReadTestData(filename);
         var sourceDoc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
         string blobId = await epcisClient.Post(sourceDoc);

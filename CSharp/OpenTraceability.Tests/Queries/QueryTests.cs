@@ -76,7 +76,7 @@ namespace OpenTraceability.Tests.Queries
         [TestCase("epcisdocument-example01.jsonld")]
         public async Task LiveServerTests(string filename)
         {
-            EPCISTestServerClient client = new EPCISTestServerClient("https://traceabilitytestserver01.azurewebsites.net", EPCISDataFormat.JSON, OpenTraceability.Models.Events.EPCISVersion.V2);
+            EPCISTestServerClient client = new EPCISTestServerClient("https://traceabilitytestserver01.azurewebsites.net", "test", EPCISDataFormat.JSON, OpenTraceability.Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
             string data = OpenTraceabilityTests.ReadTestData(filename);
@@ -105,7 +105,7 @@ namespace OpenTraceability.Tests.Queries
         [TestCase("testserver_advancedfilters.jsonld")]
         public async Task MasterData(string filename)
         {
-            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", "test", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
             string data = OpenTraceabilityTests.ReadTestData(filename);
@@ -187,7 +187,7 @@ namespace OpenTraceability.Tests.Queries
                 return true;
             };
             using HttpClient httpClient = new HttpClient(httpClientHandler);
-            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", "test", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
             string data = OpenTraceabilityTests.ReadTestData(filename);
@@ -212,7 +212,7 @@ namespace OpenTraceability.Tests.Queries
         [TestCase("aggregation_event_all_possible_fields.jsonld")]
         public async Task QueryEvents(string filename)
         {
-            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", "test", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
             string data = OpenTraceabilityTests.ReadTestData(filename);
@@ -236,7 +236,7 @@ namespace OpenTraceability.Tests.Queries
         [TestCase("aggregation_event_all_possible_fields.jsonld")]
         public async Task QueryEventsByWildCardLotSerialNumber(string filename)
         {
-            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", "test", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
             string data = OpenTraceabilityTests.ReadTestData(filename);
@@ -272,7 +272,7 @@ namespace OpenTraceability.Tests.Queries
         [TestCase("testserver_advancedfilters.jsonld", "urn:epc:id:sscc:08600031303.0004", "urn:epcglobal:cbv:bizStep:receiving", "urn:gdst:example.org:location:loc:importer.123u")]
         public async Task AdvancedFilters(string filename, string epc, string bizStep, string bizLocation)
         {
-            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", "test", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
             string data = OpenTraceabilityTests.ReadTestData(filename);
@@ -293,7 +293,7 @@ namespace OpenTraceability.Tests.Queries
         [TestCase("traceback_tests.jsonld")]
         public async Task Traceback(string filename)
         {
-            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", "test", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
             string data = OpenTraceabilityTests.ReadTestData(filename);
@@ -310,7 +310,7 @@ namespace OpenTraceability.Tests.Queries
         [TestCase("epcisquerydoc-example01.jsonld")]
         public async Task Traceback02(string filename)
         {
-            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", "test", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
 
             // upload a blob of events
             string data = OpenTraceabilityTests.ReadTestData(filename);

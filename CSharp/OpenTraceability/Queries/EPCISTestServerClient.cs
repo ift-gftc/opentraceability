@@ -19,12 +19,14 @@ namespace OpenTraceability.Queries
         string _baseURL;
         EPCISDataFormat _format;
         EPCISVersion _version;
+        string _apiKey;
 
-        public EPCISTestServerClient(string baseURL, EPCISDataFormat format, EPCISVersion version)
+        public EPCISTestServerClient(string baseURL, string apiKey, EPCISDataFormat format, EPCISVersion version)
         {
             _baseURL = baseURL;
             _version = version;
             _format = format;
+            _apiKey = apiKey;
         }
 
         /// <summary>
@@ -34,14 +36,9 @@ namespace OpenTraceability.Queries
         /// </summary>
         /// <param name="doc"></param>
         /// <returns>The blob ID of the uploaded traceability data.</returns>
-        public async Task<string> Post(EPCISDocument doc, string? blob_id = null)
+        public async Task<string> Post(EPCISDocument doc, string? datasetID = null)
         {
-            if (blob_id == null)
-            {
-                blob_id = Guid.NewGuid().ToString();
-            }
-
-            string url = $"{_baseURL.TrimEnd('/')}/epcis/{blob_id}/events";
+            string url = $"{_baseURL.TrimEnd('/')}/epcis/events";
 
             IEPCISDocumentMapper mapper = OpenTraceabilityMappers.EPCISDocument.XML;
             string contentType = "application/xml";
@@ -57,6 +54,12 @@ namespace OpenTraceability.Queries
 
                 HttpRequestMessage request = new HttpRequestMessage();
                 request.RequestUri = new Uri(url);
+                request.Headers.Add("X-API-Key", _apiKey);
+
+                if(!string.IsNullOrEmpty(datasetID))
+                {
+                    request.Headers.Add("X-Dataset-ID", datasetID);
+                }
 
                 if (_version == EPCISVersion.V1)
                 {
@@ -93,10 +96,6 @@ namespace OpenTraceability.Queries
                 request.Content = content;
                 request.Method = HttpMethod.Post;
 
-                // calculate the host field for the request
-                string host = new Uri(url).Host;
-                request.Headers.Host = host;
-
                 var response = await client.SendAsync(request);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -104,7 +103,7 @@ namespace OpenTraceability.Queries
                     throw new Exception($"{(int)response.StatusCode} - {response.StatusCode} - {contentStr}");
                 }
 
-                return blob_id;
+                return datasetID;
             }
         }
 
