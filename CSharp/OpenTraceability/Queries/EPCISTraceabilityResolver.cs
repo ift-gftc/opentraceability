@@ -57,7 +57,10 @@ namespace OpenTraceability.Queries
             // set accept to "application/json"
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            // DIAGNOSTICS: Execute the rule to validate the Http Headers.   
+            // apply the optional API key and any custom headers (e.g. X-Dataset-Id) from the options
+            request.Headers.ApplyOptionHeaders(options.APIKey, options.Headers);
+
+            // DIAGNOSTICS: Execute the rule to validate the Http Headers.
             if (report != null)
             {
                 report.CurrentRequest.HttpRequest = request;
@@ -136,7 +139,10 @@ namespace OpenTraceability.Queries
             // set accept to "application/json"
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            // DIAGNOSTICS: Execute the rule to validate the Http Headers.   
+            // apply the optional API key and any custom headers (e.g. X-Dataset-Id) from the options
+            request.Headers.ApplyOptionHeaders(options.APIKey, options.Headers);
+
+            // DIAGNOSTICS: Execute the rule to validate the Http Headers.
             if (report?.CurrentRequest != null)
             {
                 report.CurrentRequest.HttpRequest = request;
@@ -370,6 +376,9 @@ namespace OpenTraceability.Queries
             {
                 throw new Exception($"Unrecognized EPCISVersion {options.Version} on the options.");
             }
+
+            // apply the optional API key and any custom headers (e.g. X-Dataset-Id) from the options
+            request.Headers.ApplyOptionHeaders(options.APIKey, options.Headers);
 
             //// ensure Host header is set BEFORE diagnostics rule executes so the rule does not report a missing host
             //if (request.RequestUri != null)

@@ -11,12 +11,11 @@
     "epcisHeader": {
         "epcisMasterData": {
             "vocabularyList": [
-                // PRODUCT DEFINITIONS
                 {
                     "type": "urn:epcglobal:epcis:vtype:epcclass",
                     "vocabularyElementList": [
-                        // CATTLE DEFINITION
                         {
+                            "_comment": "CATTLE DEFINITION",
                             "id": "https://id.gs1.org/01/10000082345676",
                             "attributes": [
                                 {
@@ -33,9 +32,9 @@
                                 }
                             ]
                         },
-                        // STEAKS DEFINITION
                         {
-                            "id": "https://id.gs1.org/01/10000082345676",
+                            "_comment": "STEAKS DEFINITION",
+                            "id": "https://id.gs1.org/01/10000082345683",
                             "attributes": [
                                 {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
@@ -49,12 +48,11 @@
                         }
                     ]
                 },
-                // LOCATIONS
                 {
                     "type": "urn:epcglobal:epcis:vtype:location",
                     "vocabularyElementList": [
-                        // RANCH LOCATION
                         {
+                            "_comment": "RANCH LOCATION",
                             "id": "https://id.gs1.org/414/1234567089451",
                             "attributes": [
                                 {
@@ -75,8 +73,8 @@
                                 }
                             ]
                         },
-                        // SLAUGHTERHOUSE LOCATION
                         {
+                            "_comment": "SLAUGHTERHOUSE LOCATION",
                             "id": "https://id.gs1.org/414/1234567089452",
                             "attributes": [
                                 {
@@ -101,8 +99,8 @@
                                 }
                             ]
                         },
-                        // DISTRUBTION CENTER LOCATION
                         {
+                            "_comment": "DISTRIBUTION CENTER LOCATION",
                             "id": "https://id.gs1.org/414/1234567089453",
                             "attributes": [
                                 {
@@ -129,12 +127,11 @@
                         }
                     ]
                 },
-                // PARTIES (ORGANIZATIONS)
                 {
                     "type": "urn:epcglobal:epcis:vtype:party",
                     "vocabularyElementList": [
-                        // INTERNATIONAL COW FARMIGN CONGLOMERATE
                         {
+                            "_comment": "INTERNATIONAL COW FARMING CONGLOMERATE",
                             "id": "https://id.gs1.org/417/1234567089453",
                             "attributes": [
                                 {
@@ -150,8 +147,8 @@
     },
     "epcisBody": {
         "eventList": [
-            // BIRTH EVENT
             {
+                "_comment":"BITHING EVENT",
                 "type": "ObjectEvent",
                 "eventTime": "2023-01-01T09:00:00Z",
                 "eventTimeZoneOffset": "+00:00",
@@ -169,8 +166,8 @@
                     "id": "https://id.gs1.org/414/1234567089451"
                 }
             },
-            // SHIPPING CATTLE TO SLAUGHTERHOUSE
             {
+                "_comment": "SHIPPING CATTLE TO SLAUGHTERHOUSE",
                 "type": "ObjectEvent",
                 "eventTime": "2025-11-05T10:00:00Z",
                 "eventTimeZoneOffset": "+00:00",
@@ -200,8 +197,8 @@
                     }
                 ]
             },
-            // RECEIVING CATTLE TO SLAUGHTERHOUSE
             {
+                "_comment": "RECEIVING CATTLE TO SLAUGHTERHOUSE",
                 "type": "ObjectEvent",
                 "eventTime": "2025-11-06T09:00:00Z",
                 "eventTimeZoneOffset": "+00:00",
@@ -219,8 +216,8 @@
                     "id": "https://id.gs1.org/414/1234567089452"
                 }
             },
-            // TRANSFORMATION EVENT - SLAUGHTERING CATTLE INTO STEAKS
             {
+                "_comment": "TRANSFORMATION EVENT - SLAUGHTERING CATTLE AND CUTTING INTO STEAKS",
                 "type": "TransformationEvent",
                 "eventTime": "2025-11-07T10:00:00Z",
                 "eventTimeZoneOffset": "+00:00",
@@ -244,8 +241,8 @@
                     "id": "https://id.gs1.org/414/1234567089452"
                 }
             },
-            // AGGREGATION EVENT - PACKING STEAKS INTO A SSCC
             {
+                "_comment":"AGGREGATION EVENT - PACKING STEAKS INTO A SSCC",
                 "type": "AggregationEvent",
                 "eventTime": "2025-11-08T11:00:00Z",
                 "eventTimeZoneOffset": "+00:00",
@@ -264,8 +261,8 @@
                     "id": "https://id.gs1.org/414/1234567089452"
                 }
             },
-            // SHIPPING SSCC TO DISTRIBUTION CENTER
             {
+                "_comment":"SHIPPING SSCC TO DISTRIBUTION CENTER",
                 "type": "ObjectEvent",
                 "eventTime": "2025-11-10T10:00:00Z",
                 "eventTimeZoneOffset": "+00:00",
@@ -291,8 +288,8 @@
                     }
                 ]
             },
-            // RECEIVING SSCC AT DISTRIBUTION CENTER
             {
+                "_comment": "RECEIVING SSCC AT DISTRIBUTION CENTER",
                 "type": "ObjectEvent",
                 "eventTime": "2025-11-11T09:00:00Z",
                 "eventTimeZoneOffset": "+00:00",
@@ -306,8 +303,8 @@
                     "id": "https://id.gs1.org/414/1234567089453"
                 }
             },
-            // UNPACKING SSCC AT DISTRUBUTION CENTER
             {
+                "_comment":"UNPACKING SSCC AT DISTRUBUTION CENTER",
                 "type": "AggregationEvent",
                 "eventTime": "2025-11-12T10:00:00Z",
                 "eventTimeZoneOffset": "+00:00",

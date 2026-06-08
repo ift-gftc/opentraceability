@@ -25,6 +25,12 @@ namespace OpenTraceability.Queries
         public string? APIKey { get; set; }
 
         /// <summary>
+        /// Additional HTTP headers to add to each request made by the resolver (e.g. X-Dataset-Id).
+        /// A header is only added if the request does not already contain it.
+        /// </summary>
+        public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
+
+        /// <summary>
         /// The version of EPCIS that we are querying for. This defaults to EPCIS 2.0
         /// </summary>
         public EPCISVersion Version { get; set; } = EPCISVersion.V2;

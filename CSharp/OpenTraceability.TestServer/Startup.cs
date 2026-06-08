@@ -1,13 +1,18 @@
-﻿using System;
 using System.Runtime.CompilerServices;
-using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using OpenTraceability.TestServer.Auth;
+using OpenTraceability.TestServer.Core.Data;
+using OpenTraceability.TestServer.Core.Services;
+using OpenTraceability.TestServer.Infrastructure;
 using OpenTraceability.TestServer.Services;
-using OpenTraceability.TestServer.Services.Interfaces;
 
 namespace OpenTraceability.TestServer
 {
     /// <summary>
-    /// Class for handling the startup of the web service.
+    /// Configures and boots the GDST 2.0 test traceability server.
     /// </summary>
     public class Startup
     {
@@ -32,25 +37,45 @@ namespace OpenTraceability.TestServer
             try
             {
                 services.AddControllers();
-
-                // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 services.AddEndpointsApiExplorer();
                 services.AddSwaggerGen();
+                services.AddHttpClient();
 
-                if (Configuration.GetConnectionString("sqlite") != null)
+                // ---- persistence (SQLite) ----
+                string connectionString = Configuration.GetConnectionString("sqlite") ?? "Data Source=epcis.db";
+                services.AddDbContextFactory<TraceabilityDbContext>(options => options.UseSqlite(connectionString));
+                services.AddScoped<ITraceabilityStore, TraceabilityStore>();
+
+                // ---- core services (shared with the WireMock host) ----
+                services.AddSingleton<DigitalLinkService>();
+                services.AddScoped<EpcisQueryService>();
+                services.AddScoped<MasterDataService>();
+                services.AddScoped<IngestionService>();
+                services.AddScoped<SeedingService>();
+
+                // ---- host-only services ----
+                services.AddSingleton<SupportedModules>();
+                services.AddScoped<TracebackService>();
+                services.AddScoped<CapabilityTestClientService>();
+
+                // ---- API key authentication (all endpoints) ----
+                services.AddSingleton<IApiKeyStore, InMemoryApiKeyStore>();
+                services.AddAuthentication(ApiKeyAuthenticationOptions.SchemeName)
+                        .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(
+                            ApiKeyAuthenticationOptions.SchemeName, _ => { });
+
+                services.AddAuthorization(options =>
                 {
-                    services.AddScoped<IEPCISBlobService, EPCISBlobSqlLiteService>();
-                    ConfigureSqlite(Configuration);
-                }
+                    // require an authenticated user by default for every endpoint
+                    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+                });
 
                 services.AddCors(options =>
                 {
-                    options.AddPolicy(name: "myOrigins",
-                                      builder =>
-                                      {
-                                          builder.WithOrigins("https://localhost:4001")
-                                                 .AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-                                      });
+                    options.AddPolicy("myOrigins", builder =>
+                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
                 });
             }
             catch (Exception ex)
@@ -60,57 +85,42 @@ namespace OpenTraceability.TestServer
             }
         }
 
-
-        void ConfigureSqlite(IConfiguration config)
-        {
-            string cs = config.GetConnectionString("sqlite") ?? throw new Exception("No connection string 'sqlite' found in appsettings.");
-
-            string tableCmd = @"
-                    CREATE TABLE IF NOT EXISTS data (
-                        id varchar(128) PRIMARY KEY,
-                        version int NOT NULL,
-                        format int NOT NULL,
-                        raw_data text NOT NULL,
-                        created datetime NOT NULL)
-                ";
-
-            using var con = new SqliteConnection(cs);
-            con.Open();
-
-            using var cmd = new SqliteCommand(tableCmd, con);
-            cmd.ExecuteNonQuery();
-        }
-
         public void Configure(IApplicationBuilder app)
         {
             app.UseCors("myOrigins");
 
 #if RELEASE
-            app.UseHttpsRedirection();
+            if (Environment.GetEnvironmentVariable("DISABLE_HTTPS_REDIRECTION") != "TRUE")
+            {
+                app.UseHttpsRedirection();
+            }
 #endif
 
-            if (app is WebApplication)
+            // ensure the database/schema exists
+            using (var scope = app.ApplicationServices.CreateScope())
             {
-                var webApp = (app as WebApplication) ?? throw new Exception("Failed to cast app to WebApplication.");
+                var store = scope.ServiceProvider.GetRequiredService<ITraceabilityStore>();
+                store.InitializeAsync().GetAwaiter().GetResult();
 
+                // seed bundled datasets (one dataset per folder under SeedData/)
+                var seeder = scope.ServiceProvider.GetRequiredService<SeedingService>();
+                seeder.SeedFromDirectoryAsync(Path.Combine(AppContext.BaseDirectory, "SeedData"))
+                      .GetAwaiter().GetResult();
+            }
+
+            if (app is WebApplication webApp)
+            {
                 app.UseAuthentication();
                 app.UseAuthorization();
-
                 webApp.MapControllers();
             }
             else
             {
                 app.UseRouting();
-
                 app.UseAuthentication();
                 app.UseAuthorization();
-
-                app.UseEndpoints(builder =>
-                {
-                    builder.MapControllers();
-                });
+                app.UseEndpoints(builder => builder.MapControllers());
             }
         }
     }
 }
-

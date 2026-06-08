@@ -1,0 +1,20 @@
+services:
+  testserver:
+    image: opentraceability-testserver
+    build:
+      context: ../
+      dockerfile: ./CSharp/OpenTraceability.TestServer/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__sqlite=Data Source=/data/epcis.db
+      - BaseURL=http://localhost:8080
+      - Modules__0=Wildcaught
+      - Modules__1=Aquaculture
+      - Authentication__APIKey__ValidKeys__0=changeme-dev-key
+    volumes:
+      - testserver-data:/data
+
+volumes:
+  testserver-data:

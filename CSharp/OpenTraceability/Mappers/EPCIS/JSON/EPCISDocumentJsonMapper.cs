@@ -36,14 +36,14 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 }
 
                 // read the master data
-                JObject jMasterData = json["epcisHeader"]?["epcisMasterData"] as JObject;
+                JObject? jMasterData = json["epcisHeader"]?["epcisMasterData"] as JObject;
                 if (jMasterData != null)
                 {
                     EPCISJsonMasterDataReader.ReadMasterData(doc, jMasterData);
                 }
 
                 // read the events
-                JArray jEventList = json["epcisBody"]?["eventList"] as JArray;
+                JArray? jEventList = json["epcisBody"]?["eventList"] as JArray;
                 if (jEventList != null)
                 {
                     foreach (JToken jToken in jEventList)
@@ -82,7 +82,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             jEventBody["eventList"] = jEventList;
             foreach (IEvent e in doc.Events)
             {
-                JObject jEvent = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed) as JObject;
+                JObject? jEvent = OpenTraceabilityJsonLDMapper.ToJson(e, namespacesReversed) as JObject;
                 if (jEvent != null)
                 {
                     EPCISDocumentBaseJsonMapper.PostWriteEventCleanUp(jEvent);
@@ -95,17 +95,17 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             // write the header
             if (!string.IsNullOrWhiteSpace(doc.Header?.Sender?.Identifier))
             {
-                json["sender"] = doc.Header.Sender.Identifier;
+                json["sender"] = doc.Header?.Sender?.Identifier;
             }
 
             if (!string.IsNullOrWhiteSpace(doc.Header?.Receiver?.Identifier))
             {
-                json["receiver"] = doc.Header.Receiver.Identifier;
+                json["receiver"] = doc.Header?.Receiver?.Identifier;
             }
 
             if (!string.IsNullOrWhiteSpace(doc.Header?.DocumentIdentification?.InstanceIdentifier))
             {
-                json["instanceIdentifier"] = doc.Header.DocumentIdentification.InstanceIdentifier;
+                json["instanceIdentifier"] = doc.Header?.DocumentIdentification?.InstanceIdentifier;
             }
 
             EPCISJsonMasterDataWriter.WriteMasterData(json, doc);

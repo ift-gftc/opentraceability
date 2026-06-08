@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.git/
+**/.gitignore
+**/*.user
+**/*.lscache
+**/TestResults/
+**/appsettings.Development.json
+**/*.db

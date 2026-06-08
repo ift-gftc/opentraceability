@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <Title>Open Traceability - Test Server</Title>
@@ -15,7 +15,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Humanizer" Version="3.0.10" />
+    <PackageReference Include="WireMock.Net" Version="2.9.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
+    <ProjectReference Include="..\OpenTraceability.GDST\OpenTraceability.GDST.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Seed datasets shipped with the package; each subfolder is ingested as a dataset on startup. -->
+    <Content Include="SeedData\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

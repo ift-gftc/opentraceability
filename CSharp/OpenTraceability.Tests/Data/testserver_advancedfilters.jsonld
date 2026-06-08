@@ -24,6 +24,20 @@
                             "id": "urn:gdst:example.org:product:class:fisherman01.tunau",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "WildCaught"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Whole Yellowfin Tuna"
                                 },
@@ -44,6 +58,13 @@
                         {
                             "id": "urn:gdst:example.org:product:class:processor.2u",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Can of Tuna"
@@ -74,6 +95,13 @@
                             "id": "urn:gdst:example.org:product:class:feedmill.1u",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Feed"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Fish Feed"
                                 },
@@ -90,6 +118,20 @@
                         {
                             "id": "urn:gdst:example.org:product:class:hatchery.1u",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Developing"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Tuna Fryling"
@@ -120,6 +162,20 @@
                             "id": "urn:gdst:example.org:product:class:fishfarm.1u",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Mature"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Farmed Tuna"
                                 },
@@ -148,6 +204,13 @@
                         {
                             "id": "urn:gdst:example.org:product:class:processor.10u",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#productClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "seafood"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:mda#descriptionShort",
                                     "attribute": "Tuna"
@@ -183,6 +246,13 @@
                             "id": "urn:epc:id:sgln:08600031303.1.1",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#locationClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Vessel"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#vesselFlagState",
                                     "attribute": "US"
                                 },
@@ -197,6 +267,10 @@
                                 {
                                     "id": "urn:gdst:kde#imoNumber",
                                     "attribute": "IMO12345678"
+                                },
+                                {
+                                    "id": "urn:gdst:kde#vesselPublicRegistry",
+                                    "attribute": "https://example.org/vessels/VESSEL1"
                                 },
                                 {
                                     "id": "urn:epcglobal:cbv:owning_party",
@@ -224,6 +298,13 @@
                             "id": "urn:epc:id:sgln:08600031303.2.1",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#locationClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Land Facility"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:owning_party",
                                     "attribute": "urn:gdst:example.org:party:processor.1u"
                                 },
@@ -249,6 +330,13 @@
                             "id": "urn:epc:id:sgln:08600031303.3.1",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#locationClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Vessel"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:mda#vesselFlagState",
                                     "attribute": "US"
                                 },
@@ -263,6 +351,10 @@
                                 {
                                     "id": "urn:gdst:kde#imoNumber",
                                     "attribute": "IMO987654321"
+                                },
+                                {
+                                    "id": "urn:gdst:kde#vesselPublicRegistry",
+                                    "attribute": "https://example.org/vessels/TRANSSHIP1"
                                 },
                                 {
                                     "id": "urn:epcglobal:cbv:owning_party",
@@ -289,6 +381,13 @@
                         {
                             "id": "urn:gdst:example.org:location:loc:processor.plant1u",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#locationClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Land Facility"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:owning_party",
                                     "attribute": "urn:gdst:example.org:party:processor.1u"
@@ -327,6 +426,13 @@
                             "id": "urn:gdst:example.org:location:loc:hatchery.1u",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#locationClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Land Facility"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:owning_party",
                                     "attribute": "urn:gdst:example.org:party:hatchery.1u"
                                 },
@@ -359,6 +465,13 @@
                         {
                             "id": "urn:gdst:example.org:location:loc:feedmill.1u",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#locationClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Land Facility"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:owning_party",
                                     "attribute": "urn:gdst:example.org:party:feedmill.1u"
@@ -393,6 +506,13 @@
                             "id": "urn:gdst:example.org:location:loc:fishfarm.1u",
                             "attributes": [
                                 {
+                                    "id": "urn:gdst:kde#locationClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Land Facility"
+                                    }
+                                },
+                                {
                                     "id": "urn:epcglobal:cbv:owning_party",
                                     "attribute": "urn:gdst:example.org:party:fishfarm.1u"
                                 },
@@ -425,6 +545,13 @@
                         {
                             "id": "urn:gdst:example.org:location:loc:importer.123u",
                             "attributes": [
+                                {
+                                    "id": "urn:gdst:kde#locationClassification",
+                                    "attribute": {
+                                        "type": "GDST",
+                                        "value": "Land Facility"
+                                    }
+                                },
                                 {
                                     "id": "urn:epcglobal:cbv:owning_party",
                                     "attribute": "urn:gdst:example.org:party:importer.1u"
@@ -576,7 +703,7 @@
                 "eventID": "urn:uuid:39ac7499-fecd-4f65-b582-1c45ff4e6356U",
                 "epcList": [],
                 "action": "ADD",
-                "bizStep": "urn:gdst:bizStep:hatching",
+                "bizStep": "commissioning",
                 "disposition": "active",
                 "bizLocation": {
                     "id": "urn:gdst:example.org:location:loc:hatchery.1u"
@@ -706,7 +833,7 @@
                 "eventID": "urn:uuid:2fbb3592-c9fa-47ca-b419-b35528fee66fU",
                 "epcList": [],
                 "action": "ADD",
-                "bizStep": "urn:gdst:bizStep:fishingEvent",
+                "bizStep": "commissioning",
                 "disposition": "active",
                 "bizLocation": {
                     "id": "urn:epc:id:sgln:08600031303.1.1"
@@ -739,7 +866,7 @@
                             }
                         ]
                     },
-                    "cbvmda:productionMethodForFishAndSeafoodCode": "MARINE_FISHERY",
+                    "cbvmda:productionMethodForFishAndSeafoodCode": "wild-caught",
                     "cbvmda:lotNumber": "V1-0122-2022",
                     "cbvmda:certificationList": {
                         "certification": [
@@ -778,7 +905,7 @@
                 "eventID": "urn:uuid:f281edee-11e5-414c-a662-4baaac767353U",
                 "epcList": [],
                 "action": "OBSERVE",
-                "bizStep": "urn:gdst:bizStep:transshipment",
+                "bizStep": "shipping",
                 "disposition": "active",
                 "readPoint": {
                     "id": "geo:-34.3232,1.232"
@@ -830,7 +957,7 @@
                 "eventID": "urn:uuid:cb3da244-df7f-40e5-a58c-35748019c463U",
                 "epcList": [],
                 "action": "OBSERVE",
-                "bizStep": "urn:gdst:bizStep:landing",
+                "bizStep": "receiving",
                 "disposition": "active",
                 "readPoint": {
                     "id": "geo:0,0"
@@ -1067,14 +1194,14 @@
                         "uom": "KGM"
                     }
                 ],
-                "bizStep": "urn:gdst:bizStep:farmHarvest",
+                "bizStep": "commissioning",
                 "disposition": "active",
                 "bizLocation": {
                     "id": "urn:gdst:example.org:location:loc:fishfarm.1u"
                 },
                 "ilmd": {
                     "gdst:aquacultureMethod": "intensive ponds",
-                    "cbvmda:productionMethodForFishAndSeafoodCode": "AQUACULTURE",
+                    "cbvmda:productionMethodForFishAndSeafoodCode": "aquaculture",
                     "cbvmda:lotNumber": "FARMED-TUNA-01192022",
                     "cbvmda:certificationList": {
                         "certification": [
@@ -1130,7 +1257,7 @@
                         "uom": "KGM"
                     }
                 ],
-                "bizStep": "urn:gdst:bizStep:commingling",
+                "bizStep": "commissioning",
                 "disposition": "active",
                 "bizLocation": {
                     "id": "urn:gdst:example.org:location:loc:processor.plant1u"
