@@ -52,6 +52,13 @@ namespace OpenTraceability.TestServer.Core.Modules
             ["gdst:iftp"] = GdstModule.Seafood,
             ["geoLocation"] = GdstModule.Seafood,
             ["geoFence"] = GdstModule.Seafood,
+            ["cbvmda:informationProvider"] = GdstModule.Seafood,
+            ["cbvmda:productionMethodForFishAndSeafoodCode"] = GdstModule.Seafood,
+            ["readPoint"] = GdstModule.Seafood,
+            ["cbvmda:owning_party"] = GdstModule.Seafood,
+            ["cbvmda:tradeItemConditionCode"] = GdstModule.Seafood,
+            ["cbvmda:certificationList"] = GdstModule.Seafood,
+            ["cbvmda:countryOfOrigin"] = GdstModule.Seafood,
         };
 
         /// <summary>
