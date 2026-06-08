@@ -32,7 +32,7 @@ namespace OpenTraceability.Models.Events
         /// <summary>
         /// The standard business document header on the EPCIS Document / EPCIS Query Document.
         /// </summary>
-        public StandardBusinessDocumentHeader Header { get; set; }
+        public StandardBusinessDocumentHeader? Header { get; set; }
 
         /// <summary>
         /// One or more events on the EPCIS Document / EPCIS Query Document.

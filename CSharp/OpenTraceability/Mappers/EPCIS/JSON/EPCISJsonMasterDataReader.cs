@@ -30,9 +30,10 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 foreach (JToken jVocabListToken in jVocabList)
                 {
                     if (jVocabListToken is not JObject jVocabListItem) continue;
-                    string typeRaw = jVocabListItem["type"]?.ToString();
-                    string type = typeRaw?.ToLower();
-                    if (type != null)
+                    string? typeRaw = jVocabListItem["type"]?.ToString();
+                    string? type = typeRaw?.ToLower();
+
+                    if (type != null && !string.IsNullOrEmpty(typeRaw))
                     {
                         if (jVocabListItem["vocabularyElementList"] is JArray jVocabElementaryList)
                         {
@@ -53,8 +54,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
         }
 
-        private static void ReadTradeitem(EPCISBaseDocument doc, JObject xTradeitem, string type)
+        private static void ReadTradeitem(EPCISBaseDocument doc, JObject xTradeitem, string? type)
         {
+            if (type == null)
+            {
+                return;
+            }
+
             // read the GTIN from the id
             string id = xTradeitem["id"]?.ToString() ?? string.Empty;
             Type t = Setup.MasterDataTypes[type.ToLower()];
@@ -73,8 +79,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             doc.MasterData.Add(tradeitem);
         }
 
-        private static void ReadLocation(EPCISBaseDocument doc, JObject xLocation, string type)
+        private static void ReadLocation(EPCISBaseDocument doc, JObject xLocation, string? type)
         {
+            if (type == null)
+            {
+                return;
+            }
+
             // read the GLN from the id
             string id = xLocation["id"]?.ToString() ?? string.Empty;
             Type t = Setup.MasterDataTypes[type.ToLower()];
@@ -95,8 +106,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
         }
 
-        private static void ReadTradingParty(EPCISBaseDocument doc, JObject xTradingParty, string type)
+        private static void ReadTradingParty(EPCISBaseDocument doc, JObject xTradingParty, string? type)
         {
+            if (type == null)
+            {
+                return;
+            }
+
             // read the PGLN from the id
             string id = xTradingParty["id"]?.ToString() ?? string.Empty;
             TradingParty tp = new TradingParty();
@@ -110,6 +126,11 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 
         private static void ReadUnknown(EPCISBaseDocument doc, JObject xVocabElement, string type)
         {
+            if (type == null)
+            {
+                return;
+            }
+
             // read the PGLN from the id
             string id = xVocabElement["id"]?.ToString() ?? string.Empty;
             VocabularyElement ele = new VocabularyElement();
