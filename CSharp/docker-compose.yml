@@ -2,8 +2,8 @@ services:
   testserver:
     image: opentraceability-testserver
     build:
-      context: .
-      dockerfile: OpenTraceability.TestServer/Dockerfile
+      context: ../
+      dockerfile: ./CSharp/OpenTraceability.TestServer/Dockerfile
     ports:
       - "8080:8080"
     environment:
