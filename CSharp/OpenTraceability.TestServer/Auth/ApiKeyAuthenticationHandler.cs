@@ -27,6 +27,17 @@ namespace OpenTraceability.TestServer.Auth
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            // When no API keys are configured, authentication is not enforced: treat every request as
+            // an authenticated anonymous user so the global RequireAuthenticatedUser policy is satisfied.
+            if (!_apiKeyStore.HasConfiguredKeys)
+            {
+                var anonClaims = new[] { new Claim(ClaimTypes.Name, "AnonymousUser") };
+                var anonIdentity = new ClaimsIdentity(anonClaims, Scheme.Name);
+                var anonPrincipal = new ClaimsPrincipal(anonIdentity);
+                var anonTicket = new AuthenticationTicket(anonPrincipal, Scheme.Name);
+                return AuthenticateResult.Success(anonTicket);
+            }
+
             string apiKey = string.Empty;
 
             if (Request.Headers.TryGetValue(Options.HeaderName, out var headerValue))

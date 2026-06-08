@@ -30,6 +30,8 @@ namespace OpenTraceability.TestServer.Services
 
         /// <summary>Optional dataset to store the retrieved data under. Defaults to "default".</summary>
         public string? DatasetId { get; set; }
+
+        public string? CapabilityProcessUUID { get; set; } = string.Empty;
     }
 
     public class TracebackResult
@@ -66,6 +68,10 @@ namespace OpenTraceability.TestServer.Services
             if (!string.IsNullOrWhiteSpace(request.ApiKey))
             {
                 client.DefaultRequestHeaders.Add("X-API-Key", request.ApiKey);
+            }
+            if (!string.IsNullOrEmpty(request.CapabilityProcessUUID))
+            {
+                client.DefaultRequestHeaders.Add("X-Capability-Process-UUID", request.CapabilityProcessUUID);
             }
 
             var dlOptions = new DigitalLinkQueryOptions

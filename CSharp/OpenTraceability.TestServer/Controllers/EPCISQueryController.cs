@@ -12,6 +12,7 @@ namespace OpenTraceability.TestServer.Controllers;
 [ApiController]
 [Authorize]
 [Route("epcis")]
+[Route("{datasetId}/epcis")]
 public class EPCISQueryController : ControllerBase
 {
     private readonly EpcisQueryService _queryService;

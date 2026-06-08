@@ -94,27 +94,31 @@ namespace OpenTraceability.TestServer.Services
                 ? headerVals.FirstOrDefault() ?? string.Empty
                 : startResult["ComplianceProcessUUID"]?.ToString() ?? string.Empty;
 
-            var generatedEpcs = (startResult["EPCs"] as JArray)?.Select(t => t.ToString()).ToList() ?? new List<string>();
+            var generatedEpcs = (startResult["epCs"] as JArray)?.Select(t => t.ToString()).ToList() ?? new List<string>();
             _logger.LogInformation("Capability test started. UUID={Uuid}, generated EPCs={Count}", uuid, generatedEpcs.Count);
+
+            if (generatedEpcs.Count < 1)
+            {
+                throw new Exception("Failed to parse generated EPCs from the capability tool's start response.");
+            }
 
             // 2. Fetch the generated data from the tool's resolver and store it locally.
             string toolResolverUrl = request.ToolResolverUrl ?? $"{toolUrl}/digitallink/";
-            if (generatedEpcs.Count > 0)
+
+            var traceResult = await _tracebackService.ExecuteAsync(new TracebackRequest
             {
-                var traceResult = await _tracebackService.ExecuteAsync(new TracebackRequest
-                {
-                    Epcs = generatedEpcs,
-                    ResolverUrl = toolResolverUrl,
-                    ApiKey = request.ToolApiKey,
-                    Format = "JSON",
-                    Version = "2.0"
-                });
-                _logger.LogInformation("Stored generated data: {Events} events, {MasterData} master data",
-                    traceResult.EventsStored, traceResult.MasterDataStored);
-            }
+                Epcs = generatedEpcs,
+                ResolverUrl = toolResolverUrl,
+                ApiKey = request.ToolApiKey,
+                Format = "JSON",
+                Version = "2.0",
+                CapabilityProcessUUID = uuid
+            });
+            _logger.LogInformation("Stored generated data: {Events} events, {MasterData} master data",
+                traceResult.EventsStored, traceResult.MasterDataStored);
 
             // 3. Advance the test to the processing stage.
-            var nextBody = new JObject { ["EPCs"] = new JArray(generatedEpcs.Cast<object>().ToArray()) };
+            var nextBody = new JObject { ["SolutionProviderEPCs"] = new JArray(request.SolutionProviderEPCs.Cast<object>().ToArray()) };
             using (var nextReq = new HttpRequestMessage(HttpMethod.Post, $"{toolUrl}/v2/process/next"))
             {
                 nextReq.Headers.Add("X-Capability-Process-UUID", uuid);

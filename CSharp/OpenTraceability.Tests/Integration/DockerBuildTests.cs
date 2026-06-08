@@ -8,7 +8,7 @@ namespace OpenTraceability.Tests.Integration;
 
 [TestFixture]
 [Category("Docker")]
-public class DiagnosticsToolDockerBuildTests
+public class DockerBuildTests
 {
     private static bool DockerAvailable()
     {
@@ -88,6 +88,67 @@ public class DiagnosticsToolDockerBuildTests
             Assert.That(resp!.IsSuccessStatusCode, Is.True, $"DiagnosticsTool swagger endpoint not reachable. Last exception: {lastEx}");
             string swaggerJson = await resp.Content.ReadAsStringAsync();
             Assert.That(swaggerJson, Does.Contain("<!DOCTYPE html>"), "HTML doc returned as expected.");
+        }
+        finally
+        {
+            // Collect basic logs for debugging if failing
+            try { RunDocker($"logs {containerName}", ignoreErrors: true); } catch { }
+            RunDocker($"rm -f {containerName}", ignoreErrors: true);
+        }
+    }
+
+    [Test]
+    [Category("Docker")] // Allows filtering e.g. dotnet test --filter Category=Docker
+    public async Task BuildAndRun_TestServer_Image()
+    {
+        if (!DockerAvailable())
+        {
+            Assert.Ignore("Docker is not available on this machine / CI agent.");
+        }
+
+        string solutionRoot = GetSolutionRoot();
+        string projectDir = Path.Combine(solutionRoot, "OpenTraceability.TestServer");
+        string dockerfile = Path.Combine(projectDir, "Dockerfile");
+        Assert.That(File.Exists(dockerfile), "Dockerfile not found for TestServer.");
+
+        string imageTag = "testserver-test:latest";
+        string containerName = "testserver-test-container";
+
+        // Clean previous container if exists
+        RunDocker($"rm -f {containerName}", ignoreErrors: true);
+        RunDocker($"rmi {imageTag}", ignoreErrors: true);
+
+        // Build image using the repository root as context so the OpenTraceability library can embed
+        // schema resources from docs/ (referenced as ..\..\docs, which lives outside the CSharp/ folder).
+        string repoRoot = Directory.GetParent(solutionRoot)?.FullName ?? solutionRoot;
+        RunDocker($"build -f \"{dockerfile}\" -t {imageTag} \"{repoRoot}\"");
+
+        // Run container mapping host port 5089 -> container 8080
+        int hostPort = 5089;
+        RunDocker($"run -d --name {containerName} -e ASPNETCORE_ENVIRONMENT=Development -p {hostPort}:8080 {imageTag}");
+
+        try
+        {
+            using HttpClient client = new();
+            var healthUrl = $"http://localhost:{hostPort}/health";
+            var deadline = DateTime.UtcNow.AddSeconds(90);
+            HttpResponseMessage? resp = null;
+            Exception? lastEx = null;
+            while (DateTime.UtcNow < deadline)
+            {
+                try
+                {
+                    resp = await client.GetAsync(healthUrl);
+                    if (resp.IsSuccessStatusCode) break;
+                }
+                catch (Exception ex) { lastEx = ex; }
+                await Task.Delay(1500);
+            }
+
+            Assert.That(resp, Is.Not.Null, "Did not receive any HTTP response from container.");
+            Assert.That(resp!.IsSuccessStatusCode, Is.True, $"TestServer health endpoint not reachable. Last exception: {lastEx}");
+            string body = await resp.Content.ReadAsStringAsync();
+            Assert.That(body, Does.Contain("Healthy"), "Health endpoint did not report a healthy status.");
         }
         finally
         {

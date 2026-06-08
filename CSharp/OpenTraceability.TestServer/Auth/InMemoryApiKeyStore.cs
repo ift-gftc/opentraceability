@@ -16,6 +16,8 @@ namespace OpenTraceability.TestServer.Auth
             _validKeys = config.GetSection("Authentication:APIKey:ValidKeys").Get<List<string>>() ?? new List<string>();
         }
 
+        public bool HasConfiguredKeys => _validKeys.Count > 0;
+
         public Task<bool> IsValidKeyAsync(string key) => Task.FromResult(_validKeys.Contains(key));
     }
 }

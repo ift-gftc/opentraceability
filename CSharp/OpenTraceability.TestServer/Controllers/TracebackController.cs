@@ -8,6 +8,7 @@ namespace OpenTraceability.TestServer.Controllers;
 [ApiController]
 [Authorize]
 [Route("traceback")]
+[Route("{datasetId}/traceback")]
 public class TracebackController : ControllerBase
 {
     private readonly TracebackService _tracebackService;

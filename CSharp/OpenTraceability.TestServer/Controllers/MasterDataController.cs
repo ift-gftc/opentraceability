@@ -9,6 +9,7 @@ namespace OpenTraceability.TestServer.Controllers;
 [ApiController]
 [Authorize]
 [Route("masterdata")]
+[Route("{datasetId}/masterdata")]
 public class MasterDataController : ControllerBase
 {
     private readonly MasterDataService _masterData;
