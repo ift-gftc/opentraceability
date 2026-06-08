@@ -353,7 +353,7 @@ namespace OpenTraceability.TestServer.Core.Data
                 EventJson = json,
                 BizStep = evt.BusinessStep?.ToString().ToLower() ?? string.Empty,
                 Action = evt.Action?.ToString()?.ToLower() ?? string.Empty,
-                EventTime = evt.EventTime,
+                EventTime = evt.EventTime?.ToUniversalTime(),
                 RecordTime = evt.RecordTime?.UtcDateTime ?? DateTime.UtcNow
             };
         }

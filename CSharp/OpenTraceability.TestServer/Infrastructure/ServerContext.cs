@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.Extensions.Configuration;
+using OpenTraceability.GDST;
 using OpenTraceability.TestServer.Core.Modules;
 
 namespace OpenTraceability.TestServer.Infrastructure

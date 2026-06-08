@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
-using OpenTraceability.Models.Events;
 using OpenTraceability.Queries;
 using OpenTraceability.TestServer.Core.Data;
 using OpenTraceability.TestServer.Core.Modules;
@@ -19,6 +15,7 @@ using WireMock.Types;
 using WireMock.Util;
 using WireMockResponse = global::WireMock.ResponseMessage;
 using WireMockRequest = global::WireMock.IRequestMessage;
+using OpenTraceability.GDST;
 
 namespace OpenTraceability.TestServer.Core.WireMock
 {

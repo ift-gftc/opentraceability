@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using OpenTraceability.TestServer.Core.Modules;
+using OpenTraceability.GDST;
 
 namespace OpenTraceability.TestServer.Core.WireMock
 {
