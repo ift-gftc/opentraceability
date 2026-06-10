@@ -4,7 +4,7 @@ using OpenTraceability.GDST;
 using OpenTraceability.Mappers;
 using OpenTraceability.Queries;
 using OpenTraceability.TestServer.Core.Data;
-using OpenTraceability.TestServer.Core.Modules;
+using OpenTraceability.GDST.Modules;
 
 namespace OpenTraceability.TestServer.Core.Services
 {

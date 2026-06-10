@@ -1,5 +1,5 @@
 using OpenTraceability.GDST;
-using OpenTraceability.TestServer.Core.Modules;
+using OpenTraceability.GDST.Modules;
 
 namespace OpenTraceability.TestServer.Infrastructure
 {

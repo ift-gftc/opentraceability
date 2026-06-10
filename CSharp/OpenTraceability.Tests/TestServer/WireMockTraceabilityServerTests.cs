@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using OpenTraceability.GDST;
-using OpenTraceability.TestServer.Core.Modules;
+using OpenTraceability.GDST.Modules;
 using OpenTraceability.TestServer.Core.WireMock;
 using OpenTraceability.Utility;
 

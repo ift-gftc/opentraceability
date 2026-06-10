@@ -5,7 +5,7 @@ using OpenTraceability.Interfaces;
 using OpenTraceability.Mappers;
 using OpenTraceability.Queries;
 using OpenTraceability.TestServer.Core.Data;
-using OpenTraceability.TestServer.Core.Modules;
+using OpenTraceability.GDST.Modules;
 using OpenTraceability.TestServer.Core.Services;
 using WireMock.Matchers;
 using WireMock.RequestBuilders;

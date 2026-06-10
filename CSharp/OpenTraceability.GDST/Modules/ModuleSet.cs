@@ -1,6 +1,6 @@
 using OpenTraceability.GDST;
 
-namespace OpenTraceability.TestServer.Core.Modules
+namespace OpenTraceability.GDST.Modules
 {
     /// <summary>
     /// Helpers for working with the set of modules a server supports.

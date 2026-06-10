@@ -4,14 +4,17 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenTraceability.GDST;
 
-namespace OpenTraceability.TestServer.Core.Modules
+namespace OpenTraceability.GDST.Modules
 {
     /// <summary>
     /// Produces a "minified" view of serialized JSON-LD scoped to a set of supported modules:
     ///   1. Removes any property whose JSON-LD key is owned by a module NOT in the allowed set
     ///      (the property is removed entirely - not nulled or emptied).
-    ///   2. Prunes nulls, empty strings, empty arrays, and empty objects.
-    ///   3. Emits compact (non-indented) JSON.
+    ///   2. Removes source/destination list entries whose <c>type</c> value (e.g. <c>owning_party</c>)
+    ///      is owned by a module NOT in the allowed set, while keeping <c>location</c> entries and the
+    ///      list itself.
+    ///   3. Prunes nulls, empty strings, empty arrays, and empty objects.
+    ///   4. Emits compact (non-indented) JSON.
     /// </summary>
     public static class ModuleMinifier
     {
@@ -41,6 +44,10 @@ namespace OpenTraceability.TestServer.Core.Modules
                             prop.Remove();
                             continue;
                         }
+                        if (prop.Value is JArray list && IsSourceOrDestinationList(prop.Name))
+                        {
+                            FilterSourceDestEntries(list, allowedModules);
+                        }
                         if (!Process(prop.Value, allowedModules))
                         {
                             prop.Remove();
@@ -65,6 +72,33 @@ namespace OpenTraceability.TestServer.Core.Modules
 
                 default:
                     return true;
+            }
+        }
+
+        private static bool IsSourceOrDestinationList(string name)
+        {
+            return string.Equals(name, "sourceList", System.StringComparison.OrdinalIgnoreCase)
+                || string.Equals(name, "destinationList", System.StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Removes source/destination list entries whose <c>type</c> value is owned by a module not in
+        /// the allowed set. Entries with a Core type (e.g. <c>location</c>) are always kept. The normal
+        /// empty-array pruning later removes the whole list only if every entry was stripped.
+        /// </summary>
+        private static void FilterSourceDestEntries(JArray list, ISet<GdstModule> allowedModules)
+        {
+            foreach (var item in list.ToList())
+            {
+                if (item is JObject entry)
+                {
+                    string? type = entry["type"]?.Value<string>();
+                    var module = ModuleRegistry.GetModuleForSourceDestinationType(type);
+                    if (module.HasValue && !allowedModules.Contains(module.Value))
+                    {
+                        item.Remove();
+                    }
+                }
             }
         }
     }
