@@ -16,6 +16,7 @@ namespace OpenTraceability.TestServer.Core.Data
         public DbSet<TraceabilityEvent> Events { get; set; } = null!;
         public DbSet<EventSearchEntry> EventSearchEntries { get; set; } = null!;
         public DbSet<MasterDataRecord> MasterDataRecords { get; set; } = null!;
+        public DbSet<DatasetRecord> Datasets { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +43,11 @@ namespace OpenTraceability.TestServer.Core.Data
             {
                 e.HasIndex(x => new { x.DatasetId, x.ElementId }).IsUnique().HasDatabaseName("IX_MasterData_Dataset_ElementId");
                 e.HasIndex(x => x.DatasetId).HasDatabaseName("IX_MasterData_Dataset");
+            });
+
+            modelBuilder.Entity<DatasetRecord>(e =>
+            {
+                e.HasIndex(x => x.DatasetId).IsUnique().HasDatabaseName("IX_Datasets_DatasetId");
             });
         }
     }

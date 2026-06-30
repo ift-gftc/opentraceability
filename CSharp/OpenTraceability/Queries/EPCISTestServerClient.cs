@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -21,19 +23,51 @@ namespace OpenTraceability.Queries
         protected EPCISVersion _version;
         protected string _apiKey;
         protected string _dataset;
+        protected string[] _modules;
+        private bool _datasetEnsured;
 
         /// <summary>
         /// Creates a new client. Each client instance is bound to a single dataset on the server,
         /// identified by the X-Dataset-Id header. When no dataset id is provided a unique one is
-        /// generated so that callers get an isolated dataset by default.
+        /// generated so that callers get an isolated dataset by default. The server requires every
+        /// dataset to exist before use, so the client creates its dataset (with
+        /// <paramref name="modules"/>, defaulting to all GDST modules for full-fidelity responses)
+        /// on first contact.
         /// </summary>
-        public EPCISTestServerClient(string baseURL, string apiKey, EPCISDataFormat format, EPCISVersion version, string? datasetID = null)
+        public EPCISTestServerClient(string baseURL, string apiKey, EPCISDataFormat format, EPCISVersion version, string? datasetID = null, IEnumerable<string>? modules = null)
         {
             _baseURL = baseURL;
             _version = version;
             _format = format;
             _apiKey = apiKey;
             _dataset = string.IsNullOrEmpty(datasetID) ? Guid.NewGuid().ToString() : datasetID!;
+            _modules = modules?.ToArray() ?? new[] { "Seafood", "Wildcaught", "Aquaculture" };
+        }
+
+        /// <summary>
+        /// Creates this client's dataset on the server (idempotent PUT) so reads and writes are not
+        /// rejected with 404. Runs once per client instance.
+        /// </summary>
+        protected async Task EnsureDatasetAsync(HttpClient client)
+        {
+            if (_datasetEnsured) return;
+
+            string url = $"{_baseURL.TrimEnd('/')}/datasets/{Uri.EscapeDataString(_dataset)}";
+            string body = "{\"modules\":[" + string.Join(",", _modules.Select(m => $"\"{m}\"")) + "],\"description\":\"Created by EPCISTestServerClient\"}";
+
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, url))
+            {
+                request.Headers.Add("X-API-Key", _apiKey);
+                request.Content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+                var response = await client.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    string contentStr = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Failed to create dataset '{_dataset}' on the test server: {(int)response.StatusCode} - {response.StatusCode} - {contentStr}");
+                }
+            }
+
+            _datasetEnsured = true;
         }
 
         /// <summary>
@@ -56,6 +90,7 @@ namespace OpenTraceability.Queries
             using (var clientItem = HttpClientPool.GetClient())
             {
                 var client = clientItem.Value;
+                await EnsureDatasetAsync(client);
 
                 HttpRequestMessage request = new HttpRequestMessage();
                 request.RequestUri = new Uri(url);
@@ -118,6 +153,7 @@ namespace OpenTraceability.Queries
             using (var clientItem = HttpClientPool.GetClient())
             {
                 var client = clientItem.Value;
+                await EnsureDatasetAsync(client);
                 EPCISQueryInterfaceOptions options = BuildQueryOptions();
                 return await EPCISTraceabilityResolver.QueryEvents(options, parameters, client);
             }
@@ -133,6 +169,7 @@ namespace OpenTraceability.Queries
             using (var clientItem = HttpClientPool.GetClient())
             {
                 var client = clientItem.Value;
+                await EnsureDatasetAsync(client);
                 EPCISQueryInterfaceOptions options = BuildQueryOptions();
                 return await EPCISTraceabilityResolver.Traceback(options, epc, client);
             }
@@ -147,6 +184,7 @@ namespace OpenTraceability.Queries
             using (var clientItem = HttpClientPool.GetClient())
             {
                 var client = clientItem.Value;
+                await EnsureDatasetAsync(client);
                 DigitalLinkQueryOptions options = BuildDigitalLinkOptions();
                 await MasterDataResolver.ResolveMasterData(options, doc, client);
             }

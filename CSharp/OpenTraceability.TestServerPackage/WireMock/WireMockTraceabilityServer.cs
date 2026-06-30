@@ -6,6 +6,7 @@ using OpenTraceability.Mappers;
 using OpenTraceability.Queries;
 using OpenTraceability.TestServer.Core.Data;
 using OpenTraceability.GDST.Modules;
+using OpenTraceability.TestServer.Core.Models;
 using OpenTraceability.TestServer.Core.Services;
 using WireMock.Matchers;
 using WireMock.RequestBuilders;
@@ -22,10 +23,18 @@ namespace OpenTraceability.TestServer.Core.WireMock
     /// <summary>
     /// An in-process WireMock-backed traceability server for unit/integration testing in external
     /// .NET projects. Resolves digital links, runs EPCIS queries, and serves master data against an
-    /// in-memory SQLite database using the same core services as the real Docker server.
+    /// in-memory SQLite database using the same core services as the real Docker server. Like the
+    /// real server, datasets are persisted records carrying their own module set: requests under
+    /// /{datasetId}/... are served (and minified) with that dataset's modules, and unknown datasets
+    /// return 404.
     /// </summary>
     public sealed class WireMockTraceabilityServer : IDisposable
     {
+        private static readonly HashSet<string> _knownRoots = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "digitallink", "epcis", "masterdata"
+        };
+
         private readonly WireMockServer _server;
         private readonly SqliteConnection _keepAlive;
         private readonly ITraceabilityStore _store;
@@ -33,16 +42,14 @@ namespace OpenTraceability.TestServer.Core.WireMock
         private readonly DigitalLinkService _digitalLink;
         private readonly EpcisQueryService _epcisQuery;
         private readonly MasterDataService _masterData;
-        private readonly HashSet<GdstModule> _modules;
         private readonly string _datasetId;
 
         private WireMockTraceabilityServer(WireMockServer server, SqliteConnection keepAlive, ITraceabilityStore store,
-            HashSet<GdstModule> modules, string datasetId)
+            string datasetId)
         {
             _server = server;
             _keepAlive = keepAlive;
             _store = store;
-            _modules = modules;
             _datasetId = datasetId;
             _ingestion = new IngestionService(store);
             _digitalLink = new DigitalLinkService();
@@ -75,13 +82,27 @@ namespace OpenTraceability.TestServer.Core.WireMock
             var store = new TraceabilityStore(factory);
             store.InitializeAsync().GetAwaiter().GetResult();
 
-            var modules = ModuleSet.Expand(config.Modules);
+            // The dataset records are the source of truth for module minification, exactly as on
+            // the real server.
+            store.UpsertDatasetAsync(new Dataset
+            {
+                DatasetId = config.DatasetId,
+                Modules = ToModuleNames(config.Modules)
+            }).GetAwaiter().GetResult();
+            foreach (var ds in config.Datasets)
+            {
+                store.UpsertDatasetAsync(new Dataset
+                {
+                    DatasetId = ds.DatasetId,
+                    Modules = ToModuleNames(ds.Modules)
+                }).GetAwaiter().GetResult();
+            }
 
             var server = config.Port.HasValue
                 ? WireMockServer.Start(config.Port.Value)
                 : WireMockServer.Start();
 
-            var instance = new WireMockTraceabilityServer(server, keepAlive, store, modules, config.DatasetId);
+            var instance = new WireMockTraceabilityServer(server, keepAlive, store, config.DatasetId);
 
             // Seed data.
             foreach (var doc in config.SeedEpcisDocuments)
@@ -92,10 +113,29 @@ namespace OpenTraceability.TestServer.Core.WireMock
             {
                 instance._ingestion.IngestMasterDataAsync(config.DatasetId, md).GetAwaiter().GetResult();
             }
+            foreach (var ds in config.Datasets)
+            {
+                foreach (var doc in ds.SeedEpcisDocuments)
+                {
+                    var format = doc.TrimStart().StartsWith("<") ? EPCISDataFormat.XML : EPCISDataFormat.JSON;
+                    instance._ingestion.IngestEpcisDocumentAsync(ds.DatasetId, doc, format, checkSchema: false).GetAwaiter().GetResult();
+                }
+                foreach (var md in ds.SeedMasterData)
+                {
+                    instance._ingestion.IngestMasterDataAsync(ds.DatasetId, md).GetAwaiter().GetResult();
+                }
+            }
 
             instance.RegisterRoutes();
             return instance;
         }
+
+        private static List<string> ToModuleNames(IEnumerable<GdstModule>? modules)
+            => (modules ?? Enumerable.Empty<GdstModule>())
+                .Where(m => m != GdstModule.Core)
+                .Distinct()
+                .Select(m => m.ToString())
+                .ToList();
 
         // ---- public seeding helpers ----
 
@@ -123,22 +163,75 @@ namespace OpenTraceability.TestServer.Core.WireMock
 
         private void RegisterRoutes()
         {
+            // Bare routes (served from the primary dataset) and dataset-prefixed routes, matching
+            // the real server's dual route templates. The handlers branch on the first path segment.
             _server.Given(Request.Create().WithPath(new WildcardMatcher("/digitallink/*")).UsingGet())
+                   .RespondWith(Response.Create().WithCallback(HandleDigitalLink));
+            _server.Given(Request.Create().WithPath(new WildcardMatcher("/*/digitallink/*")).UsingGet())
                    .RespondWith(Response.Create().WithCallback(HandleDigitalLink));
 
             _server.Given(Request.Create().WithPath("/epcis/events").UsingGet())
                    .RespondWith(Response.Create().WithCallback(HandleEpcisQuery));
+            _server.Given(Request.Create().WithPath(new WildcardMatcher("/*/epcis/events")).UsingGet())
+                   .RespondWith(Response.Create().WithCallback(HandleEpcisQuery));
 
             _server.Given(Request.Create().WithPath(new WildcardMatcher("/masterdata/*")).UsingGet())
                    .RespondWith(Response.Create().WithCallback(HandleMasterData));
+            _server.Given(Request.Create().WithPath(new WildcardMatcher("/*/masterdata/*")).UsingGet())
+                   .RespondWith(Response.Create().WithCallback(HandleMasterData));
         }
+
+        /// <summary>
+        /// Splits a request path into its dataset id and the segments after the resource root.
+        /// "/epcis/events" → primary dataset, no prefix; "/{ds}/epcis/events" → dataset "ds".
+        /// Returns false when the path does not contain <paramref name="root"/> where expected.
+        /// </summary>
+        private bool TryParsePath(string path, string root, out string datasetId, out string? routeDatasetId, out List<string> segments)
+        {
+            var parts = path.Trim('/').Split('/').ToList();
+            datasetId = _datasetId;
+            routeDatasetId = null;
+            segments = new List<string>();
+
+            if (parts.Count > 0 && string.Equals(parts[0], root, StringComparison.OrdinalIgnoreCase))
+            {
+                segments = parts.Skip(1).ToList();
+                return true;
+            }
+            if (parts.Count > 1 && !_knownRoots.Contains(parts[0]) && string.Equals(parts[1], root, StringComparison.OrdinalIgnoreCase))
+            {
+                datasetId = parts[0];
+                routeDatasetId = parts[0];
+                segments = parts.Skip(2).ToList();
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>Loads the dataset record, or null when it does not exist (the caller returns 404).</summary>
+        private Dataset? GetDataset(string datasetId)
+            => _store.GetDatasetAsync(datasetId).GetAwaiter().GetResult();
+
+        private static WireMockResponse UnknownDataset(string datasetId)
+            => Json(404, JsonConvert.SerializeObject(new { error = $"Unknown dataset '{datasetId}'." }));
 
         private WireMockResponse HandleDigitalLink(WireMockRequest request)
         {
             try
             {
+                if (!TryParsePath(request.Path, "digitallink", out string datasetId, out string? routeDatasetId, out var segments))
+                {
+                    return Json(404, JsonConvert.SerializeObject(new { error = "not a digital link path" }));
+                }
+
+                var dataset = GetDataset(datasetId);
+                if (dataset == null)
+                {
+                    return UnknownDataset(datasetId);
+                }
+
                 string? linkType = GetQuery(request, "linkType");
-                var links = ResolveDigitalLinks(request.Path, linkType);
+                var links = ResolveDigitalLinks(segments, linkType, routeDatasetId);
                 return Json(200, JsonConvert.SerializeObject(links));
             }
             catch (Exception ex)
@@ -147,10 +240,10 @@ namespace OpenTraceability.TestServer.Core.WireMock
             }
         }
 
-        private List<OpenTraceability.Models.MasterData.DigitalLink> ResolveDigitalLinks(string path, string? linkType)
+        private List<OpenTraceability.Models.MasterData.DigitalLink> ResolveDigitalLinks(List<string> segments, string? linkType, string? routeDatasetId)
         {
-            // path like /digitallink/01/{gtin}[/10/{lot}|/21/{serial}] or word aliases
-            var segments = path.TrimStart('/').Split('/').Skip(1).ToList(); // drop "digitallink"
+            // segments like 01/{gtin}[/10/{lot}|/21/{serial}] or word aliases. Like the real server,
+            // only dataset-prefixed requests emit dataset-prefixed links; bare requests emit bare links.
             string baseUrl = Url;
 
             if (segments.Count >= 2)
@@ -162,23 +255,23 @@ namespace OpenTraceability.TestServer.Core.WireMock
                     case "01":
                     case "gtin":
                         if (segments.Count >= 4 && (segments[2] == "10" || segments[2].ToLower() == "lot"))
-                            return _digitalLink.ForEpcClass(baseUrl, id, segments[3], linkType);
+                            return _digitalLink.ForEpcClass(baseUrl, id, segments[3], linkType, routeDatasetId);
                         if (segments.Count >= 4 && (segments[2] == "21" || segments[2].ToLower() == "serial"))
-                            return _digitalLink.ForEpcInstance(baseUrl, id, segments[3], linkType);
-                        return _digitalLink.ForProduct(baseUrl, id, linkType);
+                            return _digitalLink.ForEpcInstance(baseUrl, id, segments[3], linkType, routeDatasetId);
+                        return _digitalLink.ForProduct(baseUrl, id, linkType, routeDatasetId);
                     case "00":
                     case "sscc":
-                        return _digitalLink.ForSSCC(baseUrl, id, linkType);
+                        return _digitalLink.ForSSCC(baseUrl, id, linkType, routeDatasetId);
                     case "414":
                     case "gln":
                     case "location":
-                        return _digitalLink.ForLocation(baseUrl, id, linkType);
+                        return _digitalLink.ForLocation(baseUrl, id, linkType, routeDatasetId);
                     case "417":
                     case "pgln":
                     case "party":
-                        return _digitalLink.ForParty(baseUrl, id, linkType);
+                        return _digitalLink.ForParty(baseUrl, id, linkType, routeDatasetId);
                     case "product":
-                        return _digitalLink.ForProduct(baseUrl, id, linkType);
+                        return _digitalLink.ForProduct(baseUrl, id, linkType, routeDatasetId);
                 }
             }
 
@@ -189,9 +282,20 @@ namespace OpenTraceability.TestServer.Core.WireMock
         {
             try
             {
+                if (!TryParsePath(request.Path, "epcis", out string datasetId, out _, out _))
+                {
+                    return Json(404, JsonConvert.SerializeObject(new { error = "not an epcis path" }));
+                }
+
+                var dataset = GetDataset(datasetId);
+                if (dataset == null)
+                {
+                    return UnknownDataset(datasetId);
+                }
+
                 var uri = new Uri(request.Url);
                 var parameters = new EPCISQueryParameters(uri);
-                string json = _epcisQuery.QueryEventsJsonAsync(_datasetId, parameters, _modules).GetAwaiter().GetResult();
+                string json = _epcisQuery.QueryEventsJsonAsync(datasetId, parameters, dataset.GetExpandedModules()).GetAwaiter().GetResult();
                 return Json(200, json);
             }
             catch (Exception ex)
@@ -204,14 +308,24 @@ namespace OpenTraceability.TestServer.Core.WireMock
         {
             try
             {
-                var segments = request.Path.TrimStart('/').Split('/').Skip(1).ToList(); // drop "masterdata"
+                if (!TryParsePath(request.Path, "masterdata", out string datasetId, out _, out var segments))
+                {
+                    return Json(404, JsonConvert.SerializeObject(new { error = "not a masterdata path" }));
+                }
+
+                var dataset = GetDataset(datasetId);
+                if (dataset == null)
+                {
+                    return UnknownDataset(datasetId);
+                }
+
                 if (segments.Count < 2)
                 {
                     return Json(400, JsonConvert.SerializeObject(new { error = "expected /masterdata/{type}/{identifier}" }));
                 }
 
                 string identifier = segments[segments.Count - 1];
-                string? json = _masterData.GetMasterDataJsonAsync(_datasetId, identifier, _modules).GetAwaiter().GetResult();
+                string? json = _masterData.GetMasterDataJsonAsync(datasetId, identifier, dataset.GetExpandedModules()).GetAwaiter().GetResult();
                 if (json == null)
                 {
                     return Json(404, JsonConvert.SerializeObject(new { error = $"master data not found for {identifier}" }));

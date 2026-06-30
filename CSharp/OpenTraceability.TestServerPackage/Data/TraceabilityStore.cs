@@ -10,6 +10,7 @@ using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Queries;
 using OpenTraceability.TestServer.Core.Data.Entities;
+using OpenTraceability.TestServer.Core.Models;
 using OpenTraceability.Utility;
 
 namespace OpenTraceability.TestServer.Core.Data
@@ -30,6 +31,20 @@ namespace OpenTraceability.TestServer.Core.Data
         {
             using var ctx = await _contextFactory.CreateDbContextAsync();
             await ctx.Database.EnsureCreatedAsync();
+
+            // EnsureCreated no-ops on an existing database, so tables added after a deployment's
+            // epcis.db was first created must be applied explicitly. The DDL mirrors what
+            // EnsureCreated generates for DatasetRecord on a fresh database.
+            await ctx.Database.ExecuteSqlRawAsync(
+                "CREATE TABLE IF NOT EXISTS \"Datasets\" (" +
+                "\"Id\" INTEGER NOT NULL CONSTRAINT \"PK_Datasets\" PRIMARY KEY AUTOINCREMENT, " +
+                "\"DatasetId\" TEXT NOT NULL, " +
+                "\"Modules\" TEXT NOT NULL, " +
+                "\"Description\" TEXT NULL, " +
+                "\"CreatedUtc\" TEXT NOT NULL, " +
+                "\"UpdatedUtc\" TEXT NOT NULL)");
+            await ctx.Database.ExecuteSqlRawAsync(
+                "CREATE UNIQUE INDEX IF NOT EXISTS \"IX_Datasets_DatasetId\" ON \"Datasets\" (\"DatasetId\")");
         }
 
         public async Task UpsertEventsAsync(string datasetId, IEnumerable<IEvent> events, IDictionary<string, string>? namespaces = null)
@@ -223,6 +238,87 @@ namespace OpenTraceability.TestServer.Core.Data
 
             return await ctx.EventSearchEntries.AnyAsync(s => s.DatasetId == datasetId &&
                 (s.EPC == idLower || s.ProductGTIN == idLower || s.LocationGLN == idLower || s.PartyPGLN == idLower));
+        }
+
+        public async Task<Dataset?> GetDatasetAsync(string datasetId)
+        {
+            using var ctx = await _contextFactory.CreateDbContextAsync();
+            var record = await ctx.Datasets.FirstOrDefaultAsync(d => d.DatasetId == datasetId);
+            return record == null ? null : ToDataset(record);
+        }
+
+        public async Task<List<Dataset>> ListDatasetsAsync()
+        {
+            using var ctx = await _contextFactory.CreateDbContextAsync();
+            var records = await ctx.Datasets.OrderBy(d => d.DatasetId).ToListAsync();
+            return records.Select(ToDataset).ToList();
+        }
+
+        public async Task<Dataset> UpsertDatasetAsync(Dataset dataset)
+        {
+            using var ctx = await _contextFactory.CreateDbContextAsync();
+            var now = DateTime.UtcNow;
+            var existing = await ctx.Datasets.FirstOrDefaultAsync(d => d.DatasetId == dataset.DatasetId);
+            if (existing == null)
+            {
+                existing = new DatasetRecord
+                {
+                    DatasetId = dataset.DatasetId,
+                    CreatedUtc = now
+                };
+                ctx.Datasets.Add(existing);
+            }
+            existing.Modules = string.Join(",", dataset.Modules);
+            existing.Description = dataset.Description;
+            existing.UpdatedUtc = now;
+            await ctx.SaveChangesAsync();
+            return ToDataset(existing);
+        }
+
+        public async Task<bool> DeleteDatasetAsync(string datasetId, bool purgeData)
+        {
+            using var ctx = await _contextFactory.CreateDbContextAsync();
+            var record = await ctx.Datasets.FirstOrDefaultAsync(d => d.DatasetId == datasetId);
+            if (record == null) return false;
+
+            using var tx = await ctx.Database.BeginTransactionAsync();
+            ctx.Datasets.Remove(record);
+            await ctx.SaveChangesAsync();
+            if (purgeData)
+            {
+                await PurgeDatasetDataAsync(ctx, datasetId);
+            }
+            await tx.CommitAsync();
+            return true;
+        }
+
+        public async Task ClearDatasetDataAsync(string datasetId)
+        {
+            using var ctx = await _contextFactory.CreateDbContextAsync();
+            using var tx = await ctx.Database.BeginTransactionAsync();
+            await PurgeDatasetDataAsync(ctx, datasetId);
+            await tx.CommitAsync();
+        }
+
+        private static async Task PurgeDatasetDataAsync(TraceabilityDbContext ctx, string datasetId)
+        {
+            await ctx.Events.Where(e => e.DatasetId == datasetId).ExecuteDeleteAsync();
+            await ctx.EventSearchEntries.Where(s => s.DatasetId == datasetId).ExecuteDeleteAsync();
+            await ctx.MasterDataRecords.Where(m => m.DatasetId == datasetId).ExecuteDeleteAsync();
+        }
+
+        private static Dataset ToDataset(DatasetRecord record)
+        {
+            return new Dataset
+            {
+                DatasetId = record.DatasetId,
+                Modules = record.Modules
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .ToList(),
+                Description = record.Description,
+                CreatedUtc = DateTime.SpecifyKind(record.CreatedUtc, DateTimeKind.Utc),
+                UpdatedUtc = DateTime.SpecifyKind(record.UpdatedUtc, DateTimeKind.Utc)
+            };
         }
 
         // ---- helpers ----

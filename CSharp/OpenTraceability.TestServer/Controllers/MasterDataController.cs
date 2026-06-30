@@ -10,25 +10,25 @@ namespace OpenTraceability.TestServer.Controllers;
 [Authorize]
 [Route("masterdata")]
 [Route("{datasetId}/masterdata")]
+[ServiceFilter(typeof(DatasetResolutionFilter))]
 public class MasterDataController : ControllerBase
 {
     private readonly MasterDataService _masterData;
     private readonly IngestionService _ingestionService;
-    private readonly SupportedModules _modules;
+    private readonly DatasetContext _dataset;
 
-    public MasterDataController(MasterDataService masterData, IngestionService ingestionService, SupportedModules modules)
+    public MasterDataController(MasterDataService masterData, IngestionService ingestionService, DatasetContext dataset)
     {
         _masterData = masterData;
         _ingestionService = ingestionService;
-        _modules = modules;
+        _dataset = dataset;
     }
 
     /// <summary>Returns the module-minified master data definition for a single identifier.</summary>
     [HttpGet("{type}/{identifier}")]
     public async Task<IActionResult> GetMasterData(string type, string identifier)
     {
-        string datasetId = Request.GetDatasetId();
-        string? json = await _masterData.GetMasterDataJsonAsync(datasetId, identifier, _modules.Modules);
+        string? json = await _masterData.GetMasterDataJsonAsync(_dataset.DatasetId, identifier, _dataset.Modules);
         if (json == null)
         {
             return NotFound($"Did not find master data for identifier {identifier}");
@@ -44,8 +44,7 @@ public class MasterDataController : ControllerBase
         {
             return BadRequest($"unknown master data type {type}");
         }
-        string datasetId = Request.GetDatasetId();
-        string json = await _masterData.GetMasterDataDefinitionsJsonAsync(datasetId, vocabType, _modules.Modules);
+        string json = await _masterData.GetMasterDataDefinitionsJsonAsync(_dataset.DatasetId, vocabType, _dataset.Modules);
         return Content(json, "application/json");
     }
 
@@ -59,8 +58,7 @@ public class MasterDataController : ControllerBase
             Request.Body.Position = 0;
             string rawBody = await new StreamReader(Request.Body).ReadToEndAsync();
 
-            string datasetId = Request.GetDatasetId();
-            int count = await _ingestionService.IngestMasterDataAsync(datasetId, rawBody);
+            int count = await _ingestionService.IngestMasterDataAsync(_dataset.DatasetId, rawBody);
             return Ok(new { masterDataStored = count });
         }
         catch (Exception ex)

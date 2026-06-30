@@ -8,32 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OpenTraceability.GDST;
+using OpenTraceability.TestServer.Core.Data;
+using OpenTraceability.TestServer.Core.Models;
 
 namespace OpenTraceability.TestServer.Services
 {
-    /// <summary>The request body for triggering a GDST 2.0 capability test run.</summary>
-    public class CapabilityTestRequest
-    {
-        /// <summary>The capability tool base URL (e.g. https://capabilitytool-beta-service.azurewebsites.net).</summary>
-        public string ToolUrl { get; set; } = string.Empty;
-
-        /// <summary>The X-API-Key to authenticate against the capability tool.</summary>
-        public string ToolApiKey { get; set; } = string.Empty;
-
-        /// <summary>Optional digital-link resolver URL of the tool used to fetch generated data. Defaults to {ToolUrl}/digitallink/.</summary>
-        public string? ToolResolverUrl { get; set; }
-
-        public string SolutionName { get; set; } = string.Empty;
-        public string? Version { get; set; }
-        public string Pgln { get; set; } = string.Empty;
-
-        /// <summary>Module names: Seafood, Wildcaught, Aquaculture.</summary>
-        public List<string> Modules { get; set; } = new List<string>();
-
-        /// <summary>Optional EPCs of the solution provider's own data to be validated.</summary>
-        public List<string> SolutionProviderEPCs { get; set; } = new List<string>();
-    }
-
     /// <summary>
     /// Drives the GDST 2.0 capability test as a solution-provider client: start the test, fetch the
     /// generated data and store it locally, advance the test, then poll the report to completion.
@@ -43,30 +23,57 @@ namespace OpenTraceability.TestServer.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _config;
         private readonly TracebackService _tracebackService;
+        private readonly ITraceabilityStore _store;
         private readonly ILogger<CapabilityTestClientService> _logger;
 
         public CapabilityTestClientService(
             IHttpClientFactory httpClientFactory,
             IConfiguration config,
             TracebackService tracebackService,
+            ITraceabilityStore store,
             ILogger<CapabilityTestClientService> logger)
         {
             _httpClientFactory = httpClientFactory;
             _config = config;
             _tracebackService = tracebackService;
+            _store = store;
             _logger = logger;
         }
 
-        public async Task<JObject> RunAsync(CapabilityTestRequest request)
+        public async Task<JObject> RunAsync(CapabilityTestRequest request, Dataset dataset)
         {
             string toolUrl = request.ToolUrl.TrimEnd('/');
             string ourBaseUrl = (_config["BaseURL"] ?? string.Empty).TrimEnd('/');
-            string ourResolverUrl = ourBaseUrl + "/digitallink/";
+            if (string.IsNullOrWhiteSpace(ourBaseUrl))
+            {
+                throw new Exception("BaseURL is not configured; the capability tool needs a publicly reachable digital-link resolver URL for this server.");
+            }
+
+            // Embedding the dataset in the resolver root is the only dataset selector the tool
+            // honors — it appends identifier paths to this URL verbatim and sends no dataset or
+            // module headers. Every request it makes stays scoped to this dataset, whose persisted
+            // modules drive both the minification it sees and the module list sent below.
+            string ourResolverUrl = $"{ourBaseUrl}/{dataset.DatasetId}/digitallink/";
             string ourApiKey = _config.GetSection("Authentication:APIKey:ValidKeys").Get<List<string>>()?.FirstOrDefault() ?? string.Empty;
+
+            if (request.ClearDatasetBeforeRun)
+            {
+                _logger.LogInformation("Clearing dataset {DatasetId} before capability test run", dataset.DatasetId);
+                await _store.ClearDatasetDataAsync(dataset.DatasetId);
+            }
 
             var client = _httpClientFactory.CreateClient();
             client.Timeout = TimeSpan.FromMinutes(2);
             client.DefaultRequestHeaders.Add("X-API-Key", request.ToolApiKey);
+
+            // Module ids match GDSTTools SolutionV2Module (Seafood=1, Wildcaught=2, Aquaculture=3);
+            // Core is implicit and never sent.
+            var moduleIds = dataset.GetExpandedModules()
+                .Where(m => m != GdstModule.Core)
+                .Select(m => (int)m)
+                .OrderBy(id => id)
+                .Cast<object>()
+                .ToArray();
 
             // 1. Start the test.
             var startBody = new JObject
@@ -77,7 +84,7 @@ namespace OpenTraceability.TestServer.Services
                 ["URL"] = ourResolverUrl,
                 ["PGLN"] = request.Pgln,
                 ["GDSTVersion"] = 20,
-                ["Modules"] = new JArray(request.Modules.Select(ToModuleId).Where(id => id > 0).Cast<object>().ToArray()),
+                ["Modules"] = new JArray(moduleIds),
                 ["SolutionProviderEPCs"] = new JArray(request.SolutionProviderEPCs.Cast<object>().ToArray())
             };
 
@@ -112,6 +119,7 @@ namespace OpenTraceability.TestServer.Services
                 ApiKey = request.ToolApiKey,
                 Format = "JSON",
                 Version = "2.0",
+                DatasetId = dataset.DatasetId,
                 CapabilityProcessUUID = uuid
             });
             _logger.LogInformation("Stored generated data: {Events} events, {MasterData} master data",
@@ -151,18 +159,6 @@ namespace OpenTraceability.TestServer.Services
             }
 
             return report;
-        }
-
-        private static int ToModuleId(string moduleName)
-        {
-            // Matches GDSTTools SolutionV2Module: Seafood=1, WildCaught=2, Aquaculture=3.
-            return (moduleName?.Trim().ToLower()) switch
-            {
-                "seafood" => 1,
-                "wildcaught" => 2,
-                "aquaculture" => 3,
-                _ => 0
-            };
         }
 
         private static bool IsStarted(JToken? statusToken)

@@ -9,8 +9,13 @@ namespace OpenTraceability.TestServer.Controllers;
 [Authorize]
 [Route("digitallink")]
 [Route("{datasetId}/digitallink")]
+[ServiceFilter(typeof(DatasetResolutionFilter))]
 public class DigitalLinkController : ControllerBase
 {
+    // The datasetId passed to the link builder is the ROUTE segment only (not the resolved
+    // dataset): a dataset-prefixed request emits dataset-prefixed links so a capability tool
+    // started at /{datasetId}/digitallink/ stays inside the dataset, while bare-route requests
+    // (header-scoped consumers) keep getting unprefixed links.
     private readonly DigitalLinkService _digitalLink;
     private readonly IConfiguration _config;
 

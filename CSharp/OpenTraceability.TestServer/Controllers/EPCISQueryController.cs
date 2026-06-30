@@ -13,17 +13,18 @@ namespace OpenTraceability.TestServer.Controllers;
 [Authorize]
 [Route("epcis")]
 [Route("{datasetId}/epcis")]
+[ServiceFilter(typeof(DatasetResolutionFilter))]
 public class EPCISQueryController : ControllerBase
 {
     private readonly EpcisQueryService _queryService;
     private readonly IngestionService _ingestionService;
-    private readonly SupportedModules _modules;
+    private readonly DatasetContext _dataset;
 
-    public EPCISQueryController(EpcisQueryService queryService, IngestionService ingestionService, SupportedModules modules)
+    public EPCISQueryController(EpcisQueryService queryService, IngestionService ingestionService, DatasetContext dataset)
     {
         _queryService = queryService;
         _ingestionService = ingestionService;
-        _modules = modules;
+        _dataset = dataset;
     }
 
     /// <summary>EPCIS Query Interface: returns module-minified events matching the GDST query parameters.</summary>
@@ -34,9 +35,8 @@ public class EPCISQueryController : ControllerBase
         {
             var uri = new Uri(Request.GetEncodedUrl(), UriKind.Absolute);
             var parameters = new EPCISQueryParameters(uri);
-            string datasetId = Request.GetDatasetId();
 
-            string json = await _queryService.QueryEventsJsonAsync(datasetId, parameters, _modules.Modules);
+            string json = await _queryService.QueryEventsJsonAsync(_dataset.DatasetId, parameters, _dataset.Modules);
             return Content(json, "application/json");
         }
         catch (Exception ex)
@@ -78,7 +78,7 @@ public class EPCISQueryController : ControllerBase
         Request.EnableBuffering();
         Request.Body.Position = 0;
         string rawBody = await new StreamReader(Request.Body).ReadToEndAsync();
-        string datasetId = Request.GetDatasetId();
+        string datasetId = _dataset.DatasetId;
 
         try
         {

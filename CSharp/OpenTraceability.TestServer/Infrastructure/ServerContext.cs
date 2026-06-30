@@ -1,23 +1,5 @@
-using OpenTraceability.GDST;
-using OpenTraceability.GDST.Modules;
-
 namespace OpenTraceability.TestServer.Infrastructure
 {
-    /// <summary>
-    /// The set of modules this server instance is configured to support (always includes Core,
-    /// and expands Wildcaught/Aquaculture to also include Seafood). Registered as a singleton.
-    /// </summary>
-    public class SupportedModules
-    {
-        public HashSet<GdstModule> Modules { get; }
-
-        public SupportedModules(IConfiguration config)
-        {
-            var names = config.GetSection("Modules").Get<List<string>>() ?? new List<string>();
-            Modules = ModuleSet.Parse(names);
-        }
-    }
-
     /// <summary>
     /// Helpers for resolving the dataset id and base URL from a request.
     /// </summary>

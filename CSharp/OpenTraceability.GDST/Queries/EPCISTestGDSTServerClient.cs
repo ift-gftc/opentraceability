@@ -13,8 +13,8 @@ namespace OpenTraceability.GDST.Queries
     /// </summary>
     public class EPCISTestGDSTServerClient : EPCISTestServerClient
     {
-        public EPCISTestGDSTServerClient(string baseURL, string apiKey, EPCISDataFormat format, EPCISVersion version, string? datasetID = null)
-            : base(baseURL, apiKey, format, version, datasetID)
+        public EPCISTestGDSTServerClient(string baseURL, string apiKey, EPCISDataFormat format, EPCISVersion version, string? datasetID = null, IEnumerable<string>? modules = null)
+            : base(baseURL, apiKey, format, version, datasetID, modules)
         {
         }
 
@@ -27,6 +27,7 @@ namespace OpenTraceability.GDST.Queries
             using (var clientItem = HttpClientPool.GetClient())
             {
                 var client = clientItem.Value;
+                await EnsureDatasetAsync(client);
                 DigitalLinkQueryOptions options = BuildDigitalLinkOptions();
                 await GDSTMasterDataResolver.ResolveGDSTMasterData(options, doc, client);
             }

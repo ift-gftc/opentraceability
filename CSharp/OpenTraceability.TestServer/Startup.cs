@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTraceability.TestServer.Auth;
 using OpenTraceability.TestServer.Core.Data;
+using OpenTraceability.TestServer.Core.Models;
 using OpenTraceability.TestServer.Core.Services;
 using OpenTraceability.TestServer.Infrastructure;
 using OpenTraceability.TestServer.Services;
@@ -54,7 +55,8 @@ namespace OpenTraceability.TestServer
                 services.AddScoped<SeedingService>();
 
                 // ---- host-only services ----
-                services.AddSingleton<SupportedModules>();
+                services.AddScoped<DatasetContext>();
+                services.AddScoped<DatasetResolutionFilter>();
                 services.AddScoped<TracebackService>();
                 services.AddScoped<CapabilityTestClientService>();
 
@@ -102,9 +104,27 @@ namespace OpenTraceability.TestServer
                 var store = scope.ServiceProvider.GetRequiredService<ITraceabilityStore>();
                 store.InitializeAsync().GetAwaiter().GetResult();
 
+                // The "default" dataset backs the bare (non-prefixed) routes and X-Dataset-Id
+                // header consumers. Its modules come from config; it is only created when absent
+                // so operator edits via the /datasets API survive restarts.
+                var configuredNames = Configuration.GetSection("Modules").Get<List<string>>() ?? new List<string>();
+                if (!ModuleNames.TryParseStrict(configuredNames, out var defaultModules, out var invalidNames))
+                {
+                    throw new Exception($"appsettings 'Modules' contains unknown module names: {string.Join(", ", invalidNames)}");
+                }
+                if (store.GetDatasetAsync("default").GetAwaiter().GetResult() == null)
+                {
+                    store.UpsertDatasetAsync(new Dataset
+                    {
+                        DatasetId = "default",
+                        Modules = defaultModules,
+                        Description = "Default dataset (bare routes / X-Dataset-Id header)"
+                    }).GetAwaiter().GetResult();
+                }
+
                 // seed bundled datasets (one dataset per folder under SeedData/)
                 var seeder = scope.ServiceProvider.GetRequiredService<SeedingService>();
-                seeder.SeedFromDirectoryAsync(Path.Combine(AppContext.BaseDirectory, "SeedData"))
+                seeder.SeedFromDirectoryAsync(Path.Combine(AppContext.BaseDirectory, "SeedData"), defaultModules)
                       .GetAwaiter().GetResult();
             }
 
