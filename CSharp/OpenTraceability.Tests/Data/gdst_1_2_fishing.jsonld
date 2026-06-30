@@ -1,0 +1,86 @@
+{
+  "@context": [
+    "https://ref.gs1.org/standards/epcis/epcis-context.jsonld",
+    {
+      "gdst": "https://traceability-dialogue.org/epcis"
+    }
+  ],
+  "type": "EPCISDocument",
+  "creationDate": "2024-11-25T21:21:59.1838429+00:00",
+  "schemaVersion": "2.0",
+  "epcisBody": {
+    "eventList": [
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2022-01-22T10:57:24.1560000+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:2fbb3592-c9fa-47ca-b419-b35528fee66fU",
+        "action": "ADD",
+        "bizStep": "urn:gdst:bizStep:fishingEvent",
+        "disposition": "active",
+        "bizLocation": {
+          "id": "urn:epc:id:sgln:08600031303.1.1"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:fisherman01.tunau.v1-0122-2022",
+            "quantity": 9876.0,
+            "uom": "KGM"
+          }
+        ],
+        "ilmd": {
+          "cbvmda:vesselCatchInformationList": {
+            "cbvmda:vesselCatchInformation": [
+              {
+                "cbvmda:economicZone": "urn:gdst:eez:usa",
+                "cbvmda:fishingGearTypeCode": "urn:gdst:gear:1.1",
+                "cbvmda:vesselFlagState": "US",
+                "cbvmda:vesselID": "VESSEL1",
+                "cbvmda:vesselName": "Vessel #1",
+                "gdst:fisheryImprovementProject": "test",
+                "gdst:gpsAvailability": true,
+                "gdst:imoNumber": "IMO12345678",
+                "gdst:rfmoArea": "urn:gdst:rfmo:cecaf",
+                "gdst:satelliteTrackingAuthority": "test",
+                "gdst:subnationalPermitArea": "test",
+                "gdst:vesselPublicRegistry": "test",
+                "gdst:vesselTripDate": "2022-01-20T10:57:24.1560000+00:00",
+                "cbvmda:catchArea": "urn:gdst:fao:27.1"
+              }
+            ]
+          },
+          "cbvmda:productionMethodForFishAndSeafoodCode": "MARINE_FISHERY",
+          "cbvmda:lotNumber": "V1-0122-2022",
+          "cbvmda:certificationList": {
+            "certification": [
+              {
+                "gdst:certificationType": "urn:gdst:certType:fishingAuth",
+                "certificationAgency": "test",
+                "certificationStandard": "test",
+                "certificationValue": "test",
+                "certificationIdentification": "test"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                "certificationAgency": "test",
+                "certificationStandard": "test",
+                "certificationValue": "test",
+                "certificationIdentification": "test"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                "certificationAgency": "test",
+                "certificationStandard": "test",
+                "certificationValue": "test",
+                "certificationIdentification": "test"
+              }
+            ]
+          }
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:fisherman01.1u",
+        "gdst:humanWelfarePolicy": "3P Audit",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:fisherman01.1u"
+      }
+    ]
+  }
+}
