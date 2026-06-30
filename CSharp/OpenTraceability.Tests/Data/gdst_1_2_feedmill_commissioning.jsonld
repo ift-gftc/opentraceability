@@ -1,0 +1,77 @@
+{
+  "@context": [
+    "https://ref.gs1.org/standards/epcis/epcis-context.jsonld",
+    {
+      "gdst": "https://traceability-dialogue.org/epcis"
+    }
+  ],
+  "type": "EPCISDocument",
+  "creationDate": "2024-11-25T21:21:59.1838429+00:00",
+  "schemaVersion": "2.0",
+  "epcisBody": {
+    "eventList": [
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2021-10-05T11:10:00.0000000+00:00",
+        "recordTime": "2023-07-19T11:36:57.5290000+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:495851c5-ca96-4f05-b9f7-8fa705a41c3a",
+        "epcList": [],
+        "action": "ADD",
+        "bizStep": "commissioning",
+        "disposition": "active",
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:feedmill.1"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:feedmill.1.ff11252021",
+            "quantity": 10000.0,
+            "uom": "KGM"
+          }
+        ],
+        "ilmd": {
+          "gdst:proteinSource": "wild caught",
+          "cbvmda:itemExpirationDate": "2022-02-03T03:00:00.0000000+00:00",
+          "cbvmda:countryOfOrigin": "US",
+          "cbvmda:lotNumber": "FF11252021",
+          "cbvmda:certificationList": {
+            "certification": [
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                "certificationAgency": "test",
+                "certificationStandard": "test",
+                "certificationValue": "test",
+                "certificationIdentification": "test"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                "certificationAgency": "test",
+                "certificationStandard": "test",
+                "certificationValue": "test",
+                "certificationIdentification": "test"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                "certificationAgency": "test",
+                "certificationStandard": "test",
+                "certificationValue": "test",
+                "certificationIdentification": "test"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                "certificationAgency": "test",
+                "certificationStandard": "test",
+                "certificationValue": "test",
+                "certificationIdentification": "test"
+              }
+            ]
+          }
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:feedmill.1",
+        "gdst:humanWelfarePolicy": "3P Audit",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:fishfarm.1"
+      }
+    ]
+  }
+}
