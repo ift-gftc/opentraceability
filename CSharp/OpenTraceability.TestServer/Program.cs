@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using OpenTraceability.TestServer;
+﻿using OpenTraceability.TestServer;
 
 var builder = WebApplication.CreateBuilder(args);
 Startup startup = new Startup(builder.Configuration);

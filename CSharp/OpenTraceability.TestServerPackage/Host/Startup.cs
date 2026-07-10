@@ -38,8 +38,6 @@ namespace OpenTraceability.TestServer
             try
             {
                 services.AddControllers();
-                services.AddEndpointsApiExplorer();
-                services.AddSwaggerGen();
                 services.AddHttpClient();
 
                 // ---- persistence (SQLite) ----

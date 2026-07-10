@@ -10,23 +10,6 @@
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
     
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.8" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.1" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Remove="Services\" />
-		<None Remove="Services\Interfaces\" />
-		<None Remove="Models\" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Services\" />
-		<Folder Include="Services\Interfaces\" />
-		<Folder Include="Models\" />
-	</ItemGroup>
-	<ItemGroup>
 		<ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj">
 			<GlobalPropertiesToRemove></GlobalPropertiesToRemove>
 		</ProjectReference>

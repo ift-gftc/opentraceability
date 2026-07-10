@@ -15,9 +15,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- The hostable Kestrel server (Host\) needs the ASP.NET Core shared framework; the
+         framework reference flows to package consumers via the nuspec. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Humanizer" Version="3.0.10" />
     <PackageReference Include="WireMock.Net" Version="2.9.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The Host\ sources were authored in a Web SDK project, which injects these usings
+         implicitly; a plain SDK library does not, so they are declared here. -->
+    <Using Include="Microsoft.AspNetCore.Builder" />
+    <Using Include="Microsoft.AspNetCore.Hosting" />
+    <Using Include="Microsoft.AspNetCore.Http" />
+    <Using Include="Microsoft.AspNetCore.Mvc" />
+    <Using Include="Microsoft.AspNetCore.Routing" />
+    <Using Include="Microsoft.Extensions.Configuration" />
+    <Using Include="Microsoft.Extensions.DependencyInjection" />
+    <Using Include="Microsoft.Extensions.Hosting" />
+    <Using Include="Microsoft.Extensions.Logging" />
   </ItemGroup>
 
   <ItemGroup>
