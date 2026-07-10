@@ -16,21 +16,32 @@ namespace OpenTraceability.Models.MasterData
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#streetAddressOne")]
         [OpenTraceabilityJson("streetAddress")]
-        public List<LanguageString> Address1 { get; set; }
+        public List<LanguageString>? Address1 { get; set; }
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#streetAddressTwo")]
-        public List<LanguageString> Address2 { get; set; }
+        public List<LanguageString>? Address2 { get; set; }
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#city")]
         [OpenTraceabilityJson("addressLocality")]
-        public List<LanguageString> City { get; set; }
+        public List<LanguageString>? City { get; set; }
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#state")]
         [OpenTraceabilityJson("addressRegion")]
-        public List<LanguageString> State { get; set; }
+        public List<LanguageString>? State { get; set; }
+
+        [OpenTraceabilityJson("postalCode")]
+        public string PostalCode { get; set; } = string.Empty;
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#countryCode")]
         [OpenTraceabilityJson("countryCode")]
-        public Country Country { get; set; }
+        public Country? Country { get; set; }
+
+        /// <summary>
+        /// The country of the address in the GS1 Web Vocabulary format, as a nested gs1:Country object.
+        /// Only used on the GS1 Web Vocab JSON path; the EPCIS master data path uses <see cref="Country"/> instead.
+        /// </summary>
+        [OpenTraceabilityObject]
+        [OpenTraceabilityJson("addressCountry")]
+        public AddressCountry? AddressCountry { get; set; }
     }
 }

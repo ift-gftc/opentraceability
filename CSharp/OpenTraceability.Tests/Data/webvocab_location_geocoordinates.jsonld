@@ -1,0 +1,33 @@
+﻿{
+    "@context": {
+        "gs1": "http://gs1.org/voc/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "@vocab": "http://gs1.org/voc/"
+    },
+    "@type": "gs1:Place",
+    "geo": {
+        "latitude": {
+            "@value": "51.5175264",
+            "@type": "xsd:float"
+        },
+        "longitude": {
+            "@value": "-0.1134413",
+            "@type": "xsd:float"
+        },
+        "@type": "gs1:GeoCoordinates"
+    },
+    "address": {
+        "streetAddress": [
+            {
+                "@value": "Staple Court, 11 Staple Inn Buildings",
+                "@language": "en"
+            }
+        ],
+        "postalCode": "WC1V 7QH",
+        "addressCountry": {
+            "countryCode": "GB",
+            "@type": "gs1:Country"
+        },
+        "@type": "gs1:PostalAddress"
+    }
+}

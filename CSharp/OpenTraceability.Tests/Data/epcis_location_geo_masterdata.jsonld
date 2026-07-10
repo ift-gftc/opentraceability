@@ -1,0 +1,52 @@
+{
+    "@context": [
+        "https://ref.gs1.org/standards/epcis/epcis-context.jsonld"
+    ],
+    "type": "EPCISDocument",
+    "creationDate": "2026-07-10T12:00:00.0000000+00:00",
+    "schemaVersion": "2.0",
+    "epcisHeader": {
+        "epcisMasterData": {
+            "vocabularyList": [
+                {
+                    "type": "urn:epcglobal:epcis:vtype:Location",
+                    "vocabularyElementList": [
+                        {
+                            "id": "urn:epc:id:sgln:08600031303.1.1",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "GS1 Germany Offices"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#geoLocation",
+                                    "attribute": "geo:50.942239,6.89835"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "urn:epc:id:sgln:08600031303.1.2",
+                            "attributes": [
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#name",
+                                    "attribute": "GS1 Germany Offices With Fence"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#geoLocation",
+                                    "attribute": "geo:50.942239,6.89835"
+                                },
+                                {
+                                    "id": "urn:epcglobal:cbv:mda#geoFence",
+                                    "attribute": "[[6.898247,50.942499],[6.898292,50.942275],[6.898094,50.942263],[6.898126,50.942106],[6.898526,50.94213],[6.898451,50.942512],[6.898247,50.942499]]"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "epcisBody": {
+        "eventList": []
+    }
+}

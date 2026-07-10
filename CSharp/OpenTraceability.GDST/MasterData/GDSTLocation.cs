@@ -1,6 +1,8 @@
+using Humanizer;
 using OpenTraceability.Models.MasterData;
 using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
+using static Humanizer.In;
 
 namespace OpenTraceability.GDST.MasterData
 {
@@ -11,14 +13,6 @@ namespace OpenTraceability.GDST.MasterData
         [OpenTraceabilityJson("gdst:locationClassification")]
         [OpenTraceabilityMasterData("urn:gdst:kde#locationClassification")]
         public List<GDSTClassification> LocationClassification { get; set; } = new List<GDSTClassification>();
-
-        [OpenTraceabilityJson("geoLocation")]
-        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#geoLocation")]
-        public string? GeoLocation { get; set; }
-
-        [OpenTraceabilityJson("geoFence")]
-        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#geoFence")]
-        public string? GeoFence { get; set; }
 
         [OpenTraceabilityJson("cbvmda:vesselFlagState")]
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#vesselFlagState")]

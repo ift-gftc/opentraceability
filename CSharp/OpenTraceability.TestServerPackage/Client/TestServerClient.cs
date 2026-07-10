@@ -100,19 +100,6 @@ namespace OpenTraceability.TestServer.Core.Client
             await SendForBodyAsync(HttpMethod.Post, $"/datasets/{Uri.EscapeDataString(datasetId)}/clear", null, ct);
         }
 
-        // ---- capability test ----
-
-        /// <summary>
-        /// POST /capability-test/run. Runs the full GDST 2.0 capability test against the dataset in
-        /// <paramref name="request"/> and returns the tool's final report. The dataset's persisted
-        /// modules are sent to the tool, so create/seed the dataset with the right modules first.
-        /// </summary>
-        public async Task<JObject> RunCapabilityTestAsync(CapabilityTestRequest request, CancellationToken ct = default)
-        {
-            string body = await SendForBodyAsync(HttpMethod.Post, "/capability-test/run", JsonContent(request), ct);
-            return string.IsNullOrWhiteSpace(body) ? new JObject() : JObject.Parse(body);
-        }
-
         // ---- plumbing (shared with TestServerDatasetClient) ----
 
         internal async Task<HttpResponseMessage> SendAsync(HttpMethod method, string relativePath, HttpContent? content, CancellationToken ct, Action<HttpRequestMessage>? configure = null)
