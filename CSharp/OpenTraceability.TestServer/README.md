@@ -48,14 +48,6 @@ Reserved route roots (`epcis`, `masterdata`, `digitallink`, `datasets`, `traceba
 The `Modules` list in `appsettings.json` only defines the modules of the `default` dataset, which
 is bootstrapped at startup when absent (so edits made via the API survive restarts).
 
-# Capability Tests
-`POST /capability-test/run` (or `POST /{datasetId}/capability-test/run`) runs the full GDST 2.0
-capability test as a solution-provider client against a capability tool. The test is tied to a
-dataset: the dataset's persisted modules are sent to the tool, the resolver URL handed to the tool
-is `{BaseURL}/{datasetId}/digitallink/` so every request the tool makes is served (and minified)
-from that dataset, and the tool's generated data is stored into it. Optional
-`clearDatasetBeforeRun: true` purges the dataset first so repeated runs don't accumulate stale EPCs.
-
 # Seeded Data
 Seed datasets live under `SeedData/` — each folder is a dataset, optionally carrying a
 `dataset.json` manifest:

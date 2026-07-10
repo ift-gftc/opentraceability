@@ -58,7 +58,6 @@ namespace OpenTraceability.TestServer
                 services.AddScoped<DatasetContext>();
                 services.AddScoped<DatasetResolutionFilter>();
                 services.AddScoped<TracebackService>();
-                services.AddScoped<CapabilityTestClientService>();
 
                 // ---- API key authentication (all endpoints) ----
                 services.AddSingleton<IApiKeyStore, InMemoryApiKeyStore>();
