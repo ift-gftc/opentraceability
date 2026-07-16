@@ -26,6 +26,7 @@ namespace OpenTraceability.TestServer.Core.Services
         public async Task<string> QueryEventsJsonAsync(string datasetId, EPCISQueryParameters parameters, ISet<GdstModule> allowedModules)
         {
             var doc = await _store.QueryEventsAsync(datasetId, parameters);
+            doc.QueryName = "SimpleEventQuery";
             // We are producing output (not validating input), so skip schema validation.
             string json = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(doc, checkSchema: false);
             return ModuleMinifier.Minify(json, allowedModules);

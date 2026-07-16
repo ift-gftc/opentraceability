@@ -16,7 +16,7 @@ namespace OpenTraceability.GDST.Modules
     ///   3. Removes <c>gdst:productClassification</c> / <c>gdst:locationClassification</c> entries whose
     ///      <c>value</c> is not owned by an allowed module (strict allow-list - unknown values are
     ///      stripped too).
-    ///   4. Prunes nulls, empty strings, empty arrays, and empty objects.
+    ///   4. Prunes objects and arrays that became empty as a result of the removals above.
     ///   5. Emits compact (non-indented) JSON.
     /// </summary>
     /// <remarks>
@@ -26,6 +26,12 @@ namespace OpenTraceability.GDST.Modules
     /// (<c>id: urn:gdst:kde#productClassification</c>), which this minifier has never matched - key
     /// stripping does not apply there either. That asymmetry is intentional: the EPCIS query path
     /// serves embedded master data to all tiers, and consumers depend on it.
+    ///
+    /// Minification must never invalidate the document: if the input JSON was valid against the
+    /// EPCIS JSON schema, the minified output must be too. That is why only containers emptied by
+    /// the minifier itself are pruned - nulls, empty strings, and containers that were already
+    /// empty in the input are part of the original (valid) document and are left untouched
+    /// (e.g. the schema-required <c>queryName</c> may legitimately be an empty string).
     /// </remarks>
     public static class ModuleMinifier
     {
@@ -39,11 +45,14 @@ namespace OpenTraceability.GDST.Modules
         }
 
         /// <summary>
-        /// Recursively strips module-scoped keys and prunes empties, mutating in place.
-        /// Returns true if the token should be kept, false if it is empty and should be removed.
+        /// Recursively strips module-scoped keys, mutating in place, and prunes containers that the
+        /// stripping emptied. Containers that were already empty in the input are kept so that a
+        /// schema-valid input stays schema-valid. Returns true if this token or any descendant was
+        /// modified by minification.
         /// </summary>
         private static bool Process(JToken token, ISet<GdstModule> allowedModules)
         {
+            bool modified = false;
             switch (token)
             {
                 case JObject obj:
@@ -53,41 +62,52 @@ namespace OpenTraceability.GDST.Modules
                         if (module.HasValue && !allowedModules.Contains(module.Value))
                         {
                             prop.Remove();
+                            modified = true;
                             continue;
                         }
+
+                        bool valueModified = false;
                         if (prop.Value is JArray list && IsSourceOrDestinationList(prop.Name))
                         {
-                            FilterSourceDestEntries(list, allowedModules);
+                            valueModified |= FilterSourceDestEntries(list, allowedModules);
                         }
                         if (prop.Value is JArray classifications && IsClassificationList(prop.Name))
                         {
-                            FilterClassificationEntries(classifications, prop.Name, allowedModules);
+                            valueModified |= FilterClassificationEntries(classifications, prop.Name, allowedModules);
                         }
-                        if (!Process(prop.Value, allowedModules))
+                        valueModified |= Process(prop.Value, allowedModules);
+
+                        if (valueModified && IsEmptyContainer(prop.Value))
                         {
                             prop.Remove();
                         }
+                        modified |= valueModified;
                     }
-                    return obj.Count > 0;
+                    return modified;
 
                 case JArray arr:
                     foreach (var item in arr.ToList())
                     {
-                        if (!Process(item, allowedModules))
+                        bool itemModified = Process(item, allowedModules);
+                        if (itemModified && IsEmptyContainer(item))
                         {
                             item.Remove();
                         }
+                        modified |= itemModified;
                     }
-                    return arr.Count > 0;
-
-                case JValue value:
-                    if (value.Type == JTokenType.Null) return false;
-                    if (value.Type == JTokenType.String && string.IsNullOrEmpty(value.Value<string>())) return false;
-                    return true;
+                    return modified;
 
                 default:
-                    return true;
+                    return false;
             }
+        }
+
+        /// <summary>
+        /// True when the token is an object or array with no remaining content.
+        /// </summary>
+        private static bool IsEmptyContainer(JToken token)
+        {
+            return (token is JObject obj && obj.Count == 0) || (token is JArray arr && arr.Count == 0);
         }
 
         private static bool IsSourceOrDestinationList(string name)
@@ -107,10 +127,12 @@ namespace OpenTraceability.GDST.Modules
         /// set. The value maps are strict allow-lists (see <see cref="ModuleRegistry"/>): unknown values
         /// are stripped too, so each tier is served exactly the classifications its modules define
         /// (e.g. Core keeps only <c>land facility</c> locations and no product classifications). The
-        /// normal empty-array pruning later removes the whole list when every entry was stripped.
+        /// empty-container pruning later removes the whole list when every entry was stripped.
+        /// Returns true if any entry was removed.
         /// </summary>
-        private static void FilterClassificationEntries(JArray list, string propertyName, ISet<GdstModule> allowedModules)
+        private static bool FilterClassificationEntries(JArray list, string propertyName, ISet<GdstModule> allowedModules)
         {
+            bool removed = false;
             bool isProduct = propertyName.IndexOf("product", System.StringComparison.OrdinalIgnoreCase) >= 0;
             foreach (var item in list.ToList())
             {
@@ -126,18 +148,22 @@ namespace OpenTraceability.GDST.Modules
                     if (!allowedModules.Contains(module.Value))
                     {
                         item.Remove();
+                        removed = true;
                     }
                 }
             }
+            return removed;
         }
 
         /// <summary>
         /// Removes source/destination list entries whose <c>type</c> value is owned by a module not in
-        /// the allowed set. Entries with a Core type (e.g. <c>location</c>) are always kept. The normal
-        /// empty-array pruning later removes the whole list only if every entry was stripped.
+        /// the allowed set. Entries with a Core type (e.g. <c>location</c>) are always kept. The
+        /// empty-container pruning later removes the whole list only if every entry was stripped.
+        /// Returns true if any entry was removed.
         /// </summary>
-        private static void FilterSourceDestEntries(JArray list, ISet<GdstModule> allowedModules)
+        private static bool FilterSourceDestEntries(JArray list, ISet<GdstModule> allowedModules)
         {
+            bool removed = false;
             foreach (var item in list.ToList())
             {
                 if (item is JObject entry)
@@ -147,9 +173,11 @@ namespace OpenTraceability.GDST.Modules
                     if (module.HasValue && !allowedModules.Contains(module.Value))
                     {
                         item.Remove();
+                        removed = true;
                     }
                 }
             }
+            return removed;
         }
     }
 }

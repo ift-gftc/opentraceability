@@ -36,14 +36,33 @@ namespace OpenTraceability.Tests.TestServer
         }
 
         [Test]
-        public void CoreOnly_PrunesNullsAndEmpties()
+        public void CoreOnly_KeepsOriginalNullsAndEmpties()
         {
+            // Nulls, empty strings, and empty containers that were present in the input are part of
+            // the original (schema-valid) document, so minification must not remove them - only
+            // containers that the minifier itself emptied are pruned.
             var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
             var result = JObject.Parse(ModuleMinifier.Minify(Sample, allowed));
 
-            Assert.That(result.ContainsKey("emptyString"), Is.False);
-            Assert.That(result.ContainsKey("nullValue"), Is.False);
-            Assert.That(result.ContainsKey("emptyArray"), Is.False);
+            Assert.That(result.ContainsKey("emptyString"), Is.True);
+            Assert.That(result.ContainsKey("nullValue"), Is.True);
+            Assert.That(result.ContainsKey("emptyArray"), Is.True);
+        }
+
+        [Test]
+        public void CoreOnly_PrunesContainersEmptiedByMinification()
+        {
+            const string wrapped = @"{
+                ""eventID"": ""urn:uuid:1"",
+                ""wrapper"": { ""gdst:broodstockSource"": ""hatchery-1"" },
+                ""listOfModuleObjects"": [ { ""gdst:aquacultureMethod"": ""pond"" } ]
+            }";
+
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
+            var result = JObject.Parse(ModuleMinifier.Minify(wrapped, allowed));
+
+            Assert.That(result.ContainsKey("wrapper"), Is.False, "object emptied by key stripping is pruned");
+            Assert.That(result.ContainsKey("listOfModuleObjects"), Is.False, "array emptied by key stripping is pruned");
         }
 
         [Test]
@@ -207,6 +226,42 @@ namespace OpenTraceability.Tests.TestServer
 
             Assert.That(ClassificationValues(result, "location", "gdst:locationClassification"), Is.EqualTo(new[] { "Land Facility", "processor" }));
             Assert.That(ClassificationValues(result, "tradeitem", "gdst:productClassification"), Is.EqualTo(new[] { "seafood", "processed", "farmed", "feed", "developing", "mature", "live" }));
+        }
+
+        /// <summary>
+        /// Minifying a schema-valid EPCIS query document must never invalidate it: for every module
+        /// set, mapping the minified JSON with schema validation enabled must succeed. This guards
+        /// against regressions like pruning the required (but legitimately empty) queryName property.
+        /// </summary>
+        [Test]
+        [TestCase(new GdstModule[] { GdstModule.Core })]
+        [TestCase(new GdstModule[] { GdstModule.Seafood })]
+        [TestCase(new GdstModule[] { GdstModule.Wildcaught })]
+        [TestCase(new GdstModule[] { GdstModule.Aquaculture })]
+        [TestCase(new GdstModule[] { GdstModule.Wildcaught, GdstModule.Aquaculture })]
+        public void Minify_EPCISQueryDocument_PreservesJsonSchemaValidity(GdstModule[] modules)
+        {
+            string json = OpenTraceabilityTests.ReadTestData("EPCISQueryDocument.GDST.jsonld");
+
+            // Prove the input is schema-valid to begin with; the mapper throws on schema violations.
+            Assert.DoesNotThrow(() => OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(json), "The input test data is not schema-valid; the test cannot prove anything about minification.");
+
+            var allowed = ModuleSet.Expand(modules);
+            string minified = ModuleMinifier.Minify(json, allowed);
+
+            Assert.DoesNotThrow(() => OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(minified), $"Minifying for modules [{string.Join("+", modules)}] produced JSON that is no longer valid against the EPCIS JSON schema.");
+        }
+
+        [Test]
+        public void Minify_EPCISQueryDocument_KeepsEmptyQueryName()
+        {
+            string json = OpenTraceabilityTests.ReadTestData("EPCISQueryDocument.GDST.jsonld");
+
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
+            var result = JObject.Parse(ModuleMinifier.Minify(json, allowed));
+
+            JToken? queryName = result["epcisBody"]?["queryResults"]?["queryName"];
+            Assert.That(queryName, Is.Not.Null, "The schema-required queryName property was pruned by minification.");
         }
     }
 }
