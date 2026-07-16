@@ -245,7 +245,12 @@ namespace OpenTraceability.Tests
                             {
                                 if (jt1["id"] != null)
                                 {
-                                    JToken? jt2match = jarr2.FirstOrDefault(x => x["id"]?.ToString() == jt1["id"]?.ToString());
+                                    // Attribute arrays may legally repeat the same id (e.g. one productClassification
+                                    // entry per value), so match the k-th occurrence of the id on j1 with the k-th
+                                    // occurrence on j2 instead of always taking the first.
+                                    string idValue = jt1["id"]!.ToString();
+                                    int occurrence = jarr1.Take(i).Count(x => (x as JObject)?["id"]?.ToString() == idValue);
+                                    JToken? jt2match = jarr2.Where(x => (x as JObject)?["id"]?.ToString() == idValue).Skip(occurrence).FirstOrDefault();
                                     if (jt2match != null)
                                     {
                                         jt2 = jt2match;

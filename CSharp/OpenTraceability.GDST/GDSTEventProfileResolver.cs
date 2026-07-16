@@ -18,11 +18,14 @@ namespace OpenTraceability.GDST
         TransshipmentReceiving,
         Landing,
         Commingling,
-        Processing,
+        SeafoodProcessing,
         OnVesselProcessing,
         FeedProcessing,
         MatureHarvest,
-        Decommission
+        Decommission,
+        LandBasedReceiving,
+        LandBasedShipping,
+        Processing
     }
 
     public static class GDSTEventProfileResolver
@@ -63,6 +66,10 @@ namespace OpenTraceability.GDST
                 {
                     return GDSTEventProfile.TransshipmentShipping;
                 }
+                else if (IsClassification(source, "land facility") && IsClassification(destination, "land facility"))
+                {
+                    return GDSTEventProfile.LandBasedShipping;
+                }
 
                 return GDSTEventProfile.Shipping;
             }
@@ -77,9 +84,13 @@ namespace OpenTraceability.GDST
                     return GDSTEventProfile.TransshipmentReceiving;
                 }
 
-                if (IsClassification(source, "vessel") && IsClassification(destination, "landFacility"))
+                if (IsClassification(source, "vessel") && IsClassification(destination, "land facility"))
                 {
                     return GDSTEventProfile.Landing;
+                }
+                else if (IsClassification(source, "land facility") && IsClassification(destination, "land facility"))
+                {
+                    return GDSTEventProfile.LandBasedReceiving;
                 }
 
                 return GDSTEventProfile.Receiving;
@@ -106,6 +117,12 @@ namespace OpenTraceability.GDST
                 if (InputsAndOutputsHaveSameGTIN(evt))
                 {
                     return GDSTEventProfile.Commingling;
+                }
+
+                // we have to be able to differentiate between a seafood processing event and something like a mature harvesting event
+                else if (HasProductClassification(evt, doc, "seafood", EventProductType.Output) && HasProductClassification(evt, doc, "processed", EventProductType.Output))
+                {
+                    return GDSTEventProfile.SeafoodProcessing;
                 }
 
                 return GDSTEventProfile.Processing;

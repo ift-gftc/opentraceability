@@ -13,9 +13,20 @@ namespace OpenTraceability.GDST.Modules
     ///   2. Removes source/destination list entries whose <c>type</c> value (e.g. <c>owning_party</c>)
     ///      is owned by a module NOT in the allowed set, while keeping <c>location</c> entries and the
     ///      list itself.
-    ///   3. Prunes nulls, empty strings, empty arrays, and empty objects.
-    ///   4. Emits compact (non-indented) JSON.
+    ///   3. Removes <c>gdst:productClassification</c> / <c>gdst:locationClassification</c> entries whose
+    ///      <c>value</c> is not owned by an allowed module (strict allow-list - unknown values are
+    ///      stripped too).
+    ///   4. Prunes nulls, empty strings, empty arrays, and empty objects.
+    ///   5. Emits compact (non-indented) JSON.
     /// </summary>
+    /// <remarks>
+    /// The classification value filter only matches the GS1 Web Vocab master-data shape, where
+    /// classifications appear under the <c>gdst:productClassification</c> / <c>gdst:locationClassification</c>
+    /// keys. Master data embedded in EPCIS documents uses the vocabularyElement shape
+    /// (<c>id: urn:gdst:kde#productClassification</c>), which this minifier has never matched - key
+    /// stripping does not apply there either. That asymmetry is intentional: the EPCIS query path
+    /// serves embedded master data to all tiers, and consumers depend on it.
+    /// </remarks>
     public static class ModuleMinifier
     {
         /// <summary>Minifies a JSON-LD string against the allowed module set.</summary>
@@ -48,6 +59,10 @@ namespace OpenTraceability.GDST.Modules
                         {
                             FilterSourceDestEntries(list, allowedModules);
                         }
+                        if (prop.Value is JArray classifications && IsClassificationList(prop.Name))
+                        {
+                            FilterClassificationEntries(classifications, prop.Name, allowedModules);
+                        }
                         if (!Process(prop.Value, allowedModules))
                         {
                             prop.Remove();
@@ -79,6 +94,41 @@ namespace OpenTraceability.GDST.Modules
         {
             return string.Equals(name, "sourceList", System.StringComparison.OrdinalIgnoreCase)
                 || string.Equals(name, "destinationList", System.StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsClassificationList(string name)
+        {
+            return string.Equals(name, "gdst:productClassification", System.StringComparison.OrdinalIgnoreCase)
+                || string.Equals(name, "gdst:locationClassification", System.StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Removes classification entries whose <c>value</c> is owned by a module not in the allowed
+        /// set. The value maps are strict allow-lists (see <see cref="ModuleRegistry"/>): unknown values
+        /// are stripped too, so each tier is served exactly the classifications its modules define
+        /// (e.g. Core keeps only <c>land facility</c> locations and no product classifications). The
+        /// normal empty-array pruning later removes the whole list when every entry was stripped.
+        /// </summary>
+        private static void FilterClassificationEntries(JArray list, string propertyName, ISet<GdstModule> allowedModules)
+        {
+            bool isProduct = propertyName.IndexOf("product", System.StringComparison.OrdinalIgnoreCase) >= 0;
+            foreach (var item in list.ToList())
+            {
+                if (item is JObject entry)
+                {
+                    string? value = entry["value"]?.Value<string>();
+                    var module = isProduct ? ModuleRegistry.GetModuleForProductClassification(value) : ModuleRegistry.GetModuleForLocationClassification(value);
+                    if (module == null)
+                    {
+                        // if the classification is not assigned to a module, keep it.
+                        continue;
+                    }
+                    if (!allowedModules.Contains(module.Value))
+                    {
+                        item.Remove();
+                    }
+                }
+            }
         }
 
         /// <summary>

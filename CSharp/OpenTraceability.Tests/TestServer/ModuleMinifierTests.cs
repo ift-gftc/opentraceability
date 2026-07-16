@@ -134,5 +134,79 @@ namespace OpenTraceability.Tests.TestServer
 
             Assert.That(result.ContainsKey("sourceList"), Is.False, "empty list pruned after stripping its only entry");
         }
+
+        // A location and a trade item in the GS1 Web Vocab master-data shape, carrying one
+        // classification value per module plus an unknown value that no module owns.
+        private const string ClassificationSample = @"{
+            ""location"": {
+                ""globalLocationNumber"": ""urn:gdst:loc:1"",
+                ""gdst:locationClassification"": [
+                    { ""type"": ""GDST"", ""value"": ""Land Facility"" },
+                    { ""type"": ""GDST"", ""value"": ""processor"" },
+                    { ""type"": ""GDST"", ""value"": ""vessel"" },
+                ]
+            },
+            ""tradeitem"": {
+                ""gtin"": ""urn:gdst:product:1"",
+                ""gdst:productClassification"": [
+                    { ""type"": ""GDST"", ""value"": ""seafood"" },
+                    { ""type"": ""GDST"", ""value"": ""processed"" },
+                    { ""type"": ""GDST"", ""value"": ""WildCaught"" },
+                    { ""type"": ""GDST"", ""value"": ""farmed"" },
+                    { ""type"": ""GDST"", ""value"": ""feed"" },
+                    { ""type"": ""GDST"", ""value"": ""developing"" },
+                    { ""type"": ""GDST"", ""value"": ""mature"" },
+                    { ""type"": ""GDST"", ""value"": ""live"" },
+                ]
+            }
+        }";
+
+        private static List<string?> ClassificationValues(JObject root, string element, string key)
+        {
+            var list = root[element]?[key] as JArray ?? new JArray();
+            return list.Select(t => t["value"]?.Value<string>()).ToList();
+        }
+
+        [Test]
+        public void CoreOnly_Classifications_KeepsOnlyLandFacility()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
+            var result = JObject.Parse(ModuleMinifier.Minify(ClassificationSample, allowed));
+
+            Assert.That(ClassificationValues(result, "location", "gdst:locationClassification"), Is.EqualTo(new[] { "Land Facility" }), "core keeps only the land facility location classification");
+            Assert.That(((JObject)result["tradeitem"]!).ContainsKey("gdst:productClassification"), Is.False, "no product classification is core-owned, so the emptied list is pruned");
+        }
+
+        [Test]
+        public void Seafood_Classifications_KeepsSeafoodValues_StripsOthers()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Seafood });
+            var result = JObject.Parse(ModuleMinifier.Minify(ClassificationSample, allowed));
+
+            Assert.That(ClassificationValues(result, "location", "gdst:locationClassification"), Is.EqualTo(new[] { "Land Facility", "processor" }), "seafood keeps land facility (core) and processor");
+            Assert.That(ClassificationValues(result, "tradeitem", "gdst:productClassification"), Is.EqualTo(new[] { "seafood", "processed" }), "seafood keeps only its product values; unknown 'organic' is stripped");
+        }
+
+        [Test]
+        public void Wildcaught_Classifications_KeepsVesselAndWildcaught()
+        {
+            // Wildcaught implies Seafood, so the seafood values are kept too.
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Wildcaught });
+            var result = JObject.Parse(ModuleMinifier.Minify(ClassificationSample, allowed));
+
+            Assert.That(ClassificationValues(result, "location", "gdst:locationClassification"), Is.EqualTo(new[] { "Land Facility", "processor", "vessel" }));
+            Assert.That(ClassificationValues(result, "tradeitem", "gdst:productClassification"), Is.EqualTo(new[] { "seafood", "processed", "WildCaught" }));
+        }
+
+        [Test]
+        public void Aquaculture_Classifications_KeepsAquacultureProductValues()
+        {
+            // Aquaculture implies Seafood but not Wildcaught, so vessel and WildCaught are stripped.
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Aquaculture });
+            var result = JObject.Parse(ModuleMinifier.Minify(ClassificationSample, allowed));
+
+            Assert.That(ClassificationValues(result, "location", "gdst:locationClassification"), Is.EqualTo(new[] { "Land Facility", "processor" }));
+            Assert.That(ClassificationValues(result, "tradeitem", "gdst:productClassification"), Is.EqualTo(new[] { "seafood", "processed", "farmed", "feed", "developing", "mature", "live" }));
+        }
     }
 }

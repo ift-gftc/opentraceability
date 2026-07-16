@@ -40,6 +40,8 @@ namespace OpenTraceability.Tests.Events
         private const string FeedProduct = "urn:gdst:test:product:class:feed.formula";
         private const string MatureProduct = "urn:gdst:test:product:class:mature.salmon";
         private const string ProcessedProduct = "urn:gdst:test:product:class:processed.fillet";
+        // GDST class EPCs parse the GTIN as exactly two dot segments, so product IDs stay two-segment.
+        private const string SeafoodProcessedProduct = "urn:gdst:test:product:class:seafoodprocessed.fillet";
         private const string CommingledProduct = "urn:gdst:test:product:class:commingled.tuna";
         private const string GenericProduct = "urn:gdst:test:product:class:generic.product";
 
@@ -178,11 +180,14 @@ namespace OpenTraceability.Tests.Events
             yield return new TestCaseData(BuildDisaggregationCase()).SetName("GDST profile Disaggregation JSON-LD round trip");
             yield return new TestCaseData(BuildShippingCase()).SetName("GDST profile Shipping JSON-LD round trip");
             yield return new TestCaseData(BuildTransshipmentShippingCase()).SetName("GDST profile TransshipmentShipping JSON-LD round trip");
+            yield return new TestCaseData(BuildLandBasedShippingCase()).SetName("GDST profile LandBasedShipping JSON-LD round trip");
             yield return new TestCaseData(BuildReceivingCase()).SetName("GDST profile Receiving JSON-LD round trip");
             yield return new TestCaseData(BuildTransshipmentReceivingCase()).SetName("GDST profile TransshipmentReceiving JSON-LD round trip");
+            yield return new TestCaseData(BuildLandBasedReceivingCase()).SetName("GDST profile LandBasedReceiving JSON-LD round trip");
             yield return new TestCaseData(BuildLandingCase()).SetName("GDST profile Landing JSON-LD round trip");
             yield return new TestCaseData(BuildComminglingCase()).SetName("GDST profile Commingling JSON-LD round trip");
             yield return new TestCaseData(BuildProcessingCase()).SetName("GDST profile Processing JSON-LD round trip");
+            yield return new TestCaseData(BuildSeafoodProcessingCase()).SetName("GDST profile SeafoodProcessing JSON-LD round trip");
             yield return new TestCaseData(BuildOnVesselProcessingCase()).SetName("GDST profile OnVesselProcessing JSON-LD round trip");
             yield return new TestCaseData(BuildFeedProcessingCase()).SetName("GDST profile FeedProcessing JSON-LD round trip");
             yield return new TestCaseData(BuildMatureHarvestCase()).SetName("GDST profile MatureHarvest JSON-LD round trip");
@@ -318,13 +323,26 @@ namespace OpenTraceability.Tests.Events
 
         private static ProfileRoundTripCase BuildShippingCase()
         {
+            // Vessel -> land facility: neither transshipment (both vessel) nor land-based (both land
+            // facility), so this falls through to the generic Shipping profile.
             return BuildShippingProfileCase(
                 nameof(GDSTEventProfile.Shipping),
                 GDSTEventProfile.Shipping,
                 new[] { HarvestCoC },
+                VesselOne,
+                LandFacilityOne,
+                "shipping");
+        }
+
+        private static ProfileRoundTripCase BuildLandBasedShippingCase()
+        {
+            return BuildShippingProfileCase(
+                nameof(GDSTEventProfile.LandBasedShipping),
+                GDSTEventProfile.LandBasedShipping,
+                new[] { HarvestCoC },
                 LandFacilityOne,
                 LandFacilityTwo,
-                "shipping");
+                "land-based-shipping");
         }
 
         private static ProfileRoundTripCase BuildTransshipmentShippingCase()
@@ -340,14 +358,29 @@ namespace OpenTraceability.Tests.Events
 
         private static ProfileRoundTripCase BuildReceivingCase()
         {
+            // Land facility -> vessel: neither transshipment (both vessel), landing (vessel -> land
+            // facility), nor land-based (both land facility), so this falls through to Receiving.
             return BuildReceivingProfileCase(
                 nameof(GDSTEventProfile.Receiving),
                 GDSTEventProfile.Receiving,
                 new[] { HarvestCoC },
                 LandFacilityOne,
-                LandFacilityTwo,
+                VesselOne,
                 "receiving",
                 null,
+                null);
+        }
+
+        private static ProfileRoundTripCase BuildLandBasedReceivingCase()
+        {
+            return BuildReceivingProfileCase(
+                nameof(GDSTEventProfile.LandBasedReceiving),
+                GDSTEventProfile.LandBasedReceiving,
+                new[] { HarvestCoC },
+                LandFacilityOne,
+                LandFacilityTwo,
+                "land-based-receiving",
+                "3p",
                 null);
         }
 
@@ -394,6 +427,8 @@ namespace OpenTraceability.Tests.Events
 
         private static ProfileRoundTripCase BuildProcessingCase()
         {
+            // The output is classified "Processed" only; SeafoodProcessing requires both "seafood"
+            // and "processed", so this stays on the generic Processing profile.
             return BuildTransformationProfileCase(
                 nameof(GDSTEventProfile.Processing),
                 GDSTEventProfile.Processing,
@@ -402,6 +437,21 @@ namespace OpenTraceability.Tests.Events
                 WildProduct,
                 ProcessedProduct,
                 "processing",
+                null,
+                null,
+                null);
+        }
+
+        private static ProfileRoundTripCase BuildSeafoodProcessingCase()
+        {
+            return BuildTransformationProfileCase(
+                nameof(GDSTEventProfile.SeafoodProcessing),
+                GDSTEventProfile.SeafoodProcessing,
+                new[] { HarvestCoC, ProcessorLicense },
+                Processor,
+                WildProduct,
+                SeafoodProcessedProduct,
+                "seafood-processing",
                 null,
                 null,
                 null);
@@ -646,6 +696,7 @@ namespace OpenTraceability.Tests.Events
             AddTradeItem(doc, FeedProduct, "Feed");
             AddTradeItem(doc, MatureProduct, "Mature");
             AddTradeItem(doc, ProcessedProduct, "Processed");
+            AddTradeItem(doc, SeafoodProcessedProduct, "seafood", "Processed");
             AddTradeItem(doc, CommingledProduct, "Processed");
             AddTradeItem(doc, GenericProduct, "Processed");
 
@@ -659,16 +710,17 @@ namespace OpenTraceability.Tests.Events
             return doc;
         }
 
-        private static void AddTradeItem(EPCISDocument doc, string productID, string classification)
+        private static void AddTradeItem(EPCISDocument doc, string productID, params string[] classifications)
         {
-            doc.MasterData.Add(new GDSTTradeItem
+            var tradeItem = new GDSTTradeItem
             {
-                GTIN = new GTIN(productID),
-                ProductClassification =
-                {
-                    new GDSTClassification { Type = "GDST", Value = classification }
-                }
-            });
+                GTIN = new GTIN(productID)
+            };
+            foreach (string classification in classifications)
+            {
+                tradeItem.ProductClassification.Add(new GDSTClassification { Type = "GDST", Value = classification });
+            }
+            doc.MasterData.Add(tradeItem);
         }
 
         private static void ApplyCommonFields(IEvent evt, string suffix, string bizLocation)
