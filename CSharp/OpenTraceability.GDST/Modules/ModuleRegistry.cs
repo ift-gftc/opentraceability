@@ -71,6 +71,23 @@ namespace OpenTraceability.GDST.Modules
         };
 
         /// <summary>
+        /// Maps certification <c>gdst:certificationType</c> values (full URNs) to the module that owns
+        /// them. Same "null = keep" contract as <see cref="_sourceDestTypeToModule"/>: a type NOT
+        /// present here is unlabelled and is always kept by the minifier.
+        /// </summary>
+        private static readonly Dictionary<string, GdstModule> _certificationTypeToModule = new(System.StringComparer.OrdinalIgnoreCase)
+        {
+            ["urn:gdst:certType:harvestCoC"] = GdstModule.Seafood,
+            ["urn:gdst:certType:harvestCert"] = GdstModule.Seafood,
+            ["urn:gdst:certType:humanPolicy"] = GdstModule.Seafood,
+            ["urn:gdst:certType:processorLicense"] = GdstModule.Seafood,
+            ["urn:gdst:certType:legalAuth"] = GdstModule.Aquaculture,
+            ["urn:gdst:certType:landingAuth"] = GdstModule.Wildcaught,
+            ["urn:gdst:certType:transshipmentAuth"] = GdstModule.Wildcaught,
+            ["urn:gdst:certType:fishingAuth"] = GdstModule.Wildcaught,
+        };
+
+        /// <summary>
         /// Maps product classification values (the <c>value</c> of a <c>gdst:productClassification</c>
         /// entry) to the module that owns them. Unlike <see cref="_keyToModule"/>, this map is a strict
         /// allow-list: a value NOT present here is unknown and is stripped by the minifier for every
@@ -132,6 +149,27 @@ namespace OpenTraceability.GDST.Modules
         {
             string term = LocalName(type);
             if (_sourceDestTypeToModule.TryGetValue(term, out var module))
+            {
+                return module;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the module that owns the given certification <c>gdst:certificationType</c> value
+        /// (e.g. <c>urn:gdst:certType:legalAuth</c>), or null when the type is unknown or blank.
+        /// Unknown types are considered unlabelled and are kept by the minifier, matching the
+        /// contract of <see cref="GetModuleForSourceDestinationType"/> rather than the strict
+        /// allow-list used for classifications.
+        /// </summary>
+        public static GdstModule? GetModuleForCertificationType(string? certificationType)
+        {
+            if (string.IsNullOrWhiteSpace(certificationType))
+            {
+                return null;
+            }
+
+            if (_certificationTypeToModule.TryGetValue(certificationType!.Trim(), out var module))
             {
                 return module;
             }

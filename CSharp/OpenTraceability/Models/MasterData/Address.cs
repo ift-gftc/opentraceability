@@ -29,8 +29,9 @@ namespace OpenTraceability.Models.MasterData
         [OpenTraceabilityJson("addressRegion")]
         public List<LanguageString>? State { get; set; }
 
+        [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#postalCode")]
         [OpenTraceabilityJson("postalCode")]
-        public string PostalCode { get; set; } = string.Empty;
+        public string? PostalCode { get; set; }
 
         [OpenTraceabilityMasterData("urn:epcglobal:cbv:mda#countryCode")]
         [OpenTraceabilityJson("countryCode")]

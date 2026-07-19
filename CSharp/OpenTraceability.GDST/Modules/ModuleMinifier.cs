@@ -16,8 +16,11 @@ namespace OpenTraceability.GDST.Modules
     ///   3. Removes <c>gdst:productClassification</c> / <c>gdst:locationClassification</c> entries whose
     ///      <c>value</c> is not owned by an allowed module (strict allow-list - unknown values are
     ///      stripped too).
-    ///   4. Prunes objects and arrays that became empty as a result of the removals above.
-    ///   5. Emits compact (non-indented) JSON.
+    ///   4. Removes <c>cbvmda:certificationList</c> certification entries whose
+    ///      <c>gdst:certificationType</c> is owned by a module NOT in the allowed set (unlabelled
+    ///      types are kept). Applies wherever the list appears - event root or ilmd.
+    ///   5. Prunes objects and arrays that became empty as a result of the removals above.
+    ///   6. Emits compact (non-indented) JSON.
     /// </summary>
     /// <remarks>
     /// The classification value filter only matches the GS1 Web Vocab master-data shape, where
@@ -75,6 +78,10 @@ namespace OpenTraceability.GDST.Modules
                         {
                             valueModified |= FilterClassificationEntries(classifications, prop.Name, allowedModules);
                         }
+                        if (prop.Value is JObject certList && IsCertificationList(prop.Name))
+                        {
+                            valueModified |= FilterCertificationEntries(certList, allowedModules);
+                        }
                         valueModified |= Process(prop.Value, allowedModules);
 
                         if (valueModified && IsEmptyContainer(prop.Value))
@@ -120,6 +127,48 @@ namespace OpenTraceability.GDST.Modules
         {
             return string.Equals(name, "gdst:productClassification", System.StringComparison.OrdinalIgnoreCase)
                 || string.Equals(name, "gdst:locationClassification", System.StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsCertificationList(string name)
+        {
+            return string.Equals(name, "cbvmda:certificationList", System.StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Removes certification entries whose <c>gdst:certificationType</c> is owned by a module not
+        /// in the allowed set. Entries with an unknown or missing type are kept (see
+        /// <see cref="ModuleRegistry.GetModuleForCertificationType"/>). When every entry is stripped,
+        /// the emptied <c>certification</c> property is removed too, so the empty-container pruning
+        /// later collapses the whole <c>cbvmda:certificationList</c> object. Returns true if any entry
+        /// was removed.
+        /// </summary>
+        private static bool FilterCertificationEntries(JObject certList, ISet<GdstModule> allowedModules)
+        {
+            bool removed = false;
+            if (certList["certification"] is JArray certifications)
+            {
+                foreach (var item in certifications.ToList())
+                {
+                    if (item is JObject entry)
+                    {
+                        string? certType = entry["gdst:certificationType"]?.Value<string>();
+                        var module = ModuleRegistry.GetModuleForCertificationType(certType);
+                        if (module.HasValue && !allowedModules.Contains(module.Value))
+                        {
+                            item.Remove();
+                            removed = true;
+                        }
+                    }
+                }
+
+                // Remove the emptied array so the parent certificationList object collapses via the
+                // empty-container pruning, keeping the "prune only what minification emptied" invariant.
+                if (removed && certifications.Count == 0)
+                {
+                    certifications.Parent?.Remove();
+                }
+            }
+            return removed;
         }
 
         /// <summary>

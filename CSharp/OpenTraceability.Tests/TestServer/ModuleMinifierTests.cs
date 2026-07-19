@@ -228,6 +228,84 @@ namespace OpenTraceability.Tests.TestServer
             Assert.That(ClassificationValues(result, "tradeitem", "gdst:productClassification"), Is.EqualTo(new[] { "seafood", "processed", "farmed", "feed", "developing", "mature", "live" }));
         }
 
+        // An event carrying certification lists both on the root and on the ilmd, with one
+        // certificate per owning module plus an unlabelled type that no module owns.
+        private const string CertificationSample = @"{
+            ""eventID"": ""urn:uuid:1"",
+            ""cbvmda:certificationList"": {
+                ""certification"": [
+                    { ""gdst:certificationType"": ""urn:gdst:certType:harvestCoC"", ""certificationValue"": ""abc123"" },
+                    { ""gdst:certificationType"": ""urn:gdst:certType:legalAuth"", ""certificationValue"": ""def456"" },
+                    { ""gdst:certificationType"": ""urn:gdst:certType:fishingAuth"", ""certificationValue"": ""ghi789"" },
+                    { ""gdst:certificationType"": ""urn:gdst:certType:somethingElse"", ""certificationValue"": ""jkl012"" }
+                ]
+            },
+            ""ilmd"": {
+                ""cbvmda:certificationList"": {
+                    ""certification"": [
+                        { ""gdst:certificationType"": ""urn:gdst:certType:humanPolicy"", ""certificationValue"": ""mno345"" },
+                        { ""gdst:certificationType"": ""urn:gdst:certType:landingAuth"", ""certificationValue"": ""pqr678"" }
+                    ]
+                }
+            }
+        }";
+
+        private static List<string?> CertificationTypes(JToken? certList)
+        {
+            var list = certList?["certification"] as JArray ?? new JArray();
+            return list.Select(t => t["gdst:certificationType"]?.Value<string>()).ToList();
+        }
+
+        [Test]
+        public void Seafood_Certifications_KeepsSeafoodAndUnlabelled_StripsOtherModules()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Seafood });
+            var result = JObject.Parse(ModuleMinifier.Minify(CertificationSample, allowed));
+
+            Assert.That(CertificationTypes(result["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:harvestCoC", "urn:gdst:certType:somethingElse" }), "seafood keeps its own certs and unlabelled types; aquaculture and wildcaught certs are stripped");
+            Assert.That(CertificationTypes(result["ilmd"]?["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:humanPolicy" }), "ilmd certification list is filtered the same way as the event root");
+        }
+
+        [Test]
+        public void Aquaculture_Certifications_KeepsLegalAuth_StripsWildcaught()
+        {
+            // Aquaculture implies Seafood, so the seafood certs are kept too.
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Aquaculture });
+            var result = JObject.Parse(ModuleMinifier.Minify(CertificationSample, allowed));
+
+            Assert.That(CertificationTypes(result["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:harvestCoC", "urn:gdst:certType:legalAuth", "urn:gdst:certType:somethingElse" }));
+            Assert.That(CertificationTypes(result["ilmd"]?["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:humanPolicy" }), "landingAuth is wildcaught-owned and is stripped");
+        }
+
+        [Test]
+        public void Wildcaught_Certifications_KeepsFishingAndLandingAuth_StripsAquaculture()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Wildcaught });
+            var result = JObject.Parse(ModuleMinifier.Minify(CertificationSample, allowed));
+
+            Assert.That(CertificationTypes(result["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:harvestCoC", "urn:gdst:certType:fishingAuth", "urn:gdst:certType:somethingElse" }));
+            Assert.That(CertificationTypes(result["ilmd"]?["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:humanPolicy", "urn:gdst:certType:landingAuth" }));
+        }
+
+        [Test]
+        public void Seafood_CertificationList_CollapsesWhenAllEntriesStripped()
+        {
+            const string moduleOnlyCerts = @"{
+                ""eventID"": ""urn:uuid:1"",
+                ""cbvmda:certificationList"": {
+                    ""certification"": [
+                        { ""gdst:certificationType"": ""urn:gdst:certType:legalAuth"", ""certificationValue"": ""def456"" },
+                        { ""gdst:certificationType"": ""urn:gdst:certType:fishingAuth"", ""certificationValue"": ""ghi789"" }
+                    ]
+                }
+            }";
+
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Seafood });
+            var result = JObject.Parse(ModuleMinifier.Minify(moduleOnlyCerts, allowed));
+
+            Assert.That(result.ContainsKey("cbvmda:certificationList"), Is.False, "the certification list collapses entirely when every entry was stripped");
+        }
+
         /// <summary>
         /// Minifying a schema-valid EPCIS query document must never invalidate it: for every module
         /// set, mapping the minified JSON with schema validation enabled must succeed. This guards
