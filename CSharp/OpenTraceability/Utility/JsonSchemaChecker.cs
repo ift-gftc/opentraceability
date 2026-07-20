@@ -14,6 +14,7 @@ namespace OpenTraceability.Utility
     {
         private const string EpcisSchemaUrl = "https://ref.gs1.org/standards/epcis/epcis-json-schema.json";
         private const string DigitalLinkSchemaKey = "DigitalLink";
+        private const string LinksetSchemaKey = "Linkset";
         private const string GdstSchemaKey = "GDST";
         private const string EpcisBaseSchemaKey = "EPCIS_BASE";
 
@@ -39,6 +40,11 @@ namespace OpenTraceability.Utility
                     loader.ReadString(
                         "OpenTraceability",
                         "OpenTraceability.Utility.Data.DigitalLinkSchema.json")),
+
+                [LinksetSchemaKey] = BuildSchema(
+                    loader.ReadString(
+                        "OpenTraceability",
+                        "OpenTraceability.Utility.Data.LinksetSchema.json")),
 
                 [GdstSchemaKey] = BuildSchema(
                     loader.ReadString(

@@ -36,6 +36,14 @@ namespace OpenTraceability.Queries
         public EPCISVersion Version { get; set; } = EPCISVersion.V2;
 
         /// <summary>
+        /// The version of the GS1 Digital Link / Resolver standard the resolver conforms to.
+        /// This defaults to <see cref="ResolverVersion.ResolverStandard_1_2_0"/> (the RFC 9264
+        /// linkset behavior); set it to <see cref="ResolverVersion.ResolverStandard_1_1_2"/> to
+        /// resolve against a legacy resolver that returns a flat digital link array.
+        /// </summary>
+        public ResolverVersion ResolverVersion { get; set; } = ResolverVersion.ResolverStandard_1_2_0;
+
+        /// <summary>
         /// The data format to expect the data back in.
         /// </summary>
         public EPCISDataFormat Format { get; set; } = EPCISDataFormat.JSON;

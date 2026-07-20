@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentraceability.io/schemas/linkset-response.json",
+  "title": "GS1 Resolver Linkset Response",
+  "type": "object",
+  "required": ["linkset"],
+  "properties": {
+    "linkset": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["anchor"],
+        "properties": {
+          "anchor": { "type": "string", "minLength": 1 },
+          "itemDescription": { "type": "string" }
+        },
+        "patternProperties": {
+          "^https?://": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["href"],
+              "properties": {
+                "href": { "type": "string", "minLength": 1, "format": "uri" },
+                "title": { "type": "string" },
+                "type": { "type": "string" },
+                "hreflang": { "type": "array", "items": { "type": "string" } },
+                "context": { "type": "array", "items": { "type": "string" } }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

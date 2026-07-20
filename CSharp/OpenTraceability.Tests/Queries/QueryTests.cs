@@ -211,6 +211,69 @@ namespace OpenTraceability.Tests.Queries
         }
 
         [Test]
+        [TestCase(ResolverVersion.ResolverStandard_1_1_2)]
+        [TestCase(ResolverVersion.ResolverStandard_1_2_0)]
+        public async Task GetEPCISQueryInterfaceURL_ByResolverVersion_ResolvesEpcisUrl(ResolverVersion resolverVersion)
+        {
+            // Arrange
+            using HttpClientHandler httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback += (m, e, c, h) => true;
+            using HttpClient httpClient = new HttpClient(httpClientHandler);
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", "test", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+
+            string data = OpenTraceabilityTests.ReadTestData("testserver_advancedfilters.jsonld");
+            var doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
+            string blob_id = await client.Post(doc);
+
+            DigitalLinkQueryOptions queryOptions = new DigitalLinkQueryOptions();
+            queryOptions.URL = new Uri("https://localhost:4001/digitallink");
+            queryOptions.APIKey = "test";
+            queryOptions.Headers["X-Dataset-Id"] = blob_id;
+            queryOptions.ResolverVersion = resolverVersion;
+
+            // Act & Assert: both the legacy array path (1.1.2) and the linkset path (1.2.0) must
+            // resolve to a non-null EPCIS query interface URL for every product.
+            foreach (var e in doc.Events)
+            {
+                foreach (var p in e.Products)
+                {
+                    var epcisQueryInterfaceURL = await EPCISTraceabilityResolver.GetEPCISQueryInterfaceURL(queryOptions, p.EPC, httpClient);
+                    Assert.That(epcisQueryInterfaceURL, Is.Not.Null, $"Failed to get EPCIS URL for {p.EPC} via {resolverVersion}");
+                    Assert.That(epcisQueryInterfaceURL!.ToString(), Does.Contain("/epcis"));
+                }
+            }
+        }
+
+        [Test]
+        [TestCase(ResolverVersion.ResolverStandard_1_1_2)]
+        [TestCase(ResolverVersion.ResolverStandard_1_2_0)]
+        public async Task ResolveMasterData_ByResolverVersion_ResolvesMasterData(ResolverVersion resolverVersion)
+        {
+            // Arrange
+            EPCISTestServerClient client = new EPCISTestServerClient("https://localhost:4001", "test", Mappers.EPCISDataFormat.JSON, Models.Events.EPCISVersion.V2);
+
+            string data = OpenTraceabilityTests.ReadTestData("testserver_advancedfilters.jsonld");
+            var doc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
+            string blob_id = await client.Post(doc);
+
+            using HttpClientHandler httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback += (m, e, c, h) => true;
+            using HttpClient httpClient = new HttpClient(httpClientHandler);
+
+            DigitalLinkQueryOptions queryOptions = new DigitalLinkQueryOptions();
+            queryOptions.URL = new Uri("https://localhost:4001/digitallink");
+            queryOptions.APIKey = "test";
+            queryOptions.Headers["X-Dataset-Id"] = blob_id;
+            queryOptions.ResolverVersion = resolverVersion;
+
+            // Act
+            await MasterDataResolver.ResolveMasterData(queryOptions, doc, httpClient);
+
+            // Assert
+            Assert.That(doc.MasterData.Count, Is.Not.EqualTo(0), $"no master data resolved via {resolverVersion}");
+        }
+
+        [Test]
         [TestCase("aggregation_event_all_possible_fields.jsonld")]
         public async Task QueryEvents(string filename)
         {

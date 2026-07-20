@@ -231,6 +231,31 @@ namespace OpenTraceability.TestServer.Core.WireMock
                 }
 
                 string? linkType = GetQuery(request, "linkType");
+                string? accept = GetHeader(request, "Accept");
+                string? masterDataPath = ResolveMasterDataPath(segments);
+
+                // Mode 1: linkset requested (media type or linkType=linkset) — return it, never redirect.
+                bool wantsLinkset = (linkType != null && linkType.ToLower() == DigitalLinkVocab.LinksetLinkType)
+                    || AcceptContains(accept, DigitalLinkVocab.LinksetMediaType);
+                if (wantsLinkset)
+                {
+                    string anchor = new Uri(request.Url).GetLeftPart(UriPartial.Path);
+                    var linkset = _digitalLink.BuildLinkset(Url, anchor, masterDataPath, routeDatasetId);
+                    return Json(200, JsonConvert.SerializeObject(linkset), DigitalLinkVocab.LinksetMediaType);
+                }
+
+                // Mode 2: browser-like client — redirect to the requested/default link (404 if absent).
+                if (AcceptContains(accept, "text/html"))
+                {
+                    string? target = _digitalLink.ResolveTargetHref(Url, masterDataPath, linkType, routeDatasetId);
+                    if (target == null)
+                    {
+                        return Json(404, JsonConvert.SerializeObject(new { error = $"no link of type '{linkType}'." }));
+                    }
+                    return Redirect(target + new Uri(request.Url).Query);
+                }
+
+                // Mode 3: legacy flat digital link array (default; keeps 1.1.2 consumers working).
                 var links = ResolveDigitalLinks(segments, linkType, routeDatasetId);
                 return Json(200, JsonConvert.SerializeObject(links));
             }
@@ -238,6 +263,38 @@ namespace OpenTraceability.TestServer.Core.WireMock
             {
                 return Json(500, JsonConvert.SerializeObject(new { error = ex.Message }));
             }
+        }
+
+        /// <summary>
+        /// Maps digital link path segments to the relative master data path for that identifier
+        /// (e.g. <c>product/{gtin}</c>), or null when the identifier has no master data (SSCC) or the
+        /// segments are unrecognized. Mirrors the identifier switch in <see cref="ResolveDigitalLinks"/>.
+        /// </summary>
+        private static string? ResolveMasterDataPath(List<string> segments)
+        {
+            if (segments.Count >= 2)
+            {
+                string key = segments[0].ToLower();
+                string id = segments[1];
+                switch (key)
+                {
+                    case "01":
+                    case "gtin":
+                    case "product":
+                        return $"product/{id}";
+                    case "414":
+                    case "gln":
+                    case "location":
+                        return $"location/{id}";
+                    case "417":
+                    case "pgln":
+                    case "party":
+                        return $"party/{id}";
+                    // SSCC (00/sscc) has no master data.
+                }
+            }
+
+            return null;
         }
 
         private List<OpenTraceability.Models.MasterData.DigitalLink> ResolveDigitalLinks(List<string> segments, string? linkType, string? routeDatasetId)
@@ -349,19 +406,55 @@ namespace OpenTraceability.TestServer.Core.WireMock
             return null;
         }
 
-        private static WireMockResponse Json(int statusCode, string body)
+        /// <summary>Reads a request header (case-insensitive), joining multiple values with commas.</summary>
+        private static string? GetHeader(WireMockRequest request, string key)
+        {
+            if (request.Headers == null)
+            {
+                return null;
+            }
+
+            foreach (var kvp in request.Headers)
+            {
+                if (string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase))
+                {
+                    return string.Join(",", kvp.Value);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>Returns true when an Accept header value contains the given media type.</summary>
+        private static bool AcceptContains(string? accept, string mediaType)
+            => accept != null && accept.IndexOf(mediaType, StringComparison.OrdinalIgnoreCase) >= 0;
+
+        private static WireMockResponse Json(int statusCode, string body, string contentType = "application/json")
         {
             return new WireMockResponse
             {
                 StatusCode = statusCode,
                 Headers = new Dictionary<string, WireMockList<string>>
                 {
-                    ["Content-Type"] = new WireMockList<string>("application/json")
+                    ["Content-Type"] = new WireMockList<string>(contentType)
                 },
                 BodyData = new BodyData
                 {
                     DetectedBodyType = BodyType.String,
                     BodyAsString = body
+                }
+            };
+        }
+
+        /// <summary>Builds a 302 redirect response pointing at the given absolute location.</summary>
+        private static WireMockResponse Redirect(string location)
+        {
+            return new WireMockResponse
+            {
+                StatusCode = 302,
+                Headers = new Dictionary<string, WireMockList<string>>
+                {
+                    ["Location"] = new WireMockList<string>(location)
                 }
             };
         }

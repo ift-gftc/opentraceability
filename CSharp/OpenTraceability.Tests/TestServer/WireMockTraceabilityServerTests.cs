@@ -1,8 +1,12 @@
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using OpenTraceability;
 using OpenTraceability.GDST;
 using OpenTraceability.GDST.Modules;
+using OpenTraceability.Models.MasterData;
 using OpenTraceability.TestServer.Core.WireMock;
 using OpenTraceability.Utility;
 
@@ -160,6 +164,125 @@ namespace OpenTraceability.Tests.TestServer
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), body);
             Assert.That(body, Does.Contain("@context"));
+        }
+
+        [Test]
+        public async Task DigitalLink_LinksetAcceptHeader_ReturnsLinkset()
+        {
+            using var server = WireMockTraceabilityServer.StartWireMockTraceabilityServer(new WireMockTraceabilityConfig
+            {
+                Modules = new() { GdstModule.Wildcaught, GdstModule.Aquaculture }
+            });
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(DigitalLinkVocab.LinksetMediaType));
+
+            var response = await client.GetAsync($"{server.Url}/digitallink/01/09506000134376");
+            string body = await response.Content.ReadAsStringAsync();
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), body);
+            Assert.That(response.Content.Headers.ContentType?.MediaType, Is.EqualTo(DigitalLinkVocab.LinksetMediaType));
+
+            // The body must round-trip through the core linkset model and expose the expected link types.
+            Linkset? linkset = JsonConvert.DeserializeObject<Linkset>(body);
+            Assert.That(linkset, Is.Not.Null);
+            Assert.That(linkset!.linkset, Has.Count.EqualTo(1));
+
+            LinksetItem item = linkset.linkset[0];
+            Assert.That(item.anchor, Does.Contain("/digitallink/01/09506000134376"));
+            Assert.That(item.GetLinks(DigitalLinkVocab.EpcisUri), Is.Not.Empty, "linkset must expose an epcis link");
+            Assert.That(item.GetLinks(DigitalLinkVocab.MasterDataUri), Is.Not.Empty, "product linkset must expose a master data link");
+            Assert.That(item.GetLinks(DigitalLinkVocab.DefaultLinkUri), Is.Not.Empty, "linkset must expose exactly one default link");
+        }
+
+        [Test]
+        public async Task DigitalLink_LinkTypeLinksetParam_ReturnsLinkset()
+        {
+            using var server = WireMockTraceabilityServer.StartWireMockTraceabilityServer(new WireMockTraceabilityConfig
+            {
+                Modules = new() { GdstModule.Wildcaught }
+            });
+
+            using var client = new HttpClient();
+
+            var response = await client.GetAsync($"{server.Url}/digitallink/01/09506000134376?linkType=linkset");
+            string body = await response.Content.ReadAsStringAsync();
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), body);
+            Assert.That(body, Does.Contain(DigitalLinkVocab.EpcisUri));
+        }
+
+        [Test]
+        public async Task DigitalLink_BrowserAccept_RedirectsToDefaultLink()
+        {
+            using var server = WireMockTraceabilityServer.StartWireMockTraceabilityServer(new WireMockTraceabilityConfig
+            {
+                Modules = new() { GdstModule.Wildcaught }
+            });
+
+            using var handler = new HttpClientHandler { AllowAutoRedirect = false };
+            using var client = new HttpClient(handler);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));
+
+            var response = await client.GetAsync($"{server.Url}/digitallink/01/09506000134376");
+
+            // A product's default link is its master data page.
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Found));
+            Assert.That(response.Headers.Location?.ToString(), Does.Contain("/masterdata/product/09506000134376"));
+        }
+
+        [Test]
+        public async Task DigitalLink_BrowserAccept_SpecificLinkType_RedirectsToThatLink()
+        {
+            using var server = WireMockTraceabilityServer.StartWireMockTraceabilityServer(new WireMockTraceabilityConfig
+            {
+                Modules = new() { GdstModule.Wildcaught }
+            });
+
+            using var handler = new HttpClientHandler { AllowAutoRedirect = false };
+            using var client = new HttpClient(handler);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));
+
+            var response = await client.GetAsync($"{server.Url}/digitallink/01/09506000134376?linkType={DigitalLinkVocab.EpcisCurie}");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Found));
+            Assert.That(response.Headers.Location?.ToString(), Does.Contain("/epcis"));
+        }
+
+        [Test]
+        public async Task DigitalLink_BrowserAccept_ForwardsQueryString()
+        {
+            using var server = WireMockTraceabilityServer.StartWireMockTraceabilityServer(new WireMockTraceabilityConfig
+            {
+                Modules = new() { GdstModule.Wildcaught }
+            });
+
+            using var handler = new HttpClientHandler { AllowAutoRedirect = false };
+            using var client = new HttpClient(handler);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));
+
+            var response = await client.GetAsync($"{server.Url}/digitallink/01/09506000134376?lot=ABC123");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Found));
+            Assert.That(response.Headers.Location?.ToString(), Does.Contain("lot=ABC123"), "the resolver SHALL forward the whole query string on redirect");
+        }
+
+        [Test]
+        public async Task DigitalLink_BrowserAccept_UnavailableLinkType_Returns404()
+        {
+            using var server = WireMockTraceabilityServer.StartWireMockTraceabilityServer(new WireMockTraceabilityConfig
+            {
+                Modules = new() { GdstModule.Wildcaught }
+            });
+
+            using var handler = new HttpClientHandler { AllowAutoRedirect = false };
+            using var client = new HttpClient(handler);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));
+
+            // An SSCC has no master data link, so requesting one SHALL 404.
+            var response = await client.GetAsync($"{server.Url}/digitallink/00/106141412345678908?linkType={DigitalLinkVocab.MasterDataCurie}");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
     }
 }

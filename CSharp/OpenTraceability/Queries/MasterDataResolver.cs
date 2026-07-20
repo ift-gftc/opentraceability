@@ -263,9 +263,24 @@ namespace OpenTraceability.Queries
                     throw new Exception("options.Uri is null on the DigitalLinkQueryOptions");
                 }
 
+                bool useLinkset = options.ResolverVersion == ResolverVersion.ResolverStandard_1_2_0;
+
                 HttpRequestMessage request = new HttpRequestMessage();
-                request.RequestUri = new Uri(options.URL.ToString().TrimEnd('/') + "/" + relativeURL.TrimStart('/'));
                 request.Method = HttpMethod.Get;
+
+                if (useLinkset)
+                {
+                    // Current standard: request the linkset (no linkType query) and parse it
+                    // client-side; drop any legacy ?linkType the caller appended to the relative URL.
+                    string linksetRelative = relativeURL.Split('?')[0];
+                    request.RequestUri = new Uri(options.URL.ToString().TrimEnd('/') + "/" + linksetRelative.TrimStart('/'));
+                    request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(DigitalLinkVocab.LinksetMediaType));
+                }
+                else
+                {
+                    // Legacy behavior: the relative URL already carries ?linkType=gs1:masterData.
+                    request.RequestUri = new Uri(options.URL.ToString().TrimEnd('/') + "/" + relativeURL.TrimStart('/'));
+                }
 
                 // apply the optional API key and any custom headers (e.g. X-Dataset-Id) from the options
                 request.Headers.ApplyOptionHeaders(options.APIKey, options.Headers);
@@ -293,16 +308,33 @@ namespace OpenTraceability.Queries
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // DIAGNOSTICS: Execute the rule to validate the JSON schema for digital links.
-                    if (report?.CurrentRequest != null)
+                    // Extract the master data target URLs from the resolver response, honoring the
+                    // resolver standard version: a linkset for 1.2.0, the legacy flat array otherwise.
+                    List<string> targetHrefs;
+                    if (useLinkset)
                     {
-                        await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkJsonSchemaRule>(responseStr);
+                        // DIAGNOSTICS: Validate the linkset shape.
+                        if (report?.CurrentRequest != null)
+                        {
+                            await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkLinksetSchemaRule>(responseStr);
+                        }
+
+                        targetHrefs = GetLinksetHrefs(responseStr, DigitalLinkVocab.MasterDataUri);
+                    }
+                    else
+                    {
+                        // DIAGNOSTICS: Execute the rule to validate the JSON schema for digital links.
+                        if (report?.CurrentRequest != null)
+                        {
+                            await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkJsonSchemaRule>(responseStr);
+                        }
+
+                        targetHrefs = JsonConvert.DeserializeObject<List<DigitalLink>>(responseStr)?.Select(d => d.link).ToList() ?? new List<string>();
                     }
 
-                    var links = JsonConvert.DeserializeObject<List<DigitalLink>>(responseStr)?.Select(d => d as DigitalLink).ToList() ?? new List<DigitalLink>();
-                    if (links.Count > 0)
+                    if (targetHrefs.Count > 0)
                     {
-                        foreach (var link in links)
+                        foreach (var href in targetHrefs)
                         {
                             // DIAGNOSTICS: Create a new request.
                             report?.NewRequest("Resolve Master Data", options);
@@ -310,7 +342,7 @@ namespace OpenTraceability.Queries
                             try
                             {
                                 request = new HttpRequestMessage();
-                                request.RequestUri = new Uri(link.link);
+                                request.RequestUri = new Uri(href);
                                 request.Method = HttpMethod.Get;
 
                                 // apply the optional API key and any custom headers (e.g. X-Dataset-Id) from the options
@@ -357,7 +389,7 @@ namespace OpenTraceability.Queries
                                         if (item.ID == null)
                                         {
                                             throw new Exception($"While resolve a {type} through the GS1 Digital Link Resolver, the {type} returned " +
-                                                $"had an empty or invalid Identifier. The link that was resolved was " + link + " and the results was " + json);
+                                                $"had an empty or invalid Identifier. The link that was resolved was " + href + " and the results was " + json);
                                         }
                                         else
                                         {
@@ -402,7 +434,37 @@ namespace OpenTraceability.Queries
                 }
 
                 return null;
-            }            
+            }
+        }
+
+        /// <summary>
+        /// Parses a linkset response and returns every target href declared under the given link
+        /// relation type URI, in declaration order across all anchors.
+        /// </summary>
+        /// <param name="json">The raw linkset JSON.</param>
+        /// <param name="linkTypeUri">The fully expanded link relation type URI to select.</param>
+        /// <returns>The matching hrefs; empty when the linkset declares none.</returns>
+        private static List<string> GetLinksetHrefs(string json, string linkTypeUri)
+        {
+            var hrefs = new List<string>();
+            Linkset? linkset = JsonConvert.DeserializeObject<Linkset>(json);
+            if (linkset == null)
+            {
+                return hrefs;
+            }
+
+            foreach (var item in linkset.linkset)
+            {
+                foreach (var link in item.GetLinks(linkTypeUri))
+                {
+                    if (!string.IsNullOrWhiteSpace(link.href))
+                    {
+                        hrefs.Add(link.href);
+                    }
+                }
+            }
+
+            return hrefs;
         }
     }
 }

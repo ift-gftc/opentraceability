@@ -3,7 +3,7 @@
     "https://ref.gs1.org/standards/epcis/epcis-context.jsonld"
   ],
   "type": "EPCISDocument",
-  "creationDate": "2026-07-18T02:08:41.6111855+00:00",
+  "creationDate": "2026-07-20T13:52:43.0645100+00:00",
   "schemaVersion": "2.0",
   "epcisHeader": {
     "epcisMasterData": {
@@ -14,10 +14,6 @@
             {
               "id": "urn:gdst:example.org:party:solution.fisherman",
               "attributes": [
-                {
-                  "id": "urn:epcglobal:cbv:owning_party",
-                  "attribute": "urn:gdst:example.org:party:solution.fisherman"
-                },
                 {
                   "id": "urn:epcglobal:cbv:mda#informationProvider",
                   "attribute": "urn:gdst:example.org:party:solution.fisherman"
@@ -32,10 +28,6 @@
               "id": "urn:gdst:example.org:party:solution.hatchery",
               "attributes": [
                 {
-                  "id": "urn:epcglobal:cbv:owning_party",
-                  "attribute": "urn:gdst:example.org:party:solution.hatchery"
-                },
-                {
                   "id": "urn:epcglobal:cbv:mda#informationProvider",
                   "attribute": "urn:gdst:example.org:party:solution.hatchery"
                 },
@@ -48,10 +40,6 @@
             {
               "id": "urn:gdst:example.org:party:solution.feedmill",
               "attributes": [
-                {
-                  "id": "urn:epcglobal:cbv:owning_party",
-                  "attribute": "urn:gdst:example.org:party:solution.feedmill"
-                },
                 {
                   "id": "urn:epcglobal:cbv:mda#informationProvider",
                   "attribute": "urn:gdst:example.org:party:solution.feedmill"
@@ -66,10 +54,6 @@
               "id": "urn:gdst:example.org:party:solution.fishfarm",
               "attributes": [
                 {
-                  "id": "urn:epcglobal:cbv:owning_party",
-                  "attribute": "urn:gdst:example.org:party:solution.fishfarm"
-                },
-                {
                   "id": "urn:epcglobal:cbv:mda#informationProvider",
                   "attribute": "urn:gdst:example.org:party:solution.fishfarm"
                 },
@@ -83,10 +67,6 @@
               "id": "urn:gdst:example.org:party:solution.processor",
               "attributes": [
                 {
-                  "id": "urn:epcglobal:cbv:owning_party",
-                  "attribute": "urn:gdst:example.org:party:solution.processor"
-                },
-                {
                   "id": "urn:epcglobal:cbv:mda#informationProvider",
                   "attribute": "urn:gdst:example.org:party:solution.processor"
                 },
@@ -99,10 +79,6 @@
             {
               "id": "urn:gdst:example.org:party:solution.importer",
               "attributes": [
-                {
-                  "id": "urn:epcglobal:cbv:owning_party",
-                  "attribute": "urn:gdst:example.org:party:solution.importer"
-                },
                 {
                   "id": "urn:epcglobal:cbv:mda#informationProvider",
                   "attribute": "urn:gdst:example.org:party:solution.importer"
@@ -237,6 +213,10 @@
                   "attribute": "CA"
                 },
                 {
+                  "id": "urn:epcglobal:cbv:mda#postalCode",
+                  "attribute": "94111"
+                },
+                {
                   "id": "urn:epcglobal:cbv:mda#countryCode",
                   "attribute": "US"
                 }
@@ -277,6 +257,10 @@
                   "attribute": "CA"
                 },
                 {
+                  "id": "urn:epcglobal:cbv:mda#postalCode",
+                  "attribute": "94111"
+                },
+                {
                   "id": "urn:epcglobal:cbv:mda#countryCode",
                   "attribute": "US"
                 }
@@ -305,20 +289,8 @@
                   "attribute": "Feed Mill"
                 },
                 {
-                  "id": "urn:epcglobal:cbv:mda#streetAddressOne",
-                  "attribute": "789 Feed Mill Ave"
-                },
-                {
-                  "id": "urn:epcglobal:cbv:mda#city",
-                  "attribute": "San Francisco"
-                },
-                {
-                  "id": "urn:epcglobal:cbv:mda#state",
-                  "attribute": "CA"
-                },
-                {
-                  "id": "urn:epcglobal:cbv:mda#countryCode",
-                  "attribute": "US"
+                  "id": "urn:epcglobal:cbv:mda#geoLocation",
+                  "attribute": "geo:37.7749,-122.4194"
                 }
               ]
             },
@@ -385,6 +357,10 @@
                   "attribute": "CA"
                 },
                 {
+                  "id": "urn:epcglobal:cbv:mda#postalCode",
+                  "attribute": "94111"
+                },
+                {
                   "id": "urn:epcglobal:cbv:mda#countryCode",
                   "attribute": "US"
                 }
@@ -425,6 +401,10 @@
                   "attribute": "CA"
                 },
                 {
+                  "id": "urn:epcglobal:cbv:mda#postalCode",
+                  "attribute": "94111"
+                },
+                {
                   "id": "urn:epcglobal:cbv:mda#countryCode",
                   "attribute": "US"
                 }
@@ -458,7 +438,7 @@
                 },
                 {
                   "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
-                  "attribute": "FIL"
+                  "attribute": "OTH"
                 },
                 {
                   "id": "urn:epcglobal:cbv:owning_party",
@@ -501,7 +481,7 @@
                 },
                 {
                   "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
-                  "attribute": "FIL"
+                  "attribute": "OTH"
                 },
                 {
                   "id": "urn:epcglobal:cbv:owning_party",
@@ -568,7 +548,7 @@
                 },
                 {
                   "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
-                  "attribute": "FIL"
+                  "attribute": "OTH"
                 },
                 {
                   "id": "urn:epcglobal:cbv:owning_party",
@@ -611,7 +591,7 @@
                 },
                 {
                   "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
-                  "attribute": "FIL"
+                  "attribute": "OTH"
                 },
                 {
                   "id": "urn:epcglobal:cbv:owning_party",
@@ -640,9 +620,9 @@
     "eventList": [
       {
         "type": "TransformationEvent",
-        "eventTime": "2026-04-19T22:08:41.6112327+00:00",
+        "eventTime": "2026-04-22T09:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:b4e07e3a-54cb-47e0-b8f4-6a63d5fc99ee",
+        "eventID": "urn:uuid:59453b67-6314-4fb7-b22f-c994631e2024",
         "inputQuantityList": [
           {
             "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot2",
@@ -696,9 +676,9 @@
       },
       {
         "type": "ObjectEvent",
-        "eventTime": "2026-04-19T03:08:41.6112327+00:00",
+        "eventTime": "2026-04-21T14:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:28083ef9-cc34-4b18-8605-a94761cced96",
+        "eventID": "urn:uuid:72fa2261-f172-46fb-a4f2-fd5bbf276aef",
         "epcList": [],
         "action": "ADD",
         "bizStep": "commissioning",
@@ -728,7 +708,7 @@
                 "gdst:rfmoArea": "urn:gdst:rfmo:cecaf",
                 "gdst:satelliteTrackingAuthority": "sat-auth",
                 "gdst:subnationalPermitArea": "subnat-1",
-                "gdst:vesselTripDate": "2026-04-19T02:08:41.6112327+00:00"
+                "gdst:vesselTripDate": "2026-04-21T13:52:43.0645503+00:00"
               }
             ]
           },
@@ -765,9 +745,9 @@
       },
       {
         "type": "TransformationEvent",
-        "eventTime": "2026-04-19T04:08:41.6112327+00:00",
+        "eventTime": "2026-04-21T15:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:250786fb-6cfb-4dbe-b6d3-185827665e6a",
+        "eventID": "urn:uuid:94302e6b-90e7-43b0-a353-78da4da6b020",
         "inputQuantityList": [
           {
             "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot1",
@@ -824,9 +804,9 @@
       },
       {
         "type": "ObjectEvent",
-        "eventTime": "2026-04-19T05:08:41.6112327+00:00",
+        "eventTime": "2026-04-21T16:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:d923221d-e1bf-4ce9-b51b-6c0da27530ce",
+        "eventID": "urn:uuid:ffaec177-b1f0-4654-81bd-700b5306bcf9",
         "epcList": [],
         "action": "OBSERVE",
         "bizStep": "shipping",
@@ -894,9 +874,9 @@
       },
       {
         "type": "ObjectEvent",
-        "eventTime": "2026-04-19T06:08:41.6112327+00:00",
+        "eventTime": "2026-04-21T17:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:b12bd1fe-6d69-4cde-a530-fcca7290a5c9",
+        "eventID": "urn:uuid:abe2576b-41d5-41fa-80d8-9f29ad5ef7e9",
         "epcList": [],
         "action": "OBSERVE",
         "bizStep": "receiving",
@@ -963,9 +943,9 @@
       },
       {
         "type": "ObjectEvent",
-        "eventTime": "2026-04-19T07:08:41.6112327+00:00",
+        "eventTime": "2026-04-21T18:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:5508425e-1f48-48a0-a8cb-421fd93990cf",
+        "eventID": "urn:uuid:60da2457-dccf-4d3c-9948-2e9ea8bddf3f",
         "epcList": [],
         "action": "OBSERVE",
         "bizStep": "receiving",
@@ -1033,9 +1013,9 @@
       },
       {
         "type": "ObjectEvent",
-        "eventTime": "2026-04-19T08:08:41.6112327+00:00",
+        "eventTime": "2026-04-21T19:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:a0819293-2547-47a9-90a5-fbe8a7d13327",
+        "eventID": "urn:uuid:7e44b0b1-ac50-4b69-b03e-68dfc2980422",
         "epcList": [],
         "action": "ADD",
         "bizStep": "commissioning",
@@ -1088,9 +1068,9 @@
       },
       {
         "type": "TransformationEvent",
-        "eventTime": "2026-04-19T09:08:41.6112327+00:00",
+        "eventTime": "2026-04-21T20:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:94abdf86-4316-4cda-9995-704298a5ee25",
+        "eventID": "urn:uuid:ff5d0151-c5ef-478a-9748-4c95fc62709a",
         "inputQuantityList": [
           {
             "epcClass": "urn:gdst:example.org:product:lot:class:solution.feed.source1",
@@ -1140,9 +1120,9 @@
       },
       {
         "type": "TransformationEvent",
-        "eventTime": "2026-04-19T10:08:41.6112327+00:00",
+        "eventTime": "2026-04-21T21:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:a69ebc99-2212-4c46-96ab-e808c16ba87d",
+        "eventID": "urn:uuid:d4dadc6a-86af-4ba2-92b3-68f81d530916",
         "inputQuantityList": [
           {
             "epcClass": "urn:gdst:example.org:product:lot:class:solution.fryling.lot1",
@@ -1213,9 +1193,9 @@
       },
       {
         "type": "ObjectEvent",
-        "eventTime": "2026-04-19T11:08:41.6112327+00:00",
+        "eventTime": "2026-04-21T22:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:c091f489-1088-4848-a06c-74077f98ca5d",
+        "eventID": "urn:uuid:b262f99b-18c9-4d90-958d-5f0ad06d5723",
         "epcList": [],
         "action": "OBSERVE",
         "bizStep": "shipping",
@@ -1268,9 +1248,9 @@
       },
       {
         "type": "ObjectEvent",
-        "eventTime": "2026-04-19T12:08:41.6112327+00:00",
+        "eventTime": "2026-04-21T23:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:1178d826-cf72-41de-a2a8-9bc8baad6c03",
+        "eventID": "urn:uuid:6427310e-c2c4-4f68-b8f2-7312dc0db66c",
         "epcList": [],
         "action": "OBSERVE",
         "bizStep": "receiving",
@@ -1322,9 +1302,9 @@
       },
       {
         "type": "AggregationEvent",
-        "eventTime": "2026-04-19T13:08:41.6112327+00:00",
+        "eventTime": "2026-04-22T00:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:a5d495c6-16cc-4b15-96cf-5dfabbe6e585",
+        "eventID": "urn:uuid:b12e0148-6253-4831-b3c6-8bfcac6e8169",
         "parentID": "urn:epc:id:sscc:08600031303.solution1",
         "childEPCs": [],
         "action": "ADD",
@@ -1359,9 +1339,9 @@
       },
       {
         "type": "ObjectEvent",
-        "eventTime": "2026-04-19T14:08:41.6112327+00:00",
+        "eventTime": "2026-04-22T01:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:e926eeb2-1e24-4456-9955-dccd66c67402",
+        "eventID": "urn:uuid:4f03d51f-f450-4018-9180-a4f279937178",
         "epcList": [
           "urn:epc:id:sscc:08600031303.solution1"
         ],
@@ -1409,9 +1389,9 @@
       },
       {
         "type": "ObjectEvent",
-        "eventTime": "2026-04-19T15:08:41.6112327+00:00",
+        "eventTime": "2026-04-22T02:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:5e52457d-51a9-4a5f-afed-0c0403dbe38a",
+        "eventID": "urn:uuid:26ea7194-3b8f-4443-b691-f8cc53b58d3d",
         "epcList": [
           "urn:epc:id:sscc:08600031303.solution1"
         ],
@@ -1458,9 +1438,9 @@
       },
       {
         "type": "AggregationEvent",
-        "eventTime": "2026-04-19T16:08:41.6112327+00:00",
+        "eventTime": "2026-04-22T03:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:19c1cfb7-5d89-4214-bc96-39b9ba220295",
+        "eventID": "urn:uuid:9c6d3051-1a57-42c0-8a0d-b1894646ef0b",
         "parentID": "urn:epc:id:sscc:08600031303.solution1",
         "childEPCs": [],
         "action": "DELETE",
@@ -1488,9 +1468,9 @@
       },
       {
         "type": "ObjectEvent",
-        "eventTime": "2026-04-19T17:08:41.6112327+00:00",
+        "eventTime": "2026-04-22T04:52:43.0645503+00:00",
         "eventTimeZoneOffset": "+00:00",
-        "eventID": "urn:uuid:e7850c6e-b2a6-4bf4-80a0-8e348f0a6ed9",
+        "eventID": "urn:uuid:f5204630-dee3-47e9-98db-becef68ad9ec",
         "epcList": [],
         "action": "DELETE",
         "bizStep": "destroying",

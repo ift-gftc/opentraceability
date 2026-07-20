@@ -53,6 +53,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="Utility\Data\DigitalLinkSchema.json" />
+		<EmbeddedResource Include="Utility\Data\LinksetSchema.json" />
 	</ItemGroup>
 
 	<ItemGroup>
