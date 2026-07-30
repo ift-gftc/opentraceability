@@ -4,10 +4,8 @@ Shared core of the OpenTraceability test server, plus tooling for using it from 
 services:
 
 - **Core services + SQLite store** — ingestion, EPCIS query, master data, digital link resolution,
-  and dataset persistence, shared by the real ASP.NET test server and the in-process WireMock host
-  so behavior never diverges.
+  and dataset persistence.
 - **`TestServerClient`** — a typed HTTP client aligned 1:1 with the test server's controllers.
-- **`WireMockTraceabilityServer`** — an in-process, in-memory server for fast unit tests.
 
 ## Datasets and modules
 
@@ -49,29 +47,6 @@ var report = await client.RunCapabilityTestAsync(new CapabilityTestRequest
     ClearDatasetBeforeRun = true
 });
 ```
-
-## In-process WireMock server
-
-```csharp
-using var server = WireMockTraceabilityServer.StartWireMockTraceabilityServer(new WireMockTraceabilityConfig
-{
-    Modules = new() { GdstModule.Wildcaught },          // modules of the primary dataset
-    SeedEpcisDocuments = new() { epcisJson },
-    Datasets = new()                                     // additional datasets, each with its own tier
-    {
-        new WireMockDataset { DatasetId = "core-tier", Modules = new() },
-        new WireMockDataset { DatasetId = "full-tier", Modules = new() { GdstModule.Wildcaught, GdstModule.Aquaculture } }
-    }
-});
-
-// GET {server.Url}/epcis/events              -> primary dataset
-// GET {server.Url}/core-tier/epcis/events    -> core-only minified
-// GET {server.Url}/full-tier/epcis/events    -> full GDST data
-```
-
-The WireMock host serves GET routes only (digital link, EPCIS query, master data); ingestion,
-traceback, capability tests and dataset management are only available on the real server. Datasets
-are declared via the config.
 
 ## Seed manifests
 

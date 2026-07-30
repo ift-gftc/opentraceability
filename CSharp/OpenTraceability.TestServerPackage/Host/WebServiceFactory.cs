@@ -1,8 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-
-namespace OpenTraceability.TestServer
+﻿namespace OpenTraceability.TestServer
 {
     /// <summary>
     /// This class will host an instance of the web service for testing purposes. We use Kestral here

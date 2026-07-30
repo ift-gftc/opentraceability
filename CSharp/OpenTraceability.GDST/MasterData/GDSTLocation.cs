@@ -1,8 +1,6 @@
-using Humanizer;
 using OpenTraceability.Models.MasterData;
 using OpenTraceability.Utility;
 using OpenTraceability.Utility.Attributes;
-using static Humanizer.In;
 
 namespace OpenTraceability.GDST.MasterData
 {

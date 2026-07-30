@@ -4,8 +4,7 @@ using OpenTraceability.TestServer.Core.Data.Entities;
 namespace OpenTraceability.TestServer.Core.Data
 {
     /// <summary>
-    /// EF Core context for the traceability store. Backed by SQLite (file-based for the real
-    /// server, in-memory for the WireMock test host).
+    /// EF Core context for the traceability store. Backed by SQLite.
     /// </summary>
     public class TraceabilityDbContext : DbContext
     {

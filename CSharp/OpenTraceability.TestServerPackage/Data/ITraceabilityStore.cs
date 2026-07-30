@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Queries;
@@ -8,8 +6,7 @@ using OpenTraceability.TestServer.Core.Models;
 namespace OpenTraceability.TestServer.Core.Data
 {
     /// <summary>
-    /// Repository over the traceability store. Shared by the ASP.NET controllers and the
-    /// WireMock test host so query/resolution behavior never diverges.
+    /// Repository over the traceability store.
     /// </summary>
     public interface ITraceabilityStore
     {

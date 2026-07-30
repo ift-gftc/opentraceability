@@ -17,7 +17,6 @@ namespace OpenTraceability.TestServer
     /// </summary>
     public class Startup
     {
-        [ModuleInitializer]
         public static void Init()
         {
             OpenTraceability.Setup.Initialize();
@@ -37,6 +36,8 @@ namespace OpenTraceability.TestServer
         {
             try
             {
+                Init();
+
                 services.AddControllers();
                 services.AddHttpClient();
 
@@ -45,7 +46,7 @@ namespace OpenTraceability.TestServer
                 services.AddDbContextFactory<TraceabilityDbContext>(options => options.UseSqlite(connectionString));
                 services.AddScoped<ITraceabilityStore, TraceabilityStore>();
 
-                // ---- core services (shared with the WireMock host) ----
+                // ---- core services ----
                 services.AddSingleton<DigitalLinkService>();
                 services.AddScoped<EpcisQueryService>();
                 services.AddScoped<MasterDataService>();

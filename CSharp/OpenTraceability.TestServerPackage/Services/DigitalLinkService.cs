@@ -20,7 +20,7 @@ namespace OpenTraceability.TestServer.Core.Services
 
     /// <summary>
     /// Builds GS1 Digital Link responses pointing at this server's EPCIS query interface and
-    /// master data endpoints. Pure logic shared by the controllers and the WireMock host.
+    /// master data endpoints.
     /// </summary>
     /// <remarks>
     /// Serves two response shapes so the server aligns with both resolver standards:
