@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using OpenTraceability.GDST.MasterData;
 using OpenTraceability.GDST.Queries;
 using OpenTraceability.Mappers;
@@ -12,7 +12,7 @@ namespace OpenTraceability.Tests.Queries
     [Category("UnitTest")]
     public class QueryTests
     {
-        private static IWebHost _testServer;
+        private static IHost _testServer;
         private static IConfiguration _config;
 
         static QueryTests()

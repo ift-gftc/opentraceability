@@ -15,21 +15,24 @@ namespace OpenTraceability.TestServer
 
         public static bool IsTesting { get; private set; }
 
-        public static IWebHost Create(string url, IConfiguration config)
+        public static IHost Create(string url, IConfiguration config)
         {
             IsTesting = true;
             TestBaseAddress = new Uri(url);
 
-            var webhost = WebHost.CreateDefaultBuilder(args: new string[] { })
-                                 .UseStartup<Startup>()
-                                 .UseEnvironment("Test")
-                                 .UseConfiguration(config)
-                                 .UseKestrel()
-                                 .UseUrls(TestBaseAddress.ToString())
-                                 .Build();
+            var host = Host.CreateDefaultBuilder(args: new string[] { })
+                           .ConfigureWebHostDefaults(webBuilder =>
+                           {
+                               webBuilder.UseStartup<Startup>()
+                                         .UseEnvironment("Test")
+                                         .UseConfiguration(config)
+                                         .UseKestrel()
+                                         .UseUrls(TestBaseAddress.ToString());
+                           })
+                           .Build();
 
-            webhost.Start();
-            return webhost;
+            host.Start();
+            return host;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using OpenTraceability.Mappers;
 using OpenTraceability.TestServer.Core.Client;
 using OpenTraceability.TestServer.Core.Models;
@@ -20,7 +21,7 @@ namespace OpenTraceability.Tests.TestServer
         private const string ServerUrl = "https://localhost:4007";
         private const string ApiKey = "test";
 
-        private IWebHost? _host;
+        private IHost? _host;
         private HttpClient? _http;
         private TestServerClient? _client;
 

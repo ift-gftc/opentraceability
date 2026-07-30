@@ -9,6 +9,7 @@ using OpenTraceability.Queries;
 using DiagnosticsTool.Models.Requests;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 
 namespace OpenTraceability.Tests.Integration;
 
@@ -16,8 +17,8 @@ namespace OpenTraceability.Tests.Integration;
 [Category("Integration")]
 public class DiagnosticsToolIntegrationTests
 {
-    private static IWebHost? _epcisTestServer;
-    private static IWebHost? _diagnosticsTool;
+    private static IHost? _epcisTestServer;
+    private static IHost? _diagnosticsTool;
     private static IConfiguration? _config;
 
     [OneTimeSetUp]
