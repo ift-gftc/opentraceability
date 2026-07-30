@@ -234,9 +234,17 @@ namespace OpenTraceability.Queries
     public class EPCISQuery
     {
         public DateTimeOffset? GE_recordTime { get; set; }
+
+        [Obsolete("LE_recordTime is deprecated. LT_recordTime instead.")]
         public DateTimeOffset? LE_recordTime { get; set; }
+
+        public DateTimeOffset? LT_recordTime { get; set; }
+        
         public DateTimeOffset? GE_eventTime { get; set; }
+        [Obsolete("LE_eventTime is deprecated. LT_eventTime instead.")]
         public DateTimeOffset? LE_eventTime { get; set; }
+        public DateTimeOffset? LT_eventTime { get; set; }
+
         public List<string> eventTypes { get; set; } = new List<string>();
         public List<string> MATCH_epc { get; set; } = new List<string>();
         public List<string> MATCH_epcClass { get; set; } = new List<string>();
@@ -245,6 +253,7 @@ namespace OpenTraceability.Queries
         public List<string> EQ_bizStep { get; set; } = new List<string>();
         public List<Uri> EQ_bizLocation { get; set; } = new List<Uri>();
         public List<string> EQ_action { get; set; } = new List<string>();
+        public List<string> EQ_transformationID { get; set; } = new List<string>();
 
         public bool ShouldSerializeeventTypes()
         {
@@ -284,6 +293,11 @@ namespace OpenTraceability.Queries
         public bool ShouldSerializeEQ_action()
         {
             return EQ_action?.Count > 0;
+        }
+
+        public bool ShouldSerializeEQ_transformationID()
+        {
+            return EQ_transformationID?.Count > 0;
         }
     }
 }

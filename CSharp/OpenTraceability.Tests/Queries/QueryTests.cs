@@ -37,8 +37,11 @@ namespace OpenTraceability.Tests.Queries
             parameters.query.MATCH_anyEPCClass = new List<string>() { "urn:epc:class:lgtin:4012345.012345.998877", "urn:epc:class:lgtin:4012345.012345.998877" };
             parameters.query.GE_eventTime = DateTime.UtcNow;
             parameters.query.GE_recordTime = DateTime.UtcNow;
+            // The deprecated LE_ parameters must keep round-tripping for callers that still use them.
+#pragma warning disable CS0618
             parameters.query.LE_eventTime = DateTime.UtcNow;
             parameters.query.LE_recordTime = DateTime.UtcNow;
+#pragma warning restore CS0618
             parameters.query.EQ_bizLocation = new List<Uri>() { new Uri("urn:epc:id:sgln:0614141.00888.0"), new Uri("urn:epc:id:sgln:0614141.00888.0") };
             parameters.query.EQ_bizStep = new List<string>() { "https://ref.gs1.org/cbv/BizStep-shipping", "receiving" };
 
@@ -60,14 +63,54 @@ namespace OpenTraceability.Tests.Queries
             parameters.query.MATCH_anyEPCClass = new List<string>() { "urn:epc:class:lgtin:4012345.012345.998877", "urn:epc:class:lgtin:4012345.012345.998877" };
             parameters.query.GE_eventTime = DateTime.UtcNow;
             parameters.query.GE_recordTime = DateTime.UtcNow;
+            // The deprecated LE_ parameters must keep round-tripping for callers that still use them.
+#pragma warning disable CS0618
             parameters.query.LE_eventTime = DateTime.UtcNow;
             parameters.query.LE_recordTime = DateTime.UtcNow;
+#pragma warning restore CS0618
             parameters.query.EQ_bizStep = new List<string>() { "https://ref.gs1.org/cbv/BizStep-shipping", "receiving" };
 
             string queryParameters = parameters.ToQueryParameters();
             Uri uri = new Uri("https://example.org" + queryParameters);
 
             EPCISQueryParameters paramsAfter = new EPCISQueryParameters(uri);
+
+            OpenTraceabilityTests.CompareJSON(parameters.ToJSON(), paramsAfter.ToJSON());
+        }
+
+        /// <summary>
+        /// The GDST 2.0 required parameters must survive a round trip through the query string.
+        /// </summary>
+        /// <remarks>
+        /// LT_recordTime, LT_eventTime, and EQ_transformationID are newer than the reflection-driven
+        /// serializer, so this pins that they serialize into the URL and parse back out again.
+        /// </remarks>
+        [Test]
+        public void QueryParameters_StandardRequiredParameters_RoundTripThroughTheQueryString()
+        {
+            // Arrange
+            EPCISQueryParameters parameters = new EPCISQueryParameters();
+            parameters.query.MATCH_anyEPC = new List<string>() { "https://id.gs1.org/01/00614141777778/10/987" };
+            parameters.query.MATCH_anyEPCClass = new List<string>() { "urn:epc:class:lgtin:4012345.012345.998877" };
+            parameters.query.GE_eventTime = DateTime.UtcNow;
+            parameters.query.LT_eventTime = DateTime.UtcNow.AddHours(1);
+            parameters.query.GE_recordTime = DateTime.UtcNow;
+            parameters.query.LT_recordTime = DateTime.UtcNow.AddHours(1);
+            parameters.query.EQ_bizStep = new List<string>() { "https://ref.gs1.org/cbv/BizStep-shipping" };
+            parameters.query.EQ_bizLocation = new List<Uri>() { new Uri("urn:epc:id:sgln:0614141.00888.0") };
+            parameters.query.EQ_transformationID = new List<string>() { "transform-a", "transform-b" };
+
+            // Act
+            string queryParameters = parameters.ToQueryParameters();
+            EPCISQueryParameters paramsAfter = new EPCISQueryParameters(new Uri("https://example.org" + queryParameters));
+
+            // Assert
+            Assert.That(queryParameters, Does.Contain("LT_eventTime"));
+            Assert.That(queryParameters, Does.Contain("LT_recordTime"));
+            Assert.That(queryParameters, Does.Contain("EQ_transformationID"));
+            Assert.That(paramsAfter.query.LT_eventTime, Is.EqualTo(parameters.query.LT_eventTime));
+            Assert.That(paramsAfter.query.LT_recordTime, Is.EqualTo(parameters.query.LT_recordTime));
+            Assert.That(paramsAfter.query.EQ_transformationID, Is.EqualTo(parameters.query.EQ_transformationID));
 
             OpenTraceabilityTests.CompareJSON(parameters.ToJSON(), paramsAfter.ToJSON());
         }

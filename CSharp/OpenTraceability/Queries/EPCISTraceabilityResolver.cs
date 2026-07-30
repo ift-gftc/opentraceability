@@ -320,7 +320,7 @@ namespace OpenTraceability.Queries
 
                         // query for events that occurred to the parent ID
                         var p = new EPCISQueryParameters(parent_id);
-                        p.query.LE_eventTime = next_evt_time;
+                        p.query.LT_eventTime = next_evt_time;
                         if (additionalParameters != null)
                         {
                             p.Merge(additionalParameters);
