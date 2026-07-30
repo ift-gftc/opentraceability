@@ -9,14 +9,14 @@ namespace OpenTraceability.Models.MasterData
 {
     public class VocabularyElement : IVocabularyElement
     {
-        public string ID { get; set; }
+        public string? ID { get; set; }
 
-        public string EPCISType { get; set; }
+        public string? EPCISType { get; set; }
 
         [OpenTraceabilityJson("@type")]
-        public string JsonLDType { get; set; }
+        public string? JsonLDType { get; set; }
 
-        public JToken Context { get; set; }
+        public JToken? Context { get; set; }
 
         public VocabularyType VocabularyType
         {
@@ -33,7 +33,7 @@ namespace OpenTraceability.Models.MasterData
                 // if we can't determine the type from the EPCIS type, then try to determine it from the JSON-LD type
                 if (type == VocabularyType.Unknown)
                 {
-                    if (!string.IsNullOrEmpty(JsonLDType))
+                    if (JsonLDType != null && !string.IsNullOrEmpty(JsonLDType))
                     {
                         switch(JsonLDType.Trim().ToLower())
                         {

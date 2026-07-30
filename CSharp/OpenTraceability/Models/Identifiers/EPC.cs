@@ -2,6 +2,7 @@
 using OpenTraceability.Utility;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,22 +23,19 @@ namespace OpenTraceability.Models.Identifiers
         private string _epcStr = string.Empty;
 
         public EPCType Type { get; private set; }
-        public GTIN GTIN { get; private set; }
-        public string SerialLotNumber { get; private set; }
+        public GTIN? GTIN { get; private set; }
+        public string? SerialLotNumber { get; private set; }
 
         public EPC(string epcStr)
         {
             try
             {
-                string error = EPC.DetectEPCIssue(epcStr);
+                // DetectEPCIssue rejects null/whitespace input, so epcStr is guaranteed non-null past this check.
+                string? error = EPC.DetectEPCIssue(epcStr);
 
                 if (!string.IsNullOrWhiteSpace(error))
                 {
                     throw new Exception($"The EPC {epcStr} is invalid. {error}");
-                }
-                else if (epcStr == null)
-                {
-                    throw new ArgumentNullException(nameof(epcStr));
                 }
 
                 this._epcStr = epcStr;
@@ -223,11 +221,17 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static string DetectEPCIssue(string epcStr)
+        /// <summary>
+        /// Checks the EPC string for format issues and returns a description of the problem,
+        /// or null/empty when the EPC is valid.
+        /// </summary>
+        public static string? DetectEPCIssue(string? epcStr)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(epcStr))
+                // The explicit null check narrows epcStr for nullable analysis, because netstandard2.0's
+                // IsNullOrWhiteSpace carries no [NotNullWhen] annotation.
+                if (epcStr == null || string.IsNullOrWhiteSpace(epcStr))
                 {
                     return ("The EPC is a NULL or White Space string.");
                 }
@@ -363,21 +367,21 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string epcStr, out EPC epc, out string error)
+        public static bool TryParse(string epcStr, [NotNullWhen(true)] out EPC? epc, [NotNullWhen(false)] out string? error)
         {
             try
             {
-                error = EPC.DetectEPCIssue(epcStr);
-                if (string.IsNullOrWhiteSpace(error))
-                {
-                    epc = new EPC(epcStr);
-                    return true;
-                }
-                else
+                string? issue = EPC.DetectEPCIssue(epcStr);
+                if (issue != null && !string.IsNullOrWhiteSpace(issue))
                 {
                     epc = null;
+                    error = issue;
                     return false;
                 }
+
+                epc = new EPC(epcStr);
+                error = null;
+                return true;
             }
             catch (Exception Ex)
             {
@@ -430,7 +434,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region Overrides
 
-        public static bool operator ==(EPC obj1, EPC obj2)
+        public static bool operator ==(EPC? obj1, EPC? obj2)
         {
             try
             {
@@ -463,7 +467,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool operator !=(EPC obj1, EPC obj2)
+        public static bool operator !=(EPC? obj1, EPC? obj2)
         {
             try
             {
@@ -496,7 +500,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             try
             {
@@ -555,7 +559,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IEquatable<EPC>
 
-        public bool Equals(EPC epc)
+        public bool Equals(EPC? epc)
         {
             try
             {
@@ -578,7 +582,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        private bool IsEquals(EPC epc)
+        private bool IsEquals(EPC? epc)
         {
             try
             {

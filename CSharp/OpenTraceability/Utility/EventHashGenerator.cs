@@ -444,7 +444,7 @@ namespace OpenTraceability.Utility
             text = ConvertCbvWebVocabulary(text);
             text = FormatNumeric(text);
             string? dl = NormalizeDigitalLink(text);
-            return string.IsNullOrEmpty(dl) ? text : dl;
+            return dl == null || string.IsNullOrEmpty(dl) ? text : dl;
         }
 
         private static string ConvertCbvWebVocabulary(string text)

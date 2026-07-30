@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,7 +13,7 @@ public class MasterDataHttpResponseRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_MD_HTTP_RESPONSE";
 
-    public async Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public async Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         var results = new List<DiagnosticsValidationResult>();
 

@@ -164,14 +164,14 @@ namespace OpenTraceability.GDST
         {
             var inputGTINs = evt.Products
                 .Where(p => p.Type == EventProductType.Input && p.EPC?.GTIN is not null)
-                .Select(p => p.EPC.GTIN.ToString().ToLowerInvariant())
+                .Select(p => p.EPC.GTIN!.ToString().ToLowerInvariant())
                 .Distinct()
                 .OrderBy(p => p)
                 .ToList();
 
             var outputGTINs = evt.Products
                 .Where(p => p.Type == EventProductType.Output && p.EPC?.GTIN is not null)
-                .Select(p => p.EPC.GTIN.ToString().ToLowerInvariant())
+                .Select(p => p.EPC.GTIN!.ToString().ToLowerInvariant())
                 .Distinct()
                 .OrderBy(p => p)
                 .ToList();

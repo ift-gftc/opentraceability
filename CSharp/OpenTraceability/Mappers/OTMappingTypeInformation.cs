@@ -91,8 +91,8 @@ namespace OpenTraceability.Mappers
 
         public Type Type { get; set; }
         public List<OTMappingTypeInformationProperty> Properties { get; set; } = new List<OTMappingTypeInformationProperty>();
-        public PropertyInfo ExtensionKDEs { get; set; }
-        public PropertyInfo ExtensionAttributes { get; set; }
+        public PropertyInfo? ExtensionKDEs { get; set; }
+        public PropertyInfo? ExtensionAttributes { get; set; }
 
         public OTMappingTypeInformation(Type type, EPCISDataFormat format, bool isMasterDataMapping = false)
         {
@@ -168,7 +168,7 @@ namespace OpenTraceability.Mappers
             }
         }
 
-        public OTMappingTypeInformationProperty this[string name]
+        public OTMappingTypeInformationProperty? this[string name]
         {
             get
             {
@@ -282,9 +282,9 @@ namespace OpenTraceability.Mappers
         public bool IsQuantityList { get; internal set; } = false;
         public EventProductType ProductType { get; internal set; }
         public string Name { get; internal set; } = string.Empty;
-        public string ItemName { get; internal set; } = null;
+        public string? ItemName { get; internal set; } = null;
         public EPCISVersion? Version { get; internal set; } = null;
         public int? SequenceOrder { get; internal set; } = null;
-        public string CURIEMapping { get; internal set; }
+        public string? CURIEMapping { get; internal set; }
     }
 }

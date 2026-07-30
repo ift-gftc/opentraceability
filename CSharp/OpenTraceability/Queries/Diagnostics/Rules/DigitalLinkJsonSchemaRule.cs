@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OpenTraceability.Utility;
@@ -24,7 +24,7 @@ public class DigitalLinkJsonSchemaRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_DL_JSON_SCHEMA";
 
-    public async Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public async Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         if (obj == null || obj.Length < 1)
         {

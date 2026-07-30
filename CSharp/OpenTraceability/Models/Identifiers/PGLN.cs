@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
@@ -23,7 +24,7 @@ namespace OpenTraceability.Models.Identifiers
 
         public PGLN(string pglnStr)
         {
-            string error = DetectPGLNIssue(pglnStr);
+            string? error = DetectPGLNIssue(pglnStr);
             if (!string.IsNullOrWhiteSpace(error))
             {
                 throw new Exception($"The PGLN {pglnStr} is not valid. {error}");
@@ -83,11 +84,17 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static string DetectPGLNIssue(string pglnStr)
+        /// <summary>
+        /// Checks the PGLN string for format issues and returns a description of the problem,
+        /// or null when the PGLN is valid.
+        /// </summary>
+        public static string? DetectPGLNIssue(string? pglnStr)
         {
             try
             {
-                if (string.IsNullOrEmpty(pglnStr))
+                // The explicit null check narrows pglnStr for nullable analysis, because netstandard2.0's
+                // IsNullOrEmpty carries no [NotNullWhen] annotation.
+                if (pglnStr == null || string.IsNullOrEmpty(pglnStr))
                 {
                     return ("PGLN is NULL or EMPTY.");
                 }
@@ -161,21 +168,21 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string pglnStr, out PGLN pgln, out string error)
+        public static bool TryParse(string pglnStr, [NotNullWhen(true)] out PGLN? pgln, [NotNullWhen(false)] out string? error)
         {
             try
             {
-                error = PGLN.DetectPGLNIssue(pglnStr);
-                if (string.IsNullOrWhiteSpace(error))
-                {
-                    pgln = new PGLN(pglnStr);
-                    return true;
-                }
-                else
+                string? issue = PGLN.DetectPGLNIssue(pglnStr);
+                if (issue != null && !string.IsNullOrWhiteSpace(issue))
                 {
                     pgln = null;
+                    error = issue;
                     return false;
                 }
+
+                pgln = new PGLN(pglnStr);
+                error = null;
+                return true;
             }
             catch (Exception Ex)
             {
@@ -192,7 +199,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region Overrides
 
-        public static bool operator ==(PGLN obj1, PGLN obj2)
+        public static bool operator ==(PGLN? obj1, PGLN? obj2)
         {
             try
             {
@@ -225,7 +232,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool operator !=(PGLN obj1, PGLN obj2)
+        public static bool operator !=(PGLN? obj1, PGLN? obj2)
         {
             try
             {
@@ -244,9 +251,12 @@ namespace OpenTraceability.Models.Identifiers
                     return true;
                 }
 
+                // Note - Claude - 7/29/2026: This branch is unreachable (both-null and single-null cases
+                // return above); it previously returned false, disagreeing with the equivalent operator on
+                // GLN. Aligned to true for consistency; it also narrows obj1 for nullable analysis.
                 if (obj1 == null)
                 {
-                    return false;
+                    return true;
                 }
 
                 return !obj1.Equals(obj2);
@@ -258,7 +268,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             try
             {
@@ -317,7 +327,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IEquatable
 
-        public bool Equals(PGLN pgln)
+        public bool Equals(PGLN? pgln)
         {
             try
             {
@@ -366,7 +376,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IComparable
 
-        public int CompareTo(PGLN pgln)
+        public int CompareTo(PGLN? pgln)
         {
             try
             {

@@ -100,7 +100,7 @@ namespace OpenTraceability.TestServer.Core.Data
             // so a document that declares the same id more than once is an upsert, not a constraint error.
             var list = masterData
                 .Where(m => !string.IsNullOrEmpty(m.ID))
-                .GroupBy(m => m.ID.ToLower())
+                .GroupBy(m => m.ID!.ToLower())
                 .Select(g => g.Last())
                 .ToList();
             if (list.Count == 0) return;
@@ -109,7 +109,7 @@ namespace OpenTraceability.TestServer.Core.Data
 
             foreach (var element in list)
             {
-                string elementId = element.ID.ToLower();
+                string elementId = element.ID!.ToLower();
                 var record = new MasterDataRecord
                 {
                     DatasetId = datasetId,
@@ -205,7 +205,7 @@ namespace OpenTraceability.TestServer.Core.Data
             {
                 var element = Deserialize(ti);
                 if (element?.ID == null) continue;
-                if (GTIN.TryParse(element.ID, out GTIN gtin, out _))
+                if (GTIN.TryParse(element.ID, out GTIN? gtin, out _))
                 {
                     string? gtin14 = gtin.ToGTIN14();
                     if (!string.IsNullOrEmpty(gtin14) && gtin14 == identifier)
@@ -445,7 +445,7 @@ namespace OpenTraceability.TestServer.Core.Data
             return new TraceabilityEvent
             {
                 DatasetId = datasetId,
-                EventId = evt.EventID.ToString(),
+                EventId = evt.EventID?.ToString() ?? throw new Exception("The event has no EventID; events must have an EventID stamped before they are stored."),
                 EventJson = json,
                 BizStep = evt.BusinessStep?.ToString().ToLower() ?? string.Empty,
                 Action = evt.Action?.ToString()?.ToLower() ?? string.Empty,

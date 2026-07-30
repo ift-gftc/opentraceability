@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -27,7 +27,7 @@ public class DigitalLinkHttpResponseRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_DL_HTTP_RESPONSE";
 
-    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         var results = new List<DiagnosticsValidationResult>();
 

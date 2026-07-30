@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -15,5 +15,5 @@ public interface IDiagnosticsRequestRule
     /// <summary>
     /// The method to execute the rule and return one or more validation results.
     /// </summary>
-    Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj);
+    Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj);
 }

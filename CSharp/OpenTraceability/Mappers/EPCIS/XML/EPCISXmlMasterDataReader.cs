@@ -28,15 +28,15 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             //        <Vocabulary type="urn:epcglobal:epcis:vtype:Location">
             //        <Vocabulary type="urn:epcglobal:epcis:vtype:Party">
 
-            XElement xVocabList = xMasterData.Element("VocabularyList");
+            XElement? xVocabList = xMasterData.Element("VocabularyList");
             if (xVocabList != null)
             {
                 foreach (XElement xVocab in xVocabList.Elements())
                 {
-                    string type = xVocab.Attribute("type")?.Value.ToLower();
+                    string? type = xVocab.Attribute("type")?.Value.ToLower();
                     if (type != null)
                     {
-                        XElement xVocabElementaryList = xVocab.Element("VocabularyElementList");
+                        XElement? xVocabElementaryList = xVocab.Element("VocabularyElementList");
                         if (xVocabElementaryList != null)
                         {
                             foreach (XElement xVocabElement in xVocabElementaryList.Elements())
@@ -240,7 +240,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
             else if (p.PropertyType == typeof(List<string>))
             {
-                List<string> cur = p.GetValue(o) as List<string>;
+                List<string>? cur = p.GetValue(o) as List<string>;
                 if (cur == null)
                 {
                     cur = new List<string>();
@@ -280,7 +280,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
             else if (p.PropertyType == typeof(Country))
             {
-                Country v = Countries.Parse(val);
+                Country? v = Countries.Parse(val);
                 p.SetValue(o, v);
                 return true;
             }

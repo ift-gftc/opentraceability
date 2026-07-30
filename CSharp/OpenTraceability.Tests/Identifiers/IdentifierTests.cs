@@ -34,12 +34,12 @@ namespace OpenTraceability.Tests.Identifiers
                 string? expectedGTIN = jTestcase.Value<string>("gtin");
                 string? expectedLotOrSerial = jTestcase.Value<string>("lotOrSerial");
 
-                if (!EPC.TryParse(epcStr, out EPC? e, out string? err))
+                if (!EPC.TryParse(epcStr!, out EPC? e, out string? err))
                 {
                     Assert.Fail("Failed EPC.TryParse " + err);
                 }
 
-                EPC epc = new EPC(epcStr);
+                EPC epc = new EPC(epcStr!);
 
                 if (epc.Type != expectedType)
                 {

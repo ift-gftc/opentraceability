@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ public class EPCISDuplicateEventIDsRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_EPCIS_DUPLICATE_EVENT_IDS";
 
-    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         // Parameter validation (throwing exceptions instead of returning diagnostics results)
         if (obj == null || obj.Length != 1)

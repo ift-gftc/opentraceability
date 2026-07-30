@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -24,7 +24,7 @@ public class EPCISHttpResponseRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_EPCIS_HTTP_RESPONSE";
 
-    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         if (obj == null || obj.Length < 1)
         {
@@ -79,7 +79,7 @@ public class EPCISHttpResponseRule : IDiagnosticsRequestRule
         }
 
         var contentType = response.Content.Headers.ContentType.MediaType?.ToLower();
-        if (!string.IsNullOrEmpty(contentType) &&
+        if (contentType != null && !string.IsNullOrEmpty(contentType) &&
             contentType != "application/json" &&
             contentType != "application/xml" &&
             !contentType.Contains("json") &&

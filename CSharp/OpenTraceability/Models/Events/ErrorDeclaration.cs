@@ -22,37 +22,16 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceabilityJson("reason")]
         [OpenTraceability("@type")]
-        public Uri Reason { get; set; }
+        public Uri? Reason { get; set; }
 
         [OpenTraceability("declarationTime")]
         public DateTimeOffset? DeclarationTime { get; set; }
 
         [OpenTraceabilityArray("correctiveEventID")]
         [OpenTraceability("correctiveEventIDs")]
-        public List<string> CorrectingEventIDs { get; set; }
+        public List<string> CorrectingEventIDs { get; set; } = new List<string>();
 
         [OpenTraceabilityExtensionElements]
         public List<IEventKDE> ExtensionKDEs { get; internal set; } = new List<IEventKDE>();
-
-        //public EventErrorType Reason
-        //{
-        //    get
-        //    {
-        //        EventErrorType type = EventErrorType.Unknown;
-        //        foreach (EventErrorType t in Enum.GetValues(typeof(EventErrorType)))
-        //        {
-        //            if (EnumUtil.GetEnumDescription(t) == Reason?.ToString())
-        //            {
-        //                type = t;
-        //            }
-        //        }
-        //        return type;
-        //    }
-        //    set
-        //    {
-        //        string reason = EnumUtil.GetEnumDescription(value);
-        //        this.Reason = new Uri(reason);
-        //    }
-        //}
     }
 }

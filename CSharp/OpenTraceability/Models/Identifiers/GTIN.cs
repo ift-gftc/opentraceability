@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OpenTraceability.Utility;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
@@ -11,7 +12,7 @@ namespace OpenTraceability.Models.Identifiers
     [JsonConverter(typeof(GTINConverter))]
     public class GTIN : IEquatable<GTIN>, IComparable<GTIN>
     {
-        private string _gtinStr;
+        private string _gtinStr = string.Empty;
 
         public GTIN()
         {
@@ -21,7 +22,7 @@ namespace OpenTraceability.Models.Identifiers
         {
             try
             {
-                string error = GTIN.DetectGTINIssue(gtinStr);
+                string? error = GTIN.DetectGTINIssue(gtinStr);
                 if (!string.IsNullOrWhiteSpace(error))
                 {
                     throw new Exception($"The GTIN {gtinStr} is invalid. {error}");
@@ -35,21 +36,21 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string gtinStr, out GTIN gtin, out string error)
+        public static bool TryParse(string gtinStr, [NotNullWhen(true)] out GTIN? gtin, [NotNullWhen(false)] out string? error)
         {
             try
             {
-                error = GTIN.DetectGTINIssue(gtinStr);
-                if (string.IsNullOrWhiteSpace(error))
-                {
-                    gtin = new GTIN(gtinStr);
-                    return true;
-                }
-                else
+                string? issue = GTIN.DetectGTINIssue(gtinStr);
+                if (issue != null && !string.IsNullOrWhiteSpace(issue))
                 {
                     gtin = null;
+                    error = issue;
                     return false;
                 }
+
+                gtin = new GTIN(gtinStr);
+                error = null;
+                return true;
             }
             catch (Exception Ex)
             {
@@ -224,7 +225,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region Overrides
 
-        public static bool operator ==(GTIN obj1, GTIN obj2)
+        public static bool operator ==(GTIN? obj1, GTIN? obj2)
         {
             try
             {
@@ -252,7 +253,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool operator !=(GTIN obj1, GTIN obj2)
+        public static bool operator !=(GTIN? obj1, GTIN? obj2)
         {
             try
             {
@@ -280,7 +281,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             try
             {
@@ -339,7 +340,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IEquatable<GTIN>
 
-        public bool Equals(GTIN gtin)
+        public bool Equals(GTIN? gtin)
         {
             try
             {
@@ -362,7 +363,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        private bool IsEquals(GTIN gtin)
+        private bool IsEquals(GTIN? gtin)
         {
             try
             {
@@ -391,7 +392,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IComparable
 
-        public int CompareTo(GTIN gtin)
+        public int CompareTo(GTIN? gtin)
         {
             try
             {

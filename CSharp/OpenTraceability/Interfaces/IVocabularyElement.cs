@@ -27,22 +27,22 @@ namespace OpenTraceability.Interfaces
         /// <summary>
         /// The ID of the master data object.
         /// </summary>
-        string ID { get; }
+        string? ID { get; }
 
         /// <summary>
         /// The EPCIS type of the vocabulary.
         /// </summary>
-        string EPCISType { get; set; }
+        string? EPCISType { get; set; }
 
         /// <summary>
         /// The JSON-LD type of the vocabulary element.
         /// </summary>
-        string JsonLDType { get; set; }
+        string? JsonLDType { get; set; }
 
         /// <summary>
         /// The JSON-LD context of the vocabulary element.
         /// </summary>
-        JToken Context { get; set; }
+        JToken? Context { get; set; }
 
         /// <summary>
         /// The enum representing the vocabulary type.

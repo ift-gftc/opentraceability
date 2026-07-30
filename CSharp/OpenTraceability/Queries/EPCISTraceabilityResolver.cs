@@ -300,14 +300,14 @@ namespace OpenTraceability.Queries
             for (int stack = 0; stack < 100; stack++)
             {
                 // find aggregate events where we have not queried for the parent ID
-                var agg_events = results.Document.Events.Where(e => e is IAggregationEvent && e.Action == EventAction.ADD && !queried_epcs.Contains(((IAggregationEvent)e).ParentID)).ToList();
+                var agg_events = results.Document.Events.Where(e => e is IAggregationEvent && e.Action == EventAction.ADD && ((IAggregationEvent)e).ParentID != null && !queried_epcs.Contains(((IAggregationEvent)e).ParentID!)).ToList();
 
                 if (agg_events.Count() > 0)
                 {
                     foreach (var agg_evt in agg_events)
                     {
                         // find the next event recorded where one of the children is recorded in the event
-                        var parent_id = ((IAggregationEvent)agg_evt).ParentID;
+                        var parent_id = ((IAggregationEvent)agg_evt).ParentID ?? throw new Exception("The aggregation event unexpectedly has a NULL ParentID; events without a parent are filtered out above.");
                         var child_epcs = agg_evt.Products.Where(product => product.Type == EventProductType.Child).Select(product => product.EPC);
                         var next_evt = results.Document.Events.Where(e => e.EventTime > agg_evt.EventTime && e.Products.Any(product => child_epcs.Contains(product.EPC))).OrderBy(e => e.EventTime).FirstOrDefault();
                         DateTimeOffset? next_evt_time = next_evt?.EventTime;

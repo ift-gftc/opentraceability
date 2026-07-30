@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,7 +30,7 @@ public class MasterDataValidResponseRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_MD_VALID_RESPONSE";
 
-    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         var results = new List<DiagnosticsValidationResult>();
 

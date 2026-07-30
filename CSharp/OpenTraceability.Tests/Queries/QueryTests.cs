@@ -361,12 +361,12 @@ namespace OpenTraceability.Tests.Queries
 
                     if(p.EPC.Type == EPCType.Class)
                     {
-                        EPC epc = new EPC(EPCType.Class, p.EPC.GTIN, "*");
+                        EPC epc = new EPC(EPCType.Class, p.EPC.GTIN!, "*");
                         parameters.query.MATCH_anyEPCClass= new List<string>() { epc.ToString() };
                     }
                     else
                     {
-                        EPC epc = new EPC(p.EPC.Type, p.EPC.GTIN, "*");
+                        EPC epc = new EPC(p.EPC.Type, p.EPC.GTIN!, "*");
                         parameters.query.MATCH_anyEPC = new List<string>() { epc.ToString() };
                     }
 
@@ -428,7 +428,7 @@ namespace OpenTraceability.Tests.Queries
             var doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(data);
             await client.Post(doc.ToEPCISDocument());
 
-            List<string> uniqueEventIDs = doc.Events.Select(e => e.EventID.ToString()).Distinct().ToList();
+            List<string> uniqueEventIDs = doc.Events.Select(e => e.EventID!.ToString()).Distinct().ToList();
 
             var results = await client.Traceback(new EPC("urn:epc:id:sscc:08600031303.0003"));
             Assert.That(results.Errors.Count, Is.EqualTo(0), "errors found in the traceback events");

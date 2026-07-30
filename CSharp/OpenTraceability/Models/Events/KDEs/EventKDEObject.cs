@@ -14,11 +14,11 @@ namespace OpenTraceability.Models.Events.KDEs
 {
     public class EventKDEObject : EventKDEBase, IEventKDE
     {
-        private XElement _xml = null;
-        private JToken _json = null;
+        private XElement? _xml = null;
+        private JToken? _json = null;
 
         public Type ValueType => typeof(object);
-        public object Value
+        public object? Value
         {
             get
             {
@@ -50,7 +50,7 @@ namespace OpenTraceability.Models.Events.KDEs
             _json = json;
         }
 
-        public JToken GetJson()
+        public JToken? GetJson()
         {
             try
             {
@@ -77,11 +77,9 @@ namespace OpenTraceability.Models.Events.KDEs
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                Debug.WriteLine(ex);
-                Trace.WriteLine(ex);
+                OTLogger.Error(ex);
                 return null;
-            }   
+            }
         }
 
         public void SetFromXml(XElement xml)
@@ -90,7 +88,7 @@ namespace OpenTraceability.Models.Events.KDEs
             _json = null;
         }
 
-        public XElement GetXml()
+        public XElement? GetXml()
         {
             try
             {
@@ -100,13 +98,14 @@ namespace OpenTraceability.Models.Events.KDEs
                 }
                 else if (_json != null)
                 {
-                    string xmlStr = string.Empty;
+                    string? xmlStr = string.Empty;
 
-                    JArray jArray = _json as JArray;
-                    JObject j = _json as JObject;
+                    JArray? jArray = _json as JArray;
+                    JObject? j = _json as JObject;
                     if (j != null && j.Properties().Count() > 1)
                     {
-                        xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString(), Namespace + Name) as XmlDocument)?.OuterXml;
+                        xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString(), Namespace + Name) as XmlDocument)?.OuterXml
+                            ?? throw new Exception("Failed to deserialize the JSON into an XML document. json=" + _json.ToString());
                         XElement x = new XElement(XElement.Parse(xmlStr));
                         return x;
                     }
@@ -115,10 +114,11 @@ namespace OpenTraceability.Models.Events.KDEs
                         XElement xList = new XElement(Namespace + Name);
                         foreach (var jItem in jArray)
                         {
-                            JObject jObj = jItem as JObject;
+                            JObject? jObj = jItem as JObject;
                             if (jObj != null)
                             {
-                                string itemXML = (JsonConvert.DeserializeXmlNode(jObj.ToString(), $"{Namespace}{Name}-item") as XmlDocument)?.OuterXml;
+                                string itemXML = (JsonConvert.DeserializeXmlNode(jObj.ToString(), $"{Namespace}{Name}-item") as XmlDocument)?.OuterXml
+                                    ?? throw new Exception("Failed to deserialize the JSON into an XML document. json=" + jObj.ToString());
                                 XElement xItem = new XElement(XElement.Parse(itemXML));
                                 xList.Add(xItem);
                             }
@@ -135,7 +135,7 @@ namespace OpenTraceability.Models.Events.KDEs
                         xmlStr = (JsonConvert.DeserializeXmlNode(_json.ToString()) as XmlDocument)?.OuterXml;
                     }
 
-                    if (!string.IsNullOrEmpty(xmlStr))
+                    if (xmlStr != null && !string.IsNullOrEmpty(xmlStr))
                     {
                         XElement x = new XElement((XNamespace)Namespace + Name, XElement.Parse(xmlStr));
                         return x;
@@ -152,11 +152,9 @@ namespace OpenTraceability.Models.Events.KDEs
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                Debug.WriteLine(ex);
-                Trace.WriteLine(ex);
+                OTLogger.Error(ex);
                 return null;
-            }            
+            }
         }
     }
 }

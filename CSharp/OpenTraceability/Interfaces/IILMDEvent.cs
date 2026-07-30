@@ -9,6 +9,6 @@ namespace OpenTraceability.Interfaces
 {
     public interface IILMDEvent<T> : IEvent where T : EventILMD
     {
-        T ILMD { get; set; }
+        T? ILMD { get; set; }
     }
 }

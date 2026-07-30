@@ -22,7 +22,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         {
             if (doc.MasterData.Count > 0)
             {
-                JObject xEPCISHeader = jDoc["epcisHeader"] as JObject;
+                JObject? xEPCISHeader = jDoc["epcisHeader"] as JObject;
                 if (xEPCISHeader == null)
                 {
                     jDoc["epcisHeader"] = new JObject(new JProperty("epcisMasterData", new JObject(new JProperty("vocabularyList", new JArray()))));
@@ -76,7 +76,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 string id = mapping.Name;
                 PropertyInfo p = mapping.Property;
 
-                object o = p.GetValue(md);
+                object? o = p.GetValue(md);
                 if (o != null)
                 {
                     if (id == string.Empty)
@@ -86,13 +86,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                         {
                             string subID = subMapping.Name;
                             PropertyInfo subProperty = subMapping.Property;
-                            object subObj = subProperty.GetValue(o);
+                            object? subObj = subProperty.GetValue(o);
                             if (subObj != null)
                             {
                                 if (subObj.GetType() == typeof(List<LanguageString>))
                                 {
                                     List<LanguageString> l = (List<LanguageString>)subObj;
-                                    string str = l.FirstOrDefault()?.Value;
+                                    string? str = l.FirstOrDefault()?.Value;
                                     if (str != null)
                                     {
                                         JObject jAttribute = new JObject(new JProperty("id", subID), new JProperty("attribute", str));
@@ -101,7 +101,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                                 }
                                 else
                                 {
-                                    string str = subObj.ToString();
+                                    string? str = subObj.ToString();
                                     if (str != null)
                                     {
                                         JObject jAttribute = new JObject(new JProperty("id", subID), new JProperty("attribute", str));
@@ -141,7 +141,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     else if (o.GetType() == typeof(List<LanguageString>))
                     {
                         List<LanguageString> l = (List<LanguageString>)o;
-                        string str = l.FirstOrDefault()?.Value;
+                        string? str = l.FirstOrDefault()?.Value;
                         if (str != null)
                         {
                             JObject jAttribute = new JObject(new JProperty("id", id), new JProperty("attribute", str));
@@ -150,7 +150,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     }
                     else
                     {
-                        string str = o.ToString();
+                        string? str = o.ToString();
                         if (str != null)
                         {
                             JObject jAttribute = new JObject(new JProperty("id", id), new JProperty("attribute", str));
@@ -162,7 +162,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
 
             foreach (IMasterDataKDE kde in md.KDEs)
             {
-                JToken jKDE = kde.GetGS1WebVocabJson();
+                JToken? jKDE = kde.GetGS1WebVocabJson();
                 if (jKDE != null)
                 {
                     JObject jAttribute = new JObject(new JProperty("id", kde.Name), new JProperty("attribute", jKDE));
@@ -183,11 +183,11 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                     continue;
                 }
 
-                object value = property.GetValue(o);
+                object? value = property.GetValue(o);
                 if (value != null)
                 {
-                    OpenTraceabilityAttribute xmlAtt = property.GetCustomAttribute<OpenTraceabilityAttribute>();
-                    OpenTraceabilityJsonAttribute jsonAtt = property.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
+                    OpenTraceabilityAttribute? xmlAtt = property.GetCustomAttribute<OpenTraceabilityAttribute>();
+                    OpenTraceabilityJsonAttribute? jsonAtt = property.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
                     string? name = jsonAtt?.Name ?? xmlAtt?.Name;
                     if (name != null)
                     {
@@ -213,7 +213,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                         }
                         else
                         {
-                            string str = value.ToString();
+                            string? str = value.ToString();
                             if (str != null)
                             {
                                 j[name] = str;

@@ -853,7 +853,7 @@ namespace OpenTraceability.Tests.Events
         {
             foreach (GDSTTradeItem expectedTradeItem in expected.GetMasterData<GDSTTradeItem>())
             {
-                GDSTTradeItem actualTradeItem = actual.GetMasterData<GDSTTradeItem>(expectedTradeItem.ID);
+                GDSTTradeItem actualTradeItem = actual.GetMasterData<GDSTTradeItem>(expectedTradeItem.ID!);
                 Assert.That(actualTradeItem, Is.Not.Null, "Expected trade item master data to round trip: " + expectedTradeItem.ID);
                 Assert.That(
                     actualTradeItem.ProductClassification.Select(c => c.Value),
@@ -862,7 +862,7 @@ namespace OpenTraceability.Tests.Events
 
             foreach (GDSTLocation expectedLocation in expected.GetMasterData<GDSTLocation>())
             {
-                GDSTLocation actualLocation = actual.GetMasterData<GDSTLocation>(expectedLocation.ID);
+                GDSTLocation actualLocation = actual.GetMasterData<GDSTLocation>(expectedLocation.ID!);
                 Assert.That(actualLocation, Is.Not.Null, "Expected location master data to round trip: " + expectedLocation.ID);
                 Assert.That(
                     actualLocation.LocationClassification.Select(c => c.Value),
@@ -1036,7 +1036,7 @@ namespace OpenTraceability.Tests.Events
         {
             Assert.That(evt.EventType, Is.EqualTo(eventType));
             Assert.That(evt.Action, Is.EqualTo(action));
-            Assert.That(evt.BusinessStep.ToString(), Is.EqualTo(businessStep));
+            Assert.That(evt.BusinessStep!.ToString(), Is.EqualTo(businessStep));
         }
 
         public sealed class ProfileRoundTripCase

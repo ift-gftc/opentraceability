@@ -106,7 +106,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradeitem(DigitalLinkQueryOptions options, GTIN gtin, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null)
+        public static async Task ResolveTradeitem(DigitalLinkQueryOptions options, GTIN? gtin, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null)
         {
             if (gtin != null)
             {
@@ -122,7 +122,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveLocation(DigitalLinkQueryOptions options, GLN gln, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null)
+        public static async Task ResolveLocation(DigitalLinkQueryOptions options, GLN? gln, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null)
         {
             if (gln != null)
             {
@@ -138,7 +138,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradingParty(DigitalLinkQueryOptions options, PGLN pgln, EPCISBaseDocument doc, HttpClient client, bool addGDSTExtensionHeader = false, DiagnosticsReport? report = null)
+        public static async Task ResolveTradingParty(DigitalLinkQueryOptions options, PGLN? pgln, EPCISBaseDocument doc, HttpClient client, bool addGDSTExtensionHeader = false, DiagnosticsReport? report = null)
         {
             if (pgln != null)
             {
@@ -154,7 +154,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradeitem<T>(DigitalLinkQueryOptions options, GTIN gtin, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null) where T : Tradeitem
+        public static async Task ResolveTradeitem<T>(DigitalLinkQueryOptions options, GTIN? gtin, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null) where T : Tradeitem
         {
             if (gtin != null)
             {
@@ -169,7 +169,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveLocation<T>(DigitalLinkQueryOptions options, GLN gln, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null) where T : Location
+        public static async Task ResolveLocation<T>(DigitalLinkQueryOptions options, GLN? gln, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null) where T : Location
         {
             if (gln != null)
             {
@@ -184,7 +184,7 @@ namespace OpenTraceability.Queries
             }
         }
 
-        public static async Task ResolveTradingParty<T>(DigitalLinkQueryOptions options, PGLN pgln, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null) where T : TradingParty
+        public static async Task ResolveTradingParty<T>(DigitalLinkQueryOptions options, PGLN? pgln, EPCISBaseDocument doc, HttpClient client, DiagnosticsReport? report = null) where T : TradingParty
         {
             if (pgln != null)
             {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OpenTraceability.Models.MasterData;
@@ -25,7 +25,7 @@ public class DigitalLinkResponseFoundRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_DL_RESPONSE_FOUND";
 
-    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         if (obj == null || obj.Length < 1)
         {

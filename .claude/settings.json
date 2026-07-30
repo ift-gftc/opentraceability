@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk -F'CSharp.OpenTraceability.' '{print $2}')",
+      "Bash(awk -F' \\\\\\\\[' '{print $1}')",
+      "Bash(awk -F'\\(' '{print $1}' w3.txt)",
+      "Bash(awk -F'OpenTraceability\\\\\\\\\\\\\\\\' '{print $2}')"
+    ]
+  }
+}

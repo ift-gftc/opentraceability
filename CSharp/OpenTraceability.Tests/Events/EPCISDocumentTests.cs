@@ -120,8 +120,8 @@ namespace OpenTraceability.Tests.Events
             // deserialize object events into C# models
             EPCISQueryDocument afterDoc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(strEvents);
 
-            List<string> beforeEventIDs = doc.Events.Select(e => e.EventID.ToString()).ToList();
-            List<string> afterEventIDs = afterDoc.Events.Select(e => e.EventID.ToString()).ToList();
+            List<string> beforeEventIDs = doc.Events.Select(e => e.EventID!.ToString()).ToList();
+            List<string> afterEventIDs = afterDoc.Events.Select(e => e.EventID!.ToString()).ToList();
 
             List<string> missing = beforeEventIDs.Except(afterEventIDs).ToList();
         }

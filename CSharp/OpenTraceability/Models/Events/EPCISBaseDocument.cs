@@ -281,13 +281,13 @@ namespace OpenTraceability.Models.Events
             return false;
         }
 
-        private bool HasUriMatch(Uri uri, List<string> filter, string prefix, string replacePrefix)
+        private bool HasUriMatch(Uri? uri, List<string> filter, string prefix, string replacePrefix)
         {
             // make sure all of the EQ_bizStep are converted into URI format before comparing
             for (int i = 0; i < filter.Count; i++)
             {
                 string bizStep = filter[i];
-                if (!Uri.TryCreate(bizStep, UriKind.Absolute, out Uri u))
+                if (!Uri.TryCreate(bizStep, UriKind.Absolute, out Uri? u))
                 {
                     filter[i] = replacePrefix + bizStep;
                 }

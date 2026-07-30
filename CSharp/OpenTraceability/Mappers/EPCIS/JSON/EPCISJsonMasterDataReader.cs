@@ -124,7 +124,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             doc.MasterData.Add(tp);
         }
 
-        private static void ReadUnknown(EPCISBaseDocument doc, JObject xVocabElement, string type)
+        private static void ReadUnknown(EPCISBaseDocument doc, JObject xVocabElement, string? type)
         {
             if (type == null)
             {
@@ -153,10 +153,10 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             {
                 var subMappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(property.Property.PropertyType);
                 bool setAttribute = false;
-                object subObject = Activator.CreateInstance(property.Property.PropertyType);
-                if (subObject != null)
+                object? subObject = Activator.CreateInstance(property.Property.PropertyType);
+                if (subObject != null && jMasterData["attributes"] is JArray jExpandedAttributes)
                 {
-                    foreach (JObject jAtt in jMasterData["attributes"] as JArray)
+                    foreach (JObject jAtt in jExpandedAttributes)
                     {
                         string id = jAtt["id"]?.ToString() ?? string.Empty;
                         var propMapping = subMappedProperties[id];
@@ -178,8 +178,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 }
             }
 
-            // go through each standard attribute...
-            foreach (JObject jAtt in jMasterData["attributes"] as JArray)
+            // go through each standard attribute; master data without an attributes array has nothing further to read.
+            if (!(jMasterData["attributes"] is JArray jAttributes))
+            {
+                return;
+            }
+
+            foreach (JObject jAtt in jAttributes)
             {
                 string id = jAtt["id"]?.ToString() ?? string.Empty;
 
@@ -217,7 +222,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 }
                 else if (readKDEs)
                 {
-                    JToken jAttValue = jAtt["attribute"];
+                    JToken? jAttValue = jAtt["attribute"];
                     if (jAttValue != null)
                     {
                         if (jAttValue is JObject)
@@ -265,15 +270,15 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 // go through each property...
                 foreach (PropertyInfo p in t.GetProperties())
                 {
-                    OpenTraceabilityAttribute xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
-                    OpenTraceabilityJsonAttribute jsonAtt = p.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
+                    OpenTraceabilityAttribute? xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
+                    OpenTraceabilityJsonAttribute? jsonAtt = p.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
                     string? name = jsonAtt?.Name ?? xmlAtt?.Name;
                     if (name != null)
                     {
-                        JToken x = j[name];
+                        JToken? x = j[name];
                         if (x != null)
                         {
-                            OpenTraceabilityObjectAttribute objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
+                            OpenTraceabilityObjectAttribute? objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
                             if (objAtt != null)
                             {
                                 object o = ReadKDEObject(x, p.PropertyType);
@@ -300,7 +305,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
             else if (p.PropertyType == typeof(List<string>))
             {
-                List<string> cur = p.GetValue(o) as List<string>;
+                List<string>? cur = p.GetValue(o) as List<string>;
                 if (cur == null)
                 {
                     cur = new List<string>();
@@ -340,7 +345,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
             else if (p.PropertyType == typeof(Country))
             {
-                Country v = Countries.Parse(val);
+                Country? v = Countries.Parse(val);
                 p.SetValue(o, v);
                 return true;
             }

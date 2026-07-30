@@ -62,7 +62,7 @@ namespace OpenTraceability.Tests.Events
             // read object events from test data specified in the file argument
             string stringJson = OpenTraceabilityTests.ReadTestData(file);
             JObject j = JObject.Parse(stringJson);
-            string epcisJson = j["Content"].ToString();
+            string epcisJson = j["Content"]!.ToString();
 
             // deserialize object events into C# models
             EPCISQueryDocument doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(epcisJson);

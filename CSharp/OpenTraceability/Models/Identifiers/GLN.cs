@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
@@ -24,7 +25,7 @@ namespace OpenTraceability.Models.Identifiers
         {
             try
             {
-                string error = GLN.DetectGLNIssue(glnStr);
+                string? error = GLN.DetectGLNIssue(glnStr);
                 if (!string.IsNullOrWhiteSpace(error))
                 {
                     throw new Exception($"The GLN {glnStr} is invalid. {error}");
@@ -90,11 +91,17 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static string DetectGLNIssue(string glnStr)
+        /// <summary>
+        /// Checks the GLN string for format issues and returns a description of the problem,
+        /// or null when the GLN is valid.
+        /// </summary>
+        public static string? DetectGLNIssue(string? glnStr)
         {
             try
             {
-                if (string.IsNullOrEmpty(glnStr))
+                // The explicit null check narrows glnStr for nullable analysis, because netstandard2.0's
+                // IsNullOrEmpty carries no [NotNullWhen] annotation.
+                if (glnStr == null || string.IsNullOrEmpty(glnStr))
                 {
                     return ("The GLN is NULL or EMPTY.");
                 }
@@ -180,21 +187,21 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool TryParse(string glnStr, out GLN gln, out string error)
+        public static bool TryParse(string glnStr, [NotNullWhen(true)] out GLN? gln, [NotNullWhen(false)] out string? error)
         {
             try
             {
-                error = GLN.DetectGLNIssue(glnStr);
-                if (string.IsNullOrWhiteSpace(error))
-                {
-                    gln = new GLN(glnStr);
-                    return true;
-                }
-                else
+                string? issue = GLN.DetectGLNIssue(glnStr);
+                if (issue != null && !string.IsNullOrWhiteSpace(issue))
                 {
                     gln = null;
+                    error = issue;
                     return false;
                 }
+
+                gln = new GLN(glnStr);
+                error = null;
+                return true;
             }
             catch (Exception Ex)
             {
@@ -211,7 +218,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region Overrides
 
-        public static bool operator ==(GLN obj1, GLN obj2)
+        public static bool operator ==(GLN? obj1, GLN? obj2)
         {
             try
             {
@@ -220,7 +227,10 @@ namespace OpenTraceability.Models.Identifiers
                     return true;
                 }
 
-                if (Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
+                // Note - Claude - 7/29/2026: This branch previously duplicated the both-null condition above
+                // (a copy-paste bug masked by a CS8602 pragma), making it unreachable; the intended check is
+                // "obj1 is non-null and obj2 is null", matching the equivalent operator on PGLN.
+                if (!Object.ReferenceEquals(null, obj1) && Object.ReferenceEquals(null, obj2))
                 {
                     return false;
                 }
@@ -230,9 +240,12 @@ namespace OpenTraceability.Models.Identifiers
                     return false;
                 }
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                if (obj1 == null)
+                {
+                    return false;
+                }
+
                 return obj1.Equals(obj2);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
             catch (Exception Ex)
             {
@@ -241,7 +254,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public static bool operator !=(GLN obj1, GLN obj2)
+        public static bool operator !=(GLN? obj1, GLN? obj2)
         {
             try
             {
@@ -274,7 +287,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             try
             {
@@ -333,7 +346,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IEquatable<GLN>
 
-        public bool Equals(GLN gln)
+        public bool Equals(GLN? gln)
         {
             try
             {
@@ -363,7 +376,7 @@ namespace OpenTraceability.Models.Identifiers
             }
         }
 
-        private bool IsEquals(GLN gln)
+        private bool IsEquals(GLN? gln)
         {
             try
             {
@@ -392,7 +405,7 @@ namespace OpenTraceability.Models.Identifiers
 
         #region IComparable
 
-        public int CompareTo(GLN gln)
+        public int CompareTo(GLN? gln)
         {
             try
             {

@@ -16,7 +16,7 @@ namespace OpenTraceability.Queries
         /// <summary>
         /// The URL of the EPCIS Query Interface.
         /// </summary>
-        public Uri URL { get; set; }
+        public Uri? URL { get; set; }
 
         /// <summary>
         /// The value of the X-API-Key header to use when querying the EPCIS Query Interface.

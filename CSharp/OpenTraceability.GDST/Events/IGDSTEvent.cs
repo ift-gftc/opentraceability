@@ -5,7 +5,7 @@ namespace OpenTraceability.GDST.Events
 {
     public interface IGDSTEvent : IEvent
     {
-        PGLN InformationProvider { get; set; }
+        PGLN? InformationProvider { get; set; }
     }
 
     public interface IGDSTProductOwnerEvent : IGDSTEvent

@@ -96,7 +96,7 @@ namespace OpenTraceability.TestServer.Core.Data.Entities
                     entries.Add(new EventSearchEntry
                     {
                         DatasetId = datasetId,
-                        EventId = evt.EventID.ToString(),
+                        EventId = evt.EventID?.ToString() ?? throw new Exception("The event has no EventID; events must have an EventID stamped before they are indexed."),
                         BizStep = bizStep,
                         Action = action,
                         EventTime = eventTime,

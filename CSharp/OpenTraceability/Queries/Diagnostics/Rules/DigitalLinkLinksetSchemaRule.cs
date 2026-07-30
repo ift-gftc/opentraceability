@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,7 +35,7 @@ public class DigitalLinkLinksetSchemaRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_DL_LINKSET_SCHEMA";
 
-    public async Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public async Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         if (obj == null || obj.Length < 1)
         {
