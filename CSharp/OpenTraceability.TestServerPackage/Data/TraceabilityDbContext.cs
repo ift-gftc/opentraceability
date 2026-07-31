@@ -24,6 +24,9 @@ namespace OpenTraceability.TestServer.Core.Data
                 e.HasIndex(x => new { x.DatasetId, x.EventId }).IsUnique().HasDatabaseName("IX_Events_Dataset_EventId");
                 e.HasIndex(x => x.DatasetId).HasDatabaseName("IX_Events_Dataset");
                 e.HasIndex(x => x.BizStep).HasDatabaseName("IX_Events_BizStep");
+                e.HasIndex(x => x.BizLocationGLN).HasDatabaseName("IX_Events_BizLocationGLN");
+                e.HasIndex(x => x.TransformationId).HasDatabaseName("IX_Events_TransformationId");
+                e.HasIndex(x => x.EventTime).HasDatabaseName("IX_Events_EventTime");
             });
 
             modelBuilder.Entity<EventSearchEntry>(e =>

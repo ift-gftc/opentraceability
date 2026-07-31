@@ -38,7 +38,23 @@ namespace OpenTraceability.TestServer.Core.Data.Entities
         /// </summary>
         public string Action { get; set; } = string.Empty;
 
-        public DateTimeOffset? EventTime { get; set; }
+        /// <summary>
+        /// The GLN of the event's business location (lowercased), or empty when the event has none.
+        /// Backs the EQ_bizLocation query parameter; source/destination GLNs are deliberately excluded.
+        /// </summary>
+        public string BizLocationGLN { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The transformation ID (lowercased) when the event is a transformation event, otherwise empty.
+        /// Backs the EQ_transformationID query parameter.
+        /// </summary>
+        public string TransformationId { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The event time normalized to UTC. Stored as a DateTime because the SQLite EF provider
+        /// cannot translate DateTimeOffset comparisons to SQL.
+        /// </summary>
+        public DateTime? EventTime { get; set; }
 
         public DateTime RecordTime { get; set; } = DateTime.UtcNow;
     }

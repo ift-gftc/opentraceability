@@ -30,6 +30,13 @@ namespace OpenTraceability.TestServer.Core.Data.Entities
 
         public string EPC { get; set; } = string.Empty;
 
+        /// <summary>
+        /// The <see cref="OpenTraceability.Models.Events.EventProductType"/> of the product this row's
+        /// EPC belongs to (lowercased, e.g. "reference", "child", "input"), or empty for rows that
+        /// carry a location/party identifier instead of a product.
+        /// </summary>
+        public string EpcType { get; set; } = string.Empty;
+
         public string ProductGTIN { get; set; } = string.Empty;
 
         public string LocationGLN { get; set; } = string.Empty;
@@ -40,20 +47,51 @@ namespace OpenTraceability.TestServer.Core.Data.Entities
         /// Builds the denormalized search rows for a batch of events. Mirrors the extraction
         /// approach used by the TraceabilityDriver so identifier matching behaves consistently.
         /// </summary>
+        /// <remarks>
+        /// Each row carries exactly one identifier: one row per product (EPC + its own GTIN + its
+        /// product type, kept aligned so type-restricted MATCH queries can be answered in SQL), one
+        /// row per location GLN, and one row per party PGLN. Events with no identifiers emit no
+        /// rows; time/bizStep filtering is served by the Events table, not this one.
+        /// </remarks>
         public static List<EventSearchEntry> CreateSearchEntries(string datasetId, IEnumerable<IEvent> events)
         {
             var entries = new List<EventSearchEntry>();
 
             foreach (IEvent evt in events)
             {
+                string eventId = evt.EventID?.ToString() ?? throw new Exception("The event has no EventID; events must have an EventID stamped before they are indexed.");
                 string bizStep = evt.BusinessStep?.ToString().ToLower() ?? string.Empty;
                 string action = evt.Action.ToString()?.ToLower() ?? string.Empty;
                 DateTimeOffset? eventTime = evt.EventTime;
                 DateTime recordTime = evt.RecordTime?.UtcDateTime ?? DateTime.UtcNow;
 
-                var epcs = evt.Products.Select(p => p.EPC.ToString().ToLower()).ToList();
-                var productGTINs = evt.Products.Select(p => p.EPC.GTIN?.ToString().ToLower())
-                                               .Where(g => g != null).Select(g => g!).ToList();
+                EventSearchEntry NewRow()
+                {
+                    return new EventSearchEntry
+                    {
+                        DatasetId = datasetId,
+                        EventId = eventId,
+                        BizStep = bizStep,
+                        Action = action,
+                        EventTime = eventTime,
+                        RecordTime = recordTime
+                    };
+                }
+
+                // One row per product, with the product's EPC, GTIN, and type kept together on the
+                // same row so type-restricted EPC/GTIN matching stays answerable in SQL.
+                foreach (var product in evt.Products)
+                {
+                    var row = NewRow();
+                    row.EPC = product.EPC.ToString().ToLower();
+                    row.EpcType = product.Type.ToString().ToLower();
+                    row.ProductGTIN = product.EPC.GTIN?.ToString().ToLower() ?? string.Empty;
+                    entries.Add(row);
+                }
+
+                // Collect location GLNs: the event's business location plus any SDT_Location
+                // sources/destinations. Party PGLNs come from the GDST information provider /
+                // product owner and any SDT_Possessor / SDT_Owner sources/destinations.
                 var locationGLNs = evt.Location?.GLN != null
                     ? new List<string> { evt.Location.GLN.ToString().ToLower() }
                     : new List<string>();
@@ -88,24 +126,18 @@ namespace OpenTraceability.TestServer.Core.Data.Entities
                         locationGLNs.Add(dest.Value.ToLower());
                 }
 
-                int maxCount = Math.Max(Math.Max(Math.Max(epcs.Count, productGTINs.Count), locationGLNs.Count), partyPGLNs.Count);
-                maxCount = Math.Max(maxCount, 1); // always emit at least one row so the event is discoverable by time/bizStep
-
-                for (int i = 0; i < maxCount; i++)
+                foreach (string gln in locationGLNs.Distinct())
                 {
-                    entries.Add(new EventSearchEntry
-                    {
-                        DatasetId = datasetId,
-                        EventId = evt.EventID?.ToString() ?? throw new Exception("The event has no EventID; events must have an EventID stamped before they are indexed."),
-                        BizStep = bizStep,
-                        Action = action,
-                        EventTime = eventTime,
-                        RecordTime = recordTime,
-                        EPC = i < epcs.Count ? epcs[i] : string.Empty,
-                        ProductGTIN = i < productGTINs.Count ? productGTINs[i] : string.Empty,
-                        LocationGLN = i < locationGLNs.Count ? locationGLNs[i] : string.Empty,
-                        PartyPGLN = i < partyPGLNs.Count ? partyPGLNs[i] : string.Empty
-                    });
+                    var row = NewRow();
+                    row.LocationGLN = gln;
+                    entries.Add(row);
+                }
+
+                foreach (string pgln in partyPGLNs.Distinct())
+                {
+                    var row = NewRow();
+                    row.PartyPGLN = pgln;
+                    entries.Add(row);
                 }
             }
 

@@ -45,6 +45,82 @@ namespace OpenTraceability.TestServer.Core.Data
                 "\"UpdatedUtc\" TEXT NOT NULL)");
             await ctx.Database.ExecuteSqlRawAsync(
                 "CREATE UNIQUE INDEX IF NOT EXISTS \"IX_Datasets_DatasetId\" ON \"Datasets\" (\"DatasetId\")");
+
+            // Columns added after a deployment's epcis.db was first created must also be applied
+            // explicitly. When any are added, the derived query columns and search rows are rebuilt
+            // from the stored event JSON so the upgraded database keeps returning correct results.
+            bool upgraded = false;
+            upgraded |= await AddColumnIfMissingAsync(ctx, "Events", "BizLocationGLN", "TEXT NOT NULL DEFAULT ''");
+            upgraded |= await AddColumnIfMissingAsync(ctx, "Events", "TransformationId", "TEXT NOT NULL DEFAULT ''");
+            upgraded |= await AddColumnIfMissingAsync(ctx, "EventSearchEntries", "EpcType", "TEXT NOT NULL DEFAULT ''");
+
+            if (upgraded)
+            {
+                await ctx.Database.ExecuteSqlRawAsync("CREATE INDEX IF NOT EXISTS \"IX_Events_BizLocationGLN\" ON \"Events\" (\"BizLocationGLN\")");
+                await ctx.Database.ExecuteSqlRawAsync("CREATE INDEX IF NOT EXISTS \"IX_Events_TransformationId\" ON \"Events\" (\"TransformationId\")");
+                await ctx.Database.ExecuteSqlRawAsync("CREATE INDEX IF NOT EXISTS \"IX_Events_EventTime\" ON \"Events\" (\"EventTime\")");
+                await RebuildDerivedEventDataAsync(ctx);
+            }
+        }
+
+        /// <summary>
+        /// Adds the column to the table when it does not exist yet. Returns true when the column was added.
+        /// </summary>
+        private static async Task<bool> AddColumnIfMissingAsync(TraceabilityDbContext ctx, string tableName, string columnName, string columnDefinition)
+        {
+            // Identifiers cannot be parameterized in DDL or pragma calls; all arguments are
+            // compile-time constants from this class, never user input.
+#pragma warning disable EF1002
+            int exists = await ctx.Database.SqlQueryRaw<int>($"SELECT COUNT(*) AS \"Value\" FROM pragma_table_info('{tableName}') WHERE name = '{columnName}'").SingleAsync();
+            if (exists > 0)
+            {
+                return false;
+            }
+
+            await ctx.Database.ExecuteSqlRawAsync($"ALTER TABLE \"{tableName}\" ADD COLUMN \"{columnName}\" {columnDefinition}");
+#pragma warning restore EF1002
+            return true;
+        }
+
+        /// <summary>
+        /// Rebuilds the derived query columns and search rows for every stored event from its JSON
+        /// (the source of truth). Runs when a schema upgrade adds columns to an existing database,
+        /// so older deployments keep returning correct query results.
+        /// </summary>
+        private static async Task RebuildDerivedEventDataAsync(TraceabilityDbContext ctx)
+        {
+            var records = await ctx.Events.ToListAsync();
+            var eventsByDataset = new Dictionary<string, List<IEvent>>();
+
+            foreach (var record in records)
+            {
+                // Reading our own stored output; skip schema validation.
+                var doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(record.EventJson, checkSchema: false);
+                IEvent evt = doc.Events.Single();
+
+                record.BizLocationGLN = GetBizLocationGLN(evt);
+                record.TransformationId = GetTransformationId(evt);
+
+                // Older databases stored EventTime as DateTimeOffset TEXT (with an offset suffix),
+                // which no longer compares correctly against the UTC DateTime format written today.
+                // Re-stamp and force the update so every row is rewritten in the current format.
+                record.EventTime = evt.EventTime?.UtcDateTime;
+                ctx.Entry(record).Property(r => r.EventTime).IsModified = true;
+
+                if (!eventsByDataset.TryGetValue(record.DatasetId, out List<IEvent>? datasetEvents))
+                {
+                    datasetEvents = new List<IEvent>();
+                    eventsByDataset[record.DatasetId] = datasetEvents;
+                }
+                datasetEvents.Add(evt);
+            }
+
+            await ctx.EventSearchEntries.ExecuteDeleteAsync();
+            foreach (var kvp in eventsByDataset)
+            {
+                ctx.EventSearchEntries.AddRange(EventSearchEntry.CreateSearchEntries(kvp.Key, kvp.Value));
+            }
+            await ctx.SaveChangesAsync();
         }
 
         public async Task UpsertEventsAsync(string datasetId, IEnumerable<IEvent> events, IDictionary<string, string>? namespaces = null)
@@ -136,35 +212,46 @@ namespace OpenTraceability.TestServer.Core.Data
             await ctx.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Queries events for a dataset, applying the EPCIS query parameters in SQL so only
+        /// matching rows are loaded and deserialized.
+        /// </summary>
+        /// <remarks>
+        /// Every filter mirrors the semantics of <see cref="EPCISBaseDocument.FilterEvents"/>:
+        /// time bounds compare against the UTC EventTime/RecordTime columns, EQ_bizStep terms are
+        /// expanded to their accepted CBV URN and GS1 web URI forms, EQ_bizLocation and
+        /// EQ_transformationID compare against dedicated columns, and MATCH_* parameters run as
+        /// EXISTS subqueries over the per-product search rows. The eventTypes and EQ_action
+        /// parameters are not supported (FilterEvents ignores them too).
+        /// </remarks>
         public async Task<EPCISQueryDocument> QueryEventsAsync(string datasetId, EPCISQueryParameters parameters)
         {
             using var ctx = await _contextFactory.CreateDbContextAsync();
-
-            // Use the indexed search table to narrow candidates for EPC-based queries; precise
-            // filtering (time, bizStep formats, product types) is done in-memory by FilterEvents.
-            List<string>? candidateIds = await GetCandidateEventIdsAsync(ctx, datasetId, parameters);
+            var q = parameters.query;
 
             IQueryable<TraceabilityEvent> eventsQuery = ctx.Events.Where(e => e.DatasetId == datasetId);
-            if (candidateIds != null)
-            {
-                if (candidateIds.Count == 0)
-                {
-                    return BuildQueryDocument(new List<IEvent>(), new Dictionary<string, string>(), new List<string>());
-                }
-                eventsQuery = eventsQuery.Where(e => candidateIds.Contains(e.EventId));
-            }
+            eventsQuery = ApplyTimeFilters(eventsQuery, q);
+            eventsQuery = ApplyBizStepFilter(eventsQuery, q.EQ_bizStep);
+            eventsQuery = ApplyBizLocationFilter(eventsQuery, q.EQ_bizLocation);
+            eventsQuery = ApplyTransformationIdFilter(eventsQuery, q.EQ_transformationID);
+
+            // Each MATCH parameter is a separate ANDed condition, exactly like FilterEvents applies them.
+            eventsQuery = ApplyEpcMatchFilter(ctx, eventsQuery, datasetId, q.MATCH_anyEPC, restrictToReferenceAndChild: false);
+            eventsQuery = ApplyEpcMatchFilter(ctx, eventsQuery, datasetId, q.MATCH_anyEPCClass, restrictToReferenceAndChild: false);
+            eventsQuery = ApplyEpcMatchFilter(ctx, eventsQuery, datasetId, q.MATCH_epc, restrictToReferenceAndChild: true);
+            eventsQuery = ApplyEpcMatchFilter(ctx, eventsQuery, datasetId, q.MATCH_epcClass, restrictToReferenceAndChild: true);
 
             var records = await eventsQuery.ToListAsync();
 
             // Deserialize each stored single-event document and collect events + namespaces.
-            var allEvents = new List<IEvent>();
+            var events = new List<IEvent>();
             var namespaces = new Dictionary<string, string>();
             var contexts = new List<string>();
             foreach (var record in records)
             {
                 // Reading our own stored output; skip schema validation.
                 var doc = OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(record.EventJson, checkSchema: false);
-                allEvents.AddRange(doc.Events);
+                events.AddRange(doc.Events);
                 foreach (var ns in doc.Namespaces)
                 {
                     namespaces[ns.Key] = ns.Value;
@@ -175,11 +262,7 @@ namespace OpenTraceability.TestServer.Core.Data
                 }
             }
 
-            // Apply the full set of EPCIS query parameters precisely.
-            var container = new EPCISDocument { Events = allEvents };
-            var filtered = container.FilterEvents(parameters);
-
-            return BuildQueryDocument(filtered, namespaces, contexts);
+            return BuildQueryDocument(events, namespaces, contexts);
         }
 
         public async Task<IVocabularyElement?> GetMasterDataAsync(string datasetId, string identifier)
@@ -323,59 +406,197 @@ namespace OpenTraceability.TestServer.Core.Data
 
         // ---- helpers ----
 
-        private static async Task<List<string>?> GetCandidateEventIdsAsync(TraceabilityDbContext ctx, string datasetId, EPCISQueryParameters parameters)
+        /// <summary>
+        /// Applies the GE/LE/LT event-time and record-time bounds, mirroring the corresponding
+        /// rules in <see cref="EPCISBaseDocument.FilterEvents"/> (GE and the deprecated LE bounds
+        /// are inclusive, LT is exclusive, and events without an event time never match).
+        /// One deliberate difference: events ingested without a recordTime carry their ingestion
+        /// time in the RecordTime column, so record-time bounds match them by that timestamp
+        /// (FilterEvents would exclude them outright).
+        /// </summary>
+        /// <remarks>
+        /// SQLite stores DateTime as TEXT and compares it as a string, which is only
+        /// chronologically correct when both sides share the same time zone and format. Stored
+        /// EventTime/RecordTime values are written in UTC, so every parameter is normalized to
+        /// UTC before entering the predicate.
+        /// </remarks>
+        private static IQueryable<TraceabilityEvent> ApplyTimeFilters(IQueryable<TraceabilityEvent> eventsQuery, EPCISQuery q)
         {
-            var q = parameters.query;
-
-            var exactMatches = new List<string>();
-            var prefixes = new List<string>();
-
-            void AddTerms(List<string>? terms)
+            if (q.GE_eventTime != null)
             {
-                if (terms == null) return;
-                foreach (var t in terms)
+                DateTime geEventTime = q.GE_eventTime.Value.UtcDateTime;
+                eventsQuery = eventsQuery.Where(e => e.EventTime >= geEventTime);
+            }
+
+            // The deprecated LE_ bounds are still honored (inclusive), matching FilterEvents.
+#pragma warning disable CS0618
+            if (q.LE_eventTime != null)
+            {
+                DateTime leEventTime = q.LE_eventTime.Value.UtcDateTime;
+                eventsQuery = eventsQuery.Where(e => e.EventTime <= leEventTime);
+            }
+
+            if (q.LE_recordTime != null)
+            {
+                DateTime leRecordTime = q.LE_recordTime.Value.UtcDateTime;
+                eventsQuery = eventsQuery.Where(e => e.RecordTime <= leRecordTime);
+            }
+#pragma warning restore CS0618
+
+            if (q.LT_eventTime != null)
+            {
+                DateTime ltEventTime = q.LT_eventTime.Value.UtcDateTime;
+                eventsQuery = eventsQuery.Where(e => e.EventTime < ltEventTime);
+            }
+
+            if (q.GE_recordTime != null)
+            {
+                DateTime geRecordTime = q.GE_recordTime.Value.UtcDateTime;
+                eventsQuery = eventsQuery.Where(e => e.RecordTime >= geRecordTime);
+            }
+
+            if (q.LT_recordTime != null)
+            {
+                DateTime ltRecordTime = q.LT_recordTime.Value.UtcDateTime;
+                eventsQuery = eventsQuery.Where(e => e.RecordTime < ltRecordTime);
+            }
+
+            return eventsQuery;
+        }
+
+        /// <summary>
+        /// Applies the EQ_bizStep filter, mirroring the URI normalization of
+        /// <see cref="EPCISBaseDocument.FilterEvents"/>: each term is accepted in both its CBV URN
+        /// form and its GS1 web URI form, compared against the lowercased stored business step.
+        /// </summary>
+        private static IQueryable<TraceabilityEvent> ApplyBizStepFilter(IQueryable<TraceabilityEvent> eventsQuery, List<string>? bizSteps)
+        {
+            if (bizSteps == null || bizSteps.Count == 0)
+            {
+                return eventsQuery;
+            }
+
+            List<string> acceptedBizSteps = ExpandBizStepTerms(bizSteps);
+            return eventsQuery.Where(e => acceptedBizSteps.Contains(e.BizStep));
+        }
+
+        /// <summary>
+        /// Expands each EQ_bizStep term into the set of lowercased strings it may be stored as: a
+        /// bare term becomes a CBV URN, a GS1 web URI is converted to its CBV URN, and every CBV
+        /// URN also accepts the equivalent GS1 web URI form (stored values keep their source form).
+        /// </summary>
+        private static List<string> ExpandBizStepTerms(List<string> bizSteps)
+        {
+            const string webUriPrefix = "https://ref.gs1.org/cbv/bizstep-";
+            const string urnPrefix = "urn:epcglobal:cbv:bizstep:";
+
+            var accepted = new List<string>();
+            foreach (string term in bizSteps.Where(t => !string.IsNullOrWhiteSpace(t)))
+            {
+                string lowered = term.ToLower();
+
+                string urn;
+                if (!Uri.TryCreate(term, UriKind.Absolute, out Uri? _))
                 {
-                    if (string.IsNullOrWhiteSpace(t)) continue;
-                    if (t.EndsWith("*")) prefixes.Add(t.Substring(0, t.IndexOf('*')).ToLower());
-                    else exactMatches.Add(t.ToLower());
+                    urn = urnPrefix + lowered;
+                }
+                else if (lowered.StartsWith(webUriPrefix))
+                {
+                    urn = urnPrefix + lowered.Split('-').Last();
+                }
+                else
+                {
+                    urn = lowered;
+                }
+
+                accepted.Add(urn);
+                if (urn.StartsWith(urnPrefix))
+                {
+                    accepted.Add(webUriPrefix + urn.Substring(urnPrefix.Length));
                 }
             }
 
-            AddTerms(q.MATCH_anyEPC);
-            AddTerms(q.MATCH_epc);
-            AddTerms(q.MATCH_anyEPCClass);
-            AddTerms(q.MATCH_epcClass);
+            return accepted.Distinct().ToList();
+        }
 
-            // No EPC-based narrowing terms -> let the caller load all events for the dataset.
-            if (exactMatches.Count == 0 && prefixes.Count == 0)
+        /// <summary>
+        /// Applies the EQ_bizLocation filter against the event's business location GLN, mirroring
+        /// <see cref="EPCISBaseDocument.FilterEvents"/> (source/destination GLNs never match).
+        /// </summary>
+        private static IQueryable<TraceabilityEvent> ApplyBizLocationFilter(IQueryable<TraceabilityEvent> eventsQuery, List<Uri>? bizLocations)
+        {
+            if (bizLocations == null || bizLocations.Count == 0)
             {
-                return null;
+                return eventsQuery;
             }
 
-            var ids = new HashSet<string>();
+            List<string> glns = bizLocations.Select(u => u.ToString().ToLower()).ToList();
+            return eventsQuery.Where(e => glns.Contains(e.BizLocationGLN));
+        }
 
-            if (exactMatches.Count > 0)
+        /// <summary>
+        /// Applies the EQ_transformationID filter, mirroring <see cref="EPCISBaseDocument.FilterEvents"/>:
+        /// only transformation events carry a transformation ID, so all other events are excluded
+        /// as soon as this parameter is present.
+        /// </summary>
+        private static IQueryable<TraceabilityEvent> ApplyTransformationIdFilter(IQueryable<TraceabilityEvent> eventsQuery, List<string>? transformationIds)
+        {
+            if (transformationIds == null || transformationIds.Count == 0)
             {
-                var matchIds = await ctx.EventSearchEntries
-                    .Where(s => s.DatasetId == datasetId &&
-                                (exactMatches.Contains(s.EPC) || exactMatches.Contains(s.ProductGTIN)))
-                    .Select(s => s.EventId)
-                    .Distinct()
-                    .ToListAsync();
-                foreach (var id in matchIds) ids.Add(id);
+                return eventsQuery;
             }
 
-            foreach (var prefix in prefixes)
+            // Whitespace-only terms are dropped so they can never match the empty column value
+            // that non-transformation events carry.
+            List<string> ids = transformationIds.Where(t => !string.IsNullOrWhiteSpace(t)).Select(t => t.ToLower()).ToList();
+            return eventsQuery.Where(e => ids.Contains(e.TransformationId));
+        }
+
+        /// <summary>
+        /// Applies one MATCH_* parameter as an EXISTS subquery over the per-product search rows,
+        /// mirroring <see cref="EPC.Matches"/>: every term matches its exact lowercased string
+        /// form, and a term whose serial/lot component is the '*' wildcard also matches any
+        /// product sharing the same GTIN (or, when the term has no GTIN, products without one).
+        /// </summary>
+        private static IQueryable<TraceabilityEvent> ApplyEpcMatchFilter(TraceabilityDbContext ctx, IQueryable<TraceabilityEvent> eventsQuery, string datasetId, List<string>? matchTerms, bool restrictToReferenceAndChild)
+        {
+            if (matchTerms == null || matchTerms.Count == 0)
             {
-                var matchIds = await ctx.EventSearchEntries
-                    .Where(s => s.DatasetId == datasetId && s.EPC.StartsWith(prefix))
-                    .Select(s => s.EventId)
-                    .Distinct()
-                    .ToListAsync();
-                foreach (var id in matchIds) ids.Add(id);
+                return eventsQuery;
             }
 
-            return ids.ToList();
+            var exactEpcs = new List<string>();
+            var wildcardGtins = new List<string>();
+            bool matchProductsWithoutGtin = false;
+
+            foreach (string term in matchTerms)
+            {
+                EPC epc = new EPC(term);
+                exactEpcs.Add(epc.ToString());
+                if (epc.SerialLotNumber == "*")
+                {
+                    if (epc.GTIN != null)
+                    {
+                        wildcardGtins.Add(epc.GTIN.ToString().ToLower());
+                    }
+                    else
+                    {
+                        matchProductsWithoutGtin = true;
+                    }
+                }
+            }
+
+            // MATCH_epc / MATCH_epcClass only consider reference and child products; the MATCH_any
+            // variants consider products of every type, exactly like FilterEvents.
+            if (restrictToReferenceAndChild)
+            {
+                return eventsQuery.Where(e => ctx.EventSearchEntries.Any(s => s.DatasetId == datasetId && s.EventId == e.EventId && s.EPC != string.Empty
+                    && (s.EpcType == "reference" || s.EpcType == "child")
+                    && (exactEpcs.Contains(s.EPC) || wildcardGtins.Contains(s.ProductGTIN) || (matchProductsWithoutGtin && s.ProductGTIN == string.Empty))));
+            }
+
+            return eventsQuery.Where(e => ctx.EventSearchEntries.Any(s => s.DatasetId == datasetId && s.EventId == e.EventId && s.EPC != string.Empty
+                && (exactEpcs.Contains(s.EPC) || wildcardGtins.Contains(s.ProductGTIN) || (matchProductsWithoutGtin && s.ProductGTIN == string.Empty))));
         }
 
         // Standard GDST / CBV namespaces needed to serialize prefixed KDEs when the caller does not
@@ -449,9 +670,31 @@ namespace OpenTraceability.TestServer.Core.Data
                 EventJson = json,
                 BizStep = evt.BusinessStep?.ToString().ToLower() ?? string.Empty,
                 Action = evt.Action?.ToString()?.ToLower() ?? string.Empty,
-                EventTime = evt.EventTime?.ToUniversalTime(),
+                BizLocationGLN = GetBizLocationGLN(evt),
+                TransformationId = GetTransformationId(evt),
+                EventTime = evt.EventTime?.UtcDateTime,
                 RecordTime = evt.RecordTime?.UtcDateTime ?? DateTime.UtcNow
             };
+        }
+
+        /// <summary>
+        /// Gets the lowercased GLN of the event's business location, or empty when the event has none.
+        /// </summary>
+        private static string GetBizLocationGLN(IEvent evt)
+        {
+            return evt.Location?.GLN?.ToString().ToLower() ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Gets the lowercased transformation ID when the event is a transformation event, otherwise empty.
+        /// </summary>
+        private static string GetTransformationId(IEvent evt)
+        {
+            if (evt is ITransformationEvent transformationEvent && !string.IsNullOrWhiteSpace(transformationEvent.TransformationID))
+            {
+                return transformationEvent.TransformationID.ToLower();
+            }
+            return string.Empty;
         }
 
         private static EPCISQueryDocument BuildQueryDocument(List<IEvent> events, Dictionary<string, string> namespaces, List<string> contexts)
