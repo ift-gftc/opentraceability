@@ -50,9 +50,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Packed as the NuGet package readme (PackageReadmeFile). Deliberately not copied to build
+         output: CopyToOutputDirectory made it ride ProjectReferences into every consumer's bin/
+         and into the TestServer container image, where a packaging artefact has no business. -->
     <None Update="README_TESTSERVER.md">
       <PackagePath>\</PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>True</Pack>
     </None>
   </ItemGroup>

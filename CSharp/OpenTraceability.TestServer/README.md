@@ -19,6 +19,55 @@ docker build -f ./CSharp/OpenTraceability.TestServer/Dockerfile -t opentraceabil
 docker run --name opentraceability-testserver -e ASPNETCORE_ENVIRONMENT=Development -p 5000:8080 opentraceability-testserver
 ```
 
+The container runs as the non-root `app` user (uid 1654). `/app` and `/data` are made writable for
+it in the image, because the default connection string (`Data Source=epcis.db`) makes the server
+create its SQLite file in the working directory on first start. If you have a `testserver-data`
+volume from an earlier root-owned image, either discard it
+(`docker compose -f ./CSharp/docker-compose.yml down -v`) or re-own it
+(`docker run --rm -v testserver-data:/data busybox chown -R 1654:1654 /data`).
+
+# Docker build context
+The build context is the **repository root**, not this folder: `OpenTraceability.csproj` embeds four
+schema documents through `..\..\docs\` links, so `docs/` has to be reachable alongside `CSharp/`.
+
+That root carries roughly 1.1 GB the image never needs — `.git/`, `Java/`, `.vs/`, and the `bin`/`obj`
+of all eight C# projects. [`Dockerfile.dockerignore`](Dockerfile.dockerignore) trims it to ~1.5 MB.
+It is a **strict allowlist**: it denies `**`, then re-includes only the four projects in this
+project's `ProjectReference` closure plus the four embedded schema documents.
+
+- **Adding a `ProjectReference`, or a new `docs/` embedded resource?** Add the matching
+  `!CSharp/<project>/**` or `!docs/<path>` line. `DockerIgnoreClosureTests` (a plain unit test, no
+  daemon needed) fails in milliseconds and names what is missing; without the fix the container
+  build dies several minutes in with an opaque MSB3202.
+- **The filename is deliberate.** BuildKit reads `<dockerfile-name>.dockerignore` next to the
+  Dockerfile before falling back to the context root, which scopes these rules to this one image —
+  DiagnosticsTool builds from the same root context and still needs the whole tree.
+- **`appsettings.Development.json` is excluded from the context**, so it is not published into the
+  image. It sets `BaseURL` to `https://localhost:7213`; when it was baked in, a container run with
+  `ASPNETCORE_ENVIRONMENT=Development` emitted digital links pointing at that address. The server
+  now falls back to request-derived URLs. Local `dotnet run` / F5 are unaffected.
+
+`DockerBuildTests` asserts both halves of this automatically — that the build context holds only the
+closure, and that `/app` holds only runtime assets. To additionally cross-check a built image
+against your working tree's git-ignored files (worthwhile on a dev box with a fully built tree, and
+vacuous on a clean CI checkout):
+
+```powershell
+docker build --target build -f ./CSharp/OpenTraceability.TestServer/Dockerfile -t testserver-buildstage:probe .
+$ignored = git status --porcelain --ignored=matching |
+    Where-Object { $_ -like '!!*' } |
+    ForEach-Object { ($_ -replace '^!!\s+','').Trim('"').TrimEnd('/') } |
+    Where-Object { $_ -like 'CSharp/*' } |
+    ForEach-Object { '/src/' + ($_ -replace '^CSharp/','') }
+$inImage = docker run --rm --entrypoint find testserver-buildstage:probe /src -mindepth 1
+$leaked  = $inImage | Where-Object { $p = $_; ($ignored | Where-Object { $p -eq $_ -or $p.StartsWith($_ + '/') }).Count -gt 0 }
+if ($leaked) { "LEAKED:"; $leaked } else { "clean: no git-ignored path reached /src" }
+```
+
+Matches under `obj/` are expected — the container's own `dotnet restore` creates them. Host leakage
+is distinguishable by `Debug`, `net7.0` or `net9.0` path segments, since the container only builds
+Release for net10.0/netstandard2.0.
+
 # Datasets and Modules
 The Test Server isolates data into datasets, selected by the leading `/{datasetId}/` route segment
 (e.g. `GET /gdst-wildcatch/epcis/events`) or, on the bare routes, the `X-Dataset-Id` header

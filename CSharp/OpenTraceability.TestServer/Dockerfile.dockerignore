@@ -1,0 +1,91 @@
+# Ignore-file scoped to CSharp/OpenTraceability.TestServer/Dockerfile.
+#
+# WHY THIS FILENAME: BuildKit looks for "<dockerfile-filename>.dockerignore" next to the Dockerfile
+# before falling back to "<context-root>/.dockerignore". Naming it this way keeps these rules off
+# every other image built from this repository - DiagnosticsTool builds from the same
+# repository-root context and must keep seeing the whole tree. Requires BuildKit/buildx, which is
+# what docker build, docker compose build and docker/build-push-action all use; under
+# DOCKER_BUILDKIT=0 this file is not read and the whole repository is sent - slower, never wrong.
+#
+# WHY AN ALLOWLIST: the context is the repository root, because OpenTraceability.csproj embeds
+# schema files through ..\..\docs\ links that must resolve to /docs. The root carries ~1.1 GB the
+# image never needs (.git, Java/, .vs/, bin/obj of eight projects, a local epcis.db). Everything is
+# denied first; only the TestServer's four-project build closure and the four embedded schema
+# documents are re-included.
+#
+# PATTERN SEMANTICS - two rules that are easy to get wrong:
+#  1. Patterns are relative to the BUILD CONTEXT ROOT, never to this folder. Hence every line
+#     starts with CSharp/ or docs/.
+#  2. Last match wins, so the re-exclusions must stay below the re-inclusions; and each
+#     re-inclusion must spell out its parent path literally. A "!**/Foo" pattern would not work:
+#     the walker prunes CSharp/ before it ever reaches Foo.
+#
+# IF THE BUILD FAILS with MSB3202 or a missing EmbeddedResource, a ProjectReference or docs/ file
+# was added and must be re-included below. DockerIgnoreClosureTests asserts this list stays in
+# sync with the project graph and names what is missing.
+
+# --- Deny everything ---------------------------------------------------------------------
+**
+
+# --- Re-include the TestServer build closure (4 of the 8 projects under CSharp/) -----------
+# OpenTraceability.TestServer -> OpenTraceability.TestServerPackage -> OpenTraceability.GDST
+#                             -> OpenTraceability (leaf)
+!CSharp/OpenTraceability/**
+!CSharp/OpenTraceability.GDST/**
+!CSharp/OpenTraceability.TestServerPackage/**
+!CSharp/OpenTraceability.TestServer/**
+
+# Repository-wide MSBuild/NuGet configuration. None of these exist today; they are listed so that
+# adding one later changes the container build the same way it changes a local build, instead of
+# silently applying only outside Docker.
+!global.json
+!NuGet.config
+!nuget.config
+!Directory.Build.props
+!Directory.Build.targets
+!Directory.Packages.props
+!.editorconfig
+!CSharp/global.json
+!CSharp/NuGet.config
+!CSharp/nuget.config
+!CSharp/Directory.Build.props
+!CSharp/Directory.Build.targets
+!CSharp/Directory.Packages.props
+!CSharp/.editorconfig
+
+# --- The four schema documents embedded by OpenTraceability.csproj -------------------------
+!docs/epcis/epcis_schema.json
+!docs/gdst/gdst_json_schema.json
+!docs/gdst/gdst_openapi.yaml
+!docs/beefleather/beefleather_openapi.yaml
+
+# --- Re-exclude build, IDE and local artefacts inside the kept trees. Must stay last. ------
+CSharp/**/bin
+CSharp/**/obj
+CSharp/**/.vs
+CSharp/**/TestResults
+CSharp/**/*.user
+CSharp/**/*.suo
+CSharp/**/*.lscache
+CSharp/**/*.pubxml
+CSharp/**/.DS_Store
+CSharp/OpenTraceability.TestServer/Properties/PublishProfiles
+CSharp/OpenTraceability.TestServer/Properties/ServiceDependencies
+CSharp/**/launchSettings.json
+
+# Local SQLite database left behind by running the server outside Docker (~7 MB with -wal/-shm).
+CSharp/**/*.db
+CSharp/**/*.db-shm
+CSharp/**/*.db-wal
+
+# Developer-only configuration. Keeping it out of the context keeps it out of the published image;
+# see the "Docker build context" section of README.md for the BaseURL behaviour this changes.
+CSharp/**/appsettings.Development.json
+
+# Package readme files. They are packed into the nupkgs straight from source and are never an input
+# to a build, so they have no business in the image.
+CSharp/**/*.md
+
+# The Dockerfile and this file are read by the client from disk, not from the transferred context,
+# so excluding them changes nothing except keeping them out of /src.
+CSharp/**/Dockerfile*
