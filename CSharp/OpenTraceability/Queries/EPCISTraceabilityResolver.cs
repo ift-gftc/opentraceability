@@ -125,23 +125,21 @@ namespace OpenTraceability.Queries
 
             var response = await client.SendAsync(request);
 
+            // The body is read before the success check so failure responses are captured in the
+            // diagnostics too; failed requests are the ones diagnostics consumers most need to see.
+            string json = await response.Content.ReadAsStringAsync();
+
             // DIAGNOSTICS: Execute the rule to validate the Http Headers.
             if (report?.CurrentRequest != null)
             {
                 report.CurrentRequest.HttpResponse = response;
                 report.CurrentRequest.End = DateTime.UtcNow;
+                report.CurrentRequest.ResponseBody = json;
                 await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkHttpResponseRule>(response);
             }
 
             if (response.IsSuccessStatusCode)
             {
-                string json = await response.Content.ReadAsStringAsync();
-
-                if (report?.CurrentRequest != null)
-                {
-                    report.CurrentRequest.ResponseBody = json;
-                }
-
                 if (useLinkset)
                 {
                     // DIAGNOSTICS: Validate the linkset shape.
@@ -430,6 +428,10 @@ namespace OpenTraceability.Queries
                 {
                     report.CurrentRequest.HttpResponse = response;
                     report.CurrentRequest.End = DateTime.UtcNow;
+
+                    // The body is recorded before the success check so failure responses are captured too;
+                    // failed requests are the ones diagnostics consumers most need to see.
+                    report.CurrentRequest.ResponseBody = responseBody ?? string.Empty;
                     await report.CurrentRequest.ExecuteRuleAsync<EPCISHttpResponseRule>(response);
                 }
 
@@ -438,7 +440,6 @@ namespace OpenTraceability.Queries
                     // DIAGNOSTICS: Execute the rule to validate the response schema.
                     if (report != null && responseBody != null)
                     {
-                        report.CurrentRequest.ResponseBody = responseBody;
                         await report.CurrentRequest.ExecuteRuleAsync<EPCISResponseSchemaRule>(responseBody, options.Format, options.Version);
                     }
 
@@ -465,6 +466,13 @@ namespace OpenTraceability.Queries
             {
                 if (report != null)
                 {
+                    // Requests that die before a response (connection refused, timeout) never hit the
+                    // response block above, so stamp the end time here to keep durations meaningful.
+                    if (report.CurrentRequest.End == default)
+                    {
+                        report.CurrentRequest.End = DateTime.UtcNow;
+                    }
+
                     report.CurrentRequest.AddException(ex);
                 }
 

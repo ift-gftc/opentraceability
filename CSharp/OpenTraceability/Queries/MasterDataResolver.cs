@@ -297,6 +297,7 @@ namespace OpenTraceability.Queries
                 if (report?.CurrentRequest != null)
                 {
                     report.CurrentRequest.HttpResponse = response;
+                    report.CurrentRequest.End = DateTime.UtcNow;
                     await report.CurrentRequest.ExecuteRuleAsync<MasterDataHttpResponseRule>(response);
                 }
 
@@ -364,6 +365,7 @@ namespace OpenTraceability.Queries
                                 if (report?.CurrentRequest != null)
                                 {
                                     report.CurrentRequest.HttpResponse = response;
+                                    report.CurrentRequest.End = DateTime.UtcNow;
                                     await report.CurrentRequest.ExecuteRuleAsync<MasterDataHttpResponseRule>(response);
                                 }
 
@@ -414,6 +416,17 @@ namespace OpenTraceability.Queries
                             }
                             catch (Exception ex)
                             {
+                                // DIAGNOSTICS: Record the failure so it is visible in the report, not just the console.
+                                if (report?.CurrentRequest != null)
+                                {
+                                    if (report.CurrentRequest.End == default)
+                                    {
+                                        report.CurrentRequest.End = DateTime.UtcNow;
+                                    }
+
+                                    report.CurrentRequest.AddException(ex);
+                                }
+
                                 Console.WriteLine(ex);
                             }
                         }
@@ -430,6 +443,13 @@ namespace OpenTraceability.Queries
             {
                 if (report != null && report.CurrentRequest != null)
                 {
+                    // Requests that die before a response (connection refused, timeout) never hit the
+                    // response block above, so stamp the end time here to keep durations meaningful.
+                    if (report.CurrentRequest.End == default)
+                    {
+                        report.CurrentRequest.End = DateTime.UtcNow;
+                    }
+
                     report.CurrentRequest.AddException(ex);
                 }
 
