@@ -95,6 +95,131 @@ namespace OpenTraceability.Utility
                 .ToList();
         }
 
+        /// <summary>
+        /// Validates a document and reports each failure against the location that caused it.
+        ///
+        /// Unlike <see cref="IsValidAsync"/>, this keeps the instance location and the offending value
+        /// that the validator calculates, grouping every reason under the element it belongs to.
+        /// </summary>
+        public static async Task<JsonSchemaValidationResult> ValidateAsync(string jsonStr, string schemaURL)
+        {
+            if (string.IsNullOrWhiteSpace(jsonStr))
+                throw new ArgumentException("JSON cannot be null or empty.", nameof(jsonStr));
+
+            if (string.IsNullOrWhiteSpace(schemaURL))
+                throw new ArgumentException("Schema URL cannot be null or empty.", nameof(schemaURL));
+
+            JsonSchema schema = await GetSchemaAsync(schemaURL).ConfigureAwait(false);
+
+            using JsonDocument jDoc = JsonDocument.Parse(jsonStr);
+
+            // The hierarchical format keeps the parent/child relationship between evaluation nodes.
+            // The list format flattens it away, and that relationship is what tells a real failure
+            // apart from a branch that did not matter.
+            EvaluationResults results = schema.Evaluate(
+                jDoc.RootElement,
+                new EvaluationOptions
+                {
+                    OutputFormat = OutputFormat.Hierarchical
+                });
+
+            if (results.IsValid)
+                return JsonSchemaValidationResult.Valid;
+
+            var reasonsByLocation = new Dictionary<string, List<JsonSchemaValidationReason>>(StringComparer.Ordinal);
+            var locationOrder = new List<string>();
+
+            CollectReasons(results, reasonsByLocation, locationOrder);
+
+            var errors = new List<JsonSchemaValidationError>(locationOrder.Count);
+
+            foreach (string location in locationOrder)
+            {
+                errors.Add(new JsonSchemaValidationError(
+                    location,
+                    ReadValueAt(jDoc.RootElement, location),
+                    reasonsByLocation[location]));
+            }
+
+            return new JsonSchemaValidationResult(errors, errors.Count);
+        }
+
+        private static void CollectReasons(
+            EvaluationResults node,
+            Dictionary<string, List<JsonSchemaValidationReason>> reasonsByLocation,
+            List<string> locationOrder)
+        {
+            if (node.Errors != null && node.Errors.Count > 0)
+            {
+                string location = node.InstanceLocation.ToString();
+
+                if (!reasonsByLocation.TryGetValue(location, out List<JsonSchemaValidationReason> reasons))
+                {
+                    reasons = new List<JsonSchemaValidationReason>();
+                    reasonsByLocation[location] = reasons;
+                    locationOrder.Add(location);
+                }
+
+                foreach (var error in node.Errors)
+                {
+                    reasons.Add(new JsonSchemaValidationReason(error.Key, error.Value));
+                }
+            }
+
+            if (node.Details == null)
+                return;
+
+            foreach (EvaluationResults child in node.Details)
+            {
+                CollectReasons(child, reasonsByLocation, locationOrder);
+            }
+        }
+
+        /// <summary>
+        /// Resolves a JSON Pointer against the document and returns the value as text. Returns null
+        /// for the root, for objects and arrays, or when the pointer does not resolve.
+        /// </summary>
+        private static string? ReadValueAt(JsonElement root, string pointer)
+        {
+            if (string.IsNullOrEmpty(pointer))
+                return null;
+
+            JsonElement current = root;
+
+            foreach (string rawSegment in pointer.Split('/'))
+            {
+                if (rawSegment.Length == 0)
+                    continue;
+
+                // JSON Pointer escaping: "~1" is a slash, "~0" is a tilde. Order matters.
+                string segment = rawSegment.Replace("~1", "/").Replace("~0", "~");
+
+                if (current.ValueKind == JsonValueKind.Object)
+                {
+                    if (!current.TryGetProperty(segment, out JsonElement property))
+                        return null;
+
+                    current = property;
+                }
+                else if (current.ValueKind == JsonValueKind.Array && int.TryParse(segment, out int index))
+                {
+                    if (index < 0 || index >= current.GetArrayLength())
+                        return null;
+
+                    current = current.EnumerateArray().ElementAt(index);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            if (current.ValueKind == JsonValueKind.Object || current.ValueKind == JsonValueKind.Array)
+                return null;
+
+            return current.ToString();
+        }
+
         private static Task<JsonSchema> GetSchemaAsync(string schemaURL)
         {
             if (_builtInSchemas.TryGetValue(schemaURL, out JsonSchema builtInSchema))
