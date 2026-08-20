@@ -47,4 +47,18 @@ public class DiagnosticsValidationResult
     /// The message of the validation result.
     /// </summary>
     public string Message { get; set; } = string.Empty;
+
+    /// <summary>
+    /// JSON Pointer to the element that caused the result, for example "/bizStep". Empty for the
+    /// document root, null when the result is not tied to one element.
+    ///
+    /// The message already names the location. This carries it separately so a caller can group,
+    /// filter or link to it without parsing text.
+    /// </summary>
+    public string? InstanceLocation { get; set; }
+
+    /// <summary>
+    /// The value found at <see cref="InstanceLocation"/>, when it is a scalar.
+    /// </summary>
+    public string? Value { get; set; }
 }

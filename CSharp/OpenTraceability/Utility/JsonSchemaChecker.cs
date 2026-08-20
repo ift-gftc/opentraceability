@@ -64,56 +64,50 @@ namespace OpenTraceability.Utility
             };
         }
 
+        /// <summary>
+        /// Validates a document and returns one entry per offending element, naming the element, the
+        /// value found there and every reason it was rejected. An empty list means the document is
+        /// valid.
+        ///
+        /// This is a rendering of <see cref="ValidateAsync"/>. Callers that need the parts separately
+        /// should use that instead of parsing these strings.
+        /// </summary>
         public static async Task<List<string>> IsValidAsync(string jsonStr, string schemaURL)
         {
-            if (string.IsNullOrWhiteSpace(jsonStr))
-                throw new ArgumentException("JSON cannot be null or empty.", nameof(jsonStr));
+            JsonSchemaValidationResult result = await ValidateAsync(jsonStr, schemaURL).ConfigureAwait(false);
 
-            if (string.IsNullOrWhiteSpace(schemaURL))
-                throw new ArgumentException("Schema URL cannot be null or empty.", nameof(schemaURL));
+            var messages = new List<string>(result.Errors.Count + 1);
 
-            JsonSchema schema = await GetSchemaAsync(schemaURL).ConfigureAwait(false);
+            foreach (JsonSchemaValidationError error in result.Errors)
+            {
+                messages.Add(error.ToString());
+            }
 
-            using JsonDocument jDoc = JsonDocument.Parse(jsonStr);
+            if (result.OmittedErrorCount > 0)
+            {
+                string plural = result.OmittedErrorCount == 1 ? "error" : "errors";
+                messages.Add($"... and {result.OmittedErrorCount} more {plural} not shown.");
+            }
 
-            EvaluationResults results = schema.Evaluate(
-                jDoc.RootElement,
-                new EvaluationOptions
-                {
-                    OutputFormat = OutputFormat.List
-                });
-
-            if (results.IsValid)
-                return new List<string>();
-
-            IEnumerable<string> rootErrors =
-                results.Errors?.Select(e => $"{e.Key} :: {e.Value}")
-                ?? Enumerable.Empty<string>();
-
-            IEnumerable<string> detailErrors =
-                results.Details?
-                    .SelectMany(GetErrorsRecursive)
-                ?? Enumerable.Empty<string>();
-
-            return rootErrors
-                .Concat(detailErrors)
-                .Distinct()
-                .ToList();
+            return messages;
         }
 
         /// <summary>
         /// Validates a document and reports each failure against the location that caused it.
         ///
-        /// Unlike <see cref="IsValidAsync"/>, this keeps the instance location and the offending value
-        /// that the validator calculates, groups every reason under the element it belongs to, and
-        /// discards the failures that did not affect the outcome.
+        /// Keeps the instance location and the offending value that the validator calculates, groups
+        /// every reason under the element it belongs to, and discards the failures that did not
+        /// affect the outcome.
         /// </summary>
         /// <param name="maxErrors">
         /// How many errors to report at most. The full count is kept in
         /// <see cref="JsonSchemaValidationResult.TotalErrorCount"/> so callers can say how many were
         /// left out.
         /// </param>
-        public static async Task<JsonSchemaValidationResult> ValidateAsync(string jsonStr, string schemaURL, int maxErrors = DefaultMaxErrors)
+        public static async Task<JsonSchemaValidationResult> ValidateAsync(
+            string jsonStr,
+            string schemaURL,
+            int maxErrors = DefaultMaxErrors)
         {
             if (string.IsNullOrWhiteSpace(jsonStr))
                 throw new ArgumentException("JSON cannot be null or empty.", nameof(jsonStr));
@@ -302,19 +296,6 @@ namespace OpenTraceability.Utility
             };
 
             return JsonSchema.FromText(schemaStr, buildOptions);
-        }
-
-        private static IEnumerable<string> GetErrorsRecursive(EvaluationResults result)
-        {
-            IEnumerable<string> ownErrors =
-                result.Errors?.Select(e => $"{e.Key} :: {e.Value}")
-                ?? Enumerable.Empty<string>();
-
-            IEnumerable<string> childErrors =
-                result.Details?.SelectMany(GetErrorsRecursive)
-                ?? Enumerable.Empty<string>();
-
-            return ownErrors.Concat(childErrors);
         }
     }
 }

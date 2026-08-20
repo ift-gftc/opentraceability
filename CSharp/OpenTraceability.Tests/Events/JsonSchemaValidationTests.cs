@@ -195,17 +195,63 @@ namespace OpenTraceability.Tests.Events
         }
 
         /// <summary>
-        /// The change stays additive. The existing string API has to behave exactly as before until
-        /// it is rewritten in its own commit.
+        /// The reported case, rendered. One entry per offending field instead of five keyword
+        /// fragments, two of which named fields that were not wrong.
         /// </summary>
         [Test]
-        public async Task IsValidAsync_BrokenEvent_IsUnchanged()
+        public async Task IsValidAsync_BrokenEvent_ReportsOneEntryPerOffendingField()
         {
             string json = OpenTraceabilityTests.ReadTestData(BrokenEventFile);
 
             List<string> errors = await JsonSchemaChecker.IsValidAsync(json, GdstSchemaKey);
 
-            Assert.That(errors, Has.Count.EqualTo(5));
+            Assert.That(errors, Has.Count.EqualTo(RealFailureCount));
+        }
+
+        [Test]
+        public async Task IsValidAsync_BrokenEvent_NamesTheFieldAndTheValue()
+        {
+            string json = OpenTraceabilityTests.ReadTestData(BrokenEventFile);
+
+            List<string> errors = await JsonSchemaChecker.IsValidAsync(json, GdstSchemaKey);
+            string rendered = string.Join("\n", errors);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(rendered, Does.Contain("/bizStep"));
+                Assert.That(rendered, Does.Contain("urn:epcglobal:cbv:bizstep:commissioning"));
+                Assert.That(rendered, Does.Contain("/disposition"));
+                Assert.That(rendered, Does.Contain("urn:epcglobal:cbv:disp:active"));
+            });
+        }
+
+        /// <summary>
+        /// bizStep and disposition produce the same sentence from the same keyword. The old
+        /// implementation ran Distinct over the whole document, so the two collapsed into one line
+        /// and correcting either field appeared to change nothing.
+        /// </summary>
+        [Test]
+        public async Task IsValidAsync_BrokenEvent_DoesNotMergeTwoFieldsIntoOneLine()
+        {
+            string json = OpenTraceabilityTests.ReadTestData(BrokenEventFile);
+
+            List<string> errors = await JsonSchemaChecker.IsValidAsync(json, GdstSchemaKey);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(errors.Count(e => e.Contains("/bizStep")), Is.EqualTo(1));
+                Assert.That(errors.Count(e => e.Contains("/disposition")), Is.EqualTo(1));
+            });
+        }
+
+        [Test]
+        public async Task IsValidAsync_ValidEvent_ReportsNothing()
+        {
+            string json = OpenTraceabilityTests.ReadTestData(ValidEventFile);
+
+            List<string> errors = await JsonSchemaChecker.IsValidAsync(json, GdstSchemaKey);
+
+            Assert.That(errors, Is.Empty);
         }
     }
 }

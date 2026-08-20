@@ -106,17 +106,8 @@ public class EPCISResponseSchemaRule : IDiagnosticsRequestRule
             {
                 if (version == EPCISVersion.V2)
                 {
-                    var schemaErrors = await JsonSchemaChecker.IsValidAsync(content, "https://ref.gs1.org/standards/epcis/epcis-json-schema.json");
-                    foreach (var err in schemaErrors)
-                    {
-                        results.Add(new DiagnosticsValidationResult
-                        {
-                            Level = LogLevel.Warning,
-                            Type = DiagnosticsValidationType.SchemaError,
-                            RuleKey = Key,
-                            Message = $"EPCIS JSON schema validation warning: {err}"
-                        });
-                    }
+                    var validation = await JsonSchemaChecker.ValidateAsync(content, "https://ref.gs1.org/standards/epcis/epcis-json-schema.json");
+                    SchemaValidationResultMapper.AddSchemaWarnings(results, validation, Key, "EPCIS JSON schema validation warning");
                 }
             }
             else if (format == EPCISDataFormat.XML)
