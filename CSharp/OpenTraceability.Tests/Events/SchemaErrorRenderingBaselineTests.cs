@@ -51,79 +51,6 @@ namespace OpenTraceability.Tests.Events
         }
 
         /// <summary>
-        /// Dumps what JsonSchema.Net knows about the same document and labels every error node with
-        /// the reason it is reported, so the noise can be counted rather than estimated.
-        ///
-        /// Labels:
-        ///   if-dispatch     - the failure sits under an "if" keyword. A failing "if" is how a schema
-        ///                     selects a branch, not a defect in the document.
-        ///   ancestor-passed - an ancestor evaluation succeeded, so this branch did not affect the
-        ///                     outcome. Typical of a losing "anyOf" branch.
-        ///   unresolved      - neither rule applies. These are the real failures.
-        /// </summary>
-        [Test]
-        public void Probe_ClassifyErrorNodes()
-        {
-            EvaluationResults results = Evaluate(BrokenEventFile);
-
-            var counts = new Dictionary<string, int>
-            {
-                ["if-dispatch"] = 0,
-                ["ancestor-passed"] = 0,
-                ["unresolved"] = 0
-            };
-
-            var tree = new StringBuilder();
-
-            void Walk(EvaluationResults node, bool anyAncestorValid, int depth)
-            {
-                bool hasErrors = node.Errors != null && node.Errors.Count > 0;
-
-                if (hasErrors)
-                {
-                    string label = Classify(node, anyAncestorValid);
-                    counts[label]++;
-
-                    string indent = new string(' ', depth * 2);
-                    tree.AppendLine($"{indent}[{label}] instance={node.InstanceLocation} evaluation={node.EvaluationPath}");
-
-                    foreach (var error in node.Errors!)
-                    {
-                        tree.AppendLine($"{indent}    {error.Key} :: {error.Value}");
-                    }
-                }
-
-                if (node.Details == null)
-                {
-                    return;
-                }
-
-                foreach (EvaluationResults child in node.Details)
-                {
-                    Walk(child, anyAncestorValid || node.IsValid, depth + 1);
-                }
-            }
-
-            Walk(results, anyAncestorValid: false, depth: 0);
-
-            int total = counts.Values.Sum();
-            int noise = counts["if-dispatch"] + counts["ancestor-passed"];
-
-            var report = new StringBuilder();
-            report.AppendLine($"nodes carrying errors : {total}");
-            report.AppendLine($"  if-dispatch         : {counts["if-dispatch"]}");
-            report.AppendLine($"  ancestor-passed     : {counts["ancestor-passed"]}");
-            report.AppendLine($"  unresolved          : {counts["unresolved"]}");
-            report.AppendLine($"noise share           : {noise} of {total}");
-            report.AppendLine();
-            report.Append(tree);
-
-            Save("msc180_classified.txt", report.ToString());
-
-            Assert.That(results.IsValid, Is.False);
-        }
-
-        /// <summary>
         /// Control case. The same event with the three genuine defects fixed - CBV shorthand for
         /// bizStep and disposition, and the missing @context - must validate cleanly.
         ///
@@ -140,34 +67,6 @@ namespace OpenTraceability.Tests.Events
             Save("msc180_control_valid.txt", string.Join(Environment.NewLine, errors));
 
             Assert.That(errors, Is.Empty);
-        }
-
-        private static string Classify(EvaluationResults node, bool anyAncestorValid)
-        {
-            if (node.EvaluationPath.ToString().Split('/').Contains("if"))
-            {
-                return "if-dispatch";
-            }
-
-            return anyAncestorValid ? "ancestor-passed" : "unresolved";
-        }
-
-        private static EvaluationResults Evaluate(string fixtureFile)
-        {
-            string json = OpenTraceabilityTests.ReadTestData(fixtureFile);
-
-            string schemaText = new EmbeddedResourceLoader()
-                .ReadString("OpenTraceability", GdstSchemaResource);
-
-            JsonSchema schema = JsonSchema.FromText(
-                schemaText,
-                new BuildOptions { SchemaRegistry = new SchemaRegistry() });
-
-            using JsonDocument document = JsonDocument.Parse(json);
-
-            return schema.Evaluate(
-                document.RootElement,
-                new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
         }
 
         private static void Save(string fileName, string content)
