@@ -18,6 +18,12 @@ namespace OpenTraceability.Utility
         private const string GdstSchemaKey = "GDST";
         private const string EpcisBaseSchemaKey = "EPCIS_BASE";
 
+        /// <summary>
+        /// Upper bound on how many errors a single validation reports. High enough that a realistic
+        /// document is never truncated, low enough that a pathological one cannot flood a response.
+        /// </summary>
+        public const int DefaultMaxErrors = 50;
+
         private static readonly HttpClient _httpClient = new HttpClient();
 
         private static readonly IReadOnlyDictionary<string, JsonSchema> _builtInSchemas;
@@ -99,15 +105,24 @@ namespace OpenTraceability.Utility
         /// Validates a document and reports each failure against the location that caused it.
         ///
         /// Unlike <see cref="IsValidAsync"/>, this keeps the instance location and the offending value
-        /// that the validator calculates, grouping every reason under the element it belongs to.
+        /// that the validator calculates, groups every reason under the element it belongs to, and
+        /// discards the failures that did not affect the outcome.
         /// </summary>
-        public static async Task<JsonSchemaValidationResult> ValidateAsync(string jsonStr, string schemaURL)
+        /// <param name="maxErrors">
+        /// How many errors to report at most. The full count is kept in
+        /// <see cref="JsonSchemaValidationResult.TotalErrorCount"/> so callers can say how many were
+        /// left out.
+        /// </param>
+        public static async Task<JsonSchemaValidationResult> ValidateAsync(string jsonStr, string schemaURL, int maxErrors = DefaultMaxErrors)
         {
             if (string.IsNullOrWhiteSpace(jsonStr))
                 throw new ArgumentException("JSON cannot be null or empty.", nameof(jsonStr));
 
             if (string.IsNullOrWhiteSpace(schemaURL))
                 throw new ArgumentException("Schema URL cannot be null or empty.", nameof(schemaURL));
+
+            if (maxErrors < 1)
+                throw new ArgumentOutOfRangeException(nameof(maxErrors), "At least one error must be reported.");
 
             JsonSchema schema = await GetSchemaAsync(schemaURL).ConfigureAwait(false);
 
@@ -131,9 +146,11 @@ namespace OpenTraceability.Utility
 
             CollectReasons(results, anyAncestorValid: false, reasonsByLocation, locationOrder);
 
-            var errors = new List<JsonSchemaValidationError>(locationOrder.Count);
+            // Everything is collected before the cap is applied, so the total stays truthful.
+            int totalErrorCount = locationOrder.Count;
+            var errors = new List<JsonSchemaValidationError>(Math.Min(totalErrorCount, maxErrors));
 
-            foreach (string location in locationOrder)
+            foreach (string location in locationOrder.Take(maxErrors))
             {
                 errors.Add(new JsonSchemaValidationError(
                     location,
@@ -141,7 +158,7 @@ namespace OpenTraceability.Utility
                     reasonsByLocation[location]));
             }
 
-            return new JsonSchemaValidationResult(errors, errors.Count);
+            return new JsonSchemaValidationResult(errors, totalErrorCount);
         }
 
         private static void CollectReasons(

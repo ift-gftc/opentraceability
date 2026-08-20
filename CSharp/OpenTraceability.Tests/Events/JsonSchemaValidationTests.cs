@@ -3,7 +3,7 @@
 namespace OpenTraceability.Tests.Events
 {
     /// <summary>
-    /// MSC-180. Tests for the structured validation API.
+    /// Tests for the structured validation API.
     ///
     /// Unlike the characterization tests, these do assert correctness.
     /// </summary>
@@ -15,6 +15,9 @@ namespace OpenTraceability.Tests.Events
         private const string ValidEventFile = "msc180_event_valid.jsonld";
         private const string GdstSchemaKey = "GDST";
         private const string DocumentRoot = "";
+
+        /// <summary>The reported event has three genuinely wrong fields.</summary>
+        private const int RealFailureCount = 3;
 
         [Test]
         public async Task Validate_BrokenEvent_ReportsTheOffendingFieldPaths()
@@ -138,7 +141,57 @@ namespace OpenTraceability.Tests.Events
             {
                 Assert.That(result.IsValid, Is.True);
                 Assert.That(result.Errors, Is.Empty);
+                Assert.That(result.TotalErrorCount, Is.Zero);
+                Assert.That(result.OmittedErrorCount, Is.Zero);
             });
+        }
+
+        /// <summary>
+        /// A realistic document must never be truncated by the default cap.
+        /// </summary>
+        [Test]
+        public async Task Validate_BrokenEvent_IsNotTruncatedByTheDefaultCap()
+        {
+            string json = OpenTraceabilityTests.ReadTestData(BrokenEventFile);
+
+            JsonSchemaValidationResult result = await JsonSchemaChecker.ValidateAsync(json, GdstSchemaKey);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors, Has.Count.EqualTo(RealFailureCount));
+                Assert.That(result.TotalErrorCount, Is.EqualTo(RealFailureCount));
+                Assert.That(result.OmittedErrorCount, Is.Zero);
+            });
+        }
+
+        /// <summary>
+        /// When the cap bites, the total has to stay truthful so a caller can report how many errors
+        /// were left out rather than silently hiding them.
+        /// </summary>
+        [Test]
+        public async Task Validate_BrokenEvent_KeepsTheTrueTotalWhenCapped()
+        {
+            string json = OpenTraceabilityTests.ReadTestData(BrokenEventFile);
+
+            JsonSchemaValidationResult result = await JsonSchemaChecker.ValidateAsync(json, GdstSchemaKey, maxErrors: 1);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors, Has.Count.EqualTo(1));
+                Assert.That(result.TotalErrorCount, Is.EqualTo(RealFailureCount));
+                Assert.That(result.OmittedErrorCount, Is.EqualTo(RealFailureCount - 1));
+                Assert.That(result.IsValid, Is.False);
+            });
+        }
+
+        [TestCase(0)]
+        [TestCase(-1)]
+        public void Validate_RejectsANonPositiveCap(int maxErrors)
+        {
+            string json = OpenTraceabilityTests.ReadTestData(BrokenEventFile);
+
+            Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+                async () => await JsonSchemaChecker.ValidateAsync(json, GdstSchemaKey, maxErrors));
         }
 
         /// <summary>
@@ -156,4 +209,3 @@ namespace OpenTraceability.Tests.Events
         }
     }
 }
-

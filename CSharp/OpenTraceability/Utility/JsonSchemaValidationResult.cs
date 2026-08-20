@@ -97,5 +97,10 @@ namespace OpenTraceability.Utility
         /// How many errors were found in total. Equal to Errors.Count unless a cap was applied.
         /// </summary>
         public int TotalErrorCount { get; }
+
+        /// <summary>
+        /// How many errors were left out by the cap. Zero unless the document exceeded it.
+        /// </summary>
+        public int OmittedErrorCount => TotalErrorCount - Errors.Count;
     }
 }
