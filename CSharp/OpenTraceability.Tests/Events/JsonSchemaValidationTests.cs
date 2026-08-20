@@ -14,6 +14,7 @@ namespace OpenTraceability.Tests.Events
         private const string BrokenEventFile = "msc180_event_broken.jsonld";
         private const string ValidEventFile = "msc180_event_valid.jsonld";
         private const string GdstSchemaKey = "GDST";
+        private const string DocumentRoot = "";
 
         [Test]
         public async Task Validate_BrokenEvent_ReportsTheOffendingFieldPaths()
@@ -66,6 +67,66 @@ namespace OpenTraceability.Tests.Events
             });
         }
 
+        /// <summary>
+        /// The reported event has exactly three defects: bizStep and disposition use full CBV URIs
+        /// where the schema wants the shorthand, and @context is missing. Everything else the
+        /// validator emits comes from branches that did not affect the outcome.
+        /// </summary>
+        [Test]
+        public async Task Validate_BrokenEvent_ReportsOnlyTheRealFailures()
+        {
+            string json = OpenTraceabilityTests.ReadTestData(BrokenEventFile);
+
+            JsonSchemaValidationResult result = await JsonSchemaChecker.ValidateAsync(json, GdstSchemaKey);
+
+            List<string> locations = result.Errors.Select(e => e.InstanceLocation).ToList();
+
+            Assert.That(locations, Is.EquivalentTo(new[] { "/bizStep", "/disposition", DocumentRoot }));
+        }
+
+        /// <summary>
+        /// These fields are correct in the reported event. They were previously reported because the
+        /// losing side of an anyOf, and every "if" the schema used to select the event type, were
+        /// harvested alongside the real failures.
+        /// </summary>
+        [TestCase("/type")]
+        [TestCase("/action")]
+        [TestCase("/eventTime")]
+        [TestCase("/eventTimeZoneOffset")]
+        [TestCase("/epcList")]
+        [TestCase("/quantityList")]
+        public async Task Validate_BrokenEvent_DoesNotReportValidFields(string location)
+        {
+            string json = OpenTraceabilityTests.ReadTestData(BrokenEventFile);
+
+            JsonSchemaValidationResult result = await JsonSchemaChecker.ValidateAsync(json, GdstSchemaKey);
+
+            List<string> locations = result.Errors.Select(e => e.InstanceLocation).ToList();
+
+            Assert.That(locations, Does.Not.Contain(location));
+        }
+
+        /// <summary>
+        /// sensorElementList and readPoint are not required for this event type. They came from an
+        /// anyOf branch that did not apply, and the reporter spent time chasing them.
+        /// </summary>
+        [Test]
+        public async Task Validate_BrokenEvent_DoesNotReportFieldsFromBranchesThatDoNotApply()
+        {
+            string json = OpenTraceabilityTests.ReadTestData(BrokenEventFile);
+
+            JsonSchemaValidationResult result = await JsonSchemaChecker.ValidateAsync(json, GdstSchemaKey);
+
+            string everything = string.Join("\n", result.Errors.Select(e => e.ToString()));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(everything, Does.Not.Contain("sensorElementList"));
+                Assert.That(everything, Does.Not.Contain("readPoint"));
+                Assert.That(everything, Does.Contain("@context"));
+            });
+        }
+
         [Test]
         public async Task Validate_ValidEvent_ReportsNothing()
         {
@@ -81,7 +142,8 @@ namespace OpenTraceability.Tests.Events
         }
 
         /// <summary>
-        /// This commit is additive. The existing string API has to behave exactly as before.
+        /// The change stays additive. The existing string API has to behave exactly as before until
+        /// it is rewritten in its own commit.
         /// </summary>
         [Test]
         public async Task IsValidAsync_BrokenEvent_IsUnchanged()

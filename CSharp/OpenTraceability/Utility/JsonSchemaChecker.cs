@@ -129,7 +129,7 @@ namespace OpenTraceability.Utility
             var reasonsByLocation = new Dictionary<string, List<JsonSchemaValidationReason>>(StringComparer.Ordinal);
             var locationOrder = new List<string>();
 
-            CollectReasons(results, reasonsByLocation, locationOrder);
+            CollectReasons(results, anyAncestorValid: false, reasonsByLocation, locationOrder);
 
             var errors = new List<JsonSchemaValidationError>(locationOrder.Count);
 
@@ -146,10 +146,11 @@ namespace OpenTraceability.Utility
 
         private static void CollectReasons(
             EvaluationResults node,
+            bool anyAncestorValid,
             Dictionary<string, List<JsonSchemaValidationReason>> reasonsByLocation,
             List<string> locationOrder)
         {
-            if (node.Errors != null && node.Errors.Count > 0)
+            if (node.Errors != null && node.Errors.Count > 0 && IsRealFailure(node, anyAncestorValid))
             {
                 string location = node.InstanceLocation.ToString();
 
@@ -171,8 +172,39 @@ namespace OpenTraceability.Utility
 
             foreach (EvaluationResults child in node.Details)
             {
-                CollectReasons(child, reasonsByLocation, locationOrder);
+                CollectReasons(child, anyAncestorValid || node.IsValid, reasonsByLocation, locationOrder);
             }
+        }
+
+        /// <summary>
+        /// A failing node is only worth reporting when it contributed to the document being rejected.
+        /// Two kinds of failure do not.
+        /// </summary>
+        private static bool IsRealFailure(EvaluationResults node, bool anyAncestorValid)
+        {
+            // A failing "if" is how a schema picks a branch - here, by event type. It means "this is
+            // not an AggregationEvent, move on", not "your document is wrong".
+            if (IsUnderIfKeyword(node.EvaluationPath.ToString()))
+                return false;
+
+            // A branch that failed inside a parent that succeeded did not change the outcome. This is
+            // the losing side of an "anyOf" whose other side matched.
+            return !anyAncestorValid;
+        }
+
+        private static bool IsUnderIfKeyword(string evaluationPath)
+        {
+            string[] segments = evaluationPath.Split('/');
+
+            for (int i = 0; i < segments.Length; i++)
+            {
+                // A schema may legitimately declare a property named "if", in which case the segment
+                // is a field name rather than the conditional keyword.
+                if (segments[i] == "if" && (i == 0 || segments[i - 1] != "properties"))
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>
