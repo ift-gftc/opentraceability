@@ -1,0 +1,16 @@
+{
+  "type": "ObjectEvent",
+  "action": "ADD",
+  "eventTime": "2026-02-15T10:00:00.000Z",
+  "eventTimeZoneOffset": "+00:00",
+  "bizStep": "urn:epcglobal:cbv:bizstep:commissioning",
+  "disposition": "urn:epcglobal:cbv:disp:active",
+  "epcList": [],
+  "quantityList": [
+    {
+      "epcClass": "urn:gdst:example.com:product:lot:class:1.tuna.lot111111",
+      "quantity": 500.0,
+      "uom": "KGM"
+    }
+  ]
+}
