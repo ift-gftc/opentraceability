@@ -27,5 +27,39 @@ namespace OpenTraceability.MSC.Extensions
         {
             return doc.GetFirstEventWithProductDefinition(gtin?.ToString());
         }
+
+        public static List<EPC> GetInputEPCs(this EPCISBaseDocument doc, EPC rootEPC, List<EPC> epcs, int recursionDepth)
+        {
+            recursionDepth++;
+            if (recursionDepth > 15)
+            {
+                throw new Exception("Recusrion depth exceeded while trying to get relevant EPCs.");
+            }
+
+            // make sure the root is added so we always atleast return the root.
+            if (!epcs.Contains(rootEPC))
+            {
+                epcs.Add(rootEPC);
+            }
+
+            // go through each event...
+            foreach (var evt in doc.Events)
+            {
+                if (evt.Products.Any(x => x.Type == EventProductType.Output && x.EPC.Equals(rootEPC)))
+                {
+                    var inputProducts = evt.Products.Where(x => x.Type == EventProductType.Input).ToList();
+                    foreach (var input in inputProducts)
+                    {
+                        if (!epcs.Contains(input.EPC))
+                        {
+                            epcs.Add(input.EPC);
+                            epcs = doc.GetInputEPCs(input.EPC, epcs, recursionDepth);
+                        }
+                    }
+                }
+            }
+
+            return epcs;
+        }
     }
 }
