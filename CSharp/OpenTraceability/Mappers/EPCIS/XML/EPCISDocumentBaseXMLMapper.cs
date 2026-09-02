@@ -67,21 +67,21 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             }
 
             // read the creation date
-            string creationDateAttributeStr = xDoc.Root.Attribute("creationDate")?.Value;
-            if (!string.IsNullOrWhiteSpace(creationDateAttributeStr))
+            string? creationDateAttributeStr = xDoc.Root.Attribute("creationDate")?.Value;
+            if (creationDateAttributeStr != null && !string.IsNullOrWhiteSpace(creationDateAttributeStr))
             {
                 document.CreationDate = creationDateAttributeStr.TryConvertToDateTimeOffset();
             }
 
             // read the standard business document header
-            XElement xHeader = xDoc.Root.Element("EPCISHeader")?.Element(Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader");
+            XElement? xHeader = xDoc.Root.Element("EPCISHeader")?.Element(Constants.SBDH_XNAMESPACE + "StandardBusinessDocumentHeader");
             if (xHeader != null)
             {
                 document.Header = OpenTraceabilityXmlMapper.FromXml<StandardBusinessDocumentHeader>(xHeader, document.EPCISVersion.Value);
             }
 
             // read the master data
-            XElement xMasterData = xDoc.Root.Element("EPCISHeader")?.Element("extension")?.Element("EPCISMasterData");
+            XElement? xMasterData = xDoc.Root.Element("EPCISHeader")?.Element("extension")?.Element("EPCISMasterData");
             if (xMasterData != null)
             {
                 EPCISXmlMasterDataReader.ReadMasterData(document, xMasterData);
@@ -170,7 +170,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             if (doc.Header != null)
             {
                 string xname = ((Constants.SBDH_XNAMESPACE) + "StandardBusinessDocumentHeader").ToString();
-                XElement xHeader = OpenTraceabilityXmlMapper.ToXml(xname, doc.Header, doc.EPCISVersion.Value);
+                XElement? xHeader = OpenTraceabilityXmlMapper.ToXml(xname, doc.Header, doc.EPCISVersion.Value);
                 if (xHeader != null)
                 {
                     xDoc.Root.Add(new XElement("EPCISHeader", xHeader));
@@ -186,7 +186,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         internal static Type GetEventTypeFromProfile(XElement xEvent)
         {
             Enum.TryParse<EventAction>(xEvent.Element("action")?.Value, out var action);
-            string bizStep = xEvent.Element("bizStep")?.Value;
+            string? bizStep = xEvent.Element("bizStep")?.Value;
             string eventType = xEvent.Name.LocalName;
 
             if (eventType == "extension")
@@ -203,7 +203,7 @@ namespace OpenTraceability.Mappers.EPCIS.XML
             {
                 foreach (var profile in profiles.Where(p => p.KDEProfiles != null).ToList())
                 {
-                    foreach (var kdeProfile in profile.KDEProfiles)
+                    foreach (var kdeProfile in profile.KDEProfiles!)
                     {
                         if (xEvent.QueryXPath(kdeProfile.XPath_V1) == null)
                         {

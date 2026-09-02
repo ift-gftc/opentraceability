@@ -9,6 +9,7 @@ using OpenTraceability.Queries;
 using DiagnosticsTool.Models.Requests;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 
 namespace OpenTraceability.Tests.Integration;
 
@@ -16,8 +17,8 @@ namespace OpenTraceability.Tests.Integration;
 [Category("Integration")]
 public class DiagnosticsToolIntegrationTests
 {
-    private static IWebHost? _epcisTestServer;
-    private static IWebHost? _diagnosticsTool;
+    private static IHost? _epcisTestServer;
+    private static IHost? _diagnosticsTool;
     private static IConfiguration? _config;
 
     [OneTimeSetUp]
@@ -39,7 +40,7 @@ public class DiagnosticsToolIntegrationTests
     [TestCase("aggregation_event_all_possible_fields.jsonld")]
     public async Task QueryEvents_EndToEnd(string filename)
     {
-        var epcisClient = new EPCISTestServerClient("https://localhost:4001", OpenTraceability.Mappers.EPCISDataFormat.JSON, EPCISVersion.V2);
+        var epcisClient = new EPCISTestServerClient("https://localhost:4001", "test", OpenTraceability.Mappers.EPCISDataFormat.JSON, EPCISVersion.V2);
         string data = OpenTraceabilityTests.ReadTestData(filename);
         var sourceDoc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
         string blobId = await epcisClient.Post(sourceDoc);
@@ -53,9 +54,12 @@ public class DiagnosticsToolIntegrationTests
             {
                 var options = new EPCISQueryInterfaceOptions
                 {
-                    URL = new Uri($"https://localhost:4001/epcis/{blobId}"), // remove trailing slash so controller builds correct URL
+                    URL = new Uri($"https://localhost:4001/epcis"), // remove trailing slash so controller builds correct URL
                     Version = EPCISVersion.V2,
-                    Format = OpenTraceability.Mappers.EPCISDataFormat.JSON
+                    Format = OpenTraceability.Mappers.EPCISDataFormat.JSON,
+                    APIKey = "test",
+                    Headers = new Dictionary<string, string> { { "X-Dataset-Id", blobId } },
+                    EnableStackTrace = true
                 };
                 var parameters = new EPCISQueryParameters(prod.EPC);
                 var request = new QueryEventsRequest { Options = options, Parameters = parameters };
@@ -80,7 +84,7 @@ public class DiagnosticsToolIntegrationTests
     [TestCase("traceback_tests.jsonld")]
     public async Task Traceback_EndToEnd(string filename)
     {
-        var epcisClient = new EPCISTestServerClient("https://localhost:4001", OpenTraceability.Mappers.EPCISDataFormat.JSON, EPCISVersion.V2);
+        var epcisClient = new EPCISTestServerClient("https://localhost:4001", "test", OpenTraceability.Mappers.EPCISDataFormat.JSON, EPCISVersion.V2);
         string data = OpenTraceabilityTests.ReadTestData(filename);
         var sourceDoc = OpenTraceabilityMappers.EPCISDocument.JSON.Map(data);
         string blobId = await epcisClient.Post(sourceDoc);
@@ -92,9 +96,12 @@ public class DiagnosticsToolIntegrationTests
 
         var options = new DigitalLinkQueryOptions
         {
-            URL = new Uri($"https://localhost:4001/digitallink/{blobId}"),
+            URL = new Uri($"https://localhost:4001/digitallink"),
             Version = EPCISVersion.V2,
-            Format = OpenTraceability.Mappers.EPCISDataFormat.JSON
+            Format = OpenTraceability.Mappers.EPCISDataFormat.JSON,
+            APIKey = "test",
+            Headers = new Dictionary<string, string> { { "X-Dataset-Id", blobId } },
+            EnableStackTrace = true
         };
 
         var request = new TracebackRequest { Options = options, EPC = firstEpc.ToString() };
@@ -122,9 +129,12 @@ public class DiagnosticsToolIntegrationTests
 
         var options = new DigitalLinkQueryOptions
         {
-            URL = new Uri($"https://localhost:4001/digitallink/{blobId}"),
+            URL = new Uri($"https://localhost:4001/digitallink"),
             Version = EPCISVersion.V2,
-            Format = OpenTraceability.Mappers.EPCISDataFormat.JSON
+            Format = OpenTraceability.Mappers.EPCISDataFormat.JSON,
+            APIKey = "test",
+            Headers = new Dictionary<string, string> { { "X-Dataset-Id", blobId } },
+            EnableStackTrace = true
         };
 
         var request = new TracebackRequest { Options = options, EPC = epc };

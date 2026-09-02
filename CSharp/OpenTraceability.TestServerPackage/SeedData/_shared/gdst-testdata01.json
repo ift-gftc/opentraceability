@@ -1,0 +1,1967 @@
+{
+  "@context": [
+    "https://ref.gs1.org/standards/epcis/epcis-context.jsonld"
+  ],
+  "type": "EPCISDocument",
+  "creationDate": "2026-08-02T01:13:12.3204599+00:00",
+  "schemaVersion": "2.0",
+  "epcisHeader": {
+    "epcisMasterData": {
+      "vocabularyList": [
+        {
+          "type": "urn:epcglobal:epcis:vtype:Party",
+          "vocabularyElementList": [
+            {
+              "id": "urn:gdst:example.org:party:solution.fisherman",
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.fisherman"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Fisherman"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:party:solution.hatchery",
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.hatchery"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Hatchery Co."
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:party:solution.feedmill",
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.feedmill"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Feed Mill Co."
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:party:solution.fishfarm",
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.fishfarm"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Fish Farm Co."
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:party:solution.processor",
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Processor Co."
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:party:solution.importer",
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.importer"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Importer Co."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "urn:epcglobal:epcis:vtype:Location",
+          "vocabularyElementList": [
+            {
+              "id": "urn:gdst:example.org:location:loc:solution.vessel1",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#locationClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "vessel"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#vesselFlagState",
+                  "attribute": "US"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#vesselID",
+                  "attribute": "VESSEL1"
+                },
+                {
+                  "id": "urn:gdst:kde#imoNumber",
+                  "attribute": "IMO1234567"
+                },
+                {
+                  "id": "urn:gdst:kde#vesselPublicRegistry",
+                  "attribute": "https://example.org/vessels/VESSEL1"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.fisherman"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.fisherman"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Vessel #1"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:location:loc:solution.vessel2",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#locationClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "vessel"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#vesselFlagState",
+                  "attribute": "US"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#vesselID",
+                  "attribute": "VESSEL2"
+                },
+                {
+                  "id": "urn:gdst:kde#imoNumber",
+                  "attribute": "IMO1234567"
+                },
+                {
+                  "id": "urn:gdst:kde#vesselPublicRegistry",
+                  "attribute": "https://example.org/vessels/VESSEL2"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Vessel #2"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:location:loc:solution.port",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#locationClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "land facility"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Port"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#streetAddressOne",
+                  "attribute": "123 Port St"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#streetAddressTwo",
+                  "attribute": "Suite 100"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#city",
+                  "attribute": "San Francisco"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#state",
+                  "attribute": "CA"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#postalCode",
+                  "attribute": "94111"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#countryCode",
+                  "attribute": "US"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:location:loc:solution.hatchery",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#locationClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "land facility"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.hatchery"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.hatchery"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Hatchery"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#streetAddressOne",
+                  "attribute": "456 Hatchery Rd"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#city",
+                  "attribute": "San Francisco"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#state",
+                  "attribute": "CA"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#postalCode",
+                  "attribute": "94111"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#countryCode",
+                  "attribute": "US"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:location:loc:solution.feedmill",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#locationClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "land facility"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.feedmill"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.feedmill"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Feed Mill"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#geoLocation",
+                  "attribute": "geo:37.7749,-122.4194"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:location:loc:solution.fishfarm",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#locationClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "land facility"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.fishfarm"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.fishfarm"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Fish Farm"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#geoFence",
+                  "attribute": "[[-122.4194,37.7749],[-122.418,37.7749],[-122.418,37.776],[-122.4194,37.776],[-122.4194,37.7749]]"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:location:loc:solution.processorplant",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#locationClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "land facility"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Processor Plant"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#streetAddressOne",
+                  "attribute": "321 Cannery Row"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#city",
+                  "attribute": "San Francisco"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#state",
+                  "attribute": "CA"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#postalCode",
+                  "attribute": "94111"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#countryCode",
+                  "attribute": "US"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:location:loc:solution.importerwarehouse",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#locationClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "land facility"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.importer"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.importer"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#name",
+                  "attribute": "Importer Warehouse"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#streetAddressOne",
+                  "attribute": "654 Harbor Blvd"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#city",
+                  "attribute": "San Francisco"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#state",
+                  "attribute": "CA"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#postalCode",
+                  "attribute": "94111"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#countryCode",
+                  "attribute": "US"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "urn:epcglobal:epcis:vtype:EPCClass",
+          "vocabularyElementList": [
+            {
+              "id": "urn:gdst:example.org:product:class:solution.wildfish",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "seafood"
+                  }
+                },
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "wildcaught"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "Wild Yellowfin Tuna"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                  "attribute": "OTH"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.fisherman"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.fisherman"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                  "attribute": "Thunnus albacares"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                  "attribute": "YFT"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:product:class:solution.fryling",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "seafood"
+                  }
+                },
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "developing"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "Tuna Fryling"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                  "attribute": "OTH"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.hatchery"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.hatchery"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                  "attribute": "Thunnus albacares"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                  "attribute": "YFT"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:product:class:solution.soy",
+              "attributes": [
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "Soy Meal"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.feedmill"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.feedmill"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:product:class:solution.feed",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "feed"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "Fish Feed"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.feedmill"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.feedmill"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:product:class:solution.farmedfish",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "seafood"
+                  }
+                },
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "mature"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "Farmed Yellowfin Tuna"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                  "attribute": "OTH"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.fishfarm"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.fishfarm"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                  "attribute": "Thunnus albacares"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                  "attribute": "YFT"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:product:class:solution.processedwild",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "seafood"
+                  }
+                },
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "processed"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "Processed Wild Tuna"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                  "attribute": "OTH"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                  "attribute": "Thunnus albacares"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                  "attribute": "YFT"
+                }
+              ]
+            },
+            {
+              "id": "urn:gdst:example.org:product:class:solution.processedfarmed",
+              "attributes": [
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "seafood"
+                  }
+                },
+                {
+                  "id": "urn:gdst:kde#productClassification",
+                  "attribute": {
+                    "type": "gdst",
+                    "value": "processed"
+                  }
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#descriptionShort",
+                  "attribute": "Processed Farmed Tuna"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#tradeItemConditionCode",
+                  "attribute": "OTH"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:owning_party",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#informationProvider",
+                  "attribute": "urn:gdst:example.org:party:solution.processor"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesName",
+                  "attribute": "Thunnus albacares"
+                },
+                {
+                  "id": "urn:epcglobal:cbv:mda#speciesForFisheryStatisticsPurposesCode",
+                  "attribute": "YFT"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "epcisBody": {
+    "eventList": [
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T02:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:42e43dd1-401c-41fa-8e3c-0285834f2cee",
+        "epcList": [],
+        "action": "ADD",
+        "bizStep": "commissioning",
+        "disposition": "active",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.vessel1"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot1",
+            "quantity": 10000.0,
+            "uom": "KGM"
+          }
+        ],
+        "ilmd": {
+          "cbvmda:vesselCatchInformationList": {
+            "cbvmda:vesselCatchInformation": [
+              {
+                "cbvmda:catchArea": "urn:gdst:fao:27.1",
+                "cbvmda:economicZone": "urn:gdst:eez:usa",
+                "cbvmda:fishingGearTypeCode": "urn:gdst:gear:1.1",
+                "gdst:fisheryImprovementProject": "fip-1",
+                "gdst:gpsAvailability": true,
+                "gdst:rfmoArea": "urn:gdst:rfmo:cecaf",
+                "gdst:satelliteTrackingAuthority": "sat-auth",
+                "gdst:subnationalPermitArea": "subnat-1",
+                "gdst:vesselTripDate": "2026-05-04T01:13:12.3205079+00:00"
+              }
+            ]
+          },
+          "cbvmda:productionMethodForFishAndSeafoodCode": "MARINE_FISHERY",
+          "cbvmda:certificationList": {
+            "certification": [
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                "certificationAgency": "Harvest Agency",
+                "certificationStandard": "Harvest Certificate Standard",
+                "certificationValue": "ghi789",
+                "certificationIdentification": "HARV-0003"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                "certificationAgency": "Human Policy Agency",
+                "certificationStandard": "Human Welfare Policy Standard",
+                "certificationValue": "pqr678",
+                "certificationIdentification": "HUMN-0006"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:fishingAuth",
+                "certificationAgency": "Fishing Auth Agency",
+                "certificationStandard": "Fishing Authorization Standard",
+                "certificationValue": "vwx234",
+                "certificationIdentification": "FISH-0008"
+              }
+            ]
+          }
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.fisherman",
+        "gdst:humanWelfarePolicy": "3p",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.fisherman"
+      },
+      {
+        "type": "TransformationEvent",
+        "eventTime": "2026-05-04T03:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:a5ad9d3b-5d30-4ac2-8f81-8b9a81cb894b",
+        "inputQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot1",
+            "quantity": 10000.0,
+            "uom": "KGM"
+          }
+        ],
+        "outputQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot2",
+            "quantity": 9500.0,
+            "uom": "KGM"
+          }
+        ],
+        "transformationID": "af058f7c-f77b-4f6a-a66a-639b563b4852",
+        "bizStep": "commissioning",
+        "disposition": "active",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.vessel1"
+        },
+        "ilmd": {
+          "cbvmda:countryOfOrigin": "US",
+          "cbvmda:certificationList": {
+            "certification": [
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                "certificationAgency": "CoC Agency",
+                "certificationStandard": "Generic Chain of Custody Standard",
+                "certificationValue": "abc123",
+                "certificationIdentification": "COC-0001"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                "certificationAgency": "Processor Agency",
+                "certificationStandard": "Processor License Standard",
+                "certificationValue": "def456",
+                "certificationIdentification": "PROC-0002"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                "certificationAgency": "Human Policy Agency",
+                "certificationStandard": "Human Welfare Policy Standard",
+                "certificationValue": "pqr678",
+                "certificationIdentification": "HUMN-0006"
+              }
+            ]
+          }
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.fisherman",
+        "gdst:humanWelfarePolicy": "3p",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.fisherman"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T04:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:92e39308-9b09-4a7e-8891-7f91ad142a4b",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "shipping",
+        "disposition": "in_transit",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.vessel1"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot2",
+            "quantity": 9500.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.vessel1"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.fisherman"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.vessel2"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "cbvmda:unloadingPort": "PORTSD",
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            },
+            {
+              "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+              "certificationAgency": "Human Policy Agency",
+              "certificationStandard": "Human Welfare Policy Standard",
+              "certificationValue": "pqr678",
+              "certificationIdentification": "HUMN-0006"
+            },
+            {
+              "gdst:certificationType": "urn:gdst:certType:transshipmentAuth",
+              "certificationAgency": "Transshipment Auth Agency",
+              "certificationStandard": "Transshipment Authorization Standard",
+              "certificationValue": "stu901",
+              "certificationIdentification": "TRANS-0007"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.fisherman"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T05:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:bdbbe50d-19a7-41fd-b1e6-63ae66f588e5",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "receiving",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.vessel2"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot2",
+            "quantity": 9500.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.vessel1"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.fisherman"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.vessel2"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "cbvmda:unloadingPort": "PORTSD",
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            },
+            {
+              "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+              "certificationAgency": "Human Policy Agency",
+              "certificationStandard": "Human Welfare Policy Standard",
+              "certificationValue": "pqr678",
+              "certificationIdentification": "HUMN-0006"
+            },
+            {
+              "gdst:certificationType": "urn:gdst:certType:transshipmentAuth",
+              "certificationAgency": "Transshipment Auth Agency",
+              "certificationStandard": "Transshipment Authorization Standard",
+              "certificationValue": "stu901",
+              "certificationIdentification": "TRANS-0007"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.processor"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T06:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:6b7c4659-a676-4fcc-9db9-7684fa16360b",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "receiving",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.port"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot2",
+            "quantity": 9500.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.vessel2"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.port"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "gdst:humanWelfarePolicy": "3p",
+        "cbvmda:unloadingPort": "PORTSD",
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCert",
+              "certificationAgency": "Harvest Agency",
+              "certificationStandard": "Harvest Certificate Standard",
+              "certificationValue": "ghi789",
+              "certificationIdentification": "HARV-0003"
+            },
+            {
+              "gdst:certificationType": "urn:gdst:certType:landingAuth",
+              "certificationAgency": "Landing Auth Agency",
+              "certificationStandard": "Landing Authorization Standard",
+              "certificationValue": "jkl012",
+              "certificationIdentification": "LAND-0004"
+            },
+            {
+              "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+              "certificationAgency": "Human Policy Agency",
+              "certificationStandard": "Human Welfare Policy Standard",
+              "certificationValue": "pqr678",
+              "certificationIdentification": "HUMN-0006"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.processor"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T07:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:714a2f47-a1a2-4337-9737-e6ceeb9d5ae8",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "shipping",
+        "disposition": "in_transit",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.port"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot2",
+            "quantity": 9500.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.port"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.processorplant"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.processor"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T08:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:dc00222a-b849-4c9f-8ef4-56b5d7f443e6",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "receiving",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.processorplant"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot2",
+            "quantity": 9500.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.port"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.processorplant"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.processor"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T09:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:5d9533ad-0d82-4d0a-80af-d1beb0d44734",
+        "epcList": [],
+        "action": "ADD",
+        "bizStep": "commissioning",
+        "disposition": "active",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.feedmill"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.soy.lot1",
+            "quantity": 6000.0,
+            "uom": "KGM"
+          }
+        ],
+        "ilmd": {
+          "cbvmda:countryOfOrigin": "US"
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.feedmill",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.feedmill"
+      },
+      {
+        "type": "TransformationEvent",
+        "eventTime": "2026-05-04T10:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:59ff11a8-3d1a-4c2b-8814-bf718e84d08a",
+        "inputQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.soy.lot1",
+            "quantity": 6000.0,
+            "uom": "KGM"
+          }
+        ],
+        "outputQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.feed.lot1",
+            "quantity": 5000.0,
+            "uom": "KGM"
+          }
+        ],
+        "transformationID": "40837075-7d93-4c68-8ca5-2784801fe70b",
+        "bizStep": "commissioning",
+        "disposition": "active",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.feedmill"
+        },
+        "ilmd": {
+          "gdst:proteinSource": "soy",
+          "cbvmda:countryOfOrigin": "US",
+          "cbvmda:certificationList": {
+            "certification": [
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                "certificationAgency": "CoC Agency",
+                "certificationStandard": "Generic Chain of Custody Standard",
+                "certificationValue": "abc123",
+                "certificationIdentification": "COC-0001"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                "certificationAgency": "Processor Agency",
+                "certificationStandard": "Processor License Standard",
+                "certificationValue": "def456",
+                "certificationIdentification": "PROC-0002"
+              }
+            ]
+          }
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.feedmill",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.feedmill"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T11:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:b8543dfe-3a52-4e4b-a50d-05be15a33852",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "shipping",
+        "disposition": "in_transit",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.feedmill"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.feed.lot1",
+            "quantity": 5000.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.feedmill"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.feedmill"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.fishfarm"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.fishfarm"
+          }
+        ],
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.feedmill"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T12:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:16587fbc-5b71-4361-8300-dfffba0e9991",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "receiving",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.fishfarm"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.feed.lot1",
+            "quantity": 5000.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.feedmill"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.feedmill"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.fishfarm"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.fishfarm"
+          }
+        ],
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.fishfarm"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T13:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:515e5838-d8e8-455b-9599-3b9ca47dc0e0",
+        "epcList": [],
+        "action": "ADD",
+        "bizStep": "commissioning",
+        "disposition": "active",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.hatchery"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.fryling.lot1",
+            "quantity": 1000.0,
+            "uom": "KGM"
+          }
+        ],
+        "ilmd": {
+          "gdst:broodstockSource": "domestic",
+          "cbvmda:productionMethodForFishAndSeafoodCode": "AQUACULTURE",
+          "cbvmda:certificationList": {
+            "certification": [
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                "certificationAgency": "Harvest Agency",
+                "certificationStandard": "Harvest Certificate Standard",
+                "certificationValue": "ghi789",
+                "certificationIdentification": "HARV-0003"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                "certificationAgency": "Human Policy Agency",
+                "certificationStandard": "Human Welfare Policy Standard",
+                "certificationValue": "pqr678",
+                "certificationIdentification": "HUMN-0006"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:legalAuth",
+                "certificationAgency": "Legal Auth Agency",
+                "certificationStandard": "Legal Authorization Standard",
+                "certificationValue": "mno345",
+                "certificationIdentification": "LEGL-0005"
+              }
+            ]
+          }
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.hatchery",
+        "gdst:humanWelfarePolicy": "3p",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.hatchery"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T14:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:c6fe9d4e-6354-4245-8897-39489ae5b87f",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "shipping",
+        "disposition": "in_transit",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.hatchery"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.fryling.lot1",
+            "quantity": 1000.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.hatchery"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.hatchery"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.fishfarm"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.fishfarm"
+          }
+        ],
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.hatchery"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T15:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:e9dc2875-8523-4daf-9b9d-b98567b4eebe",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "receiving",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.fishfarm"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.fryling.lot1",
+            "quantity": 1000.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.hatchery"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.hatchery"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.fishfarm"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.fishfarm"
+          }
+        ],
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.fishfarm"
+      },
+      {
+        "type": "TransformationEvent",
+        "eventTime": "2026-05-04T16:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:9a787281-ee4c-4c47-ac17-c04845b75df6",
+        "inputQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.fryling.lot1",
+            "quantity": 1000.0,
+            "uom": "KGM"
+          },
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.feed.lot1",
+            "quantity": 5000.0,
+            "uom": "KGM"
+          }
+        ],
+        "outputQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.farmedfish.lot1",
+            "quantity": 6000.0,
+            "uom": "KGM"
+          }
+        ],
+        "transformationID": "b254f418-93f0-40ff-a447-90372b88799e",
+        "bizStep": "commissioning",
+        "disposition": "active",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.fishfarm"
+        },
+        "ilmd": {
+          "gdst:aquacultureMethod": "intensive ponds",
+          "cbvmda:productionMethodForFishAndSeafoodCode": "AQUACULTURE",
+          "cbvmda:countryOfOrigin": "US",
+          "cbvmda:certificationList": {
+            "certification": [
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                "certificationAgency": "CoC Agency",
+                "certificationStandard": "Generic Chain of Custody Standard",
+                "certificationValue": "abc123",
+                "certificationIdentification": "COC-0001"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:humanPolicy",
+                "certificationAgency": "Human Policy Agency",
+                "certificationStandard": "Human Welfare Policy Standard",
+                "certificationValue": "pqr678",
+                "certificationIdentification": "HUMN-0006"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCert",
+                "certificationAgency": "Harvest Agency",
+                "certificationStandard": "Harvest Certificate Standard",
+                "certificationValue": "ghi789",
+                "certificationIdentification": "HARV-0003"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:legalAuth",
+                "certificationAgency": "Legal Auth Agency",
+                "certificationStandard": "Legal Authorization Standard",
+                "certificationValue": "mno345",
+                "certificationIdentification": "LEGL-0005"
+              }
+            ]
+          }
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.fishfarm",
+        "gdst:humanWelfarePolicy": "3p",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.fishfarm"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T17:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:33836d8f-5155-4e59-b88a-bd9d0342cd47",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "shipping",
+        "disposition": "in_transit",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.fishfarm"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.farmedfish.lot1",
+            "quantity": 6000.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.fishfarm"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.fishfarm"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.processorplant"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.fishfarm"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T18:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:183e593a-4580-4c4f-bc26-77f52dfb39bd",
+        "epcList": [],
+        "action": "OBSERVE",
+        "bizStep": "receiving",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.processorplant"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.farmedfish.lot1",
+            "quantity": 6000.0,
+            "uom": "KGM"
+          }
+        ],
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.fishfarm"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.fishfarm"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.processorplant"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.processor"
+      },
+      {
+        "type": "TransformationEvent",
+        "eventTime": "2026-05-04T19:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:21a6bf09-22af-4446-b08f-d6f8abbad8a8",
+        "inputQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.wildfish.lot2",
+            "quantity": 9500.0,
+            "uom": "KGM"
+          }
+        ],
+        "outputQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.processedwild.final1",
+            "quantity": 9000.0,
+            "uom": "KGM"
+          }
+        ],
+        "transformationID": "ba535073-229f-49f2-a777-3574e2eba311",
+        "bizStep": "commissioning",
+        "disposition": "active",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.processorplant"
+        },
+        "ilmd": {
+          "cbvmda:countryOfOrigin": "US",
+          "cbvmda:certificationList": {
+            "certification": [
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                "certificationAgency": "CoC Agency",
+                "certificationStandard": "Generic Chain of Custody Standard",
+                "certificationValue": "abc123",
+                "certificationIdentification": "COC-0001"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                "certificationAgency": "Processor Agency",
+                "certificationStandard": "Processor License Standard",
+                "certificationValue": "def456",
+                "certificationIdentification": "PROC-0002"
+              }
+            ]
+          }
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.processor",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.processor"
+      },
+      {
+        "type": "TransformationEvent",
+        "eventTime": "2026-05-04T20:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:5146e285-00a9-4c89-be38-85f0b53f2eb5",
+        "inputQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.farmedfish.lot1",
+            "quantity": 6000.0,
+            "uom": "KGM"
+          }
+        ],
+        "outputQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.processedfarmed.final1",
+            "quantity": 5500.0,
+            "uom": "KGM"
+          }
+        ],
+        "transformationID": "e9b69f5a-6510-4df3-89e6-4e471295523f",
+        "bizStep": "commissioning",
+        "disposition": "active",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.processorplant"
+        },
+        "ilmd": {
+          "cbvmda:countryOfOrigin": "US",
+          "cbvmda:certificationList": {
+            "certification": [
+              {
+                "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+                "certificationAgency": "CoC Agency",
+                "certificationStandard": "Generic Chain of Custody Standard",
+                "certificationValue": "abc123",
+                "certificationIdentification": "COC-0001"
+              },
+              {
+                "gdst:certificationType": "urn:gdst:certType:processorLicense",
+                "certificationAgency": "Processor Agency",
+                "certificationStandard": "Processor License Standard",
+                "certificationValue": "def456",
+                "certificationIdentification": "PROC-0002"
+              }
+            ]
+          }
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.processor",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.processor"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T21:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:907f0d54-3e5e-4424-ae14-1472d8e4745b",
+        "epcList": [],
+        "action": "DELETE",
+        "bizStep": "destroying",
+        "disposition": "inactive",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.processorplant"
+        },
+        "quantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.processedwild.final1",
+            "quantity": 100.0,
+            "uom": "KGM"
+          }
+        ],
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.processor",
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.processor"
+      },
+      {
+        "type": "AggregationEvent",
+        "eventTime": "2026-05-04T22:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:d28e4a1b-d259-44f5-88f3-94027d3c4292",
+        "parentID": "urn:epc:id:sscc:08600031303.solution1",
+        "childEPCs": [],
+        "action": "ADD",
+        "bizStep": "packing",
+        "disposition": "active",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.processorplant"
+        },
+        "childQuantityList": [
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.processedwild.final1",
+            "quantity": 8900.0,
+            "uom": "KGM"
+          },
+          {
+            "epcClass": "urn:gdst:example.org:product:lot:class:solution.processedfarmed.final1",
+            "quantity": 5500.0,
+            "uom": "KGM"
+          }
+        ],
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.processor",
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.processor"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-04T23:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:036db109-8ca8-4542-869b-3d7b1e9513e4",
+        "epcList": [
+          "urn:epc:id:sscc:08600031303.solution1"
+        ],
+        "action": "OBSERVE",
+        "bizStep": "shipping",
+        "disposition": "in_transit",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.processorplant"
+        },
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.processorplant"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.importerwarehouse"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.importer"
+          }
+        ],
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.processor"
+      },
+      {
+        "type": "ObjectEvent",
+        "eventTime": "2026-05-05T00:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:4775fb7f-94b6-4bdf-9237-5cc222fcdbd4",
+        "epcList": [
+          "urn:epc:id:sscc:08600031303.solution1"
+        ],
+        "action": "OBSERVE",
+        "bizStep": "receiving",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.importerwarehouse"
+        },
+        "sourceList": [
+          {
+            "type": "location",
+            "source": "urn:gdst:example.org:location:loc:solution.processorplant"
+          },
+          {
+            "type": "owning_party",
+            "source": "urn:gdst:example.org:party:solution.processor"
+          }
+        ],
+        "destinationList": [
+          {
+            "type": "location",
+            "destination": "urn:gdst:example.org:location:loc:solution.importerwarehouse"
+          },
+          {
+            "type": "owning_party",
+            "destination": "urn:gdst:example.org:party:solution.importer"
+          }
+        ],
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.importer"
+      },
+      {
+        "type": "AggregationEvent",
+        "eventTime": "2026-05-05T01:13:12.3205079+00:00",
+        "eventTimeZoneOffset": "+00:00",
+        "eventID": "urn:uuid:ae15333f-41d1-4683-8859-7f51eddcae88",
+        "parentID": "urn:epc:id:sscc:08600031303.solution1",
+        "childEPCs": [],
+        "action": "DELETE",
+        "bizStep": "unpacking",
+        "disposition": "inactive",
+        "readPoint": {
+          "id": "geo:37.7749,-122.4194"
+        },
+        "bizLocation": {
+          "id": "urn:gdst:example.org:location:loc:solution.importerwarehouse"
+        },
+        "gdst:productOwner": "urn:gdst:example.org:party:solution.importer",
+        "cbvmda:certificationList": {
+          "certification": [
+            {
+              "gdst:certificationType": "urn:gdst:certType:harvestCoC",
+              "certificationAgency": "CoC Agency",
+              "certificationStandard": "Generic Chain of Custody Standard",
+              "certificationValue": "abc123",
+              "certificationIdentification": "COC-0001"
+            }
+          ]
+        },
+        "cbvmda:informationProvider": "urn:gdst:example.org:party:solution.importer"
+      }
+    ]
+  }
+}

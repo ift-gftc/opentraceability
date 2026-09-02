@@ -7,22 +7,23 @@ namespace DiagnosticsTool
     {
         public static Uri? TestBaseAddress = null;
 
-        public static IWebHost Create(string url, IConfiguration config)
+        public static IHost Create(string url, IConfiguration config)
         {
             TestBaseAddress = new Uri(url);
+            var host = Host.CreateDefaultBuilder(args: new string[] { })
+                           .ConfigureWebHostDefaults(webBuilder =>
+                           {
+                               webBuilder.UseStartup<Startup>()
+                                         .UseEnvironment("Test")
+                                         .UseConfiguration(config)
+                                         .UseKestrel()
+                                         .UseUrls(TestBaseAddress.ToString());
+                           })
+                           .Build();
 
-            var webhost = WebHost.CreateDefaultBuilder(args: new string[] { })
-                                 .UseConfiguration(config)
-                                 .UseStartup<Startup>()
-                                 .UseKestrel()
-                                 .UseDefaultServiceProvider((context, options) =>
-                                 {
-                                     options.ValidateOnBuild = true;
-                                 })
-                                 .UseUrls(TestBaseAddress.ToString())
-                                 .Build();
-            webhost.Start();
-            return webhost;
+
+            host.Start();
+            return host;
         }
     }
 }

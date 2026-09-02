@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,7 +12,7 @@ public class MasterDataJsonSchemaRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_MD_JSON_SCHEMA";
 
-    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         var results = new List<DiagnosticsValidationResult>();
 
@@ -22,7 +22,7 @@ public class MasterDataJsonSchemaRule : IDiagnosticsRequestRule
         }
 
         var jsonContent = obj[0] as string;
-        if (string.IsNullOrWhiteSpace(jsonContent))
+        if (jsonContent == null || string.IsNullOrWhiteSpace(jsonContent))
         {
             throw new ArgumentException("JSON content is null or empty.", nameof(obj));
         }

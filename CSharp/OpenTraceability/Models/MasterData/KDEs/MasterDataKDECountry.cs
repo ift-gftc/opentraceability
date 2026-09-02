@@ -9,11 +9,11 @@ namespace OpenTraceability.Models.Events.KDEs
 {
     public class MasterDataKDECountry : MasterDataKDEBase, IMasterDataKDE
     {
-        public Country Value { get; set; }
+        public Country? Value { get; set; }
 
         public Type ValueType => typeof(Country);
 
-        public XElement GetEPCISXml()
+        public XElement? GetEPCISXml()
         {
             if (Value != null)
             {
@@ -33,7 +33,7 @@ namespace OpenTraceability.Models.Events.KDEs
             throw new NotImplementedException();
         }
 
-        public XElement GetXml()
+        public XElement? GetXml()
         {
             if (Value == null)
             {
@@ -49,7 +49,7 @@ namespace OpenTraceability.Models.Events.KDEs
 
         public void SetFromEPCISXml(XElement xml)
         {
-            Country c = Countries.Parse(xml.Value);
+            Country? c = Countries.Parse(xml.Value);
             this.Value = c;
             this.Name = xml.Attribute("id")?.Value ?? string.Empty;
         }

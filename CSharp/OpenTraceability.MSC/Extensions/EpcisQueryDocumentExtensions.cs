@@ -1,4 +1,5 @@
-﻿using OpenTraceability.Interfaces;
+﻿using OpenTraceability.GDST.Events;
+using OpenTraceability.Interfaces;
 using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Identifiers;
 
@@ -6,7 +7,39 @@ namespace OpenTraceability.MSC.Extensions
 {
     public static class EpcisQueryDocumentExtensions
     {
-        public static List<IEvent> GetEvents_rec(this EPCISQueryDocument doc, EPC epc)
+        public static Dictionary<string, EPCISQueryDocument> SplitByGLN(this EPCISQueryDocument doc)
+        {
+            Dictionary<string, EPCISQueryDocument> docs = new Dictionary<string, EPCISQueryDocument>();
+            List<IEvent> aggregationEvents = doc.Events.Where(x => x is GDSTAggregationEvent).ToList();
+            foreach (var evt in doc.Events)
+            {
+                GLN? gln = evt.Location?.GLN;
+                string glnRaw = gln?.ToString() ?? "";
+                if (!string.IsNullOrEmpty(glnRaw))
+                {
+                    if (!docs.ContainsKey(glnRaw))
+                    {
+                        var newDoc = new EPCISQueryDocument();
+                        newDoc.EPCISVersion = EPCISVersion.V2;
+                        newDoc.CreationDate = DateTimeOffset.UtcNow;
+                        newDoc.MasterData = doc.MasterData.ToList();
+                        newDoc.Events = new List<IEvent>();
+                        docs.Add(glnRaw, newDoc);
+                    }
+                    docs[glnRaw].Events.Add(evt);
+                }
+            }
+
+            // always include aggregation events in the split doc to support resolving SSCCs and aggregated products during analysis and review.
+            foreach (var kvp in docs)
+            {
+                kvp.Value.Events.AddRange(aggregationEvents);
+            }
+
+            return docs;
+        }
+
+        public static List<IEvent> GetEvents_rec(this EPCISBaseDocument doc, EPC epc)
         {
             List<IEvent> events = new List<IEvent>();
 
@@ -64,7 +97,7 @@ namespace OpenTraceability.MSC.Extensions
             return events;
         }
 
-        public static List<EventProduct> TraceBackChildren(this EPCISQueryDocument doc, EPC? parentEPC, IEvent currentEvent)
+        public static List<EventProduct> TraceBackChildren(this EPCISBaseDocument doc, EPC? parentEPC, IEvent currentEvent)
         {
             if (parentEPC == null) return new List<EventProduct>();
 
@@ -87,14 +120,36 @@ namespace OpenTraceability.MSC.Extensions
             return allChildren;
         }
 
-        public static EPCISQueryDocument GetProductEvents(this EPCISQueryDocument doc, EPC epc)
+        public static EPCISQueryDocument GetProductEvents(this EPCISBaseDocument doc, EPC epc)
         {
-            // there is a bug here somehow, and we need to re-write this...
             var isolatedDoc = new EPCISQueryDocument();
             isolatedDoc.MasterData = doc.MasterData.ToList();
             isolatedDoc.Events = doc.GetEvents_rec(epc);
 
             return isolatedDoc;
+        }
+
+        public static List<EPC> GetChildEPCs(this EPCISQueryDocument doc, EPC sscc)
+        {
+            List<EPC> childEPCs = new();
+
+            // get the most recent aggregation event for this SSCC
+            GDSTAggregationEvent? aggregationEvent = doc.Events.OrderByDescending(x => x.EventTime).FirstOrDefault(x => x.EventType == EventType.AggregationEvent && x.Products.Any(y => y.EPC == sscc)) as GDSTAggregationEvent;
+            if (aggregationEvent == null)
+            {
+                return childEPCs;
+            }
+
+            childEPCs = aggregationEvent.Products.Where(x => x.Type == EventProductType.Child).Select(x => x.EPC).ToList();
+
+            List<EPC> aggregatedChildren = childEPCs.Where(x => x.Type == EPCType.SSCC).ToList();
+            foreach (EPC child in aggregatedChildren)
+            {
+                childEPCs.Remove(child);
+                childEPCs.AddRange(doc.GetChildEPCs(child));
+            }
+
+            return childEPCs;
         }
     }
 }

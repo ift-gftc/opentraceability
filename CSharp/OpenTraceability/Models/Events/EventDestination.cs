@@ -30,7 +30,7 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceabilityJson("type")]
         [OpenTraceability("@type")]
-        public Uri Type { get; set; }
+        public Uri? Type { get; set; }
 
         public EventDestinationType ParsedType
         {
@@ -50,7 +50,7 @@ namespace OpenTraceability.Models.Events
             }
             set
             {
-                string t = EnumUtil.GetEnumAttributes<CBVAttribute>(value).Where(e => e.Value.StartsWith("urn")).FirstOrDefault()?.Value;
+                string? t = EnumUtil.GetEnumAttributes<CBVAttribute>(value).Where(e => e.Value.StartsWith("urn")).FirstOrDefault()?.Value;
                 if (!string.IsNullOrWhiteSpace(t))
                 {
                     this.Type = new Uri(t);
@@ -60,7 +60,7 @@ namespace OpenTraceability.Models.Events
 
         [OpenTraceabilityJson("destination")]
         [OpenTraceability("text()")]
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
         public EventDestination()
         {

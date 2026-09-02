@@ -1,10 +1,7 @@
 ﻿using DiagnosticsTool.Models;
 using DiagnosticsTool.Services;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
+using Microsoft.OpenApi;
 using Newtonsoft.Json.Converters;
-using System.Security.Claims;
 
 namespace DiagnosticsTool
 {

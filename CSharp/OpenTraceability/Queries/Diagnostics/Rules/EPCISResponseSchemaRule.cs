@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
@@ -14,7 +14,7 @@ public class EPCISResponseSchemaRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_EPCIS_RESPONSE_SCHEMA";
 
-    public async Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public async Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         if (obj == null || obj.Length < 3)
         {
@@ -24,19 +24,17 @@ public class EPCISResponseSchemaRule : IDiagnosticsRequestRule
         {
             throw new ArgumentException("Parameter 0 must be a string containing the EPCIS response content.", nameof(obj));
         }
-        if (obj[1] is not EPCISDataFormat)
+        if (obj[1] is not EPCISDataFormat format)
         {
             throw new ArgumentException("Parameter 1 must be an EPCISDataFormat enum value.", nameof(obj));
         }
-        if (obj[2] is not EPCISVersion)
+        if (obj[2] is not EPCISVersion version)
         {
             throw new ArgumentException("Parameter 2 must be an EPCISVersion enum value.", nameof(obj));
         }
 
         var results = new List<DiagnosticsValidationResult>();
         var content = (string?)obj[0];
-        var format = (EPCISDataFormat)obj[1];
-        var version = (EPCISVersion)obj[2];
 
         if (string.IsNullOrWhiteSpace(content))
         {

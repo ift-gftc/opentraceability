@@ -1,0 +1,345 @@
+using Newtonsoft.Json.Linq;
+using OpenTraceability.GDST;
+using OpenTraceability.GDST.Modules;
+
+namespace OpenTraceability.Tests.TestServer
+{
+    public class ModuleMinifierTests
+    {
+        private const string Sample = @"{
+            ""eventID"": ""urn:uuid:1"",
+            ""bizStep"": ""commissioning"",
+            ""gdst:broodstockSource"": ""hatchery-1"",
+            ""gdst:aquacultureMethod"": ""pond"",
+            ""cbvmda:vesselCatchInformationList"": { ""cbvmda:vesselName"": ""Boaty"" },
+            ""cbvmda:unloadingPort"": ""Port of San Diego"",
+            ""emptyString"": """",
+            ""nullValue"": null,
+            ""emptyArray"": [],
+            ""epcList"": [ ""urn:epc:id:sgtin:1"" ]
+        }";
+
+        [Test]
+        public void CoreOnly_StripsAllNonCoreModuleKeys()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
+            var result = JObject.Parse(ModuleMinifier.Minify(Sample, allowed));
+
+            Assert.That(result.ContainsKey("eventID"), Is.True);
+            Assert.That(result.ContainsKey("bizStep"), Is.True);
+            Assert.That(result.ContainsKey("epcList"), Is.True);
+
+            Assert.That(result.ContainsKey("gdst:broodstockSource"), Is.False);
+            Assert.That(result.ContainsKey("gdst:aquacultureMethod"), Is.False);
+            Assert.That(result.ContainsKey("cbvmda:vesselCatchInformationList"), Is.False);
+            Assert.That(result.ContainsKey("cbvmda:unloadingPort"), Is.False);
+        }
+
+        [Test]
+        public void CoreOnly_KeepsOriginalNullsAndEmpties()
+        {
+            // Nulls, empty strings, and empty containers that were present in the input are part of
+            // the original (schema-valid) document, so minification must not remove them - only
+            // containers that the minifier itself emptied are pruned.
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
+            var result = JObject.Parse(ModuleMinifier.Minify(Sample, allowed));
+
+            Assert.That(result.ContainsKey("emptyString"), Is.True);
+            Assert.That(result.ContainsKey("nullValue"), Is.True);
+            Assert.That(result.ContainsKey("emptyArray"), Is.True);
+        }
+
+        [Test]
+        public void CoreOnly_PrunesContainersEmptiedByMinification()
+        {
+            const string wrapped = @"{
+                ""eventID"": ""urn:uuid:1"",
+                ""wrapper"": { ""gdst:broodstockSource"": ""hatchery-1"" },
+                ""listOfModuleObjects"": [ { ""gdst:aquacultureMethod"": ""pond"" } ]
+            }";
+
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
+            var result = JObject.Parse(ModuleMinifier.Minify(wrapped, allowed));
+
+            Assert.That(result.ContainsKey("wrapper"), Is.False, "object emptied by key stripping is pruned");
+            Assert.That(result.ContainsKey("listOfModuleObjects"), Is.False, "array emptied by key stripping is pruned");
+        }
+
+        [Test]
+        public void Wildcaught_KeepsVesselAndSeafood_RemovesAquaculture()
+        {
+            // Wildcaught implies Seafood, but not Aquaculture.
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Wildcaught });
+            var result = JObject.Parse(ModuleMinifier.Minify(Sample, allowed));
+
+            Assert.That(result.ContainsKey("cbvmda:vesselCatchInformationList"), Is.True, "wildcaught key kept");
+            Assert.That(result.ContainsKey("cbvmda:unloadingPort"), Is.True, "seafood key kept (implied)");
+            Assert.That(result.ContainsKey("gdst:broodstockSource"), Is.False, "aquaculture key removed");
+            Assert.That(result.ContainsKey("gdst:aquacultureMethod"), Is.False, "aquaculture key removed");
+        }
+
+        [Test]
+        public void AquacultureAndWildcaught_KeepsEverything()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Wildcaught, GdstModule.Aquaculture });
+            var result = JObject.Parse(ModuleMinifier.Minify(Sample, allowed));
+
+            Assert.That(result.ContainsKey("cbvmda:vesselCatchInformationList"), Is.True);
+            Assert.That(result.ContainsKey("gdst:broodstockSource"), Is.True);
+            Assert.That(result.ContainsKey("gdst:aquacultureMethod"), Is.True);
+            Assert.That(result.ContainsKey("cbvmda:unloadingPort"), Is.True);
+        }
+
+        [Test]
+        public void ModuleSet_Expand_AddsCoreAndImpliedSeafood()
+        {
+            var aqua = ModuleSet.Expand(new[] { GdstModule.Aquaculture });
+            Assert.That(aqua, Does.Contain(GdstModule.Core));
+            Assert.That(aqua, Does.Contain(GdstModule.Seafood));
+            Assert.That(aqua, Does.Contain(GdstModule.Aquaculture));
+            Assert.That(aqua, Does.Not.Contain(GdstModule.Wildcaught));
+        }
+
+        private const string SourceDestSample = @"{
+            ""eventID"": ""urn:uuid:1"",
+            ""sourceList"": [
+                { ""type"": ""location"", ""source"": ""urn:gdst:loc:vessel1"" },
+                { ""type"": ""owning_party"", ""source"": ""urn:gdst:party:fisherman"" }
+            ],
+            ""destinationList"": [
+                { ""type"": ""location"", ""destination"": ""urn:gdst:loc:vessel2"" },
+                { ""type"": ""owning_party"", ""destination"": ""urn:gdst:party:processor"" }
+            ]
+        }";
+
+        [Test]
+        public void CoreOnly_StripsPartyEntries_KeepsLocationAndList()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
+            var result = JObject.Parse(ModuleMinifier.Minify(SourceDestSample, allowed));
+
+            var sourceList = (JArray)result["sourceList"]!;
+            Assert.That(sourceList, Has.Count.EqualTo(1), "owning_party source entry removed");
+            Assert.That(sourceList[0]["type"]!.Value<string>(), Is.EqualTo("location"));
+
+            var destinationList = (JArray)result["destinationList"]!;
+            Assert.That(destinationList, Has.Count.EqualTo(1), "owning_party destination entry removed");
+            Assert.That(destinationList[0]["type"]!.Value<string>(), Is.EqualTo("location"));
+            Assert.That(destinationList[0].Value<JObject>()!.ContainsKey("destination"), Is.True);
+        }
+
+        [Test]
+        public void Seafood_KeepsPartyEntries()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Wildcaught }); // implies Seafood
+            var result = JObject.Parse(ModuleMinifier.Minify(SourceDestSample, allowed));
+
+            Assert.That((JArray)result["sourceList"]!, Has.Count.EqualTo(2), "party entries kept");
+            Assert.That((JArray)result["destinationList"]!, Has.Count.EqualTo(2), "party entries kept");
+        }
+
+        [Test]
+        public void CoreOnly_PartyOnlyList_CollapsesEntirely()
+        {
+            const string partyOnly = @"{
+                ""eventID"": ""urn:uuid:1"",
+                ""sourceList"": [
+                    { ""type"": ""owning_party"", ""source"": ""urn:gdst:party:fisherman"" }
+                ]
+            }";
+
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
+            var result = JObject.Parse(ModuleMinifier.Minify(partyOnly, allowed));
+
+            Assert.That(result.ContainsKey("sourceList"), Is.False, "empty list pruned after stripping its only entry");
+        }
+
+        // A location and a trade item in the GS1 Web Vocab master-data shape, carrying one
+        // classification value per module plus an unknown value that no module owns.
+        private const string ClassificationSample = @"{
+            ""location"": {
+                ""globalLocationNumber"": ""urn:gdst:loc:1"",
+                ""gdst:locationClassification"": [
+                    { ""type"": ""GDST"", ""value"": ""Land Facility"" },
+                    { ""type"": ""GDST"", ""value"": ""processor"" },
+                    { ""type"": ""GDST"", ""value"": ""vessel"" },
+                ]
+            },
+            ""tradeitem"": {
+                ""gtin"": ""urn:gdst:product:1"",
+                ""gdst:productClassification"": [
+                    { ""type"": ""GDST"", ""value"": ""seafood"" },
+                    { ""type"": ""GDST"", ""value"": ""processed"" },
+                    { ""type"": ""GDST"", ""value"": ""WildCaught"" },
+                    { ""type"": ""GDST"", ""value"": ""farmed"" },
+                    { ""type"": ""GDST"", ""value"": ""feed"" },
+                    { ""type"": ""GDST"", ""value"": ""developing"" },
+                    { ""type"": ""GDST"", ""value"": ""mature"" },
+                    { ""type"": ""GDST"", ""value"": ""live"" },
+                ]
+            }
+        }";
+
+        private static List<string?> ClassificationValues(JObject root, string element, string key)
+        {
+            var list = root[element]?[key] as JArray ?? new JArray();
+            return list.Select(t => t["value"]?.Value<string>()).ToList();
+        }
+
+        [Test]
+        public void CoreOnly_Classifications_KeepsOnlyLandFacility()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
+            var result = JObject.Parse(ModuleMinifier.Minify(ClassificationSample, allowed));
+
+            Assert.That(ClassificationValues(result, "location", "gdst:locationClassification"), Is.EqualTo(new[] { "Land Facility" }), "core keeps only the land facility location classification");
+            Assert.That(((JObject)result["tradeitem"]!).ContainsKey("gdst:productClassification"), Is.False, "no product classification is core-owned, so the emptied list is pruned");
+        }
+
+        [Test]
+        public void Seafood_Classifications_KeepsSeafoodValues_StripsOthers()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Seafood });
+            var result = JObject.Parse(ModuleMinifier.Minify(ClassificationSample, allowed));
+
+            Assert.That(ClassificationValues(result, "location", "gdst:locationClassification"), Is.EqualTo(new[] { "Land Facility", "processor" }), "seafood keeps land facility (core) and processor");
+            Assert.That(ClassificationValues(result, "tradeitem", "gdst:productClassification"), Is.EqualTo(new[] { "seafood", "processed" }), "seafood keeps only its product values; unknown 'organic' is stripped");
+        }
+
+        [Test]
+        public void Wildcaught_Classifications_KeepsVesselAndWildcaught()
+        {
+            // Wildcaught implies Seafood, so the seafood values are kept too.
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Wildcaught });
+            var result = JObject.Parse(ModuleMinifier.Minify(ClassificationSample, allowed));
+
+            Assert.That(ClassificationValues(result, "location", "gdst:locationClassification"), Is.EqualTo(new[] { "Land Facility", "processor", "vessel" }));
+            Assert.That(ClassificationValues(result, "tradeitem", "gdst:productClassification"), Is.EqualTo(new[] { "seafood", "processed", "WildCaught" }));
+        }
+
+        [Test]
+        public void Aquaculture_Classifications_KeepsAquacultureProductValues()
+        {
+            // Aquaculture implies Seafood but not Wildcaught, so vessel and WildCaught are stripped.
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Aquaculture });
+            var result = JObject.Parse(ModuleMinifier.Minify(ClassificationSample, allowed));
+
+            Assert.That(ClassificationValues(result, "location", "gdst:locationClassification"), Is.EqualTo(new[] { "Land Facility", "processor" }));
+            Assert.That(ClassificationValues(result, "tradeitem", "gdst:productClassification"), Is.EqualTo(new[] { "seafood", "processed", "farmed", "feed", "developing", "mature", "live" }));
+        }
+
+        // An event carrying certification lists both on the root and on the ilmd, with one
+        // certificate per owning module plus an unlabelled type that no module owns.
+        private const string CertificationSample = @"{
+            ""eventID"": ""urn:uuid:1"",
+            ""cbvmda:certificationList"": {
+                ""certification"": [
+                    { ""gdst:certificationType"": ""urn:gdst:certType:harvestCoC"", ""certificationValue"": ""abc123"" },
+                    { ""gdst:certificationType"": ""urn:gdst:certType:legalAuth"", ""certificationValue"": ""def456"" },
+                    { ""gdst:certificationType"": ""urn:gdst:certType:fishingAuth"", ""certificationValue"": ""ghi789"" },
+                    { ""gdst:certificationType"": ""urn:gdst:certType:somethingElse"", ""certificationValue"": ""jkl012"" }
+                ]
+            },
+            ""ilmd"": {
+                ""cbvmda:certificationList"": {
+                    ""certification"": [
+                        { ""gdst:certificationType"": ""urn:gdst:certType:humanPolicy"", ""certificationValue"": ""mno345"" },
+                        { ""gdst:certificationType"": ""urn:gdst:certType:landingAuth"", ""certificationValue"": ""pqr678"" }
+                    ]
+                }
+            }
+        }";
+
+        private static List<string?> CertificationTypes(JToken? certList)
+        {
+            var list = certList?["certification"] as JArray ?? new JArray();
+            return list.Select(t => t["gdst:certificationType"]?.Value<string>()).ToList();
+        }
+
+        [Test]
+        public void Seafood_Certifications_KeepsSeafoodAndUnlabelled_StripsOtherModules()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Seafood });
+            var result = JObject.Parse(ModuleMinifier.Minify(CertificationSample, allowed));
+
+            Assert.That(CertificationTypes(result["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:harvestCoC", "urn:gdst:certType:somethingElse" }), "seafood keeps its own certs and unlabelled types; aquaculture and wildcaught certs are stripped");
+            Assert.That(CertificationTypes(result["ilmd"]?["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:humanPolicy" }), "ilmd certification list is filtered the same way as the event root");
+        }
+
+        [Test]
+        public void Aquaculture_Certifications_KeepsLegalAuth_StripsWildcaught()
+        {
+            // Aquaculture implies Seafood, so the seafood certs are kept too.
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Aquaculture });
+            var result = JObject.Parse(ModuleMinifier.Minify(CertificationSample, allowed));
+
+            Assert.That(CertificationTypes(result["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:harvestCoC", "urn:gdst:certType:legalAuth", "urn:gdst:certType:somethingElse" }));
+            Assert.That(CertificationTypes(result["ilmd"]?["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:humanPolicy" }), "landingAuth is wildcaught-owned and is stripped");
+        }
+
+        [Test]
+        public void Wildcaught_Certifications_KeepsFishingAndLandingAuth_StripsAquaculture()
+        {
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Wildcaught });
+            var result = JObject.Parse(ModuleMinifier.Minify(CertificationSample, allowed));
+
+            Assert.That(CertificationTypes(result["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:harvestCoC", "urn:gdst:certType:fishingAuth", "urn:gdst:certType:somethingElse" }));
+            Assert.That(CertificationTypes(result["ilmd"]?["cbvmda:certificationList"]), Is.EqualTo(new[] { "urn:gdst:certType:humanPolicy", "urn:gdst:certType:landingAuth" }));
+        }
+
+        [Test]
+        public void Seafood_CertificationList_CollapsesWhenAllEntriesStripped()
+        {
+            const string moduleOnlyCerts = @"{
+                ""eventID"": ""urn:uuid:1"",
+                ""cbvmda:certificationList"": {
+                    ""certification"": [
+                        { ""gdst:certificationType"": ""urn:gdst:certType:legalAuth"", ""certificationValue"": ""def456"" },
+                        { ""gdst:certificationType"": ""urn:gdst:certType:fishingAuth"", ""certificationValue"": ""ghi789"" }
+                    ]
+                }
+            }";
+
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Seafood });
+            var result = JObject.Parse(ModuleMinifier.Minify(moduleOnlyCerts, allowed));
+
+            Assert.That(result.ContainsKey("cbvmda:certificationList"), Is.False, "the certification list collapses entirely when every entry was stripped");
+        }
+
+        /// <summary>
+        /// Minifying a schema-valid EPCIS query document must never invalidate it: for every module
+        /// set, mapping the minified JSON with schema validation enabled must succeed. This guards
+        /// against regressions like pruning the required (but legitimately empty) queryName property.
+        /// </summary>
+        [Test]
+        [TestCase(new GdstModule[] { GdstModule.Core })]
+        [TestCase(new GdstModule[] { GdstModule.Seafood })]
+        [TestCase(new GdstModule[] { GdstModule.Wildcaught })]
+        [TestCase(new GdstModule[] { GdstModule.Aquaculture })]
+        [TestCase(new GdstModule[] { GdstModule.Wildcaught, GdstModule.Aquaculture })]
+        public void Minify_EPCISQueryDocument_PreservesJsonSchemaValidity(GdstModule[] modules)
+        {
+            string json = OpenTraceabilityTests.ReadTestData("EPCISQueryDocument.GDST.jsonld");
+
+            // Prove the input is schema-valid to begin with; the mapper throws on schema violations.
+            Assert.DoesNotThrow(() => OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(json), "The input test data is not schema-valid; the test cannot prove anything about minification.");
+
+            var allowed = ModuleSet.Expand(modules);
+            string minified = ModuleMinifier.Minify(json, allowed);
+
+            Assert.DoesNotThrow(() => OpenTraceability.Mappers.OpenTraceabilityMappers.EPCISQueryDocument.JSON.Map(minified), $"Minifying for modules [{string.Join("+", modules)}] produced JSON that is no longer valid against the EPCIS JSON schema.");
+        }
+
+        [Test]
+        public void Minify_EPCISQueryDocument_KeepsEmptyQueryName()
+        {
+            string json = OpenTraceabilityTests.ReadTestData("EPCISQueryDocument.GDST.jsonld");
+
+            var allowed = ModuleSet.Expand(new[] { GdstModule.Core });
+            var result = JObject.Parse(ModuleMinifier.Minify(json, allowed));
+
+            JToken? queryName = result["epcisBody"]?["queryResults"]?["queryName"];
+            Assert.That(queryName, Is.Not.Null, "The schema-required queryName property was pruned by minification.");
+        }
+    }
+}

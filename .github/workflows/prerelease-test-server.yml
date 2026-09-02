@@ -1,0 +1,49 @@
+name: Prerelease Test Server
+
+on:
+  push:
+    branches: [ gdst-2-0-0 ]
+    paths:
+      - 'CSharp/**'
+      # The image embeds four schema documents from docs/ (see OpenTraceability.csproj), so a
+      # schema edit must rebuild it - otherwise :beta silently keeps serving the old schema.
+      - 'docs/**'
+      - '.github/workflows/prerelease-test-server.yml'
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: test-traceability-server
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # The build context must be the repository root: the Dockerfile copies both CSharp/ and
+      # docs/ so the library's ..\..\docs embedded schema resource links resolve.
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: CSharp/OpenTraceability.TestServer/Dockerfile
+          push: true
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:beta

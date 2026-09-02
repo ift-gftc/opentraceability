@@ -1,0 +1,5 @@
+{
+  "modules": [],
+  "description": "GDST demo dataset served with Core (baseline EPCIS) support only — all module-specific KDEs are minified away.",
+  "files": [ "_shared/gdst-testdata01.json" ]
+}

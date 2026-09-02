@@ -8,11 +8,11 @@ namespace OpenTraceability.Models.Events.KDEs
 {
     public class EventKDECountry : EventKDEBase, IEventKDE
     {
-        public Country Value { get; set; }
+        public Country? Value { get; set; }
 
         public Type ValueType => typeof(Country);
 
-        public JToken GetJson()
+        public JToken? GetJson()
         {
             if (Value == null)
             {
@@ -24,7 +24,7 @@ namespace OpenTraceability.Models.Events.KDEs
             }
         }
 
-        public XElement GetXml()
+        public XElement? GetXml()
         {
             if (Value == null)
             {

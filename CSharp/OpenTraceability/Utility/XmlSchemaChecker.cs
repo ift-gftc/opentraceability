@@ -16,17 +16,18 @@ namespace OpenTraceability.Utility
 
         public bool Validate(XDocument xml, string schemaURL, out string error)
         {
-            XmlReader reader = null;
+            XmlReader? reader = null;
 
-            // sets the string value of the passed in parameter called error to null
+            // The finally block always overwrites this with the collected validation output, so the
+            // out parameter is never null when the method returns.
             StringBuilder validationError = new StringBuilder();
-            error = null;
+            error = string.Empty;
 
             // initializes a bool to false
             bool bFileOk = false;
 
             // initializes a TextReader object
-            TextReader stringReader = null;
+            TextReader? stringReader = null;
 
             try
             {
@@ -53,7 +54,7 @@ namespace OpenTraceability.Utility
                 settings.ValidationType = ValidationType.Schema;
 
                 // assigns the value of XmlSchemaSet to our XmlReaderSettings Schemas property
-                settings.Schemas = GetSchema(schemaURL) ?? throw new Exception("Failed to load schema with url " + schemaURL);
+                settings.Schemas = GetSchema(schemaURL);
 
                 // sets bool to true
                 bool bOk = true;
@@ -139,19 +140,23 @@ namespace OpenTraceability.Utility
                 // adds this XmlSchema to our XmlSchemaSet
                 sc.Add(schema);
 
-                CachedXmlSchema cachedSchema = new CachedXmlSchema();
-                cachedSchema.URL = url;
-                cachedSchema.SchemaSet = sc;
+                CachedXmlSchema cachedSchema = new CachedXmlSchema(url, sc);
                 _cache.Add(url, cachedSchema);
             }
-            return _cache[url]?.SchemaSet;
+            return _cache[url].SchemaSet;
         }
     }
 
     class CachedXmlSchema
     {
+        public CachedXmlSchema(string url, XmlSchemaSet schemaSet)
+        {
+            URL = url;
+            SchemaSet = schemaSet;
+        }
+
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
-        public string URL { get; set; }
-        public XmlSchemaSet SchemaSet { get; set; }
+        public string URL { get; }
+        public XmlSchemaSet SchemaSet { get; }
     }
 }

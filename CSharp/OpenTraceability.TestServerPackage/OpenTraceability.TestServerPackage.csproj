@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <Title>Open Traceability - Test Server</Title>
@@ -15,13 +15,46 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
+    <!-- The hostable Kestrel server (Host\) needs the ASP.NET Core shared framework; the
+         framework reference flows to package consumers via the nuspec. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The Host\ sources were authored in a Web SDK project, which injects these usings
+         implicitly; a plain SDK library does not, so they are declared here. -->
+    <Using Include="Microsoft.AspNetCore.Builder" />
+    <Using Include="Microsoft.AspNetCore.Hosting" />
+    <Using Include="Microsoft.AspNetCore.Http" />
+    <Using Include="Microsoft.AspNetCore.Mvc" />
+    <Using Include="Microsoft.AspNetCore.Routing" />
+    <Using Include="Microsoft.Extensions.Configuration" />
+    <Using Include="Microsoft.Extensions.DependencyInjection" />
+    <Using Include="Microsoft.Extensions.Hosting" />
+    <Using Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenTraceability\OpenTraceability.csproj" />
+    <ProjectReference Include="..\OpenTraceability.GDST\OpenTraceability.GDST.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Seed datasets shipped with the package; each subfolder is ingested as a dataset on startup. -->
+    <Content Include="SeedData\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Packed as the NuGet package readme (PackageReadmeFile). Deliberately not copied to build
+         output: CopyToOutputDirectory made it ride ProjectReferences into every consumer's bin/
+         and into the TestServer container image, where a packaging artefact has no business. -->
     <None Update="README_TESTSERVER.md">
       <PackagePath>\</PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>True</Pack>
     </None>
   </ItemGroup>

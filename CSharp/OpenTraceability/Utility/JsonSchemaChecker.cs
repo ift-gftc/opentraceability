@@ -1,73 +1,146 @@
 ﻿using Json.Schema;
-using Nito.AsyncEx;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenTraceability.Utility
 {
     public static class JsonSchemaChecker
     {
-        private static AsyncLock _lock = new AsyncLock();
-        private static ConcurrentDictionary<string, string> _schemaCache = new ConcurrentDictionary<string, string>();
+        private const string EpcisSchemaUrl = "https://ref.gs1.org/standards/epcis/epcis-json-schema.json";
+        private const string DigitalLinkSchemaKey = "DigitalLink";
+        private const string LinksetSchemaKey = "Linkset";
+        private const string GdstSchemaKey = "GDST";
+        private const string EpcisBaseSchemaKey = "EPCIS_BASE";
+
+        private static readonly HttpClient _httpClient = new HttpClient();
+
+        private static readonly IReadOnlyDictionary<string, JsonSchema> _builtInSchemas;
+
+        private static readonly ConcurrentDictionary<string, Lazy<Task<JsonSchema>>> _remoteSchemaCache =
+            new ConcurrentDictionary<string, Lazy<Task<JsonSchema>>>(StringComparer.Ordinal);
+
+        static JsonSchemaChecker()
+        {
+            var loader = new EmbeddedResourceLoader();
+
+            _builtInSchemas = new Dictionary<string, JsonSchema>(StringComparer.Ordinal)
+            {
+                [EpcisSchemaUrl] = BuildSchema(
+                    loader.ReadString(
+                        "OpenTraceability",
+                        "OpenTraceability.Utility.Data.EPCISJsonSchema.jsonld")),
+
+                [DigitalLinkSchemaKey] = BuildSchema(
+                    loader.ReadString(
+                        "OpenTraceability",
+                        "OpenTraceability.Utility.Data.DigitalLinkSchema.json")),
+
+                [LinksetSchemaKey] = BuildSchema(
+                    loader.ReadString(
+                        "OpenTraceability",
+                        "OpenTraceability.Utility.Data.LinksetSchema.json")),
+
+                [GdstSchemaKey] = BuildSchema(
+                    loader.ReadString(
+                        "OpenTraceability",
+                        "OpenTraceability.Utility.Data.gdst_json_schema.json")),
+
+                [EpcisBaseSchemaKey] = BuildSchema(
+                    loader.ReadString(
+                        "OpenTraceability",
+                        "OpenTraceability.Utility.Data.epcis_schema.json"))
+            };
+        }
 
         public static async Task<List<string>> IsValidAsync(string jsonStr, string schemaURL)
         {
-            List<string> errors = new List<string>();
-            if (!_schemaCache.TryGetValue(schemaURL, out string schemaStr))
-            {
-                using (await _lock.LockAsync())
+            if (string.IsNullOrWhiteSpace(jsonStr))
+                throw new ArgumentException("JSON cannot be null or empty.", nameof(jsonStr));
+
+            if (string.IsNullOrWhiteSpace(schemaURL))
+                throw new ArgumentException("Schema URL cannot be null or empty.", nameof(schemaURL));
+
+            JsonSchema schema = await GetSchemaAsync(schemaURL).ConfigureAwait(false);
+
+            using JsonDocument jDoc = JsonDocument.Parse(jsonStr);
+
+            EvaluationResults results = schema.Evaluate(
+                jDoc.RootElement,
+                new EvaluationOptions
                 {
-                    if (schemaURL == "https://ref.gs1.org/standards/epcis/epcis-json-schema.json")
-                    {
-                        EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                        schemaStr = loader.ReadString("OpenTraceability", "OpenTraceability.Utility.Data.EPCISJsonSchema.jsonld");
-                        _schemaCache.TryAdd(schemaURL, schemaStr);
-                    }
-                    else if (schemaURL == "DigitalLink")
-                    {
-                        EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                        schemaStr = loader.ReadString("OpenTraceability", "OpenTraceability.Utility.Data.DigitalLinkSchema.json");
-                        _schemaCache.TryAdd(schemaURL, schemaStr);
-                    }
-                    else if (schemaURL == "GDST")
-                    {
-                        EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                        schemaStr = loader.ReadString("OpenTraceability", "OpenTraceability.Utility.Data.gdst_json_schema.json");
-                        _schemaCache.TryAdd(schemaURL, schemaStr);
-                    }
-                    else if (schemaURL == "EPCIS_BASE")
-                    {
-                        EmbeddedResourceLoader loader = new EmbeddedResourceLoader();
-                        schemaStr = loader.ReadString("OpenTraceability", "OpenTraceability.Utility.Data.epcis_schema.json");
-                        _schemaCache.TryAdd(schemaURL, schemaStr);
-                    }
-                    else
-                    {
-                        using (HttpClient client = new HttpClient())
-                        {
-                            schemaStr = await client.GetStringAsync(schemaURL);
-                            _schemaCache.TryAdd(schemaURL, schemaStr);
-                        }
-                    }
-                }
-            }
+                    OutputFormat = OutputFormat.List
+                });
 
-            var jDoc = JsonDocument.Parse(jsonStr);
-            var mySchema = JsonSchema.FromText(schemaStr);
-            var results = mySchema.Evaluate(jDoc, new EvaluationOptions() { OutputFormat = OutputFormat.List });
-            if (!results.IsValid)
+            if (results.IsValid)
+                return new List<string>();
+
+            IEnumerable<string> rootErrors =
+                results.Errors?.Select(e => $"{e.Key} :: {e.Value}")
+                ?? Enumerable.Empty<string>();
+
+            IEnumerable<string> detailErrors =
+                results.Details?
+                    .SelectMany(GetErrorsRecursive)
+                ?? Enumerable.Empty<string>();
+
+            return rootErrors
+                .Concat(detailErrors)
+                .Distinct()
+                .ToList();
+        }
+
+        private static Task<JsonSchema> GetSchemaAsync(string schemaURL)
+        {
+            if (_builtInSchemas.TryGetValue(schemaURL, out JsonSchema builtInSchema))
+                return Task.FromResult(builtInSchema);
+
+            Lazy<Task<JsonSchema>> lazySchema = _remoteSchemaCache.GetOrAdd(
+                schemaURL,
+                key => new Lazy<Task<JsonSchema>>(
+                    () => DownloadAndBuildSchemaAsync(key),
+                    LazyThreadSafetyMode.ExecutionAndPublication));
+
+            return lazySchema.Value;
+        }
+
+        private static async Task<JsonSchema> DownloadAndBuildSchemaAsync(string schemaURL)
+        {
+            string schemaStr = await _httpClient
+                .GetStringAsync(schemaURL)
+                .ConfigureAwait(false);
+
+            return BuildSchema(schemaStr);
+        }
+
+        private static JsonSchema BuildSchema(string schemaStr)
+        {
+            var buildOptions = new BuildOptions
             {
-                IEnumerable<string> rootErrors = results.Errors?.Select(e => string.Format("{0} :: {1}", e.Key, e.Value)) ?? Enumerable.Empty<string>();
-                IEnumerable<string> detailErrors = results.Details?.SelectMany(d => (d.Errors ?? new Dictionary<string, string>()).Select(e => string.Format("{0} :: {1}", e.Key, e.Value))) ?? Enumerable.Empty<string>();
+                // Fresh registry per built schema avoids:
+                // JsonSchemaException: Overwriting registered schemas is not permitted.
+                SchemaRegistry = new SchemaRegistry()
+            };
 
-                errors = rootErrors.Concat(detailErrors).Distinct().ToList();
-            }
+            return JsonSchema.FromText(schemaStr, buildOptions);
+        }
 
-            return errors;
+        private static IEnumerable<string> GetErrorsRecursive(EvaluationResults result)
+        {
+            IEnumerable<string> ownErrors =
+                result.Errors?.Select(e => $"{e.Key} :: {e.Value}")
+                ?? Enumerable.Empty<string>();
+
+            IEnumerable<string> childErrors =
+                result.Details?.SelectMany(GetErrorsRecursive)
+                ?? Enumerable.Empty<string>();
+
+            return ownErrors.Concat(childErrors);
         }
     }
 }

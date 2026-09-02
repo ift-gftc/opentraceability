@@ -30,22 +30,22 @@ namespace OpenTraceability.Utility
         /// </summary>
         public static DateTimeOffset? TryConvertToDateTimeOffset(this string str)
         {
-            if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dt))
+            if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTimeOffset dt))
             {
                 return dt;
             }
-            else if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ssK", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+            else if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ssK", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out dt))
             {
                 return dt;
             }
             for (int i = 0; i <= 7; i++)
             {
                 string f = "".PadLeft(i, 'f');
-                if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ss.{f}Z", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ss.{f}Z", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out dt))
                 {
                     return dt;
                 }
-                else if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ss.{f}K", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                else if (DateTimeOffset.TryParseExact(str, $"yyyy-MM-ddTHH:mm:ss.{f}K", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out dt))
                 {
                     return dt;
                 }

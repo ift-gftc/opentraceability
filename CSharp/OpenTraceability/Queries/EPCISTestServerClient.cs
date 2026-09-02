@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -16,32 +18,66 @@ namespace OpenTraceability.Queries
     /// </summary>
     public class EPCISTestServerClient
     {
-        string _baseURL;
-        EPCISDataFormat _format;
-        EPCISVersion _version;
+        protected string _baseURL;
+        protected EPCISDataFormat _format;
+        protected EPCISVersion _version;
+        protected string _apiKey;
+        protected string _dataset;
+        protected string[] _modules;
+        private bool _datasetEnsured;
 
-        public EPCISTestServerClient(string baseURL, EPCISDataFormat format, EPCISVersion version)
+        /// <summary>
+        /// Creates a new client. Each client instance is bound to a single dataset on the server,
+        /// identified by the X-Dataset-Id header. When no dataset id is provided a unique one is
+        /// generated so that callers get an isolated dataset by default. The server requires every
+        /// dataset to exist before use, so the client creates its dataset (with
+        /// <paramref name="modules"/>, defaulting to all GDST modules for full-fidelity responses)
+        /// on first contact.
+        /// </summary>
+        public EPCISTestServerClient(string baseURL, string apiKey, EPCISDataFormat format, EPCISVersion version, string? datasetID = null, IEnumerable<string>? modules = null)
         {
             _baseURL = baseURL;
             _version = version;
             _format = format;
+            _apiKey = apiKey;
+            _dataset = string.IsNullOrEmpty(datasetID) ? Guid.NewGuid().ToString() : datasetID!;
+            _modules = modules?.ToArray() ?? new[] { "Seafood", "Wildcaught", "Aquaculture" };
         }
 
         /// <summary>
-        /// Posts an EPCIS Document to the Test Server and returns
-        /// a blob ID. You will need this blob ID when querying for events
-        /// after.
+        /// Creates this client's dataset on the server (idempotent PUT) so reads and writes are not
+        /// rejected with 404. Runs once per client instance.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <returns>The blob ID of the uploaded traceability data.</returns>
-        public async Task<string> Post(EPCISDocument doc, string? blob_id = null)
+        protected async Task EnsureDatasetAsync(HttpClient client)
         {
-            if (blob_id == null)
+            if (_datasetEnsured) return;
+
+            string url = $"{_baseURL.TrimEnd('/')}/datasets/{Uri.EscapeDataString(_dataset)}";
+            string body = "{\"modules\":[" + string.Join(",", _modules.Select(m => $"\"{m}\"")) + "],\"description\":\"Created by EPCISTestServerClient\"}";
+
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, url))
             {
-                blob_id = Guid.NewGuid().ToString();
+                request.Headers.Add("X-API-Key", _apiKey);
+                request.Content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+                var response = await client.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    string contentStr = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Failed to create dataset '{_dataset}' on the test server: {(int)response.StatusCode} - {response.StatusCode} - {contentStr}");
+                }
             }
 
-            string url = $"{_baseURL.TrimEnd('/')}/epcis/{blob_id}/events";
+            _datasetEnsured = true;
+        }
+
+        /// <summary>
+        /// Posts an EPCIS Document to the Test Server under this client's dataset.
+        /// </summary>
+        /// <param name="doc">The EPCIS document to post.</param>
+        /// <returns>The dataset id the data was posted under. Use this when querying for events after.</returns>
+        public async Task<string> Post(EPCISDocument doc)
+        {
+            string url = $"{_baseURL.TrimEnd('/')}/epcis/events";
 
             IEPCISDocumentMapper mapper = OpenTraceabilityMappers.EPCISDocument.XML;
             string contentType = "application/xml";
@@ -54,9 +90,12 @@ namespace OpenTraceability.Queries
             using (var clientItem = HttpClientPool.GetClient())
             {
                 var client = clientItem.Value;
+                await EnsureDatasetAsync(client);
 
                 HttpRequestMessage request = new HttpRequestMessage();
                 request.RequestUri = new Uri(url);
+                request.Headers.Add("X-API-Key", _apiKey);
+                request.Headers.Add("X-Dataset-Id", _dataset);
 
                 if (_version == EPCISVersion.V1)
                 {
@@ -93,10 +132,6 @@ namespace OpenTraceability.Queries
                 request.Content = content;
                 request.Method = HttpMethod.Post;
 
-                // calculate the host field for the request
-                string host = new Uri(url).Host;
-                request.Headers.Host = host;
-
                 var response = await client.SendAsync(request);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -104,54 +139,38 @@ namespace OpenTraceability.Queries
                     throw new Exception($"{(int)response.StatusCode} - {response.StatusCode} - {contentStr}");
                 }
 
-                return blob_id;
+                return _dataset;
             }
         }
 
         /// <summary>
-        /// Queries the test server blob for events that match the parameters.
+        /// Queries this client's dataset for events that match the parameters.
         /// </summary>
-        /// <param name="blob_id">The ID of the blob to query.</param>
         /// <param name="parameters">The EPCIS Query parameters.</param>
         /// <returns>The EPCIS Query results.</returns>
-        public async Task<EPCISQueryResults> QueryEvents(string blob_id, EPCISQueryParameters parameters)
+        public async Task<EPCISQueryResults> QueryEvents(EPCISQueryParameters parameters)
         {
             using (var clientItem = HttpClientPool.GetClient())
             {
                 var client = clientItem.Value;
-                string url = $"{_baseURL.TrimEnd('/')}/epcis/{blob_id}";
-                EPCISQueryInterfaceOptions options = new EPCISQueryInterfaceOptions()
-                {
-                    URL = new Uri(url),
-                    Format = _format,
-                    Version = _version,
-                    EnableStackTrace = true
-                };
-
+                await EnsureDatasetAsync(client);
+                EPCISQueryInterfaceOptions options = BuildQueryOptions();
                 return await EPCISTraceabilityResolver.QueryEvents(options, parameters, client);
             }
         }
 
         /// <summary>
-        /// Queries and performs a traceback against the test server blob given the EPC.
+        /// Queries and performs a traceback against this client's dataset given the EPC.
         /// </summary>
-        /// <param name="blob_id">The ID of the blob to query.</param>
         /// <param name="epc">The EPC to perform the traceback on.</param>
         /// <returns>The epcis query results.</returns>
-        public async Task<EPCISQueryResults> Traceback(string blob_id, EPC epc)
+        public async Task<EPCISQueryResults> Traceback(EPC epc)
         {
             using (var clientItem = HttpClientPool.GetClient())
             {
                 var client = clientItem.Value;
-                string url = $"{_baseURL.TrimEnd('/')}/epcis/{blob_id}";
-                EPCISQueryInterfaceOptions options = new EPCISQueryInterfaceOptions()
-                {
-                    URL = new Uri(url),
-                    Format = _format,
-                    Version = _version,
-                    EnableStackTrace = true
-                };
-
+                await EnsureDatasetAsync(client);
+                EPCISQueryInterfaceOptions options = BuildQueryOptions();
                 return await EPCISTraceabilityResolver.Traceback(options, epc, client);
             }
         }
@@ -159,23 +178,48 @@ namespace OpenTraceability.Queries
         /// <summary>
         /// Resolves all the unknown master data in the EPCIS document.
         /// </summary>
-        /// <param name="blob_id">The ID of the blob to query.</param>
         /// <param name="doc">The EPCIS document to resolve the master data for.</param>
-        public async Task ResolveMasterData(string blob_id, EPCISBaseDocument doc)
+        public async Task ResolveMasterData(EPCISBaseDocument doc)
         {
             using (var clientItem = HttpClientPool.GetClient())
             {
                 var client = clientItem.Value;
-                string url = $"{_baseURL.TrimEnd('/')}/digitallink/{blob_id}";
-                DigitalLinkQueryOptions options = new DigitalLinkQueryOptions()
-                {
-                    URL = new Uri(url),
-                    EnableStackTrace = true
-                };
-
+                await EnsureDatasetAsync(client);
+                DigitalLinkQueryOptions options = BuildDigitalLinkOptions();
                 await MasterDataResolver.ResolveMasterData(options, doc, client);
             }
         }
+
+        /// <summary>
+        /// Builds the EPCIS query interface options for this client's dataset, including the
+        /// API key and X-Dataset-Id header.
+        /// </summary>
+        protected EPCISQueryInterfaceOptions BuildQueryOptions()
+        {
+            return new EPCISQueryInterfaceOptions()
+            {
+                URL = new Uri($"{_baseURL.TrimEnd('/')}/epcis"),
+                Format = _format,
+                Version = _version,
+                APIKey = _apiKey,
+                Headers = { ["X-Dataset-Id"] = _dataset },
+                EnableStackTrace = true
+            };
+        }
+
+        /// <summary>
+        /// Builds the digital link query options for this client's dataset, including the
+        /// API key and X-Dataset-Id header.
+        /// </summary>
+        protected DigitalLinkQueryOptions BuildDigitalLinkOptions()
+        {
+            return new DigitalLinkQueryOptions()
+            {
+                URL = new Uri($"{_baseURL.TrimEnd('/')}/digitallink"),
+                APIKey = _apiKey,
+                Headers = { ["X-Dataset-Id"] = _dataset },
+                EnableStackTrace = true
+            };
+        }
     }
 }
-

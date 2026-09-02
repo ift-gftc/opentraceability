@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OpenTraceability.Models.Events; // for EPCISBaseDocument
@@ -39,7 +39,7 @@ public class EPCISMasterDataResolvedRule : IDiagnosticsRequestRule
 {
     public string Key { get; set; } = "OT_DIAG_RULE_EPCIS_MASTER_DATA_RESOLVED";
 
-    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object[] obj)
+    public Task<List<DiagnosticsValidationResult>> ExecuteAsync(params object?[] obj)
     {
         if (obj == null || obj.Length < 1)
         {
@@ -99,7 +99,7 @@ public class EPCISMasterDataResolvedRule : IDiagnosticsRequestRule
             // Check source lists for owner parties
             foreach (var source in evt.SourceList)
             {
-                if (source.ParsedType == OpenTraceability.Models.Events.EventSourceType.Owner && !string.IsNullOrWhiteSpace(source.Value))
+                if (source.ParsedType == OpenTraceability.Models.Events.EventSourceType.Owner && source.Value != null && !string.IsNullOrWhiteSpace(source.Value))
                 {
                     var tradingParty = document.GetMasterData<OpenTraceability.Models.MasterData.TradingParty>(source.Value);
                     if (tradingParty == null)
@@ -119,7 +119,7 @@ public class EPCISMasterDataResolvedRule : IDiagnosticsRequestRule
             // Check destination lists for owner parties
             foreach (var dest in evt.DestinationList)
             {
-                if (dest.ParsedType == OpenTraceability.Models.Events.EventDestinationType.Owner && !string.IsNullOrWhiteSpace(dest.Value))
+                if (dest.ParsedType == OpenTraceability.Models.Events.EventDestinationType.Owner && dest.Value != null && !string.IsNullOrWhiteSpace(dest.Value))
                 {
                     var tradingParty = document.GetMasterData<OpenTraceability.Models.MasterData.TradingParty>(dest.Value);
                     if (tradingParty == null)

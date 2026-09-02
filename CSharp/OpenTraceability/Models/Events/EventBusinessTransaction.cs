@@ -12,10 +12,10 @@ namespace OpenTraceability.Models.Events
     {
         [OpenTraceabilityJson("type")]
         [OpenTraceability("@type")]
-        public Uri Type { get; set; }
+        public Uri? Type { get; set; }
 
         [OpenTraceabilityJson("bizTransaction")]
         [OpenTraceability("text()")]
-        public string Value { get; set; }
+        public string? Value { get; set; }
     }
 }

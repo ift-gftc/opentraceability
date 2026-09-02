@@ -32,7 +32,7 @@ namespace OpenTraceability.Models.Events
         /// <summary>
         /// The standard business document header on the EPCIS Document / EPCIS Query Document.
         /// </summary>
-        public StandardBusinessDocumentHeader Header { get; set; }
+        public StandardBusinessDocumentHeader? Header { get; set; }
 
         /// <summary>
         /// One or more events on the EPCIS Document / EPCIS Query Document.
@@ -126,9 +126,22 @@ namespace OpenTraceability.Models.Events
                 }
 
                 // filter: LE_eventTime
+                // Retained for the deprecated LE_eventTime parameter so callers that have not moved to
+                // LT_eventTime keep filtering correctly. Unlike LT_, this bound is inclusive.
+#pragma warning disable CS0618
                 if (parameters.query.LE_eventTime != null)
                 {
                     if (evt.EventTime == null || evt.EventTime > parameters.query.LE_eventTime)
+                    {
+                        continue;
+                    }
+                }
+#pragma warning restore CS0618
+
+                // filter: LT_eventTime
+                if (parameters.query.LT_eventTime != null)
+                {
+                    if (evt.EventTime == null || evt.EventTime >= parameters.query.LT_eventTime)
                     {
                         continue;
                     }
@@ -144,9 +157,22 @@ namespace OpenTraceability.Models.Events
                 }
 
                 // filter: LE_recordTime
+                // Retained for the deprecated LE_recordTime parameter so callers that have not moved to
+                // LT_recordTime keep filtering correctly. Unlike LT_, this bound is inclusive.
+#pragma warning disable CS0618
                 if (parameters.query.LE_recordTime != null)
                 {
                     if (evt.RecordTime == null || evt.RecordTime > parameters.query.LE_recordTime)
+                    {
+                        continue;
+                    }
+                }
+#pragma warning restore CS0618
+
+                // filter: LT_recordTime
+                if (parameters.query.LT_recordTime != null)
+                {
+                    if (evt.RecordTime == null || evt.RecordTime >= parameters.query.LT_recordTime)
                     {
                         continue;
                     }
@@ -206,10 +232,34 @@ namespace OpenTraceability.Models.Events
                     }
                 }
 
+                // filter: EQ_transformationID
+                // Only transformation events carry a transformation ID, so every other event type is
+                // excluded as soon as this parameter is present.
+                if (parameters.query.EQ_transformationID != null && parameters.query.EQ_transformationID.Count > 0)
+                {
+                    if (!HasTransformationIDMatch(evt, parameters.query.EQ_transformationID))
+                    {
+                        continue;
+                    }
+                }
+
                 events.Add(evt);
             }
 
             return events;
+        }
+
+        /// <summary>
+        /// Determines whether the event is a transformation event whose transformation ID is in the filter.
+        /// </summary>
+        private bool HasTransformationIDMatch(IEvent evt, List<string> transformationIDs)
+        {
+            if (evt is not ITransformationEvent transformationEvt || string.IsNullOrWhiteSpace(transformationEvt.TransformationID))
+            {
+                return false;
+            }
+
+            return transformationIDs.Any(id => string.Equals(id, transformationEvt.TransformationID, StringComparison.OrdinalIgnoreCase));
         }
 
         private bool HasMatch(IEvent evt, List<string> epcs, params EventProductType[] allowedTypes)
@@ -231,13 +281,13 @@ namespace OpenTraceability.Models.Events
             return false;
         }
 
-        private bool HasUriMatch(Uri uri, List<string> filter, string prefix, string replacePrefix)
+        private bool HasUriMatch(Uri? uri, List<string> filter, string prefix, string replacePrefix)
         {
             // make sure all of the EQ_bizStep are converted into URI format before comparing
             for (int i = 0; i < filter.Count; i++)
             {
                 string bizStep = filter[i];
-                if (!Uri.TryCreate(bizStep, UriKind.Absolute, out Uri u))
+                if (!Uri.TryCreate(bizStep, UriKind.Absolute, out Uri? u))
                 {
                     filter[i] = replacePrefix + bizStep;
                 }

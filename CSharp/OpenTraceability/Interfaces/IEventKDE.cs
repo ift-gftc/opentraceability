@@ -36,8 +36,8 @@ namespace OpenTraceability.Interfaces
         /// <summary>
         /// Gets the KDE in a JSON-LD format.
         /// </summary>
-        /// <returns>The KDE expressed as JSON-LD.</returns>
-        JToken GetJson();
+        /// <returns>The KDE expressed as JSON-LD, or <see langword="null"/> when the KDE has no value to write.</returns>
+        JToken? GetJson();
 
         /// <summary>
         /// Sets the KDE from the XML expression of it.
@@ -48,7 +48,7 @@ namespace OpenTraceability.Interfaces
         /// <summary>
         /// Gets the KDE in an XML format.
         /// </summary>
-        /// <returns>The KDE expressed as XML.</returns>
-        XElement GetXml();
+        /// <returns>The KDE expressed as XML, or <see langword="null"/> when the KDE has no value to write.</returns>
+        XElement? GetXml();
     }
 }

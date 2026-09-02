@@ -1,0 +1,5 @@
+{
+  "modules": [ "Seafood", "Wildcaught" ],
+  "description": "GDST demo dataset served with the Seafood + Wildcaught modules.",
+  "files": [ "_shared/gdst-testdata01.json" ]
+}

@@ -80,9 +80,9 @@ namespace OpenTraceability.Utility
             throw new Exception("Failed to get base for dimension = " + dimension);
         }
 
-        static public UOM GetUOMFromName(string Name)
+        static public UOM? GetUOMFromName(string Name)
         {
-            UOM uom = null;
+            UOM? uom = null;
             Name = Name.ToLower();
             if (Name == "count")
             {
@@ -129,9 +129,9 @@ namespace OpenTraceability.Utility
             return (uom);
         }
 
-        static public UOM GetUOMFromUNCode(string Name)
+        static public UOM? GetUOMFromUNCode(string Name)
         {
-            UOM uom = null;
+            UOM? uom = null;
             Name = Name.ToUpper();
             if (uomsUNCodeDict.ContainsKey(Name))
             {
@@ -181,7 +181,7 @@ namespace OpenTraceability.Utility
             {
                 lock (_locker)
                 {
-                    UOM uom = UOMS.List.Find(u => u.UNCode == unCode);
+                    UOM? uom = UOMS.List.Find(u => u.UNCode == unCode);
                     if (uom == null)
                     {
                         uom = new UOM();
@@ -196,7 +196,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static bool IsNullOrEmpty(UOM uom)
+        public static bool IsNullOrEmpty(UOM? uom)
         {
             if (uom == null)
             {
@@ -214,7 +214,7 @@ namespace OpenTraceability.Utility
 
         public static UOM ParseFromName(string name)
         {
-            UOM u = null;
+            UOM u;
             try
             {
                 if (string.IsNullOrEmpty(name))
@@ -222,7 +222,7 @@ namespace OpenTraceability.Utility
                     throw new ArgumentNullException(nameof(name));
                 }
 
-                UOM uom = UOMS.GetUOMFromName(name);
+                UOM? uom = UOMS.GetUOMFromName(name);
                 if (uom != null)
                 {
                     u = new UOM();
@@ -307,7 +307,7 @@ namespace OpenTraceability.Utility
                 return (false);
             }
         }
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj != null)
             {
@@ -344,15 +344,15 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public string Name { get; private set; }
+        public string Name { get; private set; } = string.Empty;
 
-        public string Abbreviation { get; private set; }
+        public string Abbreviation { get; private set; } = string.Empty;
 
-        public string UnitDimension { get; private set; }
+        public string UnitDimension { get; private set; } = string.Empty;
 
-        public string SubGroup { get; private set; }
+        public string? SubGroup { get; private set; }
 
-        public string UNCode { get; private set; }
+        public string UNCode { get; private set; } = string.Empty;
 
         public double A { get; private set; }
 
@@ -371,42 +371,6 @@ namespace OpenTraceability.Utility
             C = 1.0;
             D = 0.0;
         }
-
-        //public UOM(XElement xmlUOM)
-        //{
-        //    A = 0.0;
-        //    B = 1.0;
-        //    C = 1.0;
-        //    D = 0.0;
-
-        //    Name = xmlUOM.Attribute("Name")?.Value ?? string.Empty;
-        //    Abbreviation = xmlUOM.Attribute("Abbreviation")?.Value ?? string.Empty;
-        //    UnitDimension = xmlUOM.Attribute("Dimension")?.Value ?? string.Empty;
-        //    UNCode = xmlUOM.Attribute("UNCode")?.Value ?? string.Empty;
-        //    SubGroup = xmlUOM.Attribute("SubGroup")?.Value ?? string.Empty;
-
-        //    if (xmlUOM.Attribute("Factor") != null)
-        //    {
-        //        A = 0.0;
-        //        B = double.Parse(xmlUOM.Attribute("Factor")?.Value ?? string.Empty);
-        //        C = 1.0;
-        //        D = 0.0;
-        //    }
-        //    else if (xmlUOM.Attribute("Numerator") != null)
-        //    {
-        //        A = 0.0;
-        //        B = double.Parse(xmlUOM.Attribute("Numerator")?.Value ?? string.Empty);
-        //        C = double.Parse(xmlUOM.Attribute("Denominator")?.Value ?? string.Empty);
-        //        D = 0.0;
-        //    }
-        //    else if (xmlUOM.Attribute("A") != null)
-        //    {
-        //        A = double.Parse(xmlUOM.Attribute("A")?.Value ?? string.Empty);
-        //        B = double.Parse(xmlUOM.Attribute("B")?.Value ?? string.Empty);
-        //        C = double.Parse(xmlUOM.Attribute("C")?.Value ?? string.Empty);
-        //        D = double.Parse(xmlUOM.Attribute("D")?.Value ?? string.Empty);
-        //    }
-        //}
 
         public UOM(JObject juom)
         {

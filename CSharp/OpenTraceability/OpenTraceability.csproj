@@ -53,6 +53,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="Utility\Data\DigitalLinkSchema.json" />
+		<EmbeddedResource Include="Utility\Data\LinksetSchema.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -78,8 +79,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Crc32.NET" Version="1.2.0" />
-		<PackageReference Include="JsonSchema.Net" Version="4.1.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="JsonSchema.Net" Version="9.2.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 	</ItemGroup>
@@ -89,8 +90,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- Packed as the NuGet package readme (PackageReadmeFile). Deliberately not copied to build
+		     output: CopyToOutputDirectory made it ride ProjectReferences into every consumer's bin/
+		     and into the TestServer container image, where a packaging artefact has no business. -->
 		<None Update="README.md">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>

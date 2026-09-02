@@ -40,17 +40,17 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             document.EPCISVersion = EPCISVersion.V2;
 
             // read the creation date
-            string creationDateAttributeStr = json["creationDate"]?.ToString();
+            string? creationDateAttributeStr = json["creationDate"]?.ToString();
             if (!string.IsNullOrWhiteSpace(creationDateAttributeStr))
             {
-                document.CreationDate = creationDateAttributeStr.TryConvertToDateTimeOffset();
+                document.CreationDate = creationDateAttributeStr?.TryConvertToDateTimeOffset();
             }
 
             // read the content...
             document.Attributes = new Dictionary<string, string>();
 
             // we are going to break down the content into either namespaces, or links to contexts...
-            JArray jContextArray = json["@context"] as JArray;
+            JArray? jContextArray = json["@context"] as JArray;
             if (jContextArray != null)
             {
                 foreach (JToken jt in jContextArray)
@@ -183,7 +183,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             // set the creation date
             if (doc.CreationDate != null)
             {
-                json["creationDate"] = doc.CreationDate.Value.ToString("O");
+                json["creationDate"] = doc.CreationDate.Value.ToUniversalTime().ToString("O");
             }
 
             json["schemaVersion"] = "2.0";
@@ -213,7 +213,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         public static Type GetEventTypeFromProfile(JObject jEvent)
         {
             Enum.TryParse<EventAction>(jEvent["action"]?.ToString(), out var action);
-            string bizStep = jEvent["bizStep"]?.ToString();
+            string? bizStep = jEvent["bizStep"]?.ToString();
             string eventType = jEvent["type"]?.ToString() ?? throw new Exception("type property not set on event " + jEvent.ToString());
 
             var profiles = Setup.Profiles.Where(p => p.EventType.ToString() == eventType && (p.Action == null || p.Action == action) && (p.BusinessStep == null || p.BusinessStep.ToLower() == bizStep?.ToLower())).OrderByDescending(p => p.SpecificityScore).ToList();
@@ -316,7 +316,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 JObject jobj = (JObject)json;
                 foreach (var jprop in jobj.Properties())
                 {
-                    JToken jvalue = jobj[jprop.Name];
+                    JToken? jvalue = jobj[jprop.Name];
                     if (jvalue is JObject)
                     {
                         json[jprop.Name] = CompressVocab((JObject)jvalue);
@@ -378,21 +378,25 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             {
                 CommentHandling = CommentHandling.Ignore,
             };
-            JObject json = JObject.Parse(jEPCISStr, loadSettings);
+            var jsonReaderSettings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
+            JObject json = JsonConvert.DeserializeObject<JObject>(jEPCISStr, jsonReaderSettings) ?? JObject.Parse(jEPCISStr, loadSettings);
 
             JObject jEPCISContext = await JsonContextHelper.GetJsonLDContextAsync("https://ref.gs1.org/standards/epcis/epcis-context.jsonld");
             Dictionary<string, string> namespaces = JsonContextHelper.ScrapeNamespaces(jEPCISContext);
 
-            JArray jEventList = json["epcisBody"]?["eventList"] as JArray;
+            JArray? jEventList = json["epcisBody"]?["eventList"] as JArray;
             if (jEventList == null)
             {
                 jEventList = json["epcisBody"]?["queryResults"]?["resultsBody"]?["eventList"] as JArray;
             }
             if (jEventList != null)
             {
-                foreach (JObject jEvent in jEventList)
+                foreach (JToken jToken in jEventList)
                 {
-                    JsonContextHelper.ExpandVocab(jEvent, jEPCISContext, namespaces);
+                    if (jToken is JObject jEvent)
+                    {
+                        JsonContextHelper.ExpandVocab(jEvent, jEPCISContext, namespaces);
+                    }
                 }
             }
 

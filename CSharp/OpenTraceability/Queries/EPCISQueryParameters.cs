@@ -106,7 +106,7 @@ namespace OpenTraceability.Queries
 
         public EPCISQuery query { get; set; } = new EPCISQuery();
 
-        public bool IsValid(out string error)
+        public bool IsValid(out string? error)
         {
             error = null;
             return true;
@@ -148,7 +148,7 @@ namespace OpenTraceability.Queries
                 }
                 else if (prop.PropertyType == typeof(List<string>))
                 {
-                    List<string> list = prop.GetValue(query) as List<string>;
+                    List<string>? list = prop.GetValue(query) as List<string>;
                     if (list != null && list.Count > 0)
                     {
                         string queryParam = $"{prop.Name}={string.Join(encodedPipe, list.Select(l => HttpUtility.UrlEncode(l)))}";
@@ -157,7 +157,7 @@ namespace OpenTraceability.Queries
                 }
                 else if (prop.PropertyType == typeof(List<Uri>))
                 {
-                    List<Uri> list = prop.GetValue(query) as List<Uri>;
+                    List<Uri>? list = prop.GetValue(query) as List<Uri>;
                     if (list != null && list.Count > 0)
                     {
                         string queryParam = $"{prop.Name}={string.Join(encodedPipe, list.Select(l => HttpUtility.UrlEncode(l.ToString())))}";
@@ -185,8 +185,8 @@ namespace OpenTraceability.Queries
                 }
                 else if (prop.PropertyType == typeof(List<string>))
                 {
-                    List<string> list = prop.GetValue(this.query) as List<string>;
-                    List<string> otherList = prop.GetValue(queryParameters.query) as List<string>;
+                    List<string>? list = prop.GetValue(this.query) as List<string>;
+                    List<string>? otherList = prop.GetValue(queryParameters.query) as List<string>;
                     if (otherList != null)
                     {
                         if (list == null)
@@ -207,8 +207,8 @@ namespace OpenTraceability.Queries
                 }
                 else if (prop.PropertyType == typeof(List<Uri>))
                 {
-                    List<Uri> list = prop.GetValue(this.query) as List<Uri>;
-                    List<Uri> otherList = prop.GetValue(queryParameters.query) as List<Uri>;
+                    List<Uri>? list = prop.GetValue(this.query) as List<Uri>;
+                    List<Uri>? otherList = prop.GetValue(queryParameters.query) as List<Uri>;
                     if (otherList != null)
                     {
                         if (list == null)
@@ -234,9 +234,17 @@ namespace OpenTraceability.Queries
     public class EPCISQuery
     {
         public DateTimeOffset? GE_recordTime { get; set; }
+
+        [Obsolete("LE_recordTime is deprecated. LT_recordTime instead.")]
         public DateTimeOffset? LE_recordTime { get; set; }
+
+        public DateTimeOffset? LT_recordTime { get; set; }
+        
         public DateTimeOffset? GE_eventTime { get; set; }
+        [Obsolete("LE_eventTime is deprecated. LT_eventTime instead.")]
         public DateTimeOffset? LE_eventTime { get; set; }
+        public DateTimeOffset? LT_eventTime { get; set; }
+
         public List<string> eventTypes { get; set; } = new List<string>();
         public List<string> MATCH_epc { get; set; } = new List<string>();
         public List<string> MATCH_epcClass { get; set; } = new List<string>();
@@ -245,6 +253,7 @@ namespace OpenTraceability.Queries
         public List<string> EQ_bizStep { get; set; } = new List<string>();
         public List<Uri> EQ_bizLocation { get; set; } = new List<Uri>();
         public List<string> EQ_action { get; set; } = new List<string>();
+        public List<string> EQ_transformationID { get; set; } = new List<string>();
 
         public bool ShouldSerializeeventTypes()
         {
@@ -284,6 +293,11 @@ namespace OpenTraceability.Queries
         public bool ShouldSerializeEQ_action()
         {
             return EQ_action?.Count > 0;
+        }
+
+        public bool ShouldSerializeEQ_transformationID()
+        {
+            return EQ_transformationID?.Count > 0;
         }
     }
 }

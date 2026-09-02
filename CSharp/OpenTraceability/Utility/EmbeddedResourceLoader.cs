@@ -20,7 +20,7 @@ namespace OpenTraceability.Utility
 
         private Assembly GetAssembly(string assemblyName)
         {
-            Assembly assembly = null;
+            Assembly assembly;
             if (m_assemblyMap.ContainsKey(assemblyName))
             {
                 assembly = m_assemblyMap[assemblyName];
@@ -35,7 +35,7 @@ namespace OpenTraceability.Utility
 
         public byte[] ReadBytes(string assemblyName, string resourceName)
         {
-            byte[] raw = null;
+            byte[]? raw = null;
             try
             {
                 Assembly assembly = GetAssembly(assemblyName);
@@ -93,9 +93,9 @@ namespace OpenTraceability.Utility
             return xDoc;
         }
 
-        public Stream ReadStream(string assemblyName, string resourceName)
+        public Stream? ReadStream(string assemblyName, string resourceName)
         {
-            Stream stream = null;
+            Stream? stream = null;
             try
             {
                 Assembly assembly = GetAssembly(assemblyName);

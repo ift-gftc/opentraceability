@@ -1,15 +1,10 @@
-﻿using OpenTraceability.Models.Events;
+using OpenTraceability.Models.Events;
 using OpenTraceability.Models.Identifiers;
 using OpenTraceability.Utility.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenTraceability.GDST.Events
 {
-    public class GDSTDisaggregationEvent : AggregationEvent<GDSTILMD>, IGDSTEvent
+    public class GDSTDisaggregationEvent : AggregationEvent<GDSTILMD>, IGDSTProductOwnerEvent
     {
         [OpenTraceability(Constants.GDST_NAMESPACE, "productOwner")]
         [OpenTraceabilityJson("gdst:productOwner")]
@@ -17,8 +12,8 @@ namespace OpenTraceability.GDST.Events
 
         public GDSTDisaggregationEvent()
         {
-            this.BusinessStep = new Uri("urn:epcglobal:cbv:bizstep:unpacking");
-            this.Action = EventAction.DELETE;
+            BusinessStep = new Uri("urn:epcglobal:cbv:bizstep:unpacking");
+            Action = EventAction.DELETE;
         }
     }
 }

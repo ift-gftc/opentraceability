@@ -40,66 +40,12 @@ namespace OpenTraceability.Queries
                 throw new Exception("options.Uri is null on the DigitalLinkQueryOptions");
             }
 
-            string? relativeUrl = epc.ToDigitalLinkURI();
+            // Build the base digital link URL (without any linkType query). The per-version helper
+            // adds the legacy ?linkType parameter or the linkset Accept header as appropriate.
+            string relativeUrl = epc.ToDigitalLinkURI();
+            string baseUrl = string.Join("/", [options.URL.ToString().TrimEnd('/'), relativeUrl.TrimStart('/')]);
 
-            relativeUrl += "?linkType=gs1:epcis";
-            string fullURL = string.Join("/", [options.URL.ToString().TrimEnd('/'), relativeUrl.TrimStart('/')]);
-
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri(fullURL);
-            request.Method = HttpMethod.Get;
-
-            // Don't manually set the host, as this can cause issues with redirects
-            //// calculate the host field for the request
-            //string host = options.URL.Host;
-            //request.Headers.Host = host;
-
-            // set accept to "application/json"
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            // DIAGNOSTICS: Execute the rule to validate the Http Headers.   
-            if (report != null)
-            {
-                report.CurrentRequest.HttpRequest = request;
-                await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkHttpRequestRule>(request.Headers);
-            }
-
-            // Send the request.
-            var response = await client.SendAsync(request);
-
-            // DIAGNOSTICS: Execute the rule to validate the Http Headers.   
-            if (report != null)
-            {
-                report.CurrentRequest.HttpResponse = response;
-                report.CurrentRequest.End = DateTime.UtcNow;
-                await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkHttpResponseRule>(response);
-            }
-
-            if (response.IsSuccessStatusCode)
-            {
-                string json = await response.Content.ReadAsStringAsync();
-
-                // DIAGNOSTICS: Execute the rule to validate the JSON.
-                if (report != null)
-                {
-                    report.CurrentRequest.ResponseBody = await response.Content.ReadAsStringAsync();
-                    await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkJsonSchemaRule>(json);
-                }
-
-                // DIAGNOSTICS: Execute the rule to validate a response was found.
-                if (report != null)
-                {
-                    await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkResponseFoundRule>(json);
-                }
-
-                var link = JsonConvert.DeserializeObject<List<DigitalLink>>(json)?.FirstOrDefault();
-                if (link != null)
-                {
-                    return new Uri(link.link.TrimEnd('/') + '/');
-                }
-            }
-
-            return null;
+            return await RequestEPCISQueryInterfaceURL(options, baseUrl, client, report);
         }
 
         /// <summary>
@@ -120,23 +66,57 @@ namespace OpenTraceability.Queries
                 throw new Exception("options.Uri is null on the DigitalLinkQueryOptions");
             }
 
+            // Preserve the historical PGLN URL composition (Uri + relative string) as the base URL;
+            // the per-version helper appends the legacy linkType query or the linkset Accept header.
             string relativeUrl = pgln.ToDigitalLinkURL();
+            string baseUrl = options.URL + relativeUrl;
 
-            relativeUrl += "?linkType=gs1:epcis";
+            return await RequestEPCISQueryInterfaceURL(options, baseUrl, client, report);
+        }
+
+        /// <summary>
+        /// Requests the EPCIS query interface URL from a digital link resolver at the given base
+        /// digital link URL, honoring the resolver standard version on the options.
+        /// </summary>
+        /// <remarks>
+        /// For <see cref="ResolverVersion.ResolverStandard_1_1_2"/> this appends
+        /// <c>?linkType=gs1:epcis</c> and reads the first entry of the legacy flat digital link
+        /// array. For <see cref="ResolverVersion.ResolverStandard_1_2_0"/> it requests the entity's
+        /// linkset (<c>Accept: application/linkset+json</c>, no linkType) and takes the first href
+        /// declared under the <c>https://ref.gs1.org/voc/epcis</c> link relation type. Returns null
+        /// when no EPCIS link can be resolved.
+        /// </remarks>
+        /// <param name="options">Options for querying a digital link resolver.</param>
+        /// <param name="baseUrl">The absolute digital link URL for the identifier, without a linkType query.</param>
+        /// <param name="client">The HTTP client to use to make the request.</param>
+        /// <param name="report">Optional diagnostics report to record the request against.</param>
+        /// <returns>The EPCIS query interface URI, or null when none is found.</returns>
+        private static async Task<Uri?> RequestEPCISQueryInterfaceURL(DigitalLinkQueryOptions options, string baseUrl, HttpClient client, DiagnosticsReport? report)
+        {
+            bool useLinkset = options.ResolverVersion == ResolverVersion.ResolverStandard_1_2_0;
 
             HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri(options.URL + relativeUrl);
             request.Method = HttpMethod.Get;
 
-            // Do not manually set the host, as this can cause issues with redirects
-            //// calculate the host field for the request
-            //string host = options.URL.Host;
-            //request.Headers.Host = host;
+            // Don't manually set the host, as this can cause issues with redirects.
+            if (useLinkset)
+            {
+                // Current standard: request the linkset and parse it client-side (no redirect).
+                request.RequestUri = new Uri(baseUrl);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(DigitalLinkVocab.LinksetMediaType));
+            }
+            else
+            {
+                // Legacy behavior: ask the resolver to filter to the EPCIS link and return an array.
+                string legacyUrl = baseUrl + "?linkType=" + DigitalLinkVocab.EpcisCurie;
+                request.RequestUri = new Uri(legacyUrl);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            }
 
-            // set accept to "application/json"
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            // apply the optional API key and any custom headers (e.g. X-Dataset-Id) from the options
+            request.Headers.ApplyOptionHeaders(options.APIKey, options.Headers);
 
-            // DIAGNOSTICS: Execute the rule to validate the Http Headers.   
+            // DIAGNOSTICS: Execute the rule to validate the Http Headers.
             if (report?.CurrentRequest != null)
             {
                 report.CurrentRequest.HttpRequest = request;
@@ -145,35 +125,76 @@ namespace OpenTraceability.Queries
 
             var response = await client.SendAsync(request);
 
-            // DIAGNOSTICS: Execute the rule to validate the Http Headers.   
+            // The body is read before the success check so failure responses are captured in the
+            // diagnostics too; failed requests are the ones diagnostics consumers most need to see.
+            string json = await response.Content.ReadAsStringAsync();
+
+            // DIAGNOSTICS: Execute the rule to validate the Http Headers.
             if (report?.CurrentRequest != null)
             {
                 report.CurrentRequest.HttpResponse = response;
                 report.CurrentRequest.End = DateTime.UtcNow;
+                report.CurrentRequest.ResponseBody = json;
                 await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkHttpResponseRule>(response);
             }
 
             if (response.IsSuccessStatusCode)
             {
-                string json = await response.Content.ReadAsStringAsync();
-
-                // DIAGNOSTICS: Execute the rule to validate the JSON.
-                if (report?.CurrentRequest != null)
+                if (useLinkset)
                 {
-                    report.CurrentRequest.ResponseBody = await response.Content.ReadAsStringAsync();
-                    await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkJsonSchemaRule>(json);
+                    // DIAGNOSTICS: Validate the linkset shape.
+                    if (report?.CurrentRequest != null)
+                    {
+                        await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkLinksetSchemaRule>(json);
+                    }
+
+                    string? href = GetFirstLinksetHref(json, DigitalLinkVocab.EpcisUri);
+                    if (href != null)
+                    {
+                        return new Uri(href.TrimEnd('/') + '/');
+                    }
                 }
-
-                // DIAGNOSTICS: Execute the rule to validate a response was found.
-                if (report?.CurrentRequest != null)
+                else
                 {
-                    await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkResponseFoundRule>(json);
+                    // DIAGNOSTICS: Validate the legacy digital link array and that a response was found.
+                    if (report?.CurrentRequest != null)
+                    {
+                        await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkJsonSchemaRule>(json);
+                        await report.CurrentRequest.ExecuteRuleAsync<DigitalLinkResponseFoundRule>(json);
+                    }
+
+                    var link = JsonConvert.DeserializeObject<List<DigitalLink>>(json)?.FirstOrDefault();
+                    if (link != null)
+                    {
+                        return new Uri(link.link.TrimEnd('/') + '/');
+                    }
                 }
+            }
 
-                var link = JsonConvert.DeserializeObject<List<DigitalLink>>(json)?.FirstOrDefault();
-                if (link != null)
+            return null;
+        }
+
+        /// <summary>
+        /// Parses a linkset response and returns the first target href declared under the given
+        /// link relation type URI, or null when the linkset declares no such link.
+        /// </summary>
+        /// <param name="json">The raw linkset JSON.</param>
+        /// <param name="linkTypeUri">The fully expanded link relation type URI to select.</param>
+        /// <returns>The first matching href, or null.</returns>
+        private static string? GetFirstLinksetHref(string json, string linkTypeUri)
+        {
+            Linkset? linkset = JsonConvert.DeserializeObject<Linkset>(json);
+            if (linkset == null)
+            {
+                return null;
+            }
+
+            foreach (var item in linkset.linkset)
+            {
+                var links = item.GetLinks(linkTypeUri);
+                if (links.Count > 0 && !string.IsNullOrWhiteSpace(links[0].href))
                 {
-                    return new Uri(link.link.TrimEnd('/') + '/');
+                    return links[0].href;
                 }
             }
 
@@ -277,14 +298,14 @@ namespace OpenTraceability.Queries
             for (int stack = 0; stack < 100; stack++)
             {
                 // find aggregate events where we have not queried for the parent ID
-                var agg_events = results.Document.Events.Where(e => e is IAggregationEvent && e.Action == EventAction.ADD && !queried_epcs.Contains(((IAggregationEvent)e).ParentID)).ToList();
+                var agg_events = results.Document.Events.Where(e => e is IAggregationEvent && e.Action == EventAction.ADD && ((IAggregationEvent)e).ParentID != null && !queried_epcs.Contains(((IAggregationEvent)e).ParentID!)).ToList();
 
                 if (agg_events.Count() > 0)
                 {
                     foreach (var agg_evt in agg_events)
                     {
                         // find the next event recorded where one of the children is recorded in the event
-                        var parent_id = ((IAggregationEvent)agg_evt).ParentID;
+                        var parent_id = ((IAggregationEvent)agg_evt).ParentID ?? throw new Exception("The aggregation event unexpectedly has a NULL ParentID; events without a parent are filtered out above.");
                         var child_epcs = agg_evt.Products.Where(product => product.Type == EventProductType.Child).Select(product => product.EPC);
                         var next_evt = results.Document.Events.Where(e => e.EventTime > agg_evt.EventTime && e.Products.Any(product => child_epcs.Contains(product.EPC))).OrderBy(e => e.EventTime).FirstOrDefault();
                         DateTimeOffset? next_evt_time = next_evt?.EventTime;
@@ -297,7 +318,7 @@ namespace OpenTraceability.Queries
 
                         // query for events that occurred to the parent ID
                         var p = new EPCISQueryParameters(parent_id);
-                        p.query.LE_eventTime = next_evt_time;
+                        p.query.LT_eventTime = next_evt_time;
                         if (additionalParameters != null)
                         {
                             p.Merge(additionalParameters);
@@ -371,6 +392,9 @@ namespace OpenTraceability.Queries
                 throw new Exception($"Unrecognized EPCISVersion {options.Version} on the options.");
             }
 
+            // apply the optional API key and any custom headers (e.g. X-Dataset-Id) from the options
+            request.Headers.ApplyOptionHeaders(options.APIKey, options.Headers);
+
             //// ensure Host header is set BEFORE diagnostics rule executes so the rule does not report a missing host
             //if (request.RequestUri != null)
             //{
@@ -404,6 +428,10 @@ namespace OpenTraceability.Queries
                 {
                     report.CurrentRequest.HttpResponse = response;
                     report.CurrentRequest.End = DateTime.UtcNow;
+
+                    // The body is recorded before the success check so failure responses are captured too;
+                    // failed requests are the ones diagnostics consumers most need to see.
+                    report.CurrentRequest.ResponseBody = responseBody ?? string.Empty;
                     await report.CurrentRequest.ExecuteRuleAsync<EPCISHttpResponseRule>(response);
                 }
 
@@ -412,7 +440,6 @@ namespace OpenTraceability.Queries
                     // DIAGNOSTICS: Execute the rule to validate the response schema.
                     if (report != null && responseBody != null)
                     {
-                        report.CurrentRequest.ResponseBody = responseBody;
                         await report.CurrentRequest.ExecuteRuleAsync<EPCISResponseSchemaRule>(responseBody, options.Format, options.Version);
                     }
 
@@ -439,6 +466,13 @@ namespace OpenTraceability.Queries
             {
                 if (report != null)
                 {
+                    // Requests that die before a response (connection refused, timeout) never hit the
+                    // response block above, so stamp the end time here to keep durations meaningful.
+                    if (report.CurrentRequest.End == default)
+                    {
+                        report.CurrentRequest.End = DateTime.UtcNow;
+                    }
+
                     report.CurrentRequest.AddException(ex);
                 }
 

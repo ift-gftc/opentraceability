@@ -63,7 +63,7 @@ namespace OpenTraceability.Utility
                 {
                     continue;
                 }
-                string value = jContext[jprop.Name]?.ToString();
+                string? value = jContext[jprop.Name]?.ToString();
                 if (value != null && IsNamespace(value))
                 {
                     namespaces.Add(jprop.Name, value.TrimEnd(':'));
@@ -75,7 +75,7 @@ namespace OpenTraceability.Utility
         public static bool IsNamespace(string value)
         {
             Regex reg = new Regex(@"^urn:[a-z0-9][a-z0-9-]{0,31}:[a-z0-9()+,\-.:=@;$_!*'%\/?#]+$");
-            if (Uri.TryCreate(value, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+            if (Uri.TryCreate(value, UriKind.Absolute, out Uri? uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
             {
                 return true;
             }
@@ -86,17 +86,19 @@ namespace OpenTraceability.Utility
             return false;
         }
 
-        public static JToken ExpandVocab(JToken json, JObject jcontext, Dictionary<string, string> namespaces, JObject jvocabcontext=null)
+        public static JToken? ExpandVocab(JToken json, JObject jcontext, Dictionary<string, string> namespaces, JObject? jvocabcontext = null)
         {
-            return ModifyVocab(json, jcontext, namespaces, namespaces.Reverse(), JsonLDVocabTransformationType.Expand);
+            // Note - Claude - 7/29/2026: The jvocabcontext argument was previously accepted but never
+            // forwarded into ModifyVocab, so callers supplying a vocab context had it silently ignored.
+            return ModifyVocab(json, jcontext, namespaces, namespaces.Reverse(), JsonLDVocabTransformationType.Expand, jvocabcontext);
         }
 
-        public static JToken CompressVocab(JToken json, JObject jcontext, Dictionary<string, string> namespaces, JObject jvocabcontext = null)
+        public static JToken? CompressVocab(JToken json, JObject jcontext, Dictionary<string, string> namespaces, JObject? jvocabcontext = null)
         {
-            return ModifyVocab(json, jcontext, namespaces, namespaces.Reverse(), JsonLDVocabTransformationType.Compress);
+            return ModifyVocab(json, jcontext, namespaces, namespaces.Reverse(), JsonLDVocabTransformationType.Compress, jvocabcontext);
         }
 
-        private static JToken ModifyVocab(JToken json, JObject jcontext, Dictionary<string, string> namespaces, Dictionary<string, string> namespacesReverse, JsonLDVocabTransformationType transformType, JObject jvocabcontext = null)
+        private static JToken? ModifyVocab(JToken json, JObject jcontext, Dictionary<string, string> namespaces, Dictionary<string, string> namespacesReverse, JsonLDVocabTransformationType transformType, JObject? jvocabcontext = null)
         {
             if (json is JObject)
             {
@@ -105,11 +107,11 @@ namespace OpenTraceability.Utility
                 // we will go through each property on the jEvent...
                 foreach (JProperty jprop in jobj.Properties())
                 {
-                    JObject jcontextprop = jcontext[jprop.Name] as JObject;
+                    JObject? jcontextprop = jcontext[jprop.Name] as JObject;
                     if (jcontextprop != null)
                     {
-                        JToken jpropvalue = jobj[jprop.Name];
-                        JToken jpropcontext = jcontextprop["@context"] ?? jvocabcontext;
+                        JToken? jpropvalue = jobj[jprop.Name];
+                        JToken? jpropcontext = jcontextprop["@context"] ?? jvocabcontext;
                         if (jpropvalue != null && jpropcontext != null)
                         {
                             if (jcontextprop.Value<string>("@type") == "@vocab")
@@ -124,7 +126,7 @@ namespace OpenTraceability.Utility
                                         for (int i = 0; i < jarr.Count; i++)
                                         {
                                             JToken jt = jarr[i];
-                                            JToken newValue = ModifyVocab(jt, jpropcontextObj, namespaces, namespacesReverse, transformType, jvocabcontext);
+                                            JToken? newValue = ModifyVocab(jt, jpropcontextObj, namespaces, namespacesReverse, transformType, jvocabcontext);
                                             if (newValue != null)
                                             {
                                                 jarr[i] = newValue;
@@ -133,7 +135,7 @@ namespace OpenTraceability.Utility
                                     }
                                     else
                                     {
-                                        JToken newValue = ModifyVocab(jpropvalue, jpropcontextObj, namespaces, namespacesReverse, transformType, jvocabcontext);
+                                        JToken? newValue = ModifyVocab(jpropvalue, jpropcontextObj, namespaces, namespacesReverse, transformType, jvocabcontext);
                                         if (newValue != null)
                                         {
                                             jobj[jprop.Name] = newValue;
@@ -156,7 +158,7 @@ namespace OpenTraceability.Utility
                                     }
                                     else
                                     {
-                                        JToken newValue = ModifyVocab(jt, jpropcontextObj, namespaces, namespacesReverse, transformType, jvocabcontext);
+                                        JToken? newValue = ModifyVocab(jt, jpropcontextObj, namespaces, namespacesReverse, transformType, jvocabcontext);
                                         if (newValue != null)
                                         {
                                             jarr[i] = newValue;
@@ -169,8 +171,8 @@ namespace OpenTraceability.Utility
                                 JObject jpropcontextObj;
                                 if (jpropcontext is JArray)
                                 {
-                                    jvocabcontext = (JObject)jpropcontext[0];
-                                    jpropcontextObj = (JObject)jpropcontext[1];
+                                    jvocabcontext = (JObject?)jpropcontext[0];
+                                    jpropcontextObj = (JObject)(jpropcontext[1] ?? throw new Exception("The @context array does not contain a second element. jpropcontext=" + jpropcontext.ToString()));
                                 }
                                 else
                                 {
@@ -191,13 +193,9 @@ namespace OpenTraceability.Utility
                 JObject jc = jvocabcontext ?? jcontext;
                 string value = json.ToString();
 
-                if (value == null)
+                if (transformType == Utility.JsonLDVocabTransformationType.Expand)
                 {
-                    return null;
-                }
-                else if (transformType == Utility.JsonLDVocabTransformationType.Expand)
-                {
-                    JToken jmapping = jc[value];
+                    JToken? jmapping = jc[value];
 
                     if (jmapping != null)
                     {
@@ -216,7 +214,7 @@ namespace OpenTraceability.Utility
                         value = value.Replace(ns, namespacesReverse[ns] + ":");
                     }
 
-                    string compressedVocab = jc.Properties().FirstOrDefault(f => f.Value.ToString() == value)?.Name;
+                    string? compressedVocab = jc.Properties().FirstOrDefault(f => f.Value.ToString() == value)?.Name;
                     if (compressedVocab != null)
                     {
                         return JToken.FromObject(compressedVocab);
@@ -241,7 +239,7 @@ namespace OpenTraceability.Utility
                     return true;
                 }
 
-                string value = jobj[jprop.Name]?.ToString();
+                string? value = jobj[jprop.Name]?.ToString();
                 if (value == null || !IsNamespace(value))
                 {
                     return true;

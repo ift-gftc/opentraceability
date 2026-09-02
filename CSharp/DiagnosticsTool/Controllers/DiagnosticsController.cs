@@ -198,6 +198,7 @@ public class DiagnosticsController : ControllerBase
         {
             URL = request.Options.URL,
             APIKey = request.Options.APIKey,
+            Headers = request.Options.Headers,
         }, epc, client, diagnosticsReport);
 
         if (url != null)
@@ -208,7 +209,8 @@ public class DiagnosticsController : ControllerBase
                 APIKey = request.Options.APIKey,
                 EnableStackTrace = request.Options.EnableStackTrace,
                 Version = request.Options.Version,
-                Format = request.Options.Format
+                Format = request.Options.Format,
+                Headers = request.Options.Headers, // include any additional headers from the request options
             }, epc, client, request.AdditionalParameters, diagnosticsReport);
 
             // Resolve master data if requested

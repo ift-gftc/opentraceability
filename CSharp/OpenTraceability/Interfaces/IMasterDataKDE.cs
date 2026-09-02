@@ -39,8 +39,8 @@ namespace OpenTraceability.Interfaces
         /// <summary>
         /// Gets the KDE in a JSON-LD format.
         /// </summary>
-        /// <returns>The KDE expressed as JSON-LD.</returns>
-        JToken GetGS1WebVocabJson();
+        /// <returns>The KDE expressed as JSON-LD, or <see langword="null"/> when the KDE has no value to write.</returns>
+        JToken? GetGS1WebVocabJson();
 
         /// <summary>
         /// Sets the KDE from the XML expression from an EPCIS XML document.
@@ -51,7 +51,7 @@ namespace OpenTraceability.Interfaces
         /// <summary>
         /// Gets the KDE in an XML format to be inserted into an EPCIS document.
         /// </summary>
-        /// <returns>The KDE expressed as XML.</returns>
-        XElement GetEPCISXml();
+        /// <returns>The KDE expressed as XML, or <see langword="null"/> when the KDE has no value to write.</returns>
+        XElement? GetEPCISXml();
     }
 }

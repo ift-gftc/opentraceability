@@ -102,16 +102,14 @@ namespace OpenTraceability.Utility
         public Measurement ToBase()
         {
             // if the UoM is NULL or EMPTY then we just return this
-            if (String.IsNullOrWhiteSpace(this.UoM?.UNCode)) return this;
+            UOM? uom = this.UoM;
+            if (uom == null || String.IsNullOrWhiteSpace(uom.UNCode)) return this;
 
-            // otherwise then we convert to base
+            // otherwise then we convert to base; GetBase throws when no base unit exists for the dimension
             Measurement trBase = new Measurement();
-            trBase.UoM = UOMS.GetBase(this.UoM);
+            trBase.UoM = UOMS.GetBase(uom);
 
-            // lets make sure we looked up the base UoM
-            if (String.IsNullOrWhiteSpace(this.UoM?.UNCode)) throw new NullReferenceException("Failed to look up base UoM. UNCode=" + this.UoM.UNCode);
-
-            trBase.Value = UoM.Convert(this.Value, trBase.UoM);
+            trBase.Value = uom.Convert(this.Value, trBase.UoM);
             trBase.Value = trBase.Value.Round();
             return (trBase);
         }
@@ -122,12 +120,13 @@ namespace OpenTraceability.Utility
             {
                 return (this);
             }
-            Measurement trBase = new Measurement();
-            trBase.UoM = UOMS.GetUOMFromUNCode(uomStr);
-            if (trBase.UoM == null)
+            UOM? uom = UOMS.GetUOMFromUNCode(uomStr);
+            if (uom == null)
             {
                 return (this);
             }
+            Measurement trBase = new Measurement();
+            trBase.UoM = uom;
             trBase.Value = UoM.Convert(this.Value, trBase.UoM);
             trBase.Value = trBase.Value.Round();
             return (trBase);
@@ -180,7 +179,9 @@ namespace OpenTraceability.Utility
         {
             try
             {
-                if (this.Value == null && this.UoM == null)
+                // Note - Claude - 7/29/2026: The original guard compared the non-nullable double Value to
+                // null (always false, CS0472); the reachable intent is an empty key when no unit is set.
+                if (this.UoM == null)
                 {
                     return "";
                 }
@@ -221,7 +222,7 @@ namespace OpenTraceability.Utility
                 List<UOM> uoms = UOMS.List;
 
                 double dblValue = double.Parse(numberStr);
-                UOM uom = UOMS.GetUOMFromUNCode(uomStr);
+                UOM? uom = UOMS.GetUOMFromUNCode(uomStr);
                 if (uom == null)
                 {
                     uom = uoms.Find(u => u.Abbreviation.ToLower() == uomStr.ToLower() || uomStr.ToLower() == u.Name.ToLower());
@@ -249,27 +250,25 @@ namespace OpenTraceability.Utility
         /// </summary>
         /// <param name="strValue"></param>
         /// <returns></returns>
-        public static Measurement TryParse(string strValue)
+        public static Measurement? TryParse(string? strValue)
         {
-            Measurement measure = null;
+            Measurement? measure = null;
             try
             {
-                if (!string.IsNullOrEmpty(strValue))
+                if (strValue != null && !string.IsNullOrEmpty(strValue))
                 {
                     measure = Measurement.Parse(strValue);
                 }
             }
             catch (Exception Ex)
             {
-#if DEBUG
                 Exception exception = new Exception("Failed to parse measurement. strValue = " + strValue, Ex);
                 OTLogger.Error(exception);
-#endif
             }
             return measure;
         }
 
-        public static bool operator ==(Measurement lhs, Measurement rhs)
+        public static bool operator ==(Measurement? lhs, Measurement? rhs)
         {
             if (ReferenceEquals(lhs, rhs))
             {
@@ -290,7 +289,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static bool operator !=(Measurement lhs, Measurement rhs)
+        public static bool operator !=(Measurement? lhs, Measurement? rhs)
         {
             if (lhs == rhs)
             {
@@ -302,7 +301,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static bool operator >(Measurement lhs, Measurement rhs)
+        public static bool operator >(Measurement? lhs, Measurement? rhs)
         {
             if (ReferenceEquals(lhs, rhs))
             {
@@ -324,7 +323,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static bool operator <(Measurement lhs, Measurement rhs)
+        public static bool operator <(Measurement? lhs, Measurement? rhs)
         {
             if (ReferenceEquals(lhs, rhs))
             {
@@ -346,7 +345,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static bool operator <=(Measurement lhs, Measurement rhs)
+        public static bool operator <=(Measurement? lhs, Measurement? rhs)
         {
             if (ReferenceEquals(lhs, rhs))
             {
@@ -367,7 +366,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static bool operator >=(Measurement lhs, Measurement rhs)
+        public static bool operator >=(Measurement? lhs, Measurement? rhs)
         {
             if (ReferenceEquals(lhs, rhs))
             {
@@ -388,7 +387,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!ReferenceEquals(obj, null))
             {
@@ -404,9 +403,12 @@ namespace OpenTraceability.Utility
             return (false);
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
-            if (!ReferenceEquals(obj, null))
+            // Note - Claude - 7/29/2026: The null/non-null branches here were inverted, so every non-null
+            // argument compared as 1 and the Measurement comparison below was unreachable. Per convention,
+            // any instance compares greater than null.
+            if (ReferenceEquals(obj, null))
             {
                 return (1);
             }
@@ -421,7 +423,7 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public int CompareTo(Measurement other)
+        public int CompareTo(Measurement? other)
         {
             if (ReferenceEquals(other, null))
             {

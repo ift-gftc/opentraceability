@@ -25,10 +25,10 @@ namespace OpenTraceability.Utility
 
         private static void Load()
         {
-            string data = null;
-            data = StaticData.ReadData("Countries.xml");
+            string data = StaticData.ReadData("Countries.xml");
             XDocument xmlCountries = XDocument.Parse(data);
-            foreach (XElement x in xmlCountries.Root.Elements())
+            XElement xmlRoot = xmlCountries.Root ?? throw new Exception("Failed to parse Countries.xml, no root element found.");
+            foreach (XElement x in xmlRoot.Elements())
             {
                 Country country = new Country(x);
                 _dirCountries.TryAdd(country.Abbreviation.ToUpper(), country);
@@ -53,9 +53,9 @@ namespace OpenTraceability.Utility
             }
         }
 
-        public static Country FromAbbreviation(string code)
+        public static Country? FromAbbreviation(string code)
         {
-            Country country = null;
+            Country? country = null;
             if (!string.IsNullOrEmpty(code))
             {
                 if (_dirCountries != null)
@@ -69,9 +69,9 @@ namespace OpenTraceability.Utility
             return (country);
         }
 
-        public static Country FromAlpha3(string code)
+        public static Country? FromAlpha3(string code)
         {
-            Country country = null;
+            Country? country = null;
             if (!string.IsNullOrEmpty(code))
             {
                 if (_dirCountries != null)
@@ -85,9 +85,9 @@ namespace OpenTraceability.Utility
             return (country);
         }
 
-        public static Country FromCountryName(string name)
+        public static Country? FromCountryName(string name)
         {
-            Country country = null;
+            Country? country = null;
             if (_dirCountries != null && !String.IsNullOrWhiteSpace(name))
             {
                 if (_dirNameCountries.ContainsKey(name.ToUpper()))
@@ -112,9 +112,9 @@ namespace OpenTraceability.Utility
             return country;
         }
 
-        public static Country FromCountryIso(int iso)
+        public static Country? FromCountryIso(int iso)
         {
-            Country country = null;
+            Country? country = null;
             if (_dirCountries != null)
             {
                 foreach (KeyValuePair<string, Country> kvp in _dirCountries)
@@ -130,7 +130,7 @@ namespace OpenTraceability.Utility
             return (country);
         }
 
-        public static Country Parse(string strValue)
+        public static Country? Parse(string strValue)
         {
             if (int.TryParse(strValue, out int iso))
             {
@@ -207,13 +207,9 @@ namespace OpenTraceability.Utility
             return this.Abbreviation.ToString();
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is Country))
-            {
-                return false;
-            }
-            if (obj == null)
             {
                 return false;
             }
@@ -233,13 +229,13 @@ namespace OpenTraceability.Utility
             return this.ISO.GetHashCode();
         }
 
-        public bool Equals(Country other)
+        public bool Equals(Country? other)
         {
             if (other == null) return false;
             return (ISO == other.ISO);
         }
 
-        public int CompareTo(Country other)
+        public int CompareTo(Country? other)
         {
             if (other == null) return 1;
             return (ISO.CompareTo(other.ISO));

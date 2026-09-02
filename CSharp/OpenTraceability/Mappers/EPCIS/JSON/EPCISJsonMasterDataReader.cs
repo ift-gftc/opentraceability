@@ -27,21 +27,25 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
         {
             if (jMasterData["vocabularyList"] is JArray jVocabList)
             {
-                foreach (JObject jVocabListItem in jVocabList)
+                foreach (JToken jVocabListToken in jVocabList)
                 {
-                    string type = jVocabListItem["type"]?.ToString()?.ToLower();
-                    if (type != null)
+                    if (jVocabListToken is not JObject jVocabListItem) continue;
+                    string? typeRaw = jVocabListItem["type"]?.ToString();
+                    string? type = typeRaw?.ToLower();
+
+                    if (type != null && !string.IsNullOrEmpty(typeRaw))
                     {
                         if (jVocabListItem["vocabularyElementList"] is JArray jVocabElementaryList)
                         {
-                            foreach (JObject jVocabEle in jVocabElementaryList)
+                            foreach (JToken jVocabEleToken in jVocabElementaryList)
                             {
+                                if (jVocabEleToken is not JObject jVocabEle) continue;
                                 switch (type)
                                 {
-                                    case "urn:epcglobal:epcis:vtype:epcclass": ReadTradeitem(doc, jVocabEle, type); break;
-                                    case "urn:epcglobal:epcis:vtype:location": ReadLocation(doc, jVocabEle, type); break;
-                                    case "urn:epcglobal:epcis:vtype:party": ReadTradingParty(doc, jVocabEle, type); break;
-                                    default: ReadUnknown(doc, jVocabEle, type); break;
+                                    case "urn:epcglobal:epcis:vtype:epcclass": ReadTradeitem(doc, jVocabEle, typeRaw); break;
+                                    case "urn:epcglobal:epcis:vtype:location": ReadLocation(doc, jVocabEle, typeRaw); break;
+                                    case "urn:epcglobal:epcis:vtype:party": ReadTradingParty(doc, jVocabEle, typeRaw); break;
+                                    default: ReadUnknown(doc, jVocabEle, typeRaw); break;
                                 }
                             }
                         }
@@ -50,11 +54,23 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
         }
 
-        private static void ReadTradeitem(EPCISBaseDocument doc, JObject xTradeitem, string type)
+        private static void ReadTradeitem(EPCISBaseDocument doc, JObject xTradeitem, string? type)
         {
+            if (type == null)
+            {
+                return;
+            }
+
             // read the GTIN from the id
             string id = xTradeitem["id"]?.ToString() ?? string.Empty;
-            Tradeitem tradeitem = new Tradeitem();
+            Type t = Setup.MasterDataTypes[type.ToLower()];
+
+            var instance = Activator.CreateInstance(t);
+            if (!(instance is Tradeitem tradeitem))
+            {
+                throw new Exception($"Failed to create instance of Tradeitem from type {t}");
+            }
+
             tradeitem.GTIN = new Models.Identifiers.GTIN(id);
             tradeitem.EPCISType = type;
 
@@ -63,11 +79,16 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             doc.MasterData.Add(tradeitem);
         }
 
-        private static void ReadLocation(EPCISBaseDocument doc, JObject xLocation, string type)
+        private static void ReadLocation(EPCISBaseDocument doc, JObject xLocation, string? type)
         {
+            if (type == null)
+            {
+                return;
+            }
+
             // read the GLN from the id
             string id = xLocation["id"]?.ToString() ?? string.Empty;
-            Type t = Setup.MasterDataTypes[type];
+            Type t = Setup.MasterDataTypes[type.ToLower()];
 
             var instance = Activator.CreateInstance(t);
             if (!(instance is Location loc))
@@ -85,8 +106,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
         }
 
-        private static void ReadTradingParty(EPCISBaseDocument doc, JObject xTradingParty, string type)
+        private static void ReadTradingParty(EPCISBaseDocument doc, JObject xTradingParty, string? type)
         {
+            if (type == null)
+            {
+                return;
+            }
+
             // read the PGLN from the id
             string id = xTradingParty["id"]?.ToString() ?? string.Empty;
             TradingParty tp = new TradingParty();
@@ -98,8 +124,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             doc.MasterData.Add(tp);
         }
 
-        private static void ReadUnknown(EPCISBaseDocument doc, JObject xVocabElement, string type)
+        private static void ReadUnknown(EPCISBaseDocument doc, JObject xVocabElement, string? type)
         {
+            if (type == null)
+            {
+                return;
+            }
+
             // read the PGLN from the id
             string id = xVocabElement["id"]?.ToString() ?? string.Empty;
             VocabularyElement ele = new VocabularyElement();
@@ -122,10 +153,10 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             {
                 var subMappedProperties = OTMappingTypeInformation.GetMasterDataXmlTypeInfo(property.Property.PropertyType);
                 bool setAttribute = false;
-                object subObject = Activator.CreateInstance(property.Property.PropertyType);
-                if (subObject != null)
+                object? subObject = Activator.CreateInstance(property.Property.PropertyType);
+                if (subObject != null && jMasterData["attributes"] is JArray jExpandedAttributes)
                 {
-                    foreach (JObject jAtt in jMasterData["attributes"] as JArray)
+                    foreach (JObject jAtt in jExpandedAttributes)
                     {
                         string id = jAtt["id"]?.ToString() ?? string.Empty;
                         var propMapping = subMappedProperties[id];
@@ -147,8 +178,13 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 }
             }
 
-            // go through each standard attribute...
-            foreach (JObject jAtt in jMasterData["attributes"] as JArray)
+            // go through each standard attribute; master data without an attributes array has nothing further to read.
+            if (!(jMasterData["attributes"] is JArray jAttributes))
+            {
+                return;
+            }
+
+            foreach (JObject jAtt in jAttributes)
             {
                 string id = jAtt["id"]?.ToString() ?? string.Empty;
 
@@ -162,13 +198,31 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 {
                     if (!TrySetValueType(jAtt["attribute"]?.ToString() ?? string.Empty, propMapping.Property, md))
                     {
-                        object value = ReadKDEObject(jAtt, propMapping.Property.PropertyType);
-                        propMapping.Property.SetValue(md, value);
+                        JToken? attribute = jAtt["attribute"];
+                        if (propMapping.Property.GetCustomAttribute<OpenTraceabilityArrayAttribute>() != null && propMapping.Property.GetValue(md) is IList list)
+                        {
+                            if (attribute is JArray array)
+                            {
+                                foreach (JToken item in array)
+                                {
+                                    list.Add(ReadKDEObject(item, propMapping.Property.PropertyType.GenericTypeArguments[0]));
+                                }
+                            }
+                            else if (attribute != null)
+                            {
+                                list.Add(ReadKDEObject(attribute, propMapping.Property.PropertyType.GenericTypeArguments[0]));
+                            }
+                        }
+                        else if (attribute != null)
+                        {
+                            object value = ReadKDEObject(attribute, propMapping.Property.PropertyType);
+                            propMapping.Property.SetValue(md, value);
+                        }
                     }
                 }
                 else if (readKDEs)
                 {
-                    JToken jAttValue = jAtt["attribute"];
+                    JToken? jAttValue = jAtt["attribute"];
                     if (jAttValue != null)
                     {
                         if (jAttValue is JObject)
@@ -199,11 +253,16 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 IList list = (IList)value;
                 if (j is JArray)
                 {
-                    foreach (JObject xchild in (JArray)j)
+                    foreach (JToken xchild in (JArray)j)
                     {
                         object child = ReadKDEObject(xchild, t.GenericTypeArguments[0]);
                         list.Add(child);
                     }
+                }
+                else if (j != null)
+                {
+                    object child = ReadKDEObject(j, t.GenericTypeArguments[0]);
+                    list.Add(child);
                 }
             }
             else
@@ -211,16 +270,19 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
                 // go through each property...
                 foreach (PropertyInfo p in t.GetProperties())
                 {
-                    OpenTraceabilityAttribute xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
-                    if (xmlAtt != null)
+                    OpenTraceabilityAttribute? xmlAtt = p.GetCustomAttribute<OpenTraceabilityAttribute>();
+                    OpenTraceabilityJsonAttribute? jsonAtt = p.GetCustomAttribute<OpenTraceabilityJsonAttribute>();
+                    string? name = jsonAtt?.Name ?? xmlAtt?.Name;
+                    if (name != null)
                     {
-                        JToken x = j[xmlAtt.Name];
+                        JToken? x = j[name];
                         if (x != null)
                         {
-                            OpenTraceabilityObjectAttribute objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
+                            OpenTraceabilityObjectAttribute? objAtt = p.GetCustomAttribute<OpenTraceabilityObjectAttribute>();
                             if (objAtt != null)
                             {
                                 object o = ReadKDEObject(x, p.PropertyType);
+                                p.SetValue(value, o);
                             }
                             else if (!TrySetValueType(x.ToString(), p, value))
                             {
@@ -243,7 +305,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
             else if (p.PropertyType == typeof(List<string>))
             {
-                List<string> cur = p.GetValue(o) as List<string>;
+                List<string>? cur = p.GetValue(o) as List<string>;
                 if (cur == null)
                 {
                     cur = new List<string>();
@@ -283,7 +345,7 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             }
             else if (p.PropertyType == typeof(Country))
             {
-                Country v = Countries.Parse(val);
+                Country? v = Countries.Parse(val);
                 p.SetValue(o, v);
                 return true;
             }
