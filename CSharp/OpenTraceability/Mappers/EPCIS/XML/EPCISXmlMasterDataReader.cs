@@ -59,13 +59,24 @@ namespace OpenTraceability.Mappers.EPCIS.XML
         {
             // read the GTIN from the id
             string id = xTradeitem.Attribute("id")?.Value ?? string.Empty;
-            Tradeitem tradeitem = new Tradeitem();
-            tradeitem.GTIN = new Models.Identifiers.GTIN(id);
-            tradeitem.EPCISType = type;
 
-            // read the object
-            ReadMasterDataObject(tradeitem, xTradeitem);
-            doc.MasterData.Add(tradeitem);
+            // Use the registered type, like ReadLocation does, so the GDST trade item and its mapped
+            // properties are used instead of the base class.
+            Type t = Setup.GetMasterDataTypeDefault(typeof(Tradeitem)) ?? typeof(Tradeitem);
+            var instance = Activator.CreateInstance(t);
+            if (!(instance is Tradeitem tradeitem))
+            {
+                throw new Exception($"Failed to create instance of Tradeitem from type {t}");
+            }
+            else
+            {
+                tradeitem.GTIN = new Models.Identifiers.GTIN(id);
+                tradeitem.EPCISType = type;
+
+                // read the object
+                ReadMasterDataObject(tradeitem, xTradeitem);
+                doc.MasterData.Add(tradeitem);
+            }
         }
 
         private static void ReadLocation(EPCISBaseDocument doc, XElement xLocation, string type)
@@ -164,7 +175,20 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 var propMapping = mappedProperties[id];
                 if (propMapping != null)
                 {
-                    if (!TrySetValueType(xeAtt.Value, propMapping.Property, md))
+                    if (propMapping.IsArray && propMapping.IsObject)
+                    {
+                        // The writer emits one attribute per item, and the attribute's children are that
+                        // item's fields. Read a single item and append it, so repeated attributes with the
+                        // same id accumulate instead of replacing one another.
+                        IList list = propMapping.Property.GetValue(md) as IList
+                            ?? (IList)Activator.CreateInstance(propMapping.Property.PropertyType)!;
+
+                        Type itemType = propMapping.Property.PropertyType.GenericTypeArguments[0];
+                        list.Add(ReadKDEObject(xeAtt, itemType));
+
+                        propMapping.Property.SetValue(md, list);
+                    }
+                    else if (!TrySetValueType(xeAtt.Value, propMapping.Property, md))
                     {
                         object value = ReadKDEObject(xeAtt, propMapping.Property.PropertyType);
                         propMapping.Property.SetValue(md, value);
@@ -172,19 +196,21 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                 }
                 else if (readKDEs)
                 {
-                    if (xeAtt.HasElements)
                     {
-                        // serialize into object kde...
-                        IMasterDataKDE kdeObject = new MasterDataKDEObject(string.Empty, id);
-                        kdeObject.SetFromEPCISXml(xeAtt);
-                        md.KDEs.Add(kdeObject);
-                    }
-                    else
-                    {
-                        // serialize into string kde
-                        IMasterDataKDE kdeString = new MasterDataKDEString(string.Empty, id);
-                        kdeString.SetFromEPCISXml(xeAtt);
-                        md.KDEs.Add(kdeString);
+                        if (xeAtt.HasElements)
+                        {
+                            // serialize into object kde...
+                            IMasterDataKDE kdeObject = new MasterDataKDEObject(string.Empty, id);
+                            kdeObject.SetFromEPCISXml(xeAtt);
+                            md.KDEs.Add(kdeObject);
+                        }
+                        else
+                        {
+                            // serialize into string kde
+                            IMasterDataKDE kdeString = new MasterDataKDEString(string.Empty, id);
+                            kdeString.SetFromEPCISXml(xeAtt);
+                            md.KDEs.Add(kdeString);
+                        }
                     }
                 }
             }

@@ -120,12 +120,23 @@ namespace OpenTraceability.Mappers.EPCIS.XML
                         IList l = (IList)o;
                         foreach (var i in l)
                         {
-                            string? str = i.ToString();
-                            if (str != null)
+                            XElement xAtt = new XElement("attribute", new XAttribute("id", id));
+
+                            // Mirrors the JSON writer: an array of mapped objects is written as nested
+                            // elements. ToString() would emit the .NET type name instead of the value.
+                            if (p.GetCustomAttribute<OpenTraceabilityObjectAttribute>() != null)
                             {
-                                XElement xAtt = new XElement("attribute", new XAttribute("id", id));
-                                xAtt.Value = str;
+                                WriteObject(xAtt, i.GetType(), i);
                                 xVocabEle.Add(xAtt);
+                            }
+                            else
+                            {
+                                string? str = i.ToString();
+                                if (str != null)
+                                {
+                                    xAtt.Value = str;
+                                    xVocabEle.Add(xAtt);
+                                }
                             }
                         }
                     }
