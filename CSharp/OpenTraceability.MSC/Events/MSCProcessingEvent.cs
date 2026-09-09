@@ -8,7 +8,7 @@ namespace OpenTraceability.MSC.Events
 {
     // GDST 2.0 moved productOwner off IGDSTEvent and onto IGDSTProductOwnerEvent. The MSC events carry
     // the KDE, so they announce it through the interface rather than as a property a reader has to know about.
-    public class MSCProcessingEvent : ObjectEvent<MSCILMD>, IMSCILMDEvent, IGDSTProductOwnerEvent
+    public class MSCProcessingEvent : TransformationEvent<MSCILMD>, IMSCILMDEvent, IGDSTProductOwnerEvent
     {
         public MSCProcessingEvent()
         {
