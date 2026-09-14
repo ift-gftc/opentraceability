@@ -6,3 +6,5 @@
 /Java/opentraceability/.idea
 /.vs
 /CSharp/OpenTraceability.TestServer/epcis.db
+/CSharp/OpenTraceability.TestServer/epcis.db-shm
+/CSharp/OpenTraceability.TestServer/epcis.db-wal
