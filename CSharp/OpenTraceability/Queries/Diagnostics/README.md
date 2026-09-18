@@ -80,6 +80,21 @@ Each validation result includes:
 - **Type**: The validation type from above
 - **RuleKey**: Identifier of the rule that generated the result
 - **Message**: Descriptive error message
+- **InstanceLocation**: JSON Pointer to the element that caused the result, for
+  schema errors. Empty for the document root, null when the result is not tied
+  to a single element.
+- **Value**: The value found at that location, when it is a scalar.
+
+Schema validation reports one result per offending element, naming the element,
+its value, and every reason it was rejected:
+
+```text
+/epcisBody/eventList/0/ilmd/gdst:broodstockSource — 'InvalidValue'
+    enum: Value should match one of the values specified by the enum
+```
+Failures that did not affect the outcome are not reported: a failing `if`, which
+is how a schema selects a branch by event type, and the losing side of an `anyOf`
+whose other side matched.
 
 ## Usage in EPCISTraceabilityResolver
 

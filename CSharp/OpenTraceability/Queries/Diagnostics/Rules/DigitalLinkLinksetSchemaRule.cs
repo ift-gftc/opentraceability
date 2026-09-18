@@ -97,17 +97,8 @@ public class DigitalLinkLinksetSchemaRule : IDiagnosticsRequestRule
     {
         try
         {
-            var schemaErrors = await JsonSchemaChecker.IsValidAsync(jsonContent, "Linkset");
-            foreach (var error in schemaErrors)
-            {
-                results.Add(new DiagnosticsValidationResult
-                {
-                    Level = LogLevel.Warning,
-                    Type = DiagnosticsValidationType.SchemaError,
-                    RuleKey = Key,
-                    Message = $"Linkset schema validation warning: {error}"
-                });
-            }
+            var validation = await JsonSchemaChecker.ValidateAsync(jsonContent, "Linkset");
+            SchemaValidationResultMapper.AddSchemaWarnings(results, validation, Key, "Linkset schema validation warning");
         }
         catch (Exception ex)
         {

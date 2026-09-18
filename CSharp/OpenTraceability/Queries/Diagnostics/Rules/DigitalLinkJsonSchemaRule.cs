@@ -85,17 +85,8 @@ public class DigitalLinkJsonSchemaRule : IDiagnosticsRequestRule
     {
         try
         {
-            var schemaErrors = await JsonSchemaChecker.IsValidAsync(jsonContent, "DigitalLink");
-            foreach (var error in schemaErrors)
-            {
-                results.Add(new DiagnosticsValidationResult
-                {
-                    Level = LogLevel.Warning,
-                    Type = DiagnosticsValidationType.SchemaError,
-                    RuleKey = Key,
-                    Message = $"JSON schema validation warning: {error}"
-                });
-            }
+            var validation = await JsonSchemaChecker.ValidateAsync(jsonContent, "DigitalLink");
+            SchemaValidationResultMapper.AddSchemaWarnings(results, validation, Key, "JSON schema validation warning");
         }
         catch (Exception ex)
         {

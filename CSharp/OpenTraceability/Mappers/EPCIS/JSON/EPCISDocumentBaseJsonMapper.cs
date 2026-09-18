@@ -252,7 +252,9 @@ namespace OpenTraceability.Mappers.EPCIS.JSON
             List<string> errors = await JsonSchemaChecker.IsValidAsync(jsonStr, "https://ref.gs1.org/standards/epcis/epcis-json-schema.json");
             if (errors.Count > 0)
             {
-                throw new OpenTraceabilitySchemaException("Failed to validate JSON schema with errors:\n" + string.Join("\n", errors) + "\n\n and json " + json.ToString(Formatting.Indented));
+                // The errors name the offending elements, so the document is no longer needed to work out what failed. It used to be appended here
+                // and rode into HTTP error responses.
+                throw new OpenTraceabilitySchemaException("Failed to validate JSON schema with errors:\n" + string.Join("\n", errors));
             }
         }
 
