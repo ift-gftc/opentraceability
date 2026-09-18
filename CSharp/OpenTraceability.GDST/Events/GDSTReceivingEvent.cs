@@ -5,9 +5,11 @@ namespace OpenTraceability.GDST.Events
 {
     public class GDSTReceivingEvent : ObjectEvent<GDSTILMD>, IGDSTILMDEvent
     {
+        [OpenTraceability(Constants.GDST_NAMESPACE, "humanWelfarePolicy")]
         [OpenTraceabilityJson("gdst:humanWelfarePolicy")]
         public string? HumanWelfarePolicy { get; set; }
 
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "unloadingPort")]
         [OpenTraceabilityJson("cbvmda:unloadingPort")]
         public string? UnloadingPort { get; set; }
 

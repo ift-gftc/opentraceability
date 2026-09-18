@@ -3117,7 +3117,7 @@
         "type": "magnetic vector potential"
     },
     {
-        "UNCode": "D60",
+        "UNCode": "D61",
         "name": "weber per millimetre",
         "symbol": "Wb/mm",
         "multiplier": 1e3,
@@ -3369,5 +3369,13 @@
         "multiplier": 1e-5,
         "offset": 0,
         "type": "effective dose"
+    },
+    {
+        "name": "case",
+        "UNCode": "CA",
+        "symbol": "ca",
+        "type": "count",
+        "offset": 0,
+        "multiplier": 1
     }
 ]

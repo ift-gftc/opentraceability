@@ -256,7 +256,7 @@ namespace OpenTraceability.Utility
                     }
                     else
                     {
-                        throw new Exception("Failed to parse UOM");
+                        throw new Exception($"Failed to parse UOM from '{name}.'");
                     }
                 }
 

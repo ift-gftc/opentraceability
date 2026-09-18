@@ -1,4 +1,5 @@
-﻿using OpenTraceability.Models.Events;
+﻿using OpenTraceability.GDST.Events;
+using OpenTraceability.Models.Events;
 using OpenTraceability.MSC.Events;
 
 namespace OpenTraceability.MSC
@@ -15,6 +16,14 @@ namespace OpenTraceability.MSC
                 if (!_isInitialized)
                 {
                     OpenTraceability.GDST.Setup.Initialize();
+
+                    // GDST 1.2 events map onto the GDST 2.0 core event types. GDST 1.2 named the profile in the
+                    // business step, so these registrations are what let a 1.2 document deserialize into the 2.0
+                    // classes. Hatching and farm harvest are aquaculture and out of scope for MSC.
+                    OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTCommissionEvent), EventType.ObjectEvent, "urn:gdst:bizStep:fishingEvent", Models.Events.EventAction.ADD));
+                    OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTReceivingEvent), EventType.ObjectEvent, "urn:gdst:bizStep:transshipment", Models.Events.EventAction.OBSERVE));
+                    OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(GDSTReceivingEvent), EventType.ObjectEvent, "urn:gdst:bizStep:landing", Models.Events.EventAction.OBSERVE));
+
 
                     OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(MSCProcessingEvent), EventType.TransformationEvent, "urn:epcglobal:cbv:bizstep:commissioning"));
                     OpenTraceability.Setup.RegisterEventProfile(new OpenTraceabilityEventProfile(typeof(MSCProcessingEvent), EventType.TransformationEvent, "https://ref.gs1.org/cbv/BizStep-commissioning"));

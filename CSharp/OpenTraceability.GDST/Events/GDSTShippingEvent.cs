@@ -5,6 +5,7 @@ namespace OpenTraceability.GDST.Events
 {
     public class GDSTShippingEvent : ObjectEvent<GDSTILMD>, IGDSTILMDEvent
     {
+        [OpenTraceability(Constants.CBVMDA_NAMESPACE, "unloadingPort")]
         [OpenTraceabilityJson("cbvmda:unloadingPort")]
         public string? UnloadingPort { get; set; }
 
